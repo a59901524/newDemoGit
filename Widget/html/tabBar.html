@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+    <style>
+        html,
+        body {
+            background: transparent !important;
+            overflow: hidden;
+            height: 100%;
+            /* background: red; */
+        }
+
+        body {
+            border-top: 0 !important;
+        }
+
+        html,
+        body {
+            font-size: 14px;
+            height: 100%;
+        }
+
+        .hover {
+            opacity: .8;
+        }
+
+        .flex-wrap {
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: flex;
+        }
+
+        .flex-con {
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            flex: 1;
+        }
+
+        .flex-vertical {
+            -webkit-box-orient: vertical;
+            -webkit-flex-flow: column;
+            flex-flow: column;
+        }
+
+        .border-t,
+        .border-b {
+            position: relative;
+        }
+
+        .border-t:before,
+        .border-b:after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            /* background: #ddd; */
+            right: 0;
+            height: 1px;
+            -webkit-transform: scaleY(0.5);
+            transform: scaleY(0.5);
+            -webkit-transform-origin: 0 0;
+            transform-origin: 0 0;
+        }
+
+        .border-b:after {
+            top: auto;
+            bottom: 0;
+        }
+
+        #footer {
+            height: 100%;
+            background: #250084;
+            border: none;
+        }
+
+        #footer ul li {
+          background: #250084;
+            color: #cccccc;
+            border: none;
+            font-size: 10px;
+            height: 15vw;
+            background-repeat: no-repeat;
+            background-position: 50% 0.5rem;
+            /* padding-top: 2rem; */
+            line-height: 22vw;
+            overflow: hidden;
+        }
+
+        .color999 {
+            color: #999999!important;
+        }
+
+        #footer ul li.active {
+            color: #ffffff;
+        }
+
+        #footer ul li.active1 {
+            color: #ffffff;
+        }
+
+        .ulborder {
+            /*border-top: 1px solid #ffffff;*/
+        }
+
+        #footer ul li:nth-child(1) {
+            background-image: url(../image/tabBar/t1.png);
+            background-size: auto 2rem;
+        }
+
+        #footer ul li:nth-child(2) {
+            background-image: url(../image/tabBar/t2.png);
+            background-size: auto 2rem;
+        }
+
+        #footer ul li:nth-child(3) {
+            background-image: url(../image/tabBar/t3.png);
+            background-size: auto 2rem;
+        }
+
+        #footer ul li:nth-child(4) {
+            background-image: url(../image/tabBar/t4.png);
+            background-size: auto 2rem;
+        }
+
+        #footer ul li:nth-child(5) {
+            background-image: url(../image/tabBar/t5.png);
+            background-size: auto 2rem;
+        }
+
+        #footer ul li:nth-child(1).active {
+            background-image: url(../image/tabBar/t1_1.png);
+            background-size: auto 2rem;
+        }
+
+        #footer ul li:nth-child(2).active {
+            background-image: url(../image/tabBar/t2_1.png);
+            background-size: auto 2rem;
+        }
+
+        #footer ul li:nth-child(3).active {
+            background-image: url(../image/tabBar/t3_1.png);
+            background-size: auto 2rem;
+        }
+
+        #footer ul li:nth-child(4).active {
+            background-image: url(../image/tabBar/t4.png);
+            background-size: auto 2rem;
+        }
+
+        #footer ul li:nth-child(5).active {
+            background-image: url(../image/tabBar/t5_1.png);
+            background-size: auto 2rem;
+        }
+
+        #footer ul li:nth-child(1).active1 {
+            background-image: url(../image/tabBar/t1_1.png);
+            background-size: auto 2rem;
+        }
+
+        #footer ul li:nth-child(2).active1 {
+            background-image: url(../image/tabBar/t2_1.png);
+            background-size: auto 2rem;
+        }
+
+        #footer ul li:nth-child(3).active1 {
+            background-image: url(../image/tabBar/t3_1.png);
+            background-size: auto 2rem;
+        }
+
+        #footer ul li:nth-child(4).active1 {
+            background-image: url(../image/tabBar/t4.png);
+            background-size: auto 2rem;
+        }
+
+        #footer ul li:nth-child(5).active1 {
+            background-image: url(../image/tabBar/t5_1.png);
+            background-size: auto 2rem;
+        }
+
+        .flex-con {
+            overflow: auto
+        }
+    </style>
+</head>
+
+<body>
+    <div id="footer" class="border-t" v-cloak>
+        <ul class="flex-wrap" :class="{'ulborder':selectIndex==2||selectIndex==3||selectIndex==4}">
+            <li tapmode="hover" onclick="randomSwitchBtn( this );" class="flex-con text_center">{{langContent.tab1?langContent.tab1:''}}</li>
+            <li tapmode="hover" onclick="randomSwitchBtn( this );" class="flex-con text_center">{{langContent.tab2?langContent.tab2:''}}</li>
+            <li tapmode="hover" onclick="randomSwitchBtn( this );" class="flex-con text_center">{{langContent.tab3?langContent.tab3:''}}</li>
+            <!-- <li tapmode="hover" @click="OpenShot();" class="flex-con flex_row_center">
+                <img src="../image/shot.png" alt="" style="width: 3.5rem;height: 3.5rem;">
+            </li> -->
+            <!-- <li tapmode="hover" onclick="randomSwitchBtn( this );" class="flex-con text_center">我的森林</li> -->
+            <li tapmode="hover" onclick="randomSwitchBtn( this );" class="flex-con text_center">{{langContent.tab4?langContent.tab4:''}}</li>
+            <li tapmode="hover" onclick="randomSwitchBtn( this );" class="flex-con text_center">{{langContent.tab5?langContent.tab5:''}}</li>
+        </ul>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/const.js"></script>
+<script type="text/javascript" src="../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../script/rsa.js"></script>
+<script type="text/javascript" src="../script/aes.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script>
+    var tabBar = new Vue({
+            el: '#footer',
+            data: {
+                langContent: {},
+                selectIndex: 0,
+                footerDom: ''
+            },
+            created: function() {
+                var that = this;
+                apiready = function() {
+                    $api.fixTabBar($api.byId('footer'));
+                    that.footerDom = $api.dom('#footer')
+                    //$api.css(that.footerDom, 'background-color:rgba(0,0,0,0.1);'); //commented 2015-05-27
+                    $api.css(that.footerDom, 'background-color:rgba(255,255,255,1);');
+                    var eFootLis = $api.domAll('#footer li')
+                    $api.addCls(eFootLis[0], 'active');
+                    that.selectIndex = 0;
+                    that.langContent = GlobleLanguageContent.tabBar;
+                    /***********   去交易信箱   **************/
+                    api.addEventListener({
+                        name: 'pushJYXX'
+                    }, function(ret, err) {
+                        var eFootLis = $api.domAll('#footer li')
+                        for (var i = 0, len = eFootLis.length; i < len; i++) {
+                            if (i != 3) {
+                                $api.addCls(eFootLis[i], 'color999');
+                            } else {
+                                $api.removeCls(eFootLis[i], 'color999');
+                                $api.addCls(eFootLis[i], 'active1');
+                            }
+                            $api.removeCls(eFootLis[i], 'active');
+                        }
+                        //$api.css(that.footerDom, 'background-color:rgba(255,255,255,1);');
+                        $api.css(that.footerDom, 'background-color:rgba(0,0,0,1);');
+                        $api.addCls(eFootLis[3], 'active1');
+                        that.selectIndex = 3;
+                        api.setStatusBarStyle({
+                            style: 'dark',
+                            color: 'rgba(0,0,0,0)'
+                        });
+                        api.execScript({
+                            name: 'root',
+                            script: 'funIn(' + 3 + ');',
+                        });
+                        $api.setStorage('curframename', 'frame3');
+                        api.execScript({
+                            name: 'root',
+                            frameName: 'frame3',
+                            //script: "frame3.getinfo(),frame3.getHeader(),frame3.changeListtype(3,'交易信箱')",
+                            script: "",
+                        });
+                    });
+                    /***********   去看视频   **************/
+                    api.addEventListener({
+                        name: 'dailyPlayVideo'
+                    }, function(ret, err) {
+                        var eFootLis = $api.domAll('#footer li')
+                        $api.removeCls(eFootLis[1], 'active');
+                        $api.removeCls(eFootLis[2], 'active');
+                        $api.removeCls(eFootLis[3], 'active');
+                        $api.removeCls(eFootLis[4], 'active');
+                        $api.removeCls(eFootLis[4], 'active1');
+                        $api.addCls(eFootLis[0], 'active');
+                        api.execScript({
+                            name: 'root',
+                            script: 'funIn(' + 0 + ');',
+                        });
+                        $api.css(that.footerDom, 'background-color:rgba(0,0,0,0.1);');
+                        for (var i = 0, len = eFootLis.length; i < len; i++) {
+                            $api.removeCls(eFootLis[i], 'color999');
+                        }
+                        $api.css(that.footerDom, 'background-color:rgba(0,0,0,0.1);');
+                        $api.removeCls(eFootLis[1], 'active');
+                        $api.addCls(eFootLis[0], 'active');
+                        that.selectIndex = 0;
+                        api.setStatusBarStyle({
+                            style: 'light',
+                            color: 'rgba(0,0,0,0)'
+                        });
+                        $api.setStorage('curframename', 'frame0');
+                    });
+                    /***********   改变底部背景   **************/
+                    api.addEventListener({
+                        name: 'changeBg'
+                    }, function(ret, err) {
+                        if (ret) {
+                            if (ret.value.type == 1) {
+                                $api.css(that.footerDom, 'background-color:rgba(0,0,0,0.1);');
+                                $api.css($api.dom('li.active'), 'color: #f3d577;');
+                            } else {
+                                $api.css(that.footerDom, 'background-color:rgba(0,0,0,0.6);');
+                                $api.css($api.dom('li.active'), 'color: #f3d577;');
+                            }
+                        }
+                    });
+                };
+
+            },
+            methods: {
+                reloadlang: function() {
+                    var that = this;
+                    that.langContent = GlobleLanguageContent.tabBar;
+                },
+                OpenShot: function() {
+                    api.sendEvent({
+                        name: 'pause',
+                        extra: {}
+                    });
+                    http(checkTodayVideo, 'post', {}, function(ret) {
+                        if (ret.code == 200) {
+                            api.openFrame({
+                                name: 'shotframe',
+                                url: 'shotframe.html',
+                                bounces: false,
+                                reload: true,
+                                rect: {
+                                    x: 0,
+                                    y: 0,
+                                    w: api.winWidth,
+                                    h: api.winHeight
+                                }
+                            });
+                        }
+                    })
+                }
+            }
+
+        })
+        // 随意切换按钮
+    function randomSwitchBtn(tag) {
+        if (tag == $api.dom('#footer li.active')) return;
+        var eFootLis = $api.domAll('#footer li')
+        index = 0;
+        for (var i = 0, len = eFootLis.length; i < len; i++) {
+            if (tag == eFootLis[i]) {
+                index = i;
+            } else {
+                $api.removeCls(eFootLis[i], 'active');
+                $api.removeCls(eFootLis[i], 'active1');
+            }
+        }
+        tabBar.$data.selectIndex = index;
+        if (index == 0) {
+            for (var i = 0, len = eFootLis.length; i < len; i++) {
+                $api.removeCls(eFootLis[i], 'color999');
+            }
+            //$api.css(tabBar.$data.footerDom, 'background-color:rgba(0,0,0,0.1);'); --commented 2015-04-21
+            $api.css(tabBar.$data.footerDom, 'background-color:rgba(255,255,255,1);');
+            $api.addCls(eFootLis[0], 'active');
+        } else if (index == 1) {
+            for (var i = 0, len = eFootLis.length; i < len; i++) {
+                $api.removeCls(eFootLis[i], 'color999');
+            }
+            $api.css(tabBar.$data.footerDom, 'background-color:rgba(0,0,0,0.6);');
+            $api.addCls(eFootLis[1], 'active');
+        } else {
+            $api.css(tabBar.$data.footerDom, 'background-color:rgba(255,255,255,1);');
+            //$api.css(tabBar.$data.footerDom, 'background-color:rgba(0,0,0,0.1);');
+            for (var i = 0, len = eFootLis.length; i < len; i++) {
+                if (tag != eFootLis[i]) {
+                    $api.addCls(eFootLis[i], 'color999');
+                } else {
+                    $api.removeCls(eFootLis[i], 'color999');
+                }
+            }
+            // $api.css($api.dom('li.active'), 'color: #cb974d;');
+            $api.addCls(eFootLis[index], 'active1');
+        }
+        if (index == 2) {
+            api.setStatusBarStyle({
+                style: 'dark',
+                color: 'rgba(0,0,0,0)'
+            });
+        } else {
+            api.setStatusBarStyle({
+                style: 'light',
+                color: 'rgba(0,0,0,0)'
+            });
+        }
+        api.execScript({
+            name: 'root',
+            script: 'funIn(' + index + ');',
+        });
+        $api.setStorage('curframename', 'frame' + index);
+    };
+</script>

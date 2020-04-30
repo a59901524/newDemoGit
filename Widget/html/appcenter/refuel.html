@@ -1,0 +1,550 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>加油卡充值</title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../lib/iconfont2/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <style>
+        input,
+        .input {
+            flex: 1;
+            font-size: 1.2rem;
+            padding: 1rem 0rem;
+            text-indent: 1rem;
+            width: 80%;
+            color: #999999;
+        }
+
+        input::placeholder {
+            font-size: 14px;
+            width: 80%;
+            color: #999999;
+            line-height: normal;
+        }
+
+        input[disabled] {
+            color: #333;
+            -webkit-text-fill-color: #333;
+        }
+
+        .item {
+            width: calc(100% / 3 - 2px - 8px);
+            height: 60px;
+            overflow: hidden;
+            border: 1px solid #dddddd;
+            border-radius: 5px;
+            margin: 4px;
+        }
+
+        .HDCposition {
+            margin: .5rem;
+        }
+
+        .tomyfeed {
+            font-size: 1rem;
+            position: absolute;
+            right: 1rem;
+            bottom: 10px;
+            margin-right: 1rem;
+        }
+        /* 加油类型标签样式 */
+
+        .refuelstyle {
+            width: calc(100% / 2 - 14px);
+            height: 30px;
+            line-height: 30px;
+            overflow: hidden;
+            margin: 6px;
+            text-align: center;
+            padding: .5rem 0;
+            color: #ccc;
+        }
+        /* 选中加油类型标签样式 */
+
+        .refuelstyle.refue_checked {
+            width: calc(100% / 2 - 14px);
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            overflow: hidden;
+            margin: 6px;
+            border: 1px solid #b88840;
+            background: #111;
+            color: #b88840;
+            padding: .5rem 0;
+        }
+
+        .icon-tongxunlu_hh {
+            font-size: 2rem;
+            margin-right: 1rem;
+        }
+
+        .bbd {
+            padding-left: 1rem;
+        }
+
+        img {
+            width: 1.2rem;
+            height: 1.2rem;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .color_black6_left {
+            width: 25%;
+            color: #666;
+        }
+
+        .color_black6_right {
+            width: 75%;
+        }
+
+        .publicpsw .publicpswitem {
+            width: 80%;
+        }
+
+        .publicpsw .paswdimg {
+            width: 46px;
+            height: 46px;
+            position: absolute;
+            top: -23px;
+            left: 50%;
+            transform: translate(-50%);
+        }
+
+        .publicpsw input {
+            color: #cfa767;
+            /* width: calc(100% - 1.66rem); */
+            flex: 1;
+            height: 40px;
+            line-height: 40px;
+            text-indent: 10px;
+            background: #ffffff;
+            border-radius: 5px;
+            border: solid 1px #dddddd;
+            margin-top: 25px;
+            font-size: 14px;
+            -webkit-appearance: none;
+            padding: 0 !important;
+        }
+
+        .publicpsw input::placeholder {
+            font-size: 14px;
+            color: #999999;
+            line-height: 40px;
+        }
+
+        .publicpsw ::-webkit-input-placeholder {
+            font-size: 14px;
+            color: #999999;
+            line-height: 40px;
+        }
+        /* 使用webkit内核的浏览器 */
+
+        .publicpsw :-moz-placeholder {
+            font-size: 14px;
+            color: #999999;
+            line-height: 40px;
+        }
+        /* Firefox版本4-18 */
+
+        .publicpsw ::-moz-placeholder {
+            font-size: 14px;
+            color: #999999;
+            line-height: 40px;
+        }
+        /* Firefox版本19+ */
+
+        .publicpsw :-ms-input-placeholder {
+            font-size: 14px;
+            color: #999999;
+            line-height: 40px;
+        }
+
+        .publicpsw .btn {
+            width: 48%;
+            height: 40px;
+            background-color: #cfa767;
+            border-radius: 5px;
+            color: #ffffff;
+            line-height: 40px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .publicpsw .btn1 {
+            background-color: #dddddd;
+            color: #333333;
+        }
+    </style>
+</head>
+
+<body class="color_999 bg-white">
+    <div id="refuel" class="content" v-cloak>
+        <header class="header bbd posi_relative">
+            <i class="iconfont icon-xiangzuo" onclick="goBack()"></i>
+            <div>{{langContent.title?langContent.title:''}}</div>
+            <div class="tomyfeed color_black6" @click="toPage('refuel_record','refuel_record.html',{typelist:typelist})">{{langContent.record?langContent.record:''}}</div>
+        </header>
+        <!-- 可用HDC -->
+
+        <!-- <div class=" padding1 fontSize14 color_black6_left">
+            {{langContent.value?langContent.value:''}}：<span class=" color_default1">{{HDC?HDC:'0'}}</span>
+        </div> -->
+        <!-- 可用HDC -->
+        <div class="flex_row_left bbd ">
+            <div class="fontSize14 color_black6_left ">{{langContent.value?langContent.value:''}}</div>
+            <div class="color_black6_right">
+                <!-- <input class="flex_grow1" :placeholder="" disabled> -->
+                <div class="flex_grow1 input ">{{HDC?HDC:'0'}}</div>
+            </div>
+        </div>
+        <!-- 输入手机号码 -->
+        <div class="flex_row_left bbd ">
+            <div class="fontSize14 color_black6_left">{{langContent.tel?langContent.tel:''}}</div>
+            <div class="color_black6_right" style="margin-left: 1rem;">
+                <input class="flex_grow1" type="tel" :placeholder="langContent.tel_input" v-model="mobile">
+            </div>
+            <i class="iconfont icon-tongxunlu_hh color_default1" @click="select()"></i>
+        </div>
+        <!--持卡人姓名 -->
+        <div class="flex_row_left bbd ">
+            <div class="fontSize14 color_black6_left">{{langContent.name?langContent.name:''}}</div>
+            <div class="color_black6_right"> <input class="flex_grow1" :placeholder="langContent.name_input" v-model="username"></div>
+        </div>
+        <!-- 加油卡卡号 -->
+        <div class="flex_row_left bbd ">
+            <div class="fontSize14 color_black6_left">{{langContent.card?langContent.card:''}}</div>
+            <div class="color_black6_right"> <input class="flex_grow1" type="tel" maxlength="19" οnkeyup="value=value.replace(/[^\d\.]/g,'')" :placeholder="langContent.card_input" v-model="game_userid"></div>
+        </div>
+        <!-- 加油卡类型 -->
+        <div class="flex_row_left bbd posi_relative" @click="refue_checkeds()">
+            <div class="fontSize14 color_black6_left">{{langContent.cardtype?langContent.cardtype:''}}</div>
+            <div class="color_black6_right ">
+                <input class="flex_grow1" type="tel" :placeholder="cardtype_input?cardtype_input:langContent.cardtype_input" disabled>
+
+            </div>
+            <i class="iconfont icon-direction_right color_default1" style="position: absolute;right: 1rem; "></i>
+        </div>
+
+
+
+        <!-- 充值金额 -->
+        <div class="fontSize12   padding1 marginT1" style="padding-bottom: .2rem;">{{langContent.money?langContent.money:''}}</div>
+        <!-- 中石化列表 -->
+        <div class="flex_row_left flex_wrap" v-if="charge_type==1">
+            <div v-for="obj in typelist" class="item text_center" @click="charge(obj.id)" v-if="obj.face_value != 0 &&  obj.status !=0">
+                <div class="fontSize16 color_black6 HDCposition">
+                    <img src="../../image/appcenter/ic_topUp_coins.png" alt=""> {{obj.face_value}} {{langContent.yuan?langContent.yuan:''}}</div>
+                <div class="fontSize12 ">{{langContent.price?langContent.price:''}}{{obj.HDC}}HDC</div>
+            </div>
+        </div>
+
+        <!-- 中石油列表 -->
+        <div class="flex_row_left flex_wrap" v-if="charge_type==2">
+            <div v-for="objnum in cardnumdata" class="item text_center" @click="charge2(objnum)">
+                <div class="fontSize16 color_black6 HDCposition">
+                    <img src="../../image/appcenter/ic_topUp_coins.png" alt=""> {{objnum.money}}{{langContent.yuan?langContent.yuan:''}}</div>
+                <div class="fontSize12  ">{{langContent.price?langContent.price:''}}{{objnum.HDC.HDC}}HDC</div>
+            </div>
+
+        </div>
+
+        <div v-show="isShow" class="black_overlay1 flex_row_center publicpsw" @touchmove.prevent>
+            <div class="publicpswitem posi_relative padding1 bg-white text_center">
+                <img class="paswdimg" src="../../image/tree/password.svg" alt="">
+                <div class="flex_row_left">
+                    <input type="password" :placeholder="langContent.psw_input" v-model="password">
+                </div>
+                <div class="flex_row_between marginT1">
+                    <div @click.stop="submit" class="btn">{{langContent.sure?langContent.sure:''}}</div>
+                    <div @click.stop="password='';isShow=false;" class="btn btn1">{{langContent.cancel?langContent.cancel:''}}</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    var refuel = new Vue({
+        el: '#refuel',
+        data: {
+            mobile: '', //手机号码
+            type: '', // 选中金额类型
+            password: '',
+            isShow: false,
+            HDC: 0,
+            typelist: [], // 中石化数组
+            charge_type: 1, //否	int	加油卡类型 （1:中石化、2:中石油；默认为1)
+            cardtype_input: '', //存储加油卡类型名字
+            game_userid: '', // 加油卡号
+            username: '', //  持卡人姓名
+            cardnum: '', //    有区别注意！！（中石化默认是1张   中石油没有默认 是自己选择的金额)
+            cardnumdata: [
+                // 中石油数组
+                {
+                    money: 100,
+                    HDC: ''
+                }, {
+                    money: 200,
+                    HDC: ''
+                }, {
+                    money: 500,
+                    HDC: ''
+                }, {
+                    money: 1000,
+                    HDC: ''
+                },
+            ],
+            langContent: {},
+            getCodetip: {},
+            flag: true
+        },
+        created: function() {
+            var that = this;
+            apiready = function() {
+                fixStatusbar('header,.header,.headers', '.content');
+                refuel.$data.langContent = GlobleLanguageContent.refuel;
+                refuel.$data.getCodetip = GlobleLanguageContent.getCode;
+                that.getInfo();
+                that.gettypelists();
+                that.cardnumdata.forEach(function(e) {
+                    that.get_hdc_num(e)
+                });
+            }
+        },
+        methods: {
+
+            refue_checkeds: function() {
+                var that = this;
+                var list = that.langContent.cardtypelist
+                api.actionSheet({
+                    cancelTitle: that.langContent.cacle,
+                    buttons: list
+                }, function(ret, err) {
+                    var index = ret.buttonIndex;
+                    if (index == 1) {
+                        that.charge_type = 1;
+                        that.cardtype_input = list[0]
+                    } else {
+                        that.charge_type = 2;
+                        that.cardtype_input = list[1]
+                    }
+                })
+            },
+            toPage: function(name, url, params) {
+                api.openWin({
+                    name: name,
+                    url: url,
+                    reload: true,
+                    pageParam: params || {}
+                });
+            },
+            select: function() {
+                var that = this;
+                api.openContacts(function(ret, err) {
+                    if (ret && ret.status) {
+                        that.mobile = ret.phone.replace(/\s+/g, "");
+
+                    } else {
+
+                    }
+                });
+            },
+            charge: function(num) {
+                var that = this;
+                if (that.mobile === '') {
+                    api.toast({
+                        msg: that.langContent.notel,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return;
+                }
+                if (that.username === '') {
+                    api.toast({
+                        msg: that.langContent.noname,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return;
+                }
+                if (/^\d{19}$/.test(that.game_userid)) {
+
+                } else {
+                    api.toast({
+                        msg: that.langContent.nocard,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return;
+                }
+                that.type = num;
+                that.isShow = true;
+                return
+            },
+            charge2: function(num) {
+                var that = this;
+                if (that.mobile === '') {
+                    api.toast({
+                        msg: that.langContent.notel,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return;
+                }
+                if (that.username === '') {
+                    api.toast({
+                        msg: that.langContent.noname,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return;
+                }
+                if (/^\d{16}$/.test(that.game_userid)) {
+
+                } else {
+                    api.toast({
+                        msg: that.langContent.nocard,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return;
+                }
+                that.cardnum = num.money;
+                that.isShow = true;
+                return
+            },
+            submit: function() {
+                var that = this;
+                if (that.flag) {
+                    that.flag = false
+                    if (that.password == '') {
+                        api.toast({
+                            msg: that.langContent.nopsw,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                        return;
+                    }
+                    // 中石化类型
+                    if (that.charge_type == 1) {
+                        // 充值接口
+                        var params = {
+                                proid: that.type, //选中金额id
+                                cardnum: 1, // 中石化类型是默认购买多少张  （有区别）
+                                game_userid: that.game_userid, // 加油卡卡号
+                                mobile: that.mobile, // 持卡人手机号码
+                                username: that.username, // 持卡人姓名
+                                charge_type: that.charge_type, // 充值卡类型
+                                password: that.password, // 交易密码
+                            }
+                            // console.log(JSON.stringify(params) + '****************// 中石化类型');
+                        http(rechargeUrl, 'post', params, function(res) {
+                            that.flag = true
+                                // console.log(JSON.stringify(res) + '****************// 中石化类型');
+                            if (res.code == 200) {
+                                api.toast({
+                                    msg: res.msg,
+                                    duration: 2000,
+                                    location: 'bottom'
+                                });
+                                that.password = '';
+                                that.isShow = !that.isShow;
+                            }
+                        }, function(err) {})
+                    } else {
+                        // 中石油类型
+                        var params = {
+                                proid: 10008, //选中金额
+                                cardnum: that.cardnum, // 中石油类型是默认购买j金额
+                                game_userid: that.game_userid, // 加油卡卡号
+                                mobile: that.mobile, // 持卡人手机号码
+                                username: that.username, // 持卡人姓名
+                                charge_type: that.charge_type, // 充值卡类型
+                                password: that.password, // 交易密码
+                            }
+                            // console.log(JSON.stringify(params) + '****************// 中石油类型');
+                        http(rechargeUrl, 'post', params, function(res) {
+                            that.flag = true
+                                // console.log(JSON.stringify(res) + '****************// 中石油类型');
+                            if (res.code == 200) {
+                                api.toast({
+                                    msg: res.msg,
+                                    duration: 2000,
+                                    location: 'bottom'
+                                });
+                                that.password = '';
+                                that.isShow = !that.isShow;
+                            }
+                        }, function(err) {})
+                    }
+                } else {
+                    api.toast({
+                        msg: that.getCodetip.submit_tips,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+
+            },
+            getInfo: function() {
+                var that = this;
+                //个人资料的接口  取电话号码和HDC
+                http(getuserinfoUrl, 'get', {}, function(ret) {
+                    if (ret.code == 200) {
+                        that.mobile = ret.data.mobile;
+                        that.HDC = ret.data.user_money;
+                    } else if (ret.code == 401) {
+                        api.sendEvent({
+                            name: 'pause',
+                            extra: {}
+                        });
+                        console.log("TO login.html");
+                        toPage('login', '../auth/login.html', {
+                            from: 'center'
+                        });
+                    }
+                })
+            },
+            // 加油卡类型
+            gettypelists: function() {
+                var that = this;
+                http(sinopectypeUrl, 'post', {}, function(ret) {
+                    if (ret.code == 200) {
+                        that.typelist = ret.data;
+                    }
+
+                })
+            },
+            // 中石油  HDC显示
+            get_hdc_num: function(obj) {
+                var that = this;
+                http(JXA_payUrl, 'post', {
+                    money: obj.money
+                }, function(ret) {
+                    if (ret.code == 200) {
+                        obj.HDC = ret.data
+                    }
+                })
+            },
+
+        },
+
+    });
+</script>

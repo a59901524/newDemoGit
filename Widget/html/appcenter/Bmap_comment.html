@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>工作室详情</title>
+    <link rel="stylesheet" href="../../lib/swiper/swiper.min.css">
+    <link rel="stylesheet" href="../../lib/iconfont2/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <style>
+        html,
+        body {
+            /*height: 100%;*/
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            /* -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+            background: #26252b; */
+        }
+        
+        .swiper-wrapper,
+        .swiper-slide,
+        .swiper-slide img {
+            width: 100%;
+            height: 200px;
+        }
+        
+        .btn-fixed {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            text-align: center;
+            font-size: 16px;
+            line-height: 3.5rem;
+            height: 3.5rem;
+            width: 100%!important;
+            bottom: -1px!important;
+            background-color: #fff;
+            padding: 1rem 0rem;
+        }
+        
+        .buttom_bgimg {
+            width: 90%;
+            color: #fff;
+            background-color: #ccaa7a;
+            border-radius: 5px;
+            margin: 0 auto;
+        }
+        /* 分页器 */
+        
+        .swiper-pagination-bullet-active {
+            background-color: #cb974d;
+            width: 5px;
+            height: 5px;
+        }
+        
+        .swiper-pagination-bullet {
+            width: 5px;
+            height: 5px;
+        }
+    </style>
+</head>
+
+<body class="has_header color_black6">
+    <div id="Bmap_comment" class="content" v-cloak>
+        <header class="header ">
+            <i class="iconfont icon-xiangzuo color_default1" onclick="goBack()"></i>
+            <div>{{langContent.title?langContent.title:''}}</div>
+        </header>
+        <!-- 轮播图 -->
+        <div id="swiper-lifeserve" class="swiper-container ">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide" v-for="data in mapdataimg">
+                    <img :src="data" alt="">
+                </div>
+            </div>
+            <!-- 如果需要分页器 -->
+            <div class="swiper-pagination"></div>
+        </div>
+
+        <div class=" padding12 fontSize12 bg-white ">
+
+            <div class="flex_row_between marginB10 marginT5">
+                <div class="color_black3 fontSize14"> <span>{{mapdata.studioName}}</span>
+                </div>
+                <div class="">{{mapdata.distance}}km</div>
+            </div>
+            <div class="marginT5 "> <span class="color_999">{{langContent.lx?langContent.lx:''}}：</span> {{mapdata.userName}} </div>
+
+            <div class="marginT5 " @click="copy(mapdata.mobile)">
+                <span class="color_999">{{langContent.sj?langContent.sj:''}}：</span> {{mapdata.mobile}}
+            </div>
+            <div class="marginT5 " @click="copy(mapdata.weChat)">
+                <span class="color_999">{{langContent.wx?langContent.wx:''}}：</span> {{mapdata.weChat}}
+            </div>
+            <div class="marginT5 " @click="copy(mapdata.postbox)">
+                <span class="color_999">{{langContent.yx?langContent.yx:''}}：</span> {{mapdata.postbox}}
+            </div>
+            <div class="marginT5 " @click="copy(mapdata.site)">
+                <span class="color_999">{{langContent.dz?langContent.dz:''}}：</span> {{mapdata.site}}
+            </div>
+        </div>
+
+        <div class=" " style="height: 1rem;"></div>
+
+        <div class=" padding12 fontSize12 bg-white">
+            <div class="flex_row_left marginB10 marginT5 ">
+                <div> <span class="color_999">{{langContent.yysj?langContent.yysj:''}}：</span></div>
+                <div>09:00-12:00 &nbsp;&nbsp;&nbsp;&nbsp; </div>
+                <div>14:00-18:00</div>
+            </div>
+            <div class="marginT5 ">
+                <span class="color_999">{{langContent.mj?langContent.mj:''}}：</span> {{mapdata.area}}㎡
+            </div>
+            <div class="marginT5 ">
+                <span class="color_999">{{langContent.rs?langContent.rs:''}}：</span> {{mapdata.receptionNum}}
+            </div>
+            <div class="marginT5 ">
+                <span class="color_999">{{langContent.nl?langContent.nl:''}}：</span> {{mapdata.capacity}}
+            </div>
+        </div>
+        <div style="height: 8rem;"></div>
+        <div class="btn-fixed btd" @click="onpenNavigation(mapdata)">
+            <div class="buttom_bgimg">
+                {{langContent.go?langContent.go:''}}
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript" src="../../lib/swiper/swiper.min.js"></script>
+<script type="text/javascript">
+    var Bmap_comment = new Vue({
+        el: "#Bmap_comment",
+        data: {
+            mapdata: [],
+            mapdataimg: [],
+            langContent: {},
+            getCodetip: {},
+        },
+        created: function() {
+            var that = this
+            apiready = function() {
+                fixStatusbar('header,.header,.headers', '.content');
+                if (api.deviceModel == 'iPhone10,3' || api.deviceModel == 'iPhone10,6' || api.deviceModel == 'iPhone11,8' || api.deviceModel == 'iPhone11,2' || api.deviceModel == 'iPhone11,6' || api.deviceModel == 'iPhone11,4') {
+                    bottomheight = api.safeArea.bottom + 90;
+                    $api.css($api.dom('.btn'), 'bottom: ' + bottomheight + 'px');
+                }
+                var height = $api.fixStatusBar($api.dom('.header'))
+                if (height > 0) {
+                    $api.css($api.dom('.cont'), 'margin-top:' + (height) + 'px;');
+                }
+                Bmap_comment.$data.langContent = GlobleLanguageContent.Bmap_comment;
+                Bmap_comment.$data.getCodetip = GlobleLanguageContent.getCode;
+                that.mapdataimg = api.pageParam.mapdata.imgdata
+                that.mapdata = api.pageParam.mapdata
+                setTimeout(function() {
+                    new Swiper('#swiper-lifeserve', {
+                        loop: true,
+                        // effect: 'cube',
+                        effect: 'slide',
+                        pagination: {
+                            el: '.swiper-pagination',
+                        },
+                        autoplay: {
+                            delay: 2000,
+                            stopOnLastSlide: false,
+                            disableOnInteraction: false,
+                        },
+                        touchMoveStopPropagation: false,
+                        on: {
+                            touchStart: function(event) {
+                                api.setFrameAttr({
+                                    bounces: false
+                                });
+                                api.removeEventListener({
+                                    name: 'swipeleft'
+                                });
+                            },
+                            touchEnd: function(event) {
+                                api.setFrameAttr({
+                                    bounces: true
+                                });
+                            },
+
+                        },
+
+                    })
+                }, 500);
+
+            }
+        },
+        methods: {
+            // 复制信息
+            copy: function(text) {
+                var that = this;
+                if (text == '') {
+                    return
+                }
+                var clipBoard = api.require('clipBoard');
+                clipBoard.set({
+                    value: text
+                }, function(ret, err) {
+                    if (ret) {
+                        api.toast({
+                            msg: that.langContent.copyStatu,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                        // alert(JSON.stringify(ret));
+                    } else {
+                        // alert(JSON.stringify(err));
+                    }
+                });
+            },
+            // 唤醒地图APP
+            onpenNavigation: function(map_data) {
+                var that = this
+                api.actionSheet({
+                    title: that.langContent.select,
+                    cancelTitle: that.langContent.cancel,
+                    buttons: that.langContent.maps
+                }, function(ret, err) {
+
+                    // 高德地图1
+                    if (ret.buttonIndex == 1) {
+                        if (api.systemType == "ios" || api.systemType == "IOS") {
+                            // // 打开ios
+                            api.openApp({
+                                iosUrl: 'iosamap://navi?sourceApplication=applicationName&backScheme=applicationScheme&poiname=fangheng&poiid=BGVIS&lat=' + map_data.lat + '&lon=' + map_data.lon + '&dev=1&style=2'
+                            }, function(ret, err) {
+                                if (ret) {
+                                    // alert(JSON.stringify(ret))
+                                } else {
+                                    api.toast({
+                                        msg: that.langContent.nogd
+                                    });
+                                }
+                            });
+                        } else {
+                            // 打开安卓
+                            api.openApp({
+                                androidPkg: 'android.intent.action.VIEW',
+                                appParam: {
+                                    lat: map_data.lon,
+                                    lon: map_data.lat,
+                                    dev: '1',
+                                    style: '2',
+                                    sourceApplication: api.appName
+                                },
+                                uri: 'androidamap://navi?sourceApplication=applicationName&backScheme=applicationScheme&poiname=fangheng&poiid=BGVIS&lat=' + map_data.lat + '&lon=' + map_data.lon + '&dev=1&style=2',
+                                iosUrl: 'iosamap://navi?sourceApplication=applicationName&backScheme=applicationScheme&poiname=fangheng&poiid=BGVIS&lat=' + map_data.lat + '&lon=' + map_data.lon + '&dev=1&style=2'
+                            }, function(ret, err) {
+                                if (ret) {
+                                    // alert(JSON.stringify(ret))
+                                } else {
+                                    api.toast({
+                                        msg: that.langContent.nogd
+                                    });
+                                }
+                            })
+                        }
+
+                    }
+
+                    //百度地图2
+                    if (ret.buttonIndex == 2) {
+                        if (api.systemType == "ios" || api.systemType == "IOS") {
+                            // 打开ios
+                            api.openApp({
+                                iosUrl: 'baidumap://map/direction?destination=' + map_data.lat +  ',' + map_data.lon + '&mode=driving&src=osm#Intent;scheme=bdapp;package=com.baidu.BaiduMap;end' 
+                            }, function(ret, err) {
+                                if (ret) {
+                                    // alert(JSON.stringify(ret))
+                                } else {
+                                    api.toast({
+                                        msg: that.langContent.nobd
+                                    });
+                                }
+                            });
+                        } else {
+                            api.openApp({
+                                androidPkg: 'android.intent.action.VIEW',
+                                appParam:  { 
+                                    destination: map_data.lat +  ','  + map_data.lon,
+                                    mode: 'driving',
+                                    src: api.appName
+                                },
+                                mimeType: 'text/html',
+                                uri: 'intent://map/direction?destination=' + map_data.lat  +  ',' + map_data.lon + '&mode=driving&src=osm#Intent;scheme=bdapp;package=com.baidu.BaiduMap;end',
+                                iosUrl: 'baidumap://map/direction?destination='  + map_data.lat + ','  + map_data.lon + '&mode=driving&src=osm#Intent;scheme=bdapp;package=com.baidu.BaiduMap;end' 
+                            },  function(ret,  err)  {
+                                if  (ret)  {
+                                    // alert(JSON.stringify(ret))
+                                } 
+                                else  { 
+                                    api.toast({
+                                        msg: that.langContent.nobd
+                                    });
+                                }
+                            });
+                        }
+
+                    }
+                });
+            }
+        }
+    })
+</script>

@@ -1,0 +1,41 @@
+.feedback{
+	background-color: #250084;
+	background-image: url('../../image/new/h1.jpg');
+	background-repeat: no-repeat;
+	background-size: 100%;
+	color: #ffffff;
+}
+.feedback .content{
+	padding-top: 0.16rem;
+}
+.feedback .content .nav{
+	display: flex;
+	justify-content: space-around;
+	height: 0.4rem;
+	line-height: 0.4rem;
+}
+.feedback .content .nav .active{
+	color: #ffffff;
+	background: #006cff;
+}
+.feedback .content .nav span{
+	width: 1.84rem;
+	height: 0.4rem;
+	line-height: 0.4rem;
+	text-align: center;
+	border-radius: 0.4rem;
+	background: #26057f;
+	display: inline-block;
+}
+.feedback .cont{
+	margin: 0.22rem 0.12rem;
+	min-height: 10rem;
+}
+.feedback .cont .ul .li{
+	border-bottom: 0.01rem solid #370e9f;
+  padding: 0.24rem 0;
+}
+.feedback .cont .ul .title{
+	font-size: 0.32rem;
+  margin-bottom: 0.2rem;
+}

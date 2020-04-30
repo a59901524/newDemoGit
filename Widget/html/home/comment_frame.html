@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>评论</title>
+    <link rel="stylesheet" type="text/css" href="../../lib/iconfont/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <!-- <link rel="stylesheet" type="text/css" href="../../css/music.css" /> -->
+    <style>
+        body,
+        html,
+        #comment_frame {
+            border-radius: 5px 5px 0 0;
+            background: rgba(0, 0, 0, 0)
+        }
+
+        #comment_frame {
+            width: 100vw;
+            height: 100vh;
+            background: #110e24;
+            color: #ffffff;
+        }
+
+        .inputarea {
+            background: #1e1d35;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+
+        .inputarea input {
+            background: #2b2b3e;
+            color: #ffffff;
+            flex: 1;
+            height: 25px;
+            line-height: 25px;
+            text-indent: 15px;
+            border-radius: 25px;
+        }
+
+        .lable {
+            background: #15112c;
+            color: #6e6e6f;
+            margin-left: 12px;
+            height: 35px;
+            line-height: 35px;
+        }
+
+         ::-webkit-input-placeholder {
+            font-size: 14px;
+            color: #6e6e6f;
+        }
+        /* 使用webkit内核的浏览器 */
+
+         :-moz-placeholder {
+            font-size: 14px;
+            color: #6e6e6f;
+        }
+        /* Firefox版本4-18 */
+
+         ::-moz-placeholder {
+            font-size: 14px;
+            color: #6e6e6f;
+        }
+        /* Firefox版本19+ */
+
+         :-ms-input-placeholder {
+            font-size: 14px;
+            color: #6e6e6f;
+        }
+
+        .colorgray {
+            color: #969696;
+        }
+
+        .close {
+            width: 18px;
+            height: 18px;
+        }
+
+        .list {
+            background: #15112c;
+        }
+
+        .userimg {
+            width: 40px;
+            height: 40px;
+            margin: 0 10px 0 0;
+        }
+
+        .userimg2 {
+            width: 20px;
+            height: 20px;
+            margin: 0 10px 0 0;
+        }
+
+        .likeimg {
+            width: 22px;
+            height: 22px;
+        }
+
+        .time {
+            color: #c8c8c8;
+            margin-left: 5px;
+        }
+
+        .heads {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: #110e24;
+        }
+
+        .list {}
+
+        .upicon {
+            width: 15px;
+            height: 15px;
+        }
+    </style>
+</head>
+
+<body class="">
+    <div id="comment_frame">
+        <div class="list">
+            <div v-for="obj in list" class="flex_row_left padding1" style="align-items: flex-start;">
+                <img class="userimg Bc" :src="obj.headImg?obj.headImg:'../../image/logo.png'" alt="" />
+                <div style="flex: 1;">
+                    <div class="colorgray fontSize14">{{obj.nickname}}</div>
+                    <div class="color_white fontSize12 marginT5" v-html='obj.content'>
+                        {{obj.content}}
+                        <span class="time">{{obj.create_time}}</span>
+                    </div>
+                    <div class="padding1" v-show="obj.child_list&&obj.child_list.length>0">
+                        <div v-show="!obj.check">
+                            <div class="flex_row_left">
+                                <img class="userimg2 Bc" :src="obj.child_list[0]&&obj.child_list[0].headImg?obj.child_list[0].headImg:'../../image/logo.png'" alt="" />
+                                <div class="colorgray fontSize14">
+                                    {{obj.child_list[0]&&obj.child_list[0].nickname?obj.child_list[0].nickname:''}}
+                                </div>
+                            </div>
+                            <div class="color_white fontSize12 marginT5">
+                                {{obj.child_list[0]&&obj.child_list[0].content?obj.child_list[0].content:''}}
+                                <span class="time">{{obj.child_list[0]&&obj.child_list[0].create_time?obj.child_list[0].create_time:''}}</span>
+                            </div>
+
+                            <div v-show="obj.child_list&&obj.child_list.length>1" class="flex_row_left colorgray marginT5" @click="showAllCom(obj)">
+                                展开{{obj.child_list&&obj.child_list.length?obj.child_list.length:'0'}}条回复
+                                <img class="upicon" src="../../image/down.png" alt="" />
+                            </div>
+                        </div>
+                        <div v-show="obj.check">
+                            <div v-for="item in obj.child_list">
+                                <div class="flex_row_left">
+                                    <img class="userimg2 Bc" :src="item.headImg?item.headImg:'../../image/logo.png'" alt="" />
+                                    <div class="colorgray fontSize14">{{item.nickname}}</div>
+                                </div>
+                                <div class="color_white fontSize12 marginT5">
+                                    {{item.content}}
+                                    <span class="time">{{item.create_time}}</span>
+                                </div>
+                            </div>
+                            <div class="flex_row_left colorgray marginT5" @click="closeCom(obj)">
+                                收起
+                                <img class="upicon" src="../../image/up.png" alt="" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text_center" style="margin-left: 10px;">
+                    <img @click="addLike(obj)" v-show="obj.is_like==0" class="likeimg" src="../../image/love.png" alt="">
+                    <img @click="addLike(obj)" v-show="obj.is_like==1" class="likeimg" src="../../image/loved.png" alt="">
+                    <div class="colorgray">{{obj.like_count?obj.like_count:'0'}}</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript">
+    var comment_frame = new Vue({
+        el: "#comment_frame",
+        data: {
+            id: '',
+            comment: '',
+            comment_count: 0,
+            list: [],
+        },
+        created: function() {
+            var that = this;
+            apiready = function() {
+                /***********   更新评论数量  **************/
+                api.addEventListener({
+                    name: 'framegetCom'
+                }, function(ret, err) {
+                    if (ret) {
+                        that.getcommet()
+                    }
+                });
+                that.id = api.pageParam.id
+                that.getcommet()
+                    // that.transEmo("")
+            }
+        },
+        methods: {
+            addLike: function(obj) {
+                var that = this;
+                http(likeCommentUrl, 'post', {
+                        comment_id: obj.comment_id
+                    },
+                    function(ret) {
+                        // console.log(JSON.stringify(ret))
+                        if (ret.code == 200) {
+                            obj.is_like = ret.data.is_like
+                            obj.like_count = ret.data.like_count
+                        } else if (ret.code == 403) {
+                            api.sendEvent({
+                                name: 'pause',
+                                extra: {}
+                            });
+                            console.log("TO login.html");
+                            toPage('login', '../auth/login.html');
+                        }
+                        if (ret.msg == '请先实名认证才可以点赞') {
+                            api.openWin({
+                                name: 'personal_data',
+                                url: '../my/personal_data.html',
+                                reload: true,
+                                pageParam: {}
+                            });
+                        }
+                    },
+                    function(err) {
+                        alert(JSON.stringify(err));
+                    });
+            },
+            closeCom: function(obj) {
+                var that = this;
+                obj.check = false
+            },
+            showAllCom: function(obj) {
+                var that = this;
+                obj.check = true
+            },
+            getcommet: function() {
+                var that = this;
+                http(commentListUrl, 'post', {
+                    video_id: that.id
+                }, function(ret) {
+                    console.log(JSON.stringify(ret))
+                    if (ret && ret.code == 200) {
+                        that.comment_count = ret.data.comment_count;
+                        api.sendEvent({
+                            name: 'updatecommentcount',
+                            extra: {
+                                id: api.pageParam.id,
+                                num: that.comment_count
+                            }
+                        });
+
+                        that.list = ret.data.list;
+                        // api.toast({
+                        //     msg: ret.msg,
+                        //     duration: 2000,
+                        //     location: 'bottom'
+                        // });
+                        that.list.forEach(function(element) {
+                            element.check = false;
+                            element.content = JSON.parse(JSON.stringify(that.transEmo(element.content)))
+                                // if()
+                            element.child_list.forEach(function(e) {
+                                e.content = JSON.parse(JSON.stringify(that.transEmo(e.content)))
+
+                            });
+                            element.child_list = JSON.parse(JSON.stringify(element.child_list))
+                        });
+                        that.list = JSON.parse(JSON.stringify(that.list))
+                    } else {
+                        api.toast({
+                            msg: ret.msg,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                    }
+                }, function(err) {});
+            },
+            //文字表情转换
+            transEmo: function(emoMsg) {
+                var that = this
+                var emoPath
+                var transMsg = ''
+                var reg = /\[(.*?)\]/gm;
+                transMsg = emoMsg.replace(reg, function(match) {
+                    for (var i = 0, len = that.emoData.length; i < len; i++) {
+                        if (that.emoData[i].text === match) {
+                            emoPath = '../../res/emotion/' + that.emoData[i].name + '.png';
+                            return '<img style="display:inline-block;width:25px;height:25px" src="' + emoPath + '" />'
+                        }
+                    }
+                    return match;
+                });
+                return transMsg;
+            },
+            close: function() {
+                api.sendEvent({
+                    name: 'CanSwiper',
+                    extra: {}
+                });
+                api.closeFrame({});
+            }
+        }
+    })
+</script>

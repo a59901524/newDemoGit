@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>搜索结果</title>
+    <link rel="stylesheet" type="text/css" href="../../lib/iconfont/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <!-- <link rel="stylesheet" type="text/css" href="../../css/music.css" /> -->
+    <style>
+        #search_frame {
+            width: 100vw;
+            min-height: calc(100vh);
+            color: #cb974d;
+        }
+        
+        .histroy {
+            background: #ffffff;
+            border-bottom: 1px solid #dddddd;
+        }
+        
+        .colorgray {
+            color: #999999;
+        }
+        
+        .friend {
+            margin: auto 15px;
+        }
+        
+        .on {
+            color: white;
+            font-weight: bold;
+            border-bottom: 2px solid #ffffff;
+        }
+        
+        .userimg {
+            width: 50px;
+            height: 50px;
+            margin: 0 10px 0 0;
+        }
+        
+        .userimg2 {
+            width: 35px;
+            height: 35px;
+            margin: 0 10px 0 0;
+        }
+        
+        .info {
+            flex: 1;
+            line-height: 25px;
+        }
+        
+        .flow {
+            color: #cb974d;
+            border: 1px solid #cb974d;
+            height: 20px;
+            width: 55px;
+            text-align: center;
+            line-height: 20px;
+            border-radius: 20px;
+        }
+        
+        .delet {
+            width: 15px;
+            height: 15px;
+        }
+        
+        .userinfo {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="search_frame" v-cloak>
+        <div v-show="type==1">
+            <div class="histroy padding1 flex_row_between" v-for="user in list" @click="toPerson(user.uid)">
+                <img class="userimg Bc" :src="user.avatar?user.avatar:'../../image/logo.png'" alt="" />
+                <div class="info">
+                    <div class="color_black3 fontSize14">{{user.nickname}}</div>
+                    <div class="colorgray fontSize12">ID:{{user.user_sn}} {{langContent.fans?langContent.fans:''}}:{{user.fans_count}}</div>
+                    <div class="colorgray fontSize12">{{user.signature}}</div>
+                </div>
+                <div class="flow" v-show="user.is_focus==0" @click.stop="attention(user)">{{langContent.follow?langContent.follow:''}}</div>
+                <div class="flow" v-show="user.is_focus==1" @click.stop="attention(user)">{{langContent.followed?langContent.followed:''}}</div>
+            </div>
+            <p v-show="isAll&&list.length>0" class="color_gray text_center padding1">{{getCodetip.nomore?getCodetip.nomore:''}}</p>
+            <p v-show="list.length<=0" class="color_gray text_center" style="padding-top:50%;">{{getCodetip.nocontent?getCodetip.nocontent:''}}</p>
+        </div>
+        <div v-show="type==2">
+            <div class="histroy flex_row_between flex_wrap">
+                <div class="posi_relative" style="height: 66.6vw;width: calc(50% - 2px);overflow: hidden;margin: 1px;" v-for="(item, index) in list" :key="index" @click="todetailPage(index)">
+                    <video :class="'v'+index" width="100%" height="100%" style="object-fit: cover;object-position: 50% 50%;" :src="item.video_url" :poster="item.img?item.img:'../../image/loading.gif'" preload="auto"></video>
+                    <div class="userinfo width100">
+                        <div class="color_white fontSize14 padding1 text-overflow_1" style="padding-bottom: 0;">
+                            {{item.title}}</div>
+                        <div class="flex_row_left padding1">
+                            <img class="userimg2 Bc" :src="item.headImg?item.headImg:'../../image/logo.png'" alt="" />
+                            <div class="text-overflow_1 color_white" style="flex: 1;">{{item.nickname}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p v-show="isAll&&list.length>0" class="color_gray text_center padding1">{{getCodetip.nomore?getCodetip.nomore:''}}</p>
+            <p v-show="list.length<=0" class="color_gray text_center" style="padding-top:50%;">{{getCodetip.nocontent?getCodetip.nocontent:''}}</p>
+        </div>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    var search_frame = new Vue({
+        el: "#search_frame",
+        data: {
+            words: '',
+            isShowlist: false,
+            type: 1,
+            v_list: [],
+            page: 1,
+            params: {},
+            list: [],
+            isAll: false,
+            langContent: {},
+            getCodetip: {},
+        },
+        created: function() {
+            var that = this;
+            apiready = function() {
+                fixStatusbar('header,.header,.headers', '.content');
+                search_frame.$data.langContent = GlobleLanguageContent.search;
+                search_frame.$data.getCodetip = GlobleLanguageContent.getCode;
+                that.type = api.pageParam.type
+                if (api.pageParam.type == 1) {
+                    that.getList();
+                } else {
+                    that.getvideoList();
+                }
+                api.addEventListener({
+                    name: 'scrolltobottom',
+                    extra: {
+                        threshold: 5 //设置距离底部多少距离时触发，默认值为0，数字类型
+                    }
+                }, function(ret, err) {
+                    if (api.pageParam.type == 1) {
+                        that.getList('loadMore');
+                    } else {
+                        that.getvideoList('loadMore');
+                    }
+                });
+            }
+        },
+        methods: {
+            attention: function(item) {
+                var that = this;
+                http(focusUrl, 'post', {
+                    focus_id: item.uid
+                }, function(ret) {
+                    if (ret.code == 200) {
+                        api.toast({
+                            msg: ret.msg,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                        item.is_focus = ret.data.is_focus
+                    }
+                }, function(err) {
+                    alert(JSON.stringify(err));
+                });
+            },
+            toPerson: function(id) {
+                var that = this;
+                api.openWin({
+                    name: 'other',
+                    url: '../my/other.html',
+                    bounces: true,
+                    pageParam: {
+                        uid: id
+                    }
+                });
+            },
+            todetailPage: function(index) {
+                var that = this;
+                var newArry = [];
+                newArry = that.list.concat()
+                    // newArry = [...that.list]
+                setTimeout(function() {
+                    if (index > 9) {
+                        var zhengshu = parseInt((index + 1) / 5)
+                        var param_page = Math.ceil((index + 1) / 5) //page根据index向上取整
+                        var param_index = index - ((param_page - 1) * 5) //此时的index为取到的真实
+                        if ((index % 10) == 0) {
+                            newArry.splice(0, ((zhengshu - 1) * 5));
+                            param_index = index - ((param_page - 2) * 5) //此时的index为取到的真实
+                        } else if (((((index + 1) % 5) == 0))) {
+                            newArry.splice(0, ((zhengshu - 1) * 5));
+                        } else {
+                            newArry.splice(0, (zhengshu * 5));
+                        }
+                    } else {
+                        if (newArry.length > 10) {
+                            newArry.slice(0, 10);
+                        } else {}
+                        if (index > 4) {
+                            var param_page = 2
+                        } else {
+                            var param_page = 1
+                        }
+                        var param_index = index
+                    }
+                    api.openWin({
+                        name: 'homevideo_info',
+                        url: '../home/homevideo_info.html',
+                        reload: true,
+                        pageParam: {
+                            from: 'search',
+                            list: newArry,
+                            index: param_index,
+                            page: param_page,
+                            keyword: api.pageParam.words
+                        }
+                    });
+                }, 10);
+
+            },
+            getList: function(act) {
+                var that = this;
+                if (act == 'loadMore') {
+                    that.page++;
+                    that.params = {
+                        page: that.page,
+                        keyword: api.pageParam.words,
+                        limit: 10
+                    }
+                } else {
+                    that.page = 1;
+                    that.params = {
+                        page: 1,
+                        keyword: api.pageParam.words,
+                        limit: 10
+                    }
+                }
+                http(searchUrl, 'post', that.params, function(res) {
+                        if (res.code == 200) {
+                            if (act == 'loadMore') {
+                                that.list = that.list.concat(res.data.user_list);
+                                if (res.data.user_list && res.data.user_list.length == 0) {
+                                    api.removeEventListener({
+                                        name: 'scrolltobottom'
+                                    })
+                                    that.isAll = true;
+                                }
+                            } else {
+                                that.list = res.data.user_list;
+                                if (res.data.user_list && res.data.user_list.length < 10) {
+                                    api.removeEventListener({
+                                        name: 'scrolltobottom'
+                                    })
+                                    that.isAll = true;
+                                }
+                            }
+                        }
+                    },
+                    function(err) {
+                        // alert(JSON.stringify(err));
+                    });
+            },
+            getvideoList: function(act) {
+                var that = this;
+                if (act == 'loadMore') {
+                    that.page++;
+                    that.params = {
+                        page: that.page,
+                        keyword: api.pageParam.words,
+                        limit: 10
+                    }
+                } else {
+                    that.page = 1;
+                    that.params = {
+                        page: 1,
+                        keyword: api.pageParam.words,
+                        limit: 10
+                    }
+                }
+                http(searchUrl, 'post', that.params,
+                    function(res) {
+                        if (res.code == 200) {
+                            if (act == 'loadMore') {
+                                that.list = that.list.concat(res.data.video_list);
+                                if (res.data.video_list && res.data.video_list.length == 0) {
+                                    api.removeEventListener({
+                                        name: 'scrolltobottom'
+                                    })
+                                    that.isAll = true;
+                                }
+                            } else {
+                                that.list = res.data.video_list;
+                                if (res.data.video_list && res.data.video_list.length < 10) {
+                                    api.removeEventListener({
+                                        name: 'scrolltobottom'
+                                    })
+                                    that.isAll = true;
+                                }
+                            }
+                        }
+                    },
+                    function(err) {
+                        // alert(JSON.stringify(err));
+                    });
+            },
+        }
+    })
+</script>

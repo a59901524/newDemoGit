@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>反馈详情</title>
+    <link rel="stylesheet" href="../../lib/vant/vant.css">
+    <link rel="stylesheet" href="../../lib/iconfont2/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <style media="screen">
+        .item {
+            overflow: hidden;
+            height: auto;
+            padding: 0 0 20px 0;
+        }
+        
+        .my {
+            height: 40px;
+            width: 40px;
+            border-radius: 50%;
+            background: #4dbfbe;
+            overflow: hidden;
+            text-align: center;
+            line-height: 40px;
+            margin: 0 10px;
+        }
+        
+        .time {
+            /* font-size: 0.9rem; */
+            flex: 1;
+            line-height: 25px;
+        }
+        
+        .desc {
+            line-height: 2.3rem;
+            /* margin-top: 0.5rem; */
+            padding: 0.5rem 0;
+        }
+        
+        .look {
+            border-top: 1px solid #545454;
+            line-height: 40px;
+            padding-top: 0.5rem;
+            color: #ca7748;
+        }
+        
+        .flex_row_between {
+            align-items: flex-start;
+        }
+        
+        .xian {
+            border-left: 1px solid #dddddd;
+            position: absolute;
+            left: 30px;
+            top: 40px;
+            bottom: 0;
+            z-index: 0;
+        }
+        
+        .item:last-child .xian {
+            display: none;
+        }
+        
+        .backimg {
+            width: 24.2vw;
+            height: 24.2vw;
+            margin: 5px;
+        }
+        
+        .fixbtn {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            height: 80px;
+        }
+        
+        .btn {
+            height: 40px;
+            color: #48c3dd;
+            border: 1px solid #48c3dd;
+            width: 40%;
+            line-height: 40px;
+            white-space: nowrap;
+            text-align: center;
+        }
+        
+        .on {
+            background: #48c3dd;
+            color: #ffffff;
+        }
+        
+        .item:nth-last-child(1) .xian {
+            display: none;
+        }
+    </style>
+</head>
+
+<body class="color_default1">
+    <div id="feeddetail" class="content" v-cloak>
+        <header class="header ">
+            <i class="iconfont icon-xiangzuo" onclick="goBack()"></i>
+            <div>{{item.type_id==1?langContent.title1:langContent.title2}}</div>
+        </header>
+        <van-pull-refresh id="getInfo" v-model="downLoading" @refresh="getInfo" :pulling-text="getCodetip.vant_pulling" :loosing-text="getCodetip.vant_loosing" :loading-text="getCodetip.vant_loading">
+            <van-list class="list" v-model="upLoading" :finished="finished" :finished-text="getCodetip.vantlistfinished" @load="getInfo" :immediate-check="false">
+                <div class="padding1">
+                    <div class="flex_row_between item posi_relative">
+                        <div class="flex_col_between height100">
+                            <div class="my fontSize16 color_white">{{langContent.me?langContent.me:''}}</div>
+                            <div class="xian"></div>
+                        </div>
+                        <div class="time fontSize14">
+                            <div>{{item.content?item.content:''}}
+                            </div>
+                            <div v-show="item.feed_img&&item.feed_img.length>0" class="flex_row_left flex_wrap">
+                                <img v-for="(img,index) in item.feed_img" @click="fnOpenImg(index,item.feed_img)" class="backimg" :src="img?img:'../../image/applogo.png'" alt="">
+                            </div>
+                            <div class="fontSize12 color_gray flex_row_left">
+                                <img style="height: 15px;width:auto;margin-right: 5px;" src="../../image/feedtime.png" alt=""> {{item.create_time?changeDate(item.create_time):""}}
+                            </div>
+                        </div>
+                    </div>
+                    <div v-for="obj in list" class="flex_row_between item posi_relative">
+                        <div class="flex_col_between height100">
+                            <div v-if="obj.uid!=0" class="my fontSize16 color_white">{{langContent.me?langContent.me:''}}</div>
+                            <div v-if="obj.uid==0" class="my fontSize16 color_white">
+                                <img src="../../image/applogo.png" alt="">
+                            </div>
+                            <div class="xian"></div>
+                        </div>
+                        <div class="time fontSize14">
+                            <div>{{obj.reply_content?obj.reply_content:''}}
+                            </div>
+                            <div class="flex_row_left flex_wrap">
+                                <img v-for="(img,index) in obj.reply_img" @click="fnOpenImg(index,obj.reply_img)" class="backimg" :src="img?img:'../../image/applogo.png'" alt="">
+                            </div>
+                            <div class="fontSize12 color_gray flex_row_left">
+                                <img style="height: 15px;width:auto;margin-right: 5px;" src="../../image/feedtime.png" alt=""> {{obj.create_time?changeDate(obj.create_time):""}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </van-list>
+        </van-pull-refresh>
+        <div class="padding1 text_center fontSize16" v-if="item.type_id==1">{{langContent.sta?langContent.sta:''}}
+            <span v-show="item.act_status==0">{{langContent.sta1?langContent.sta1:''}}</span>
+            <span v-show="item.act_status==1">{{langContent.sta2?langContent.sta2:''}}</span>
+            <span v-show="item.act_status==2">{{langContent.sta3?langContent.sta:''}}</span>
+            <span v-show="item.act_status==3">{{langContent.sta4?langContent.sta4:''}}</span>
+        </div>
+        <div class="zhanwei" style="height: 90px"></div>
+        <div class="fixbtn flex_row_around bg_white">
+            <div v-if="item.status==0" class="btn">{{langContent.closed?langContent.closed:''}}</div>
+            <div v-if="item.status>0" @click="closeOrder()" class="btn">{{langContent.close?langContent.close:''}}</div>
+            <div v-if="item.status>0" class="btn on" @click="tofeeddetailPage('feedback','feedback.html',{from:'continuefeed',id:item.id})">{{langContent.continu?langContent.continu:''}}</div>
+        </div>
+    </div>
+
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../lib/vant/vant.min.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    var feeddetail = new Vue({
+        el: "#feeddetail",
+        data: {
+            list: [],
+            item: {},
+            downLoading: false,
+            upLoading: false,
+            finished: false,
+            page: 1,
+            langContent: {},
+            getCodetip: {}
+        },
+        created: function() {
+            var that = this;
+            apiready = function() {
+                fixStatusbar('header,.header,.headers', '.content');
+                var height = $api.fixStatusBar(document.querySelector('header'));
+                var minheight = api.winHeight - height;
+                $api.css($api.dom('#feeddetail'), 'min-height:' + minheight + 'px');
+                feeddetail.$data.langContent = GlobleLanguageContent.feeddetail;
+                feeddetail.$data.getCodetip = GlobleLanguageContent.getCode;
+                that.item = api.pageParam.item;
+                that.getInfo()
+            }
+
+        },
+        methods: {
+            changeDate: function(datetimes) {
+                var needdate = new Date(datetimes * 1000);
+                Y = needdate.getFullYear() + '-';
+                M = (needdate.getMonth() + 1 < 10 ? '0' + (needdate.getMonth() + 1) : needdate.getMonth() + 1) + '-';
+                D = needdate.getDate() + ' ';
+                h = (needdate.getHours() < 10 ? '0' + needdate.getHours() : needdate.getHours()) + ':';
+                m = (needdate.getMinutes() < 10 ? '0' + needdate.getMinutes() : needdate.getMinutes());
+                //      年 月 日 时 分 秒
+                return Y + M + D + h + m;
+            },
+            closeOrder: function() {
+                var that = this;
+                http(closefeedbackUrl, 'post', {
+                    id: api.pageParam.item.id,
+                }, function(res) {
+                    if (res.code == 200) {
+                        api.toast({
+                            msg: that.langContent.sucess,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                        api.execScript({
+                            name: 'feedlist',
+                            script: 'feedlist.getInfo()'
+                        });
+                        that.item.status = 0
+                    }
+                }, function(err) {})
+            },
+            tofeeddetailPage: function(name, url, params) {
+                api.openWin({
+                    name: name,
+                    url: url,
+                    reload: true,
+                    pageParam: params || {}
+                });
+            },
+            fnOpenImg: function(i, imgs) {
+                var UIPhotoViewer = api.require('UIPhotoViewer');
+                UIPhotoViewer.open({
+                    images: imgs,
+                    placeholderImg: 'widget://image/loading_more.gif',
+                    bgColor: '#000'
+                }, function(ret, err) {
+                    if (ret) {
+                        if (ret.eventType == 'click') {
+                            UIPhotoViewer.close()
+                        }
+                    } else {}
+                });
+                UIPhotoViewer.setIndex({
+                    index: i
+                });
+            },
+            getInfo: function() {
+                var that = this;
+                if (that.upLoading) { //上拉加载
+                    that.page++;
+                } else {
+                    that.page = 1; //刷新
+                    that.finished = true;
+                }
+                http(getreplylistUrl, 'post', {
+                    feedback_id: api.pageParam.item.id,
+                    page: that.page
+                }, function(res) {
+                    if (res.code == 200) {
+                        if (that.upLoading) {
+                            that.list = that.list.concat(res.data.data);
+                            that.upLoading = false;
+                        } else {
+                            that.list = res.data.data;
+                            that.downLoading = false;
+                            that.finished = false;
+                            api.execScript({
+                                name: 'feedlist',
+                                script: 'feedlist.getInfo()'
+                            });
+                        }
+                        if (res.data && res.data.data && res.data.data.length < 10) {
+                            that.finished = true;
+                        }
+                    }
+                }, function(err) {
+
+                })
+            }
+        }
+    })
+</script>

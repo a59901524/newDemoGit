@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <title>购买HDC</title>
+    <link rel="stylesheet" href="../../lib/iconfont/iconfont.css">
+    <link rel="stylesheet" href="../../css/common.css">
+    <style>
+        html,
+        body {
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        input::placeholder {
+            font-size: 14px;
+            color: #666666;
+        }
+
+        #op_sell_JXA {
+            width: 100%;
+            min-height: 100%;
+        }
+
+        .item input {
+            -webkit-apprarance: none;
+            -webkit-tap-highlight-color: transparent;
+            width: calc(100% - 1.4rem);
+            padding: .8rem;
+            border: 1px solid #dddddd;
+            border-radius: .3rem;
+            -webkit-appearance: none;
+            color: #333333;
+        }
+
+        input[disabled] {
+            color: #333333 !important;
+            opacity: 1;
+        }
+
+        .sell_JXA {
+            padding: .6rem;
+            border: 1px solid #dddddd;
+            border-radius: .3rem;
+        }
+        /* 选着付款方式 */
+
+        .black_overlay1 {
+            position: fixed;
+            top: 0%;
+            left: 0%;
+            width: 100%;
+            height: 100%;
+            background: rgba(191, 191, 191, .5);
+            z-index: 1001;
+        }
+
+        .marginL1 {
+            margin-left: .5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="op_buylimit" class="flex_col_center color_black6 padding1" style="height: 100%;" v-cloak>
+        <div class="padding12 width100">
+            <div class="  bg-white bbd fontSize16 padding1" style="border-top-left-radius: 1rem;border-top-right-radius: 1rem">
+                <div class="text_center" style="margin: 0 auto;">买入HDC</div>
+            </div>
+            <div class="bg-white padding12 fontSize14 item " style="border-bottom-left-radius: 1rem;border-bottom-right-radius: 1rem">
+                <div>购买数量：</div>
+                <input class="marginT5 " type="tel" placeholder="0" v-model="num">
+                <div class="marginT5">购买单价($)：</div>
+                <input class="marginT5 " type="number" placeholder="" v-model="unit_price" disabled>
+                <div class="marginT5">
+                    交易方式： <!-- 交易方式 -->
+                </div>
+                <div class="flex_row_between marginT5  sell_JXA" @click="isShow=true">
+                    <div>{{title}}</div>
+                    <i class="iconfont iconjiantou-xia color_default1" @click="isShow=true"></i>
+                </div>
+                <div class="marginT5">交易密码</div>
+                <!-- <input class="marginT5 " type="password" placeholder="" v-model="pwd"> -->
+                <input class="marginT5 " type="password" :placeholder="langContent.psw_input" v-model="pwd">
+                <div class=" fontSize14 padding12_top">
+                    <p> <span style="color: red;">{{langContent.tip1?langContent.tip1:''}}：</span>{{langContent.tip2?langContent.tip2:''}}</p>
+                    <p class="padding12_top"> {{langContent.tip3?langContent.tip3:''}}</p>
+                    <!-- 注:买方购买绿果不需要支付手续费 -->
+                </div>
+                <div class="flex_row_between marginT2">
+                    <div class=" submit_style" @click="submit">
+                        确认
+                    </div>
+                    <div class=" cancel_style mt" @click="cancel">
+                        取消
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="black_overlay1 flex_row_center " v-if="isShow">
+            <div class=" Brd1 bg-white" style="width: 75%;padding: 2rem 1rem;font-size: 18px">
+                <div class="flex_row_left" @click="changePay(langContent.wx)">
+                    <i class="iconfont icondanxuanxuanzhong color_default1" v-if="title=='微信'||title=='WeChat'"></i>
+                    <i class="iconfont icondanxuanweixuanzhong color_default1" v-if="title!='微信'&&title!='WeChat'"></i>
+                    <div class="marginL1">{{langContent.wx?langContent.wx:''}}</div>
+                </div>
+                <div class="flex_row_left marginT1" @click="changePay(langContent.zfb)">
+                    <i class="iconfont icondanxuanxuanzhong color_default1" v-if="title=='支付宝'||title=='Alipay'"></i>
+                    <i class="iconfont icondanxuanweixuanzhong color_default1" v-if="title!='支付宝'&&title!='Alipay'"></i>
+                    <div class="marginL1">{{langContent.zfb?langContent.zfb:''}}</div>
+                </div>
+                <div v-if="default_sort != '86'" class="flex_row_left marginT1" @click="changePay(langContent.ytf)">
+                    <i class="iconfont icondanxuanxuanzhong color_default1" v-if="title=='以太坊'||title=='Ethereum'"></i>
+                    <i class="iconfont icondanxuanweixuanzhong color_default1" v-if="title!='以太坊'&&title!='Ethereum'"></i>
+                    <div class="marginL1">{{langContent.ytf?langContent.ytf:''}}</div>
+                </div>
+                <div class="flex_row_left marginT1" @click="changePay(langContent.yhk)">
+                    <i class="iconfont icondanxuanxuanzhong color_default1" v-if="title=='银行卡'||title=='Bank Card'"></i>
+                    <i class="iconfont icondanxuanweixuanzhong color_default1" v-if="title!='银行卡'&&title!='Bank Card'"></i>
+                    <div class="marginL1">{{langContent.yhk?langContent.yhk:''}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    var op_buylimit = new Vue({
+        el: "#op_buylimit",
+        data: {
+            isShow: false,
+            title: '微信',
+            unit_price: '',
+            num: '',
+            check: 1,
+            pwd: '',
+            langContent: {},
+            getCodetip: {},
+            flag: true,
+            default_sort: ''
+
+        },
+        created: function() {
+            var that = this
+            apiready = function() {
+                op_buylimit.$data.langContent = GlobleLanguageContent.op_buylimit;
+                op_buylimit.$data.getCodetip = GlobleLanguageContent.getCode;
+                that.title = op_buylimit.$data.langContent.wx
+                that.getinfo();
+            }
+        },
+        methods: {
+            getinfo: function() {
+                var that = this
+                http(getJyzxUrl, 'post', {}, function(ret) {
+                    if (ret.code == 200) {
+                        that.unit_price = ret.data.trade_yjl_today_price;
+                    }
+                })
+                http(getuserinfoUrl, 'post', {}, function(ret) {
+                    if (ret.code == 200) {
+                        // 获取用户区号
+                        that.default_sort = ret.data.area_code
+                        if (ret.data.area_code != '86') {
+                            that.title = that.langContent.ytf
+                        }
+                    }
+                })
+            },
+            cancel: function() {
+                api.closeFrame({
+                    name: 'op_buylimit'
+                });
+            },
+            changePay: function(title) {
+                this.isShow = !this.isShow;
+                this.title = title;
+                if (title == '银行卡' || title == 'Bank Card') {
+                    this.check = 4;
+                } else if (title == '支付宝' || title == 'Alipay') {
+                    this.check = 2;
+                } else if (title == '微信' || title == 'WeChat') {
+                    this.check = 1;
+                } else if (title == '以太坊' || title == 'Ethereum') {
+                    this.check = 3;
+                }
+            },
+            toPage: function(name, url, params) {
+                api.openWin({
+                    name: name,
+                    url: url,
+                    reload: true,
+                    pageParam: params || {}
+                });
+            },
+            submit: function() {
+                var that = this
+                var reg = /^[1-9]?[0-9]*\.[0-9]*$/; //任务数量控制整数
+                if (!that.num) {
+                    api.toast({
+                        msg: that.langContent.nonum,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return
+                }
+                if (!that.unit_price) {
+                    api.toast({
+                        msg: that.langContent.noprice,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return
+                }
+                if (reg.test(that.num) == true) {
+                    api.toast({
+                        msg: that.langContent.noinit,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return
+                }
+
+                var param = {
+                    num: that.num,
+                    password: that.pwd,
+                    pay_type: that.check,
+                }
+
+                if (that.flag) {
+                    that.flag = false
+                    http(putOrderUrl, 'post', param, function(ret) {
+                        that.flag = true
+                        if (ret.code == 200) {
+                            api.toast({
+                                msg: ret.msg,
+                                duration: 2000,
+                                location: 'bottom'
+                            });
+                            api.execScript({
+                                name: 'root',
+                                frameName: 'frame3',
+                                script: 'frame3.getHeader()'
+                            });
+                            setTimeout(function() {
+                                api.closeFrame()
+                            }, 2000);
+                            that.flag = true
+                        } else if (ret.code == 405) {
+                            api.toast({
+                                msg: ret.msg,
+                                duration: 2000,
+                                location: 'bottom'
+                            });
+                            setTimeout(function() {
+                                api.openWin({
+                                    name: 'personal_data',
+                                    url: '../my/personal_data.html',
+                                    reload: true,
+                                    pageParam: {}
+                                });
+                                that.cancel();
+                            }, 1999);
+                        }
+                    })
+                } else {
+                    api.toast({
+                        msg: that.getCodetip.submit_tips,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+
+            }
+        }
+    })
+</script>

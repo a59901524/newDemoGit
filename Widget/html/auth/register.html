@@ -1,0 +1,321 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>注册</title>
+    <link rel="stylesheet" type="text/css" href="../../css/new/reset.css">
+    <link rel="stylesheet" type="text/css" href="../../lib/vant/vant.css" />
+    <link rel="stylesheet" type="text/css" href="../../lib/iconfont2/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/new/register.css">
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <script src="../../script/lib-flexible.js"></script>
+</head>
+
+<body class="register">
+    <div id="register">
+        <header>
+            <div class="left" onclick="goBack()"><img src="../../image/new/back.png" alt=""></div>
+            <div class="center fontSize35">注册</div>
+        </header>
+        <!-- <div class="h88"></div> -->
+        <div class="contarin">
+            <div class="ul">
+                <div class="li phone">
+                    <input type="tel" v-model="mobile" placeholder="输入手机号" />
+                </div>
+                <div class="li pic">
+                    <input type="text" class="picRight" v-model="thumb" placeholder="请输入右侧图片中的数字" />
+                    <span @click="updateImg"><img :src="Imgs" alt=""></span>
+                </div>
+                <div class="li tel">
+                    <input type="text" class="picRight" v-model="code" placeholder="短信验证码" />
+                    <span class="colff8900" @click="getCode">{{verifyCodeTips}}</span>
+                    <!-- <span v-show="!showCode" class="colcccccc">22s</span> -->
+                </div>
+                <div class="li ps">
+                    <input type="password" v-model="password" placeholder="设置登录密码，6-20位数字、字母或字符" />
+                </div>
+                <div class="li confirmPs">
+                    <input type="password" v-model="jypsw" placeholder="确认登录密码" />
+                </div>
+                <div class="li code">
+                    <input type="text" v-model="number" placeholder="输入邀请码，必填" />
+                </div>
+                <div class="agree">
+                    <van-checkbox v-model="checked" shape="square">我已阅读并同意<span class="col1d93eb" onclick="toPage('userAgreement', '../my/user_agreement.html')">《用户注册及网站服务协议》</span></van-checkbox>
+                </div>
+                <div class="btn" @click="register()">
+                    立即注册
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script src="../../lib/vant/vant.min.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+    var register = new Vue({
+        el: '#register',
+        data: {
+            mobile: '',
+            code: '',
+            password: '',
+            repwd: '',
+            jypsw: '',
+            rejypwd: '',
+            number: '',
+            area_code: 86,
+            countdown: 60,
+            verifyCodeTips: '',
+            codeEnable: true,
+            Imgs: '',
+            thumb: '',
+            type: '',
+            unionid: '',
+            machine_code: '',
+            flag: true,
+            checked: true,
+            getCodetip: {},
+            langContent: {},
+            columns: [],
+            showPicker: false,
+            quhaolist: [],
+            area_code_name: ''
+        },
+        created: function() {
+            var that = this;
+            apiready = function() {
+                fixStatusbar('header,.header,.headers', '.content');
+                // console.log(api.pageParam)
+                that.machine_code = api.deviceId;
+                if (api.pageParam.type) {
+                    that.type = api.pageParam.type
+                    that.unionid = api.pageParam.unionid
+                }
+                // if ($api.getStorage('area_code')) {
+                //     that.area_code = $api.getStorage('area_code')
+                //         // if (that.area_code == '86') {
+                //         //     $api.setStorage('multiLang', 'cn');
+                //         // } else {
+                //         //     $api.setStorage('multiLang', 'en');
+                //         // }
+                //         // setLang()
+                // }
+                that.getQUnum()
+                that.updateImg()
+                register.$data.getCodetip = GlobleLanguageContent.getCode;
+                register.$data.langContent = GlobleLanguageContent.register;
+                that.verifyCodeTips = that.getCodetip.get;
+            }
+        },
+        methods: {
+            onConfirm: function(value, index) {
+                var that = this;
+                that.area_code = that.quhaolist[index].area_code;
+                that.area_code_name = that.quhaolist[index].area_code + ' (' + that.quhaolist[index].name + ')' + ' (' + that.quhaolist[index].name_en + ')';
+                $api.setStorage('area_code', that.area_code);
+                api.execScript({
+                    name: 'login',
+                    script: 'login.getAreacode()'
+                });
+                // if (that.area_code == '86') {
+                //     $api.setStorage('multiLang', 'cn');
+                // } else {
+                //     $api.setStorage('multiLang', 'en');
+                // }
+                // setLang();
+                // setTimeout(function() {
+                //     register.$data.getCodetip = GlobleLanguageContent.getCode;
+                //     register.$data.langContent = GlobleLanguageContent.register;
+                //     that.verifyCodeTips = that.getCodetip.get;
+                // }, 10);
+                that.showPicker = false;
+            },
+            onCancel: function() {
+                var that = this;
+                that.showPicker = false;
+            },
+            getQUnum: function() {
+				return;
+				/*
+                var that = this;
+                http(getQuhao, 'post', {}, function(ret) {
+                    // console.error(JSON.stringify(ret))
+                    if (ret && ret.code == 200) {
+                        that.quhaolist = ret.data.info;
+                        that.quhaolist.forEach(function(element) {
+                            that.columns.push(element.area_code + ' ' + element.name + '(' + element.name_en + ')')
+                        });
+                    } else {
+                        api.toast({
+                            msg: ret.msg,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                    }
+                }, function(err) {});*/
+            },
+            getCode: function() {
+                var that = this;
+                if (this.codeEnable) {
+                    if (that.area_code == 86) {
+                        if (/^1[1-9]\d{9}$/.test(this.mobile)) {} else {
+                            api.toast({
+                                msg: that.getCodetip.phonetip,
+                                duration: 2000,
+                                location: 'bottom'
+                            });
+                            return;
+                        }
+                    }
+                    // if (/^1[3-9]\d{9}$/.test(this.mobile)) {
+                    if (this.mobile && this.mobile != '') {
+                        this.getCodeFromServer();
+                    } else {
+                        api.toast({
+                            msg: that.getCodetip.phonetip,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                    }
+                } else {
+                    api.toast({
+                        msg: that.getCodetip.timetip,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+            },
+            settime: function() {
+                var that = this
+                if (that.countdown == 1) {
+                    that.countdown = 60;
+                    // that.verifyCodeTips = "获取验证码";
+                    that.verifyCodeTips = that.getCodetip.get;
+                    that.codeEnable = true;
+                    return;
+                } else {
+                    that.countdown--;
+                    that.verifyCodeTips = that.getCodetip.reget + "(" + that.countdown + ")";
+                }
+                setTimeout(function() {
+                    that.settime();
+                }, 1000)
+            },
+            getCodeFromServer: function() {
+                var that = this;
+                var param = {
+                    mobile: register.mobile,
+                    captcha: register.thumb,
+                    area_code: that.area_code
+                }
+                http(sendMsgUrl, 'post', param, function(ret) {
+                    // console.log(JSON.stringify(ret))
+                    if (ret && ret.code == 200) {
+                        api.toast({
+                            msg: ret.msg,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                        //发送验证码成功后开始倒计时
+                        that.codeEnable = false;
+                        that.settime();
+                    } else {
+                        api.toast({
+                            msg: ret.message,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                    }
+                }, function(err) {
+                    alert(err);
+                });
+            },
+            register: function() {
+                var that = this
+                var url
+                if (this.password) {
+                    if (this.password.length > 5) {
+                        if (this.jypsw.length > 5) {
+                            var param = {
+                                mobile: that.mobile,
+                                user_sn: that.number,
+                                password: that.password,
+                                reset_password: that.password,
+                                area_code: that.area_code,
+                                pay_password: that.jypsw,
+                                reset_pay_password: that.jypsw,
+                                sms_code: that.code,
+                                machine_code: that.machine_code
+                            };
+                            if (that.flag) {
+                                that.flag = false;
+                                http(registerUrl, 'post', param, function(ret) {
+                                    that.flag = true;
+                                    if (ret && ret.code == 200) {
+                                        api.toast({
+                                            msg: ret.msg,
+                                            duration: 2000,
+                                            location: 'bottom'
+                                        });
+                                        setTimeout(function() {
+                                            api.closeWin();
+                                        }, 2000);
+                                    } else {
+                                        api.toast({
+                                            msg: ret.msg,
+                                            duration: 2000,
+                                            location: 'bottom'
+                                        });
+                                    }
+                                }, function(err) {});
+                            } else {
+                                api.toast({
+                                    msg: that.getCodetip.registerwait,
+                                    duration: 2000,
+                                    location: 'bottom'
+                                });
+                            }
+                        } else {
+                            api.toast({
+                                msg: that.getCodetip.leasttrapsw,
+                                duration: 2000,
+                                location: 'bottom'
+                            });
+                        }
+                    } else {
+                        api.toast({
+                            msg: that.getCodetip.leastpsw,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                    }
+                } else {
+                    api.toast({
+                        msg: that.getCodetip.pswtip,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+            },
+            toAgreement: function() {
+                toPage('agreement', '../../html/my/agreement.html', {});
+            },
+            updateImg: function() {
+                this.Imgs = baseUrl + 'base/captcha?time=' + new Date().getTime()
+            }
+        }
+    });
+</script>

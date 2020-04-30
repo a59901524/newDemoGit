@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>帮助中心</title>
+    <link rel="stylesheet" href="../../lib/vant/vant.css">
+    <link rel="stylesheet" href="../../lib/iconfont2/iconfont.css">
+    <link rel="stylesheet" href="../../css/common.css">
+    <style>
+
+    </style>
+</head>
+
+<body class="has_header color_default1">
+    <div id="incentive_system" v-cloak>
+        <header class="header bbd">
+            <i class="iconfont icon-xiangzuo" onclick="goBack()"></i>
+            <div>{{langContent.bzzx?langContent.bzzx:''}}</div>
+        </header>
+        <!-- <div class='cont padding12' v-html='info.award_text'>
+
+        </div> -->
+        <div class="cont">
+            <van-pull-refresh id="getInfo" v-model="downLoading" @refresh="getInfo" :pulling-text="getCodetip.vant_pulling" :loosing-text="getCodetip.vant_loosing" :loading-text="getCodetip.vant_loading">
+                <van-list class="" v-model="upLoading" :finished="finished" :finished-text="getCodetip.vantlistfinished" @load="getInfo" :immediate-check="false">
+
+                    <div class="bg_white flex_row_between  bbd" v-for="item in list" @click="toPage('about_us','about_us.html',{title:langContent.bzxq,id:item.id})">
+                        <div class="padding12">
+                            <div class="color_default1 fontSize14">
+                                {{getCodetip.language_id==1?item.title:item.title_en}}
+                            </div>
+                            <div class="color_gray fontSize12 marginT1">
+                                {{item.create_time}}
+                            </div>
+                        </div>
+                    </div>
+                </van-list>
+            </van-pull-refresh>
+        </div>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../lib/vant/vant.min.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    var incentive_system = new Vue({
+        el: "#incentive_system",
+        data: {
+            info: '',
+            list: [],
+            langContent: {},
+            getCodetip: {},
+            page: 1,
+            downLoading: false,
+            upLoading: false,
+            finished: false,
+        },
+        created: function() {
+            var that = this
+            apiready = function() {
+                var height = $api.fixStatusBar($api.dom('.header'))
+                if (height > 0) {
+                    $api.css($api.dom('.cont'), 'margin-top:' + (height - 45) + 'px;');
+                }
+                incentive_system.$data.langContent = GlobleLanguageContent.frame4;
+                incentive_system.$data.getCodetip = GlobleLanguageContent.getCode;
+                that.getInfo()
+            }
+        },
+        methods: {
+            changeDate: function(datetimes) {
+                var needdate = new Date(datetimes * 1000);
+                Y = needdate.getFullYear() + '/';
+                M = (needdate.getMonth() + 1 < 10 ? '0' + (needdate.getMonth() + 1) : needdate.getMonth() + 1) + '/';
+                D = needdate.getDate() + ' ';
+                h = (needdate.getHours() < 10 ? '0' + needdate.getHours() : needdate.getHours()) + ':';
+                m = (needdate.getMinutes() < 10 ? '0' + needdate.getMinutes() : needdate.getMinutes()) + ':';
+                s = (needdate.getSeconds() < 10 ? '0' + needdate.getSeconds() : needdate.getSeconds());
+                //      年 月 日 时 分 秒
+                return Y + M + D + h + m + s;
+            },
+            toPage: function(name, url, params) {
+                api.openWin({
+                    name: name,
+                    url: url,
+                    reload: true,
+                    pageParam: params || {}
+                });
+            },
+            getInfo: function() {
+                    var that = this;
+                    if (that.upLoading) { //上拉加载
+                        that.page++;
+                        var param = {
+                            page: that.page,
+                            pid: 7
+                        }
+                    } else {
+                        that.page = 1; //刷新
+                        that.finished = true;
+                        var param = {
+                            page: 1,
+                            pid: 7
+                        }
+                    }
+                    http(helplistUrl, 'post', param, function(ret) {
+                        if (ret.code == 200) {
+                            if (that.upLoading) {
+                                that.list = that.list.concat(ret.data.data);
+                                that.upLoading = false;
+                            } else {
+                                that.list = ret.data.data;
+                                that.downLoading = false;
+                                that.finished = false;
+                            }
+                            if (ret.data && ret.data.data && ret.data.data.length < 8) {
+                                that.finished = true;
+                            }
+                        }
+                    })
+                }
+                // getInfo: function() {
+                //     var that = this;
+                //     http(aboutUsUrl, 'post', {}, function(res) {
+                //         if (res.code == 200) {
+                //             that.info = res.data;
+                //         }
+                //     }, function(err) {})
+                // },
+        }
+    })
+</script>

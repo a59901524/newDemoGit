@@ -1,0 +1,33 @@
+.addWxCode{
+	color: #ffffff;
+}
+.addWxCode .content2{
+	margin: 0.16rem 0.12rem 0;
+	background-color: rgba(37, 0, 115, 0.5);
+	border-radius: 0.12rem;
+	padding: 0.12rem 0.2rem;
+	min-height: 4.2rem;
+	font-size: 0.25rem;
+	position: relative;
+}
+.addWxCode .addImg:before{
+	content: '';
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	background: url('../../image/new/add.png') no-repeat;
+	background-size: 100% 100%;
+	width: 1.5rem;
+	height: 1.5rem;
+	transform: translate(-50%, -50%);
+}
+.addWxCode .btn{
+	height: 0.68rem;
+	line-height: 0.68rem;
+	text-align: center;
+	color: #0f56e3;
+	border-radius: 0.12rem;
+	font-size: 0.28rem;
+	background-image: linear-gradient(#1fe2ff, #007ff7);
+	margin: 0.7rem 0.2rem;
+}

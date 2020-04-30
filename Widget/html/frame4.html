@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>个人中心</title>
+    <link rel="stylesheet" type="text/css" href="../css/new/reset.css">
+    <link rel="stylesheet" type="text/css" href="../lib/vant/vant.css" />
+    <link rel="stylesheet" type="text/css" href="../lib/iconfont2/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../css/new/personal.css">
+    <script src="../script/lib-flexible.js"></script>
+</head>
+
+<body class="personal">
+  <div id="frame4" class="contarin">
+      <header>
+          <div class="center fontSize35">个人中心</div>
+      </header>
+      <div class="h88"></div>
+      <div class="top">
+          <div class="topLeft">
+              <div class="img fl" onclick="toPage('personal_data','my/personal_data.html')"><img :src="info.avatar||'../image/logo.png'" alt=""></div>
+              <div class="title fl">
+                  <div class="phone">{{info.mobile}}</div>
+                  <div class="cont">
+                    <span v-show="info.level_id==1">{{langContent.level1?langContent.level1:''}}</span>
+                    <span v-show="info.level_id==2">{{langContent.level2?langContent.level2:''}}</span>
+                    <span v-show="info.level_id==3">{{langContent.level3?langContent.level3:''}}</span>
+                    <span v-show="info.level_id==4">{{langContent.level4?langContent.level4:''}}</span>
+                    <span v-show="info.level_id==5">{{langContent.level5?langContent.level5:''}}</span>
+                    邀请码：{{info.user_sn}}
+                  </div>
+              </div>
+          </div>
+          <div class="topRight">
+              <img @click="qiandao" src="../image/new/qd.png" alt="">签到
+          </div>
+      </div>
+      <div class="nav">
+          <div class="navLi">
+              <div class="fontSize30 col00fbfd">{{fixTwo(info.world_use_money)?fixTwo(info.world_use_money):'0'}}</div>
+              <div class="name fontSize26">可用YS</div>
+          </div>
+          <div class="navLi">
+              <div class="fontSize30 col00fbfd">{{fixTwo(info.world_money)?fixTwo(info.world_money):'0'}}</div>
+              <div class="name fontSize26">YS</div>
+          </div>
+          <div class="navLi">
+              <div class="fontSize30 col00fbfd">{{fixTwo(info.user_money)?fixTwo(info.user_money):'0'}}</div>
+              <div class="name fontSize26">HDC</div>
+          </div>
+          <div class="navLi">
+              <div class="fontSize30 col00fbfd">{{fixTwo(info.candy_money)?fixTwo(info.candy_money):'0'}}</div>
+              <div class="name fontSize26">HD</div>
+          </div>
+      </div>
+      <div class="content">
+          <div class="conHead">
+              <div class="contLi g2" onclick="toPage('group_guild','./comment/group_guild.html')">
+                  <p>进入公会</p>
+              </div>
+              <div class="contLi g1" @click="getShare()">
+                  <p>推广招募</p>
+              </div>
+              <div class="contLi g3" @click="toPage('group','my/group.html')">
+                  <p>我的社区</p>
+              </div>
+          </div>
+          <div class="conUl">
+              <div class="conLi c1 jtRight" onclick="toPage('personal_data','my/personal_data.html')">
+                  个人资料
+              </div>
+              <div class="conLi c2 jtRight" onclick="toPage('bill','my/bill.html')">
+                  账单中心
+              </div>
+              <div class="conLi c3 jtRight" @click="toPage('transformation','my/transformation.html',{transtype:1})">
+                  转换HDC
+              </div>
+              <div class="conLi c4 jtRight" onclick="toPage('frame2_1','frame2_1.html',{transtype:2})">
+                  转化HD
+              </div>
+              <div class="conLi c5 jtRight" onclick="toPage('dailytasks','my/dailytasks.html')">
+                  每日任务
+              </div>
+              <div class="conLi c6 jtRight" onclick="toPage('incentive_system','my/incentive_system.html')">
+                  帮助中心
+              </div>
+              <div class="conLi c7 jtRight" @click="toPage('feedlist','my/feedlist.html',{from:'center'})">
+                  反馈中心
+              </div>
+              <div class="conLi c8 jtRight" onclick="toPage('setting','my/setting.html')">
+                  设置
+              </div>
+          </div>
+      </div>
+      <van-popup v-model="showShare">
+          <div class="pop">
+              <div class="con">
+                  <div class="code"><img :src="shareinfo.thumb||'../../image/qrimg.png'" alt=""></div>
+              </div>
+              <div class="button">
+                  <span @click.stop="Save_album(shareinfo.thumb)" class="save">保存按钮</span>
+                  <span @click.stop="copy" class="copy">复制链接</span>
+              </div>
+          </div>
+      </van-popup>
+  </div>
+
+</body>
+
+</html>
+<script type="text/javascript" src="../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../lib/vant/vant.min.js"></script>
+<script type="text/javascript" src="../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/rsa.js"></script>
+<script type="text/javascript" src="../script/aes.js"></script>
+<script type="text/javascript" src="../script/const.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<!-- <script type="text/javascript" src="../lib/md5.js"></script> -->
+<script type="text/javascript">
+    var frame4 = new Vue({
+        el: "#frame4",
+        data: {
+            info: Object,
+            showShare: false,
+            shareinfo: {},
+            flag: true,
+            Vlevel: 0,
+            show: false,
+            isShowNewtip: false,
+            tips_status: 0,
+            langContent: {},
+            getCodetip: {}
+        },
+        created: function() {
+            var that = this
+            apiready = function() {
+                api.closeFrame({
+                    name: 'frame3_comment'
+                });
+                // fixStatusbar('header,.header,.headers', '.content');
+                setTimeout(function() {
+                    api.bringFrameToFront({
+                        from: 'tabBar'
+                    });
+                }, 1);
+                var frame4Dom = $api.dom('#frame4');
+                var emptyDom = $api.dom('.empty');
+                if (api.deviceModel == 'iPhone10,3' || api.deviceModel == 'iPhone10,6' || api.deviceModel == 'iPhone11,8' || api.deviceModel == 'iPhone11,2' || api.deviceModel == 'iPhone11,6' || api.deviceModel == 'iPhone11,4') {
+                    bottomheight = api.safeArea.bottom + 56;
+                    $api.css(frame4Dom, 'padding-bottom: ' + bottomheight + 'px');
+                }
+                var height = $api.fixStatusBar(document.querySelector('header'));
+                var minheight = api.winHeight - height - 56;
+                $api.css(frame4Dom, 'min-height:' + minheight + 'px');
+                $api.css(emptyDom, 'height:' + height + 'px');
+                frame4.$data.langContent = GlobleLanguageContent.frame4;
+                frame4.$data.getCodetip = GlobleLanguageContent.getCode;
+                that.getInfo()
+                window.onscroll = function() {
+                    that.handleScroll()
+                }
+                api.addEventListener({
+                    name: 'viewdisappear'
+                }, function(ret, err) {
+                    api.setStatusBarStyle({
+                        style: 'dark',
+                        color: 'rgba(0,0,0,0)'
+                    });
+                });
+            }
+        },
+        methods: {
+            //获取屏幕滚动的距离，并判断位置
+            handleScroll: function() {
+                var that = this;
+                var changHeadDom = $api.dom('#changHead');
+                var scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
+                if (Number(scrollTop) == 0) {
+                    $api.css(changHeadDom, 'background: rgba(255, 255, 255, 0);');
+                    $api.css(changHeadDom, 'color:#fffff;');
+                    api.setStatusBarStyle({
+                        style: 'light',
+                        color: 'rgba(0,0,0,0)'
+                    });
+                }
+                if (Number(scrollTop) <= 10) {
+                    $api.css(changHeadDom, 'background: rgba(255, 255, 255, 0);color:#fffff;');
+                    api.setStatusBarStyle({
+                        style: 'light',
+                        color: 'rgba(0,0,0,0)'
+                    });
+                } else if (scrollTop <= 15) {
+                    $api.css(changHeadDom, 'background: rgba(225, 225, 225, 0.2);color:#fffff;');
+                    api.setStatusBarStyle({
+                        style: 'light',
+                        color: 'rgba(0,0,0,0)'
+                    });
+                } else if (scrollTop <= 20) {
+                    $api.css(changHeadDom, 'background: rgba(225, 225, 225, 0.4);color:#fffff;');
+                    api.setStatusBarStyle({
+                        style: 'dark',
+                        color: 'rgba(0,0,0,0)'
+                    });
+                } else if (scrollTop <= 25) {
+                    $api.css(changHeadDom, 'background: rgba(225, 225, 225, 0.5);color:#ffffff;');
+                    api.setStatusBarStyle({
+                        style: 'dark',
+                        color: 'rgba(0,0,0,0)'
+                    });
+                } else if (scrollTop <= 30) {
+                    $api.css(changHeadDom, 'background: rgba(225, 225, 225, 0.6);color:#ffffff;');
+                    api.setStatusBarStyle({
+                        style: 'dark',
+                        color: 'rgba(0,0,0,0)'
+                    });
+                } else if (scrollTop <= 35) {
+                    $api.css(changHeadDom, 'background: rgba(225, 225, 225, 0.8);color:#cb974d;');
+                    api.setStatusBarStyle({
+                        style: 'dark',
+                        color: 'rgba(0,0,0,0)'
+                    });
+                } else if (scrollTop <= 40) {
+                    $api.css(changHeadDom, 'background: rgba(225, 225, 225, 0.9);color:#cb974d;');
+                    api.setStatusBarStyle({
+                        style: 'dark',
+                        color: 'rgba(0,0,0,0)'
+                    });
+                } else if (scrollTop > 45) {
+                    $api.css(changHeadDom, 'background: rgba(225, 225, 225, 1);color:#cb974d;');
+                    api.setStatusBarStyle({
+                        style: 'dark',
+                        color: 'rgba(0,0,0,0)'
+                    });
+                } else {
+                    $api.css(changHeadDom, 'background: rgba(255, 255, 255, 0);color:#fffff;');
+                    api.setStatusBarStyle({
+                        style: 'light',
+                        color: 'rgba(0,0,0,0)'
+                    });
+                }
+            },
+            // 小数点
+            fixTwo: function(num) {
+                if (num && num != 0 && Number(num) != 0) {
+                    return Number(num).toFixed(2);
+                } else {
+                    return 0.00;
+                }
+            },
+            reloadlang: function() {
+                var that = this;
+                frame4.$data.langContent = GlobleLanguageContent.frame4;
+                frame4.$data.getCodetip = GlobleLanguageContent.getCode;
+            },
+            // 单选按钮
+            dontshow: function() {
+                var that = this;
+                if (that.tips_status == 0) {
+                    that.tips_status = 1
+                } else {
+                    that.tips_status = 0
+                }
+            },
+            suretip: function() {
+                var that = this;
+                that.isShowNewtip = false;
+                if (that.tips_status == 1) {
+                    http(updatetipsstatus, 'post', {}, function(ret) {
+                        if (ret.code == 200) {
+                            toPage('college', './college/college.html')
+                        }
+                    })
+                } else {
+                    toPage('college', './college/college.html')
+                }
+            },
+            showunread: function(num) {
+                if (num < 10) {
+                    if (num == 0) {
+                        return '...'
+                    } else {
+                        return num
+                    }
+                } else {
+                    return '...'
+                }
+            },
+            // 点击签到
+            qiandao: function() {
+                var that = this
+                if (that.flag) {
+                    that.flag = false;
+                    http(signInUrl, 'post', {}, function(ret) {
+                        that.flag = true;
+                        //点击签到接口  sign_count=1已签到         sign_count=0未签到
+                        if (ret.code == 200) {
+                            api.toast({
+                                msg: ret.msg,
+                                duration: 2000,
+                                location: 'bottom'
+                            });
+                            that.getInfo()
+                        } else {
+                            api.toast({
+                                msg: ret.msg,
+                                duration: 2000,
+                                location: 'bottom'
+                            });
+                        }
+                    })
+                } else {
+                    api.toast({
+                        msg: that.langContent.singwait,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+            },
+            getShare: function() {
+                var that = this;
+                api.showProgress({
+                    title: '',
+                    text: that.langContent.loading,
+                    modal: true
+                });
+                http(shareIndexUrl, 'post', {}, function(ret) {
+                    // console.error(JSON.stringify(ret))
+                    if (ret.code == 200) {
+                        that.shareinfo = ret.data;
+                        that.shareinfo.thumb = that.shareinfo.thumb + '?time=' + new Date().getTime()
+                        setTimeout(function() {
+                            api.hideProgress();
+                            that.showShare = true
+                        }, 1000);
+                    } else {
+                        api.toast({
+                            msg: ret.msg,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                        setTimeout(function() {
+                            api.hideProgress();
+                            that.showShare = false
+                        }, 1000);
+                    }
+                })
+            },
+            Save_album: function(imgs) {
+                var that = this;
+                var saveimgs = imgs.split("?")[0]
+                api.showProgress({
+                    title: '',
+                    text: that.getCodetip.saving,
+                    modal: true
+                });
+                var name = 'fs://' + saveimgs.substring(saveimgs.lastIndexOf('/') + 1);
+                api.download({
+                    url: saveimgs,
+                    savePath: name,
+                    report: true,
+                    cache: true,
+                    allowResume: true
+                }, function(ret, err) {
+                    if (ret.state == 1) {
+                        api.saveMediaToAlbum({
+                            path: name,
+                            groupName: 'MeetJXA'
+                        }, function(ret, err) {
+                            if (ret && ret.status) {
+                                api.hideProgress();
+                                api.toast({
+                                    msg: that.getCodetip.saveSuc,
+                                    duration: 2000,
+                                    location: 'bottom'
+                                });
+                            } else {
+                                api.hideProgress();
+                                api.toast({
+                                    msg: that.getCodetip.saveFail,
+                                    duration: 2000,
+                                    location: 'bottom'
+                                });
+                            }
+                        });
+                    }
+                });
+            },
+            copy: function() {
+                var that = this
+                var clipBoard = api.require('clipBoard');
+                clipBoard.set({
+                    value: that.shareinfo.img_url
+                }, function(ret, err) {
+                    if (ret) {
+                        api.toast({
+                            msg: that.getCodetip.copyStatu,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                    } else {}
+                });
+            },
+            OpenShot: function() {
+                var that = this
+                api.sendEvent({
+                    name: 'pause',
+                    extra: {}
+                });
+                if (that.info.auth_primary == 0) {
+                    api.toast({
+                        msg: that.getCodetip.isSmrz,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    setTimeout(function() {
+                        api.openWin({
+                            name: 'personal_data',
+                            url: './my/personal_data.html',
+                            reload: true,
+                            pageParam: {}
+                        });
+                    }, 1500);
+                } else {
+                    // http(checkTodayVideo, 'post', {}, function(ret) {
+                    //     if (ret.code == 200) {
+                    api.openFrame({
+                        name: 'shotframe',
+                        url: 'shotframe.html',
+                        bounces: false,
+                        reload: true,
+                        rect: {
+                            x: 0,
+                            y: 0,
+                            w: api.winWidth,
+                            h: api.winHeight
+                        }
+                    });
+                    //     }
+                    // })
+                }
+
+            },
+            toPage: function(name, url, params) {
+                api.openWin({
+                    name: name,
+                    url: url,
+                    reload: true,
+                    pageParam: params || {}
+                });
+            },
+            getInfo: function() {
+                var that = this;
+                http(getuserinfoUrl, 'post', {}, function(ret) {
+                    if (ret.code == 200) {
+                        that.info = ret.data;
+                        if (that.info.novice_tips_status == 0) {
+                            that.isShowNewtip = true
+                        }
+                        if (that.info.auth_senior == 1) {
+                            that.Vlevel = 3;
+                        } else {
+                            if (that.info.auth_middle == 1) {
+                                that.Vlevel = 2;
+                            } else {
+                                if (that.info.auth_primary == 1) {
+                                    that.Vlevel = 1;
+                                } else {
+                                    that.Vlevel = 0;
+                                }
+                            }
+                        }
+                    } else if (ret.code == 401) {
+                        api.sendEvent({
+                            name: 'pause',
+                            extra: {}
+                        });
+                        toPage('login', 'auth/login.html', {
+                            from: 'center'
+                        });
+                    }
+                })
+            },
+            showAlert: function() {
+                api.toast({
+                    msg: '暂未开放，敬请期待',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+            }
+        }
+    })
+</script>

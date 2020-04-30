@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>森林详情</title>
+    <link rel="stylesheet" href="../../lib/iconfont2/iconfont.css">
+    <link rel="stylesheet" href="../../css/common.css">
+    <style>
+        /* @-webkit-keyframes gogogo {
+            0% {
+                -webkit-transform: rotate(0deg);
+            }
+
+            50% {
+                -webkit-transform: rotate(180deg);
+            }
+
+            100% {
+                -webkit-transform: rotate(360deg);
+            }
+        } */
+
+        html,
+        body {
+            background: #000000;
+        }
+
+        #trees_details {
+            background: url(../../image/treedetail.png) no-repeat;
+            background-size: 100% auto;
+            /* height: 100%;
+            min-height: 100%;
+            max-height: 100%; */
+            /* position: relative; */
+        }
+
+        .f_h_cont {
+            height: 40vh;
+            width: calc(100vw - 1rem);
+            padding: .5rem;
+            position: relative;
+            /* overflow: hidden; */
+            overflow-y: visible!important;
+            overflow-x: hidden;
+            z-index: 9;
+        }
+
+        .f_h_cont .tea-leaf {
+            display: inline-block;
+            position: absolute;
+            color: #9CA3B4;
+            width: 4.5rem;
+            text-align: center;
+            margin-top: 5px;
+        }
+
+        .coin:nth-child(odd) {
+            position: relative;
+            -webkit-animation: mymove 2s linear infinite;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+        }
+
+        .coin:nth-child(even) {
+            position: relative;
+            -webkit-animation: myopmove 2s linear infinite;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+        }
+
+        @-webkit-keyframes mymove {
+            25% {
+                -webkit-transform: translateY(-5px);
+            }
+            50%,
+            100% {
+                -webkit-transform: translateY(0);
+            }
+            75% {
+                -webkit-transform: translateY(5px);
+            }
+        }
+
+        @-webkit-keyframes myopmove {
+            25% {
+                -webkit-transform: translateY(5px);
+            }
+            50%,
+            100% {
+                -webkit-transform: translateY(0);
+            }
+            75% {
+                -webkit-transform: translateY(-5px);
+            }
+        }
+
+        @-webkit-keyframes d {
+            from {
+                width: 250px;
+                height: 250px;
+            }
+            to {
+                width: 0;
+                height: 0;
+            }
+        }
+
+        .JXA {
+            width: 40px;
+            height: 40px;
+            padding: 5px;
+            background-image: url(../../image/tree/bg_yjl.png);
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+            color: #ffffff;
+        }
+
+        .treetumb {
+            width: 50px;
+            height: 50px;
+        }
+    </style>
+</head>
+
+<body class="">
+    <div id="trees_details" class="content" v-cloak>
+        <header class="header bg_black">
+            <i class="iconfont icon-xiangzuo color_white fontSize16" style="color: #ffffff;" onclick="goBack()"></i>
+            <div class="color_white">{{langContent.title?langContent.title:''}}</div>
+        </header>
+        <div class="color_white cont fontSize14 flex_row_between" style="padding: 3rem 2rem 2rem 2rem">
+            <div class="flex_row_left">
+                <img class="treetumb Bc marginR5" :src="'../../image/tree/tree'+proid+'sz.png'" alt="">{{info.forest_name}}
+            </div>
+            <div style="color: #2cc597;">{{langContent.zzsz?langContent.zzsz:''}}</div>
+        </div>
+        <div class="f_h_cont" style="overflow-y: visible!important">
+            <div class="tea-leaf flex_row_center" v-for="(item, key) in list" :key="key" :class="'tea-leaf'+key">
+                <div class="JXA Bc text_center flex_row_center coin fontSize10" @click="getGold(item.id)">
+                    {{fixTwo(item.profit)}} HDC
+                </div>
+            </div>
+        </div>
+        <div class="color_default1" style="padding: 2rem;position: absolute;bottom: 2rem;width: calc(100% - 4rem);">
+            <div class="flex_row_between posi_relative">
+                <div style="width: 75%;">
+                    <span class="font_bold" style="font-size: 22px;word-wrap: break-word">{{info.calculation_power}}</span> <span class="fontSize14">HDC</span>
+                </div>
+                <!-- <div class="color_default marginL1" style="padding: .5rem 1rem;border: 1px solid;border-radius: 0.5rem;" v-if="info.status==2"> -->
+                <div class="marginL1" style="color:#5fa7ff;padding: .5rem 1rem;border: 1px solid #00a0e9;border-radius: 0.5rem;position: absolute;right: 0;" @click="getFruit()">
+                    {{langContent.get?langContent.get:''}}
+                </div>
+            </div>
+            <div class="fontSize14 marginT1 color_CC">
+                {{langContent.hyd?langContent.hyd:''}}：{{info.lively}}
+            </div>
+            <div class="fontSize14 marginT1 color_CC">
+                {{langContent.ljhd?langContent.ljhd:''}}：{{info.profit_total}} 个HDC
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    var trees_details = new Vue({
+        el: "#trees_details",
+        data: {
+            list: [],
+            info: {},
+            id: '',
+            proid: 0,
+            langContent: {},
+        },
+        created: function() {
+            var that = this
+            apiready = function() {
+                fixStatusbar('header,.header,.headers', '.content');
+                var height = $api.fixStatusBar(document.querySelector('header'));
+                var minheight = api.winHeight - height - 45;
+                $api.css($api.dom('#trees_details'), 'height:' + minheight + 'px');
+                trees_details.$data.langContent = GlobleLanguageContent.trees_details;
+                that.id = api.pageParam.id;
+                that.proid = api.pageParam.proid;
+                that.getInfo();
+            }
+        },
+        methods: {
+            fixTwo: function(num) {
+                if (num && num != 0 && Number(num) != 0) {
+                    return Number(num).toFixed(4);
+                } else {
+                    return 0.00;
+                }
+            },
+            toPage: function(name, url, params) {
+                api.openWin({
+                    name: name,
+                    url: url,
+                    reload: true,
+                    pageParam: params || {}
+                });
+            },
+            getGold: function(id) {
+                var that = this;
+                http(getmyProUrl, 'post', {
+                    profit_id: id,
+                }, function(res) {
+                    if (res.code == 200) {
+                        api.toast({
+                            msg: res.msg,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                        api.startPlay({
+                            path: 'widget://res/water.mp3'
+                        }, function(ret, err) {
+                            if (ret) {} else {}
+                        });
+                        api.execScript({
+                            name: 'root',
+                            frameName: 'frame1',
+                            script: 'frame1.getInfo()'
+                        });
+                        that.getInfo();
+                    } else {
+                        api.toast({
+                            msg: res.msg,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                    }
+                });
+            },
+            getInfo: function() {
+                var that = this;
+                http(myProDetailUrl, 'post', {
+                    id: that.id
+                }, function(ret) {
+                    if (ret.code == 200) {
+                        that.info = ret.data.detail;
+                        that.list = ret.data.profit;
+                        setTimeout(function() {
+                            for (var i in that.list) {
+                                $api.css($api.dom(".tea-leaf" + i), "left:" + Math.floor(Math.random() * 90) + "%;top:" + Math.floor(Math.random() * 20) + "rem");
+                                $api.addCls($api.dom(".tea-leaf" + i), "d");
+                            }
+                        }, 100);
+                    }
+                })
+            },
+            getFruit: function() {
+                var that = this;
+                if (that.list && that.list.length > 0) {
+                    http(getdeatilallUrl, 'post', {
+                        user_forest_id: that.id
+                    }, function(res) {
+                        if (res.code == 200) {
+                            api.toast({
+                                msg: res.msg,
+                                duration: 2000,
+                                location: 'bottom'
+                            });
+                            api.startPlay({
+                                path: 'widget://res/water.mp3'
+                            }, function(ret, err) {
+                                if (ret) {} else {}
+                            });
+                            api.execScript({
+                                name: 'root',
+                                frameName: 'frame1',
+                                script: 'frame1.getInfo()'
+                            });
+                            that.getInfo();
+                        } else {
+                            api.toast({
+                                msg: res.msg,
+                                duration: 2000,
+                                location: 'bottom'
+                            });
+                        }
+                    });
+                } else {
+                    api.toast({
+                        msg: that.langContent.noJXA,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    that.getInfo();
+                    return;
+                }
+
+            }
+        }
+    })
+</script>

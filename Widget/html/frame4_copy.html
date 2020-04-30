@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>个人中心</title>
+    <link rel="stylesheet" href="../lib/iconfont2/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+    <!-- <link rel="stylesheet" type="text/css" href="../css/frame3.css" /> -->
+    <style>
+        #frame4 {
+            /* background-image: url("../image/myCenter/bg_main.jpg"); */
+            /* background-repeat: no-repeat;
+            background-size: 100% 100%;
+            min-height: calc(100vh - 56px); */
+            padding-bottom: 56px;
+        }
+
+        .item {
+            width: calc(100% - 30px);
+            height: 40px;
+            /* margin: 1rem; */
+            padding: 8px 15px;
+            border-bottom: 1px solid #eeeeee;
+            font-size: 16px;
+            background: #ffffff;
+        }
+
+        .yue {
+            width: 25%;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .yue div {
+            width: 100%;
+            height: 20px;
+            line-height: 20px;
+        }
+
+        .sharebtn {
+            width: 45%;
+            height: 40px;
+            line-height: 40px;
+            color: #ffffff;
+            text-align: center;
+            /* background-image: url(../image/sharebtn.png);
+            background-repeat: no-repeat;
+            background-size: 100% 100%; */
+            border-radius: 5px;
+            font-size: 14px;
+            background: #2cc597;
+        }
+
+        .sharebtn1 {
+            background: #ff5a52
+        }
+
+        button {
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+            -webkit-appearance: none;
+            padding: 0;
+            margin: 0;
+            outline: none;
+            border: none;
+            border-radius: 0;
+            background: transparent;
+            width: 4rem;
+            height: 4rem;
+            position: absolute;
+            /*background-color: #a89866;*/
+            border-radius: 50%;
+            right: 11rem;
+            top: 2.7rem;
+            font-size: 1.2rem;
+            font-weight: 900;
+            color: red;
+        }
+
+        .Vlevel {
+            position: absolute;
+            bottom: -.5rem;
+            left: 50%;
+            transform: translate(-50%);
+            background: white;
+            padding: 1px 5px;
+            border-radius: 1rem;
+            font-size: 10px;
+            white-space: nowrap;
+            max-width: 60px;
+            color: #333333;
+        }
+
+        .certiimg {
+            height: 12px;
+            width: auto;
+        }
+        /* .congradulate {
+            line-height: 20px;
+            height: 20px;
+            margin: 0 8px;
+            flex: 1;
+            color: #F0E68C;
+            transition: all 0.1s;
+            text-shadow: 1px 1px 1px #00FF00;
+        } */
+
+        @media all and (-webkit-min-device-pixel-ratio:0) and (min-resolution: .001dpcm) {
+            .congradulate {
+                /* background-image: -webkit-linear-gradient(left, #f4ab20 50%, #fec250 100%); */
+                background-image: -webkit-linear-gradient(left, #cb974d, #f4ab20 50%, #cb974d 50%, #f4ab20 100%, #cb974d);
+                -webkit-text-fill-color: transparent;
+                -webkit-background-clip: text;
+                -webkit-background-size: 200% 100%;
+                -webkit-animation: masked-animation 3s infinite linear;
+            }
+        }
+
+        @-webkit-keyframes masked-animation {
+            0% {
+                background-position: 0 0;
+            }
+            100% {
+                background-position: -100% 0;
+            }
+        }
+
+        .unread {
+            background-color: #bd2121;
+            height: 20px;
+            width: 20px;
+            white-space: nowrap;
+            text-align: center;
+            line-height: 20px;
+        }
+
+        .black_overlay2 {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1002;
+        }
+
+        .tipitem {
+            width: 90%;
+            height: auto;
+            max-height: 80%;
+            background: #fbfbfb;
+            font-family: "Microsoft YaHei", 微软雅黑;
+        }
+
+        .tipbg {
+            width: 100%;
+            height: auto;
+            max-height: 100%;
+        }
+
+        .tip {
+            margin-top: -25vw;
+            width: 80%;
+            border-radius: 5px;
+            box-shadow: 1px 0px 3px #dddddd;
+        }
+
+        .lo_btn {
+            padding: 10px 5px;
+            margin: 15px auto;
+            width: 33%;
+            text-align: center;
+            border-radius: 5px;
+            background-color: #cfa767;
+            color: #ffffff;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .lo_btn1 {
+            background-color: #2cc597;
+            color: #ffffff;
+        }
+
+        .common_radio {
+            width: 1.4rem;
+            height: 1.4rem;
+            min-width: 1.4rem;
+            min-height: 1.4rem;
+            border-radius: 50%;
+            border: 1px solid #999999;
+            position: relative;
+            display: inline-block;
+            background: #ffffff;
+        }
+
+        .common_radio.on {
+            background: #23ab3d !important;
+            border: 1px solid #23ab3d;
+        }
+
+        .button_sty {
+            padding: .3rem 1rem .3rem 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 2rem;
+        }
+
+        .margin_2xx {
+            margin: .5rem 0rem;
+        }
+
+        .signin_img {
+            width: 3.2rem;
+            height: auto;
+            max-height: 3.2rem;
+        }
+
+        .property_bgc {
+            /* background-image: linear-gradient(125deg, #cfa767 0%, #fdecb8 100%), linear-gradient( #cfa767, #cfa767); */
+            /* background-blend-mode: normal, normal; */
+            background: #ffffff;
+            border-radius: 5px;
+            color: #333;
+            padding: 1rem 0rem;
+            margin: 0 10px;
+        }
+
+        .iconfont {
+            font-size: 20px;
+        }
+
+        .headpart {
+            background-image: url("../image/myCenter/bg_user.jpg");
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+        }
+
+        .empty {
+            height: 100px;
+        }
+
+        #changHead {
+            left: 0;
+            top: 0;
+            position: fixed;
+            z-index: 100000;
+            display: block;
+            width: 100%;
+            height: 45px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.3rem;
+            background: rgba(225, 225, 225, 0);
+            color: #ffffff;
+        }
+
+        .color_45 {
+            color: #454545;
+        }
+
+        .icolor1 {
+            color: #cfa767;
+        }
+
+        .icolor2 {
+            color: #ef5b9c;
+        }
+
+        .icolor3 {
+            color: #2a5caa;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="frame4" class="color_black3" style="position: relative;" v-cloak>
+        <header id="changHead" class="">
+            <div class="fontSize16">{{langContent.title?langContent.title:''}}</div>
+        </header>
+        <!-- 信息部分 -->
+        <div class="headpart posi_relative">
+            <div class="empty"></div>
+            <div class="flex_row_between color_white padding1">
+                <div class="flex_row_left" style="margin-top: 10px;flex: 1;">
+                    <!-- 用户头像 -->
+                    <div class="posi_relative">
+                        <img tapmode="hover" onclick="toPage('personal_data','my/personal_data.html')" :src="info.avatar||'../image/logo.png'" alt="" class="Bc" style="width: 5rem;height: 5rem;">
+                        <div class="Vlevel flex_row_center" v-if="Vlevel==0">
+                            <i class="iconfont icon-vip color_999 fontSize10" onclick="goBack()"></i> {{langContent.rzsta?langContent.rzsta:''}}
+                        </div>
+                        <div class="Vlevel flex_row_center" v-if="Vlevel==1"><i class="iconfont icon-vip color_default1 fontSize10" onclick="goBack()"></i>{{langContent.rzsta1?langContent.rzsta1:''}}</div>
+                        <div class="Vlevel flex_row_center" v-if="Vlevel==2"><i class="iconfont icon-vip color_default1 fontSize10" onclick="goBack()"></i>{{langContent.rzsta2?langContent.rzsta2:''}}</div>
+                        <div class="Vlevel flex_row_center" v-if="Vlevel==3"><i class="iconfont icon-vip color_default1 fontSize10" onclick="goBack()"></i>{{langContent.rzsta3?langContent.rzsta3:''}}</div>
+                    </div>
+                    <!-- 手机号，等级，我的邀请码 -->
+                    <div class="fontSize12 " style="margin-left:.8rem;">
+                        <div class="fontSize18">{{info.mobile}}</div>
+                        <div class="fontSize12 marginT5" v-show="info.level_id==1">{{langContent.dj?langContent.dj:''}}:{{langContent.level1?langContent.level1:''}}</div>
+                        <div class="fontSize12 marginT5" v-show="info.level_id==2">{{langContent.dj?langContent.dj:''}}:{{langContent.level2?langContent.level2:''}}</div>
+                        <div class="fontSize12 marginT5" v-show="info.level_id==3">{{langContent.dj?langContent.dj:''}}:{{langContent.level3?langContent.level3:''}}</div>
+                        <div class="fontSize12 marginT5" v-show="info.level_id==4">{{langContent.dj?langContent.dj:''}}:{{langContent.level4?langContent.level4:''}}</div>
+                        <div class="fontSize12 marginT5" v-show="info.level_id==5">{{langContent.dj?langContent.dj:''}}:{{langContent.level5?langContent.level5:''}}</div>
+                        <div class="fontSize12 marginT5">{{langContent.yqm?langContent.yqm:''}}:{{info.user_sn}}</div>
+                    </div>
+                    <div style="margin-left: 0.5rem;">
+                        <!-- 点击签到接口  sign_count=1已签到         sign_count=0未签到 -->
+                        <img src="../image/myCenter/ic_signin_successful.png" alt="" class="signin_img" @click="qiandao" v-if="info.sign_count ==1">
+                        <img src="../image/myCenter/ic_signin.png" alt="" class="signin_img" @click="qiandao" v-if="info.sign_count ==0">
+                        <!-- <img :src="langContent.qdimgUrl" alt="" class="signin_img" @click="qiandao" v-if="info.sign_count ==0"> -->
+                        <div v-if="info.sign_count==0" class="text_center marginT5">{{langContent.qd?langContent.qd:''}}</div>
+                        <div v-if="info.sign_count==1" class="text_center marginT5">{{langContent.yqd?langContent.yqd:''}}</div>
+                    </div>
+                </div>
+                <!-- 进入公会，推广招募，我的社区 -->
+                <div class="flex_col_between">
+                    <div tapmode="hover" class="button_sty flex_row_center" onclick="toPage('group_guild','./comment/group_guild.html')">
+                        <i class="iconfont icon-gonghui-anzhuo color_white marginR5 fontSize18"></i> {{langContent.jrgh?langContent.jrgh:''}}
+                    </div>
+                    <div tapmode="hover" class="button_sty flex_row_center margin_2xx " @click="getShare()">
+                        <i class="iconfont icon-tuiguang color_white marginR5 fontSize18"></i> {{langContent.tgzm?langContent.tgzm:''}}
+                    </div>
+                    <div tapmode="hover" class="button_sty flex_row_center" @click="toPage('group','my/group.html')">
+                        <i class="iconfont icon-shequ color_white marginR5 fontSize18"></i> {{langContent.wdsq?langContent.wdsq:''}}
+                    </div>
+                </div>
+            </div>
+            <!-- <div style="height: 75px;"></div> -->
+            <!-- 我的资产 -->
+            <div class="flex_row_around property_bgc " style="margin-top: 1rem;">
+                <div class="fontSize14 flex_col_center yue">
+                    <div class="text-overflow_1 color_45">{{langContent.kyysj?langContent.kyysj:''}}</div>
+                    <div class="marginT5 text-overflow_1">{{fixTwo(info.world_use_money)?fixTwo(info.world_use_money):'0'}}</div>
+                </div>
+                <div class="flex_col_center fontSize14 yue">
+                    <div class="text-overflow_1 color_45">{{langContent.ysj?langContent.ysj:''}}</div>
+                    <div class="marginT5 text-overflow_1">{{fixTwo(info.world_money)?fixTwo(info.world_money):'0'}}</div>
+                </div>
+                <div class="fontSize14 flex_col_center yue">
+                    <div class="text-overflow_1 color_45">JXA</div>
+                    <div class="marginT5 text-overflow_1">{{fixTwo(info.user_money)?fixTwo(info.user_money):'0'}}</div>
+                </div>
+                <div class="fontSize14 flex_col_center yue">
+                    <div class="text-overflow_1 color_45">{{langContent.tg?langContent.tg:''}}</div>
+                    <div class="marginT5 text-overflow_1">{{fixTwo(info.candy_money)?fixTwo(info.candy_money):'0'}}</div>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="padding12 cont posi_relative"> -->
+        <!-- 城市合伙人，横幅提示 -->
+        <div v-if="info.is_partner==1" class="flex_row_center" style="margin-top: 0.6rem;">
+            <marquee class="fontSize12" direction="left" behavior="scroll" scrollamount="3" scrolldelay="0" loop="-1" height="25" hspace="2" vspace="2">
+                <div class="congradulate">{{langContent.gxhhr1?langContent.gxhhr1:''}}{{info.belong_city?info.belong_city:''}}{{langContent.gxhhr2?langContent.gxhhr2:''}}</div>
+            </marquee>
+        </div>
+        <!-- </div> -->
+        <div v-if="info.is_partner!=1" style="height: 5px;"></div>
+        <div class="list fontSize14" style="z-index: 1;">
+            <div class="marginT5">
+                <!-- 个人资料 -->
+                <div tapmode="hover" class="flex_row_between item" onclick="toPage('personal_data','my/personal_data.html')">
+                    <div class="flex_row_left " style="flex: 1;">
+                        <i class="iconfont icon-ziliao icolor1 fontSize20 "></i>
+                        <div>{{langContent.grzl?langContent.grzl:''}}</div>
+                    </div>
+                    <i class="iconfont icon-direction_right color_default1 fontSize18 "></i>
+                </div>
+                <!-- 账单中心 -->
+                <div tapmode="hover" class="flex_row_between item" onclick="toPage('bill','my/bill.html')">
+                    <div class="flex_row_left " style="flex: 1;">
+                        <i class="iconfont icon-zhangdan icolor1 fontSize20 marginR10"></i>
+                        <div>{{langContent.zdzx?langContent.zdzx:''}}</div>
+                    </div>
+                    <i class="iconfont icon-direction_right color_default1 fontSize18 "></i>
+                </div>
+                <!-- 转换JXA -->
+                <div tapmode="hover" class="flex_row_between item" @click="toPage('transformation','my/transformation.html',{transtype:1})">
+                    <div class="flex_row_left " style="flex: 1;">
+                        <i class="iconfont icon-zhuanhuan icolor1 fontSize20 marginR10"></i>
+                        <div>{{langContent.zhJXA?langContent.zhJXA:''}}JXA</div>
+                    </div>
+                    <i class="iconfont icon-direction_right color_default1 fontSize18 "></i>
+                </div>
+                <!-- 云世界 -->
+                <div tapmode="hover" class="flex_row_between item" onclick="toPage('frame2_1','frame2_1.html',{transtype:2})">
+                    <div class="flex_row_left " style="flex: 1;">
+                        <i class="iconfont icon-yun icolor1 fontSize20 marginR10"></i>
+                        <div>{{langContent.ysj?langContent.ysj:''}}</div>
+                    </div>
+                    <i class="iconfont icon-direction_right color_default1 fontSize18 "></i>
+                </div>
+                <!-- 每日任务 -->
+                <div tapmode="hover" class="flex_row_between item" onclick="toPage('dailytasks','my/dailytasks.html')">
+                    <div class="flex_row_left " style="flex: 1;">
+                        <i class="iconfont icon-renwu icolor1 fontSize20 marginR10"></i>
+                        <div>{{langContent.mrrw?langContent.mrrw:''}}</div>
+                    </div>
+                    <i class="iconfont icon-direction_right color_default1 fontSize18 "></i>
+                </div>
+            </div>
+            <div class="marginT5">
+                <!-- 发布视频 -->
+                <div tapmode="hover" class="flex_row_between item" @click="OpenShot()">
+                    <div class="flex_row_left " style="flex: 1;">
+                        <i class="iconfont icon-shipin icolor2 fontSize20 marginR10"></i>
+                        <div>{{langContent.fbsp?langContent.fbsp:''}}</div>
+                    </div>
+                    <i class="iconfont icon-direction_right color_default1 fontSize18 "></i>
+                </div>
+                <!-- 我的作品 -->
+                <div tapmode="hover" class="flex_row_between item" onclick="toPage('myvideo','./my/myvideo.html')">
+                    <div class="flex_row_left " style="flex: 1;">
+                        <i class="iconfont icon-yingpian icolor2 fontSize20 marginR10"></i>
+                        <div>{{langContent.wdzp?langContent.wdzp:''}}</div>
+                    </div>
+                    <i class="iconfont icon-direction_right color_default1 fontSize18 "></i>
+                </div>
+                <!-- 视频消息 -->
+                <div tapmode="hover" class="flex_row_between item" @click="toPage('message','./my/message.html',{is_real_notice:info.is_real_notice})">
+                    <div class="flex_row_left " style="flex: 1;">
+                        <i class="iconfont icon-news icolor2 fontSize20 marginR10"></i>
+                        <div>{{langContent.spxx?langContent.spxx:''}}</div>
+                    </div>
+
+                    <div v-if="(info.my_unread&&info.my_unread>0)||info.is_real_notice==0" class="Bc unread color_white">
+                        {{showunread(info.my_unread)}} </div>
+                    <i class="iconfont icon-direction_right color_default1 fontSize18 "></i>
+                </div>
+                <!-- 消息公告 -->
+                <div tapmode="hover" class="flex_row_between item" onclick="toPage('inform','my/inform.html')">
+                    <div class="flex_row_left " style="flex: 1;">
+                        <i class="iconfont icon-gonggao icolor2 fontSize20 marginR10"></i>
+                        <div>{{langContent.xxgg?langContent.xxgg:''}}</div>
+                    </div>
+                    <i class="iconfont icon-direction_right color_default1 fontSize18 "></i>
+                </div>
+            </div>
+            <div class="marginT5">
+                <!-- 帮助中心 -->
+                <div tapmode="hover" class="flex_row_between item" onclick="toPage('incentive_system','my/incentive_system.html')">
+                    <div class="flex_row_left " style="flex: 1;">
+                        <i class="iconfont icon-bangzhu icolor3 fontSize20 marginR10"></i>
+                        <div>{{langContent.bzzx?langContent.bzzx:''}}</div>
+                    </div>
+                    <i class="iconfont icon-direction_right color_default1 fontSize18 "></i>
+                </div>
+                <!-- 反馈中心 -->
+                <div tapmode="hover" class="flex_row_between item" @click="toPage('feedlist','my/feedlist.html',{from:'center'})">
+                    <div class="flex_row_left " style="flex: 1;">
+                        <i class="iconfont icon-fankui icolor3 fontSize20 marginR10"></i>
+                        <div>{{langContent.fkzx?langContent.fkzx:''}}</div>
+                    </div>
+                    <i class="iconfont icon-direction_right color_default1 fontSize18 "></i>
+                </div>
+                <!-- 设置 -->
+                <div tapmode="hover" class="flex_row_between item" onclick="toPage('setting','my/setting.html')">
+                    <div class="flex_row_left " style="flex: 1;">
+                        <i class="iconfont icon-shezhi icolor3 fontSize20 marginR10"></i>
+                        <div>{{langContent.set?langContent.set:''}}</div>
+                    </div>
+                    <i class="iconfont icon-direction_right color_default1 fontSize18 "></i>
+                </div>
+            </div>
+        </div>
+        <!-- 推广连接 -->
+        <div class="box_wrapper" style="color:#000000;" @touchmove.prevent v-if="showShare" @click="showShare=false">
+            <div class="box  posi_relative">
+                <div class="padding12 flex_row_center">
+                    <img :src="shareinfo.thumb||'../../image/qrimg.png'" alt="" style="width: 100%;height: auto;max-height: 80vh;">
+                </div>
+                <div class="flex_row_around">
+                    <div class="sharebtn" @click.stop="Save_album(shareinfo.thumb)">{{langContent.saveimg?langContent.saveimg:''}}</div>
+                    <div class="sharebtn sharebtn1" @click.stop="copy">{{langContent.copylink?langContent.copylink:''}}</div>
+                </div>
+
+            </div>
+        </div>
+        <!-- 新手提示-->
+        <div class="black_overlay2 flex_col_center" @touchmove.prevent v-if="isShowNewtip">
+            <div class="tipitem bg_white flex_col_center color_black3">
+                <img class="tipbg" :src="langContent.imgUrl" alt="">
+                <div class="tip fontSize16 bg_white posi_relative padding1">
+                    <!-- <div class="fontSize18">新手操作提示：</div> -->
+                    <div class="padding1" v-html="langContent.tip1">
+                        <!-- 1.注册登录后请前往 👉<span class="color_default1">个人中心&gt;个人资料&gt;实名认证&gt;初级认证</span>👈 完成实名认证开启更多新玩法！ -->
+                        <!-- {{langContent.tip1?langContent.tip1:''}} -->
+                    </div>
+                    <div class="padding1" v-html="langContent.tip2">
+                        <!-- 2.更多新手教程尽在商学院！用户可前往 👉<span class="color_default1">应用中心&gt;商学院</span>👈 学习更多玩法！ -->
+                        <!-- {{langContent.tip2?langContent.tip2:''}} -->
+                    </div>
+                    <div class="flex_row_left padding1">
+                        <div class="common_radio marginR10 text_center" :class="{'on':tips_status == 1}" @click="dontshow()"></div>
+                        {{langContent.know?langContent.know:''}}
+                    </div>
+                </div>
+                <div class="flex_row_center width100">
+                    <div class="lo_btn fontSize16 marginT1 color_default1 bg_default" @click.stop="isShowNewtip = false">{{langContent.next?langContent.next:''}}</div>
+                    <div class="lo_btn lo_btn1 fontSize16 marginT1 color_default1 bg_default" @click.stop="suretip()">{{langContent.golook?langContent.golook:''}}</div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+</body>
+
+</html>
+<script type="text/javascript" src="../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../script/rsa.js"></script>
+<script type="text/javascript" src="../script/aes.js"></script>
+<script type="text/javascript" src="../script/const.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<!-- <script type="text/javascript" src="../lib/md5.js"></script> -->
+<script type="text/javascript">
+    var frame4 = new Vue({
+        el: "#frame4",
+        data: {
+            info: Object,
+            showShare: false,
+            shareinfo: {},
+            flag: true,
+            Vlevel: 0,
+            isShowNewtip: false,
+            tips_status: 0,
+            langContent: {},
+            getCodetip: {}
+        },
+        created: function() {
+            var that = this
+            apiready = function() {
+                api.closeFrame({
+                    name: 'frame3_comment'
+                });
+                // fixStatusbar('header,.header,.headers', '.content');
+                setTimeout(function() {
+                    api.bringFrameToFront({
+                        from: 'tabBar'
+                    });
+                }, 1);
+                var frame4Dom = $api.dom('#frame4');
+                var emptyDom = $api.dom('.empty');
+                if (api.deviceModel == 'iPhone10,3' || api.deviceModel == 'iPhone10,6' || api.deviceModel == 'iPhone11,8' || api.deviceModel == 'iPhone11,2' || api.deviceModel == 'iPhone11,6' || api.deviceModel == 'iPhone11,4') {
+                    bottomheight = api.safeArea.bottom + 56;
+                    $api.css(frame4Dom, 'padding-bottom: ' + bottomheight + 'px');
+                }
+                var height = $api.fixStatusBar(document.querySelector('header'));
+                var minheight = api.winHeight - height - 56;
+                $api.css(frame4Dom, 'min-height:' + minheight + 'px');
+                $api.css(emptyDom, 'height:' + height + 'px');
+                frame4.$data.langContent = GlobleLanguageContent.frame4;
+                frame4.$data.getCodetip = GlobleLanguageContent.getCode;
+                that.getInfo()
+                window.onscroll = function() {
+                    that.handleScroll()
+                }
+                api.addEventListener({
+                    name: 'viewdisappear'
+                }, function(ret, err) {
+                    api.setStatusBarStyle({
+                        style: 'dark',
+                        color: 'rgba(0,0,0,0)'
+                    });
+                });
+            }
+        },
+        methods: {
+            //获取屏幕滚动的距离，并判断位置
+            handleScroll: function() {
+                var that = this;
+                var changHeadDom = $api.dom('#changHead');
+                var scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
+                if (Number(scrollTop) == 0) {
+                    $api.css(changHeadDom, 'background: rgba(255, 255, 255, 0);');
+                    $api.css(changHeadDom, 'color:#fffff;');
+                    api.setStatusBarStyle({
+                        style: 'light',
+                        color: 'rgba(0,0,0,0)'
+                    });
+                }
+                if (Number(scrollTop) <= 10) {
+                    $api.css(changHeadDom, 'background: rgba(255, 255, 255, 0);color:#fffff;');
+                    api.setStatusBarStyle({
+                        style: 'light',
+                        color: 'rgba(0,0,0,0)'
+                    });
+                } else if (scrollTop <= 15) {
+                    $api.css(changHeadDom, 'background: rgba(225, 225, 225, 0.2);color:#fffff;');
+                    api.setStatusBarStyle({
+                        style: 'light',
+                        color: 'rgba(0,0,0,0)'
+                    });
+                } else if (scrollTop <= 20) {
+                    $api.css(changHeadDom, 'background: rgba(225, 225, 225, 0.4);color:#fffff;');
+                    api.setStatusBarStyle({
+                        style: 'dark',
+                        color: 'rgba(0,0,0,0)'
+                    });
+                } else if (scrollTop <= 25) {
+                    $api.css(changHeadDom, 'background: rgba(225, 225, 225, 0.5);color:#ffffff;');
+                    api.setStatusBarStyle({
+                        style: 'dark',
+                        color: 'rgba(0,0,0,0)'
+                    });
+                } else if (scrollTop <= 30) {
+                    $api.css(changHeadDom, 'background: rgba(225, 225, 225, 0.6);color:#ffffff;');
+                    api.setStatusBarStyle({
+                        style: 'dark',
+                        color: 'rgba(0,0,0,0)'
+                    });
+                } else if (scrollTop <= 35) {
+                    $api.css(changHeadDom, 'background: rgba(225, 225, 225, 0.8);color:#cb974d;');
+                    api.setStatusBarStyle({
+                        style: 'dark',
+                        color: 'rgba(0,0,0,0)'
+                    });
+                } else if (scrollTop <= 40) {
+                    $api.css(changHeadDom, 'background: rgba(225, 225, 225, 0.9);color:#cb974d;');
+                    api.setStatusBarStyle({
+                        style: 'dark',
+                        color: 'rgba(0,0,0,0)'
+                    });
+                } else if (scrollTop > 45) {
+                    $api.css(changHeadDom, 'background: rgba(225, 225, 225, 1);color:#cb974d;');
+                    api.setStatusBarStyle({
+                        style: 'dark',
+                        color: 'rgba(0,0,0,0)'
+                    });
+                } else {
+                    $api.css(changHeadDom, 'background: rgba(255, 255, 255, 0);color:#fffff;');
+                    api.setStatusBarStyle({
+                        style: 'light',
+                        color: 'rgba(0,0,0,0)'
+                    });
+                }
+            },
+            // 小数点
+            fixTwo: function(num) {
+                if (num && num != 0 && Number(num) != 0) {
+                    return Number(num).toFixed(2);
+                } else {
+                    return 0.00;
+                }
+            },
+            reloadlang: function() {
+                var that = this;
+                frame4.$data.langContent = GlobleLanguageContent.frame4;
+                frame4.$data.getCodetip = GlobleLanguageContent.getCode;
+            },
+            // 单选按钮
+            dontshow: function() {
+                var that = this;
+                if (that.tips_status == 0) {
+                    that.tips_status = 1
+                } else {
+                    that.tips_status = 0
+                }
+            },
+            suretip: function() {
+                var that = this;
+                that.isShowNewtip = false;
+                if (that.tips_status == 1) {
+                    http(updatetipsstatus, 'post', {}, function(ret) {
+                        if (ret.code == 200) {
+                            toPage('college', './college/college.html')
+                        }
+                    })
+                } else {
+                    toPage('college', './college/college.html')
+                }
+            },
+            showunread: function(num) {
+                if (num < 10) {
+                    if (num == 0) {
+                        return '...'
+                    } else {
+                        return num
+                    }
+                } else {
+                    return '...'
+                }
+            },
+            // 点击签到
+            qiandao: function() {
+                var that = this
+                if (that.flag) {
+                    that.flag = false;
+                    http(signInUrl, 'post', {}, function(ret) {
+                        that.flag = true;
+                        //点击签到接口  sign_count=1已签到         sign_count=0未签到
+                        if (ret.code == 200) {
+                            api.toast({
+                                msg: ret.msg,
+                                duration: 2000,
+                                location: 'bottom'
+                            });
+                            that.getInfo()
+                        } else {
+                            api.toast({
+                                msg: ret.msg,
+                                duration: 2000,
+                                location: 'bottom'
+                            });
+                        }
+                    })
+                } else {
+                    api.toast({
+                        msg: that.langContent.singwait,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+            },
+            getShare: function() {
+                var that = this;
+                api.showProgress({
+                    title: '',
+                    text: that.langContent.loading,
+                    modal: true
+                });
+                http(shareIndexUrl, 'post', {}, function(ret) {
+                    // console.error(JSON.stringify(ret))
+                    if (ret.code == 200) {
+                        that.shareinfo = ret.data;
+                        that.shareinfo.thumb = that.shareinfo.thumb + '?time=' + new Date().getTime()
+                        setTimeout(function() {
+                            api.hideProgress();
+                            that.showShare = true
+                        }, 1000);
+                    } else {
+                        api.toast({
+                            msg: ret.msg,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                        setTimeout(function() {
+                            api.hideProgress();
+                            that.showShare = false
+                        }, 1000);
+                    }
+                })
+            },
+            Save_album: function(imgs) {
+                var that = this;
+                var saveimgs = imgs.split("?")[0]
+                api.showProgress({
+                    title: '',
+                    text: that.getCodetip.saving,
+                    modal: true
+                });
+                var name = 'fs://' + saveimgs.substring(saveimgs.lastIndexOf('/') + 1);
+                api.download({
+                    url: saveimgs,
+                    savePath: name,
+                    report: true,
+                    cache: true,
+                    allowResume: true
+                }, function(ret, err) {
+                    if (ret.state == 1) {
+                        api.saveMediaToAlbum({
+                            path: name,
+                            groupName: 'MeetJXA'
+                        }, function(ret, err) {
+                            if (ret && ret.status) {
+                                api.hideProgress();
+                                api.toast({
+                                    msg: that.getCodetip.saveSuc,
+                                    duration: 2000,
+                                    location: 'bottom'
+                                });
+                            } else {
+                                api.hideProgress();
+                                api.toast({
+                                    msg: that.getCodetip.saveFail,
+                                    duration: 2000,
+                                    location: 'bottom'
+                                });
+                            }
+                        });
+                    }
+                });
+            },
+            copy: function() {
+                var that = this
+                var clipBoard = api.require('clipBoard');
+                clipBoard.set({
+                    value: that.shareinfo.img_url
+                }, function(ret, err) {
+                    if (ret) {
+                        api.toast({
+                            msg: that.getCodetip.copyStatu,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                    } else {}
+                });
+            },
+            OpenShot: function() {
+                var that = this
+                api.sendEvent({
+                    name: 'pause',
+                    extra: {}
+                });
+                if (that.info.auth_primary == 0) {
+                    api.toast({
+                        msg: that.getCodetip.isSmrz,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    setTimeout(function() {
+                        api.openWin({
+                            name: 'personal_data',
+                            url: './my/personal_data.html',
+                            reload: true,
+                            pageParam: {}
+                        });
+                    }, 1500);
+                } else {
+                    // http(checkTodayVideo, 'post', {}, function(ret) {
+                    //     if (ret.code == 200) {
+                    api.openFrame({
+                        name: 'shotframe',
+                        url: 'shotframe.html',
+                        bounces: false,
+                        reload: true,
+                        rect: {
+                            x: 0,
+                            y: 0,
+                            w: api.winWidth,
+                            h: api.winHeight
+                        }
+                    });
+                    //     }
+                    // })
+                }
+
+            },
+            toPage: function(name, url, params) {
+                api.openWin({
+                    name: name,
+                    url: url,
+                    reload: true,
+                    pageParam: params || {}
+                });
+            },
+            getInfo: function() {
+                var that = this;
+                http(getuserinfoUrl, 'post', {}, function(ret) {
+                    if (ret.code == 200) {
+                        that.info = ret.data;
+                        if (that.info.novice_tips_status == 0) {
+                            that.isShowNewtip = true
+                        }
+                        if (that.info.auth_senior == 1) {
+                            that.Vlevel = 3;
+                        } else {
+                            if (that.info.auth_middle == 1) {
+                                that.Vlevel = 2;
+                            } else {
+                                if (that.info.auth_primary == 1) {
+                                    that.Vlevel = 1;
+                                } else {
+                                    that.Vlevel = 0;
+                                }
+                            }
+                        }
+                    } else if (ret.code == 401) {
+                        api.sendEvent({
+                            name: 'pause',
+                            extra: {}
+                        });
+                        toPage('login', 'auth/login.html', {
+                            from: 'center'
+                        });
+                    }
+                })
+            },
+            showAlert: function() {
+                api.toast({
+                    msg: '暂未开放，敬请期待',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+            }
+        }
+    })
+</script>

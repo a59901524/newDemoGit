@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="../../lib/iconfont2/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <!-- <style>
+        #praise {
+            background: #161823;
+            position: absolute;
+            top: 45px;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+    </style> -->
+</head>
+
+<body>
+
+    <div id="praise">
+        <header class="header color_default1">
+            <i class="iconfont icon-xiangzuo" onclick="goBack()"></i>
+            <div>{{langContent.title?langContent.title:''}}</div>
+        </header>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    var praise = new Vue({
+        el: "#praise",
+        data: {
+            langContent: {},
+        },
+        created: function() {
+            var that = this
+            apiready = function() {
+                praise.$data.langContent = GlobleLanguageContent.praise_frame;
+                fixStatusbar('header,.header,.headers', '.content');
+                that.openFrame()
+            }
+        },
+        methods: {
+            openFrame: function() {
+                    api.openFrame({
+                        name: 'praise_frame',
+                        url: 'praise_frame.html',
+                        rect: {
+                            x: 0,
+                            y: $api.dom(".header").offsetHeight,
+                            w: 'auto',
+                            h: 'auto'
+                        },
+                        reload: true,
+                        pageParam: {}
+                    })
+                }
+                // getInfo: function () {
+
+            //     var that = this;
+            //     http(userInfo, 'get', {},
+            //         function (ret) {
+            //             // console.log(JSON.stringify(ret))
+            //             if (ret.code == 200) {
+            //                 that.usInfo = ret.data
+            //             } else if (ret.code == 403) {
+            //                 toPage('login', 'my/login.html');
+            //             }
+            //         },
+            //         function (err) {
+            //             alert(JSON.stringify(err));
+            //         });
+            // },
+            // toPage: function (name, url, params) {
+            //     api.openWin({
+            //         name: name,
+            //         url: url,
+            //         reload: true,
+            //         pageParam: params || {}
+            //     });
+            // }
+        }
+    })
+</script>

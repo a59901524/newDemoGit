@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=0">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <link rel="stylesheet" href="./style/reset.css">
+    <link rel="stylesheet" type="text/css" href="../../lib/vant/vant.css" />
+    <link rel="stylesheet" href="./style/home.css">
+    <script src="./js/lib-flexible.js"></script>
+    <title>首页</title>
+</head>
+<body class="home">
+    <div id="home" class="contarin">
+        <div class="head">
+            <div class="headLeft">
+                <div class="h3">可售额度</div>
+                133565
+            </div>
+            <div class="headRight">
+                <div class="pUl">
+                    <div class="li">
+                        <div class="p colffffff fontSize22">今日交易手续费</div>
+                        24190
+                    </div>
+                    <div class="li">
+                        <div class="p colffffff fontSize22">个人荣誉分</div>
+                        24190
+                    </div>
+                </div>
+                <div class="pUl">
+                    <div class="li">
+                        <div class="p colffffff fontSize22">总交易手续</div>
+                        24190
+                    </div>
+                    <div class="li">
+                        <div class="p colffffff fontSize22">平台总交易量</div>
+                        24190
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="btn">挂买单</div>
+        <div class="hb bj bjTu">
+            <div class="title">今日参考价</div>
+            <div class="content col04e5ee">$<span class="fontSize52">1.148</span><span class="colffffff fontSize24">（汇率1：7）≈8.036CNY</span></div>
+            <div class="hbFixe fontSize26">
+                <div class="left">
+                    昨日参考价：<span class="col04e5ee">$1.145</span>
+                </div>
+                <div class="right">
+                    今日交易量：<span class="colff8900">91650</span>
+                </div>
+            </div>
+        </div>
+        <div class="list bj bjTu">
+            <div class="tabNav">
+                <span @click="tabClass()" :class="{'col04e5ee': tabShow}">求购列表</span>
+                <span @click="tabClass()" :class="{'col04e5ee': !tabShow}">交易信箱</span>
+            </div>
+            <div v-show='!tabShow'>
+                <div class="tab">
+                    <div class="tabLi"><span>10-20体验区</span></div>
+                    <div class="tabLi"><span class="col04e5ee">20-1000体验区</span></div>
+                </div>
+                <div class="ul">
+                    <div class="li">
+                        <div class="img"><img src="./image/tx.png" alt=""></div>
+                        <div class="content">
+                            <div class="ptop">
+                                <div class="left">15898988888<span><img src="./image/wb.png" alt=""></span><span><img src="./image/wx.png" alt=""></span><span><img src="./image/zf.png" alt=""></span></div>
+                                <div class="right">33 | 199分</div>
+                            </div>
+                            <div class="pbot fontSize22">
+                                <div class="left">
+                                    <div class="num">数量: <span class="fontSize32 col00fbfd">3888</span></div>
+                                    <div class="price col04e5ee">单价：$0.6010</div>
+                                </div>
+                                <div class="right fontSize24" @click='show = true'>出售</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="li">
+                        <div class="img"><img src="./image/tx.png" alt=""></div>
+                        <div class="content">
+                            <div class="ptop">
+                                <div class="left">15898988888<span><img src="./image/wb.png" alt=""></span><span><img src="./image/wx.png" alt=""></span><span><img src="./image/zf.png" alt=""></span></div>
+                                <div class="right">33 | 199分</div>
+                            </div>
+                            <div class="pbot fontSize22">
+                                <div class="left">
+                                    <div class="num">数量: <span class="fontSize32 col00fbfd">3888</span></div>
+                                    <div class="price col04e5ee">单价：$0.6010</div>
+                                </div>
+                                <div class="right fontSize24">出售</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="li">
+                        <div class="img"><img src="./image/tx.png" alt=""></div>
+                        <div class="content">
+                            <div class="ptop">
+                                <div class="left">15898988888<span><img src="./image/wb.png" alt=""></span><span><img src="./image/wx.png" alt=""></span><span><img src="./image/zf.png" alt=""></span></div>
+                                <div class="right">33 | 199分</div>
+                            </div>
+                            <div class="pbot fontSize22">
+                                <div class="left">
+                                    <div class="num">数量: <span class="fontSize32 col00fbfd">3888</span></div>
+                                    <div class="price col04e5ee">单价：$0.6010</div>
+                                </div>
+                                <div class="right fontSize24">出售</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="li">
+                        <div class="img"><img src="./image/tx.png" alt=""></div>
+                        <div class="content">
+                            <div class="ptop">
+                                <div class="left">15898988888<span><img src="./image/wb.png" alt=""></span><span><img src="./image/wx.png" alt=""></span><span><img src="./image/zf.png" alt=""></span></div>
+                                <div class="right">33 | 199分</div>
+                            </div>
+                            <div class="pbot fontSize22">
+                                <div class="left">
+                                    <div class="num">数量: <span class="fontSize32 col00fbfd">3888</span></div>
+                                    <div class="price col04e5ee">单价：$0.6010</div>
+                                </div>
+                                <div class="right fontSize24">出售</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div v-show="tabShow">
+                <div class="tabUl">
+                    <div class="ulLeft">
+                        <span>买入</span>
+                        <span>卖出</span>
+                    </div>
+                    <div class="ulRight">
+                        <span>挂单中</span>
+                        <span>交易中</span>
+                        <span>已完成</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <van-popup v-model="show">
+            <div class="sell bjTu">
+                <div class="title">买入HDC</div>
+                <div class="input">
+                    <label class="fontSize28">购买数量</label>
+                    <input type="text">
+                </div>
+                <div class="input">
+                    <label class="fontSize28">购买单价（$）</label>
+                    <input type="text">
+                </div>
+                <div class="input jt" @click="onPayMent">
+                    <label class="fontSize28">交易方式</label>
+                    <input type="text" disabled>
+                </div>
+                <div class="input">
+                    <label class="fontSize28">交易密码</label>
+                    <input type="text">
+                </div>
+                <div class="content fontSize24">
+                    <span class="colffffff">请注意：</span>挂单完成后，取消订单将扣除挂单剩余数量百分之十的手续费，请慎重挂单。<br/>发起买入信息后请及时关注您的防弹匹配情况，请确保匹配成功，对方开启收款信息后1小时内计时付款并上传支付凭证，否则被投诉将会影响您的信用。
+                </div>
+                <div class="foot">
+                    <div class="btn confirm" @click='submit'>确认</div>
+                    <div class="btn cacel" @click='submit'>取消</div>
+                </div>
+            </div>
+        </van-popup>
+        <van-popup
+          v-model="payMentShow"
+          position="bottom"
+          :style="{ height: '30%' }"
+        >
+            <van-picker
+              show-toolbar
+              title="支付方式"
+              :columns="columns"
+              @cancel="onCancel"
+              @confirm="onConfirm"
+            />
+        </van-popup>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vant@2.5/lib/vant.min.js"></script>
+    <script>
+        new Vue({
+            el:"#home",
+            data () {
+                return {
+                    tabShow: false,
+                    show: false,
+                    columns: ['微信', '支付宝'],
+                    payMentShow: false
+                }
+            },
+            methods: {
+                tabClass () {
+                    this.tabShow = !this.tabShow
+                },
+                onCancel () {
+                    this.payMentShow = false
+                },
+                onConfirm () {
+                    this.payMentShow = false
+                },
+                submit () {
+                    this.show = false
+                },
+                onPayMent () {
+                    this.payMentShow = true
+                }
+            }
+		})
+    </script>
+</body>
+</html>

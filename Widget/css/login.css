@@ -1,0 +1,54 @@
+.code_tip {
+    margin-top: 6rem;
+    width: 100%;
+    padding: .5rem 0;
+}
+
+input::placeholder {
+    font-size: 1rem;
+    color: #B3A795;
+}
+
+.ml_h_img {
+    padding-top: 70px;
+}
+
+.ml_h_img img {
+    width: 8.4rem;
+    height: 8.4rem;
+}
+
+.ml_input {
+    margin: 4rem;
+}
+
+.r_s1_wrapper {
+    padding-bottom: 1rem;
+    /* border-color: #666666; */
+    margin-bottom: 1.5rem;
+    background-image: url(../image/input_bg.png);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+}
+
+.r_s1_wrapper span {
+    width: 33%;
+}
+
+.r_s1_wrapper img {
+    width: 20px;
+    height: auto;
+}
+
+.r_s1_wrapper input {
+    /* width: 60%; */
+    color: #B3A795;
+    text-indent: 12px;
+    font-size: 14px;
+}
+
+p {
+    margin: 0;
+    color: blue;
+    font-size: 14px
+}

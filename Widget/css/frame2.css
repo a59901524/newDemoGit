@@ -1,0 +1,257 @@
+#frame2 {
+    min-height: calc(100vh);
+    background: #000000;
+    padding-top: 130vw;
+}
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background: #000000;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+.back {
+    position: fixed;
+    top: 30px;
+    left: 15px;
+    width: 35px;
+    height: 35px;
+}
+
+.editbeauty {
+    position: fixed;
+    top: 30px;
+    right: 15px;
+    width: 100px;
+    height: 35px;
+    /* color: #B3A795; */
+    color: #ffffff;
+}
+
+.editbeauty img {
+    width: 25px;
+    height: 25px;
+    margin: auto;
+}
+
+.paibtn {
+    position: fixed;
+    bottom: 35px;
+    left: 50%;
+    width: 70px;
+    height: 70px;
+    line-height: 70px;
+    text-align: center;
+    color: #ffffff;
+    transform: translate(-50%);
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    -ms-border-radius: 50%;
+    -o-border-radius: 50%;
+    background: #cb974d;
+    -webkit-transform: translate(-50%);
+    -moz-transform: translate(-50%);
+    -ms-transform: translate(-50%);
+    -o-transform: translate(-50%);
+}
+
+.spead {
+    width: 80%;
+    height: 30px;
+    line-height: 30px;
+    border-radius: 5px;
+    position: fixed;
+    bottom: 140px;
+    left: 10%;
+    background: rgba(0, 0, 0, 0.3);
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -ms-border-radius: 5px;
+    -o-border-radius: 5px;
+}
+
+.spead div {
+    width: 20%;
+    height: 100%;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.spead div.on {
+    background: #cb974d;
+}
+
+.upload {
+    position: fixed;
+    bottom: 40px;
+    width: 90px;
+    height: 70px;
+    text-align: center;
+    color: #ffffff;
+    left: 65%;
+    /* color: #B3A795; */
+}
+
+.upload img {
+    height: 28px;
+    width: 28px;
+    margin: 20px auto 0px auto;
+}
+
+.next {
+    position: fixed;
+    right: 30px;
+    bottom: 25px;
+    /* margin-left: calc(90% - 80px); */
+    width: 80px;
+    height: 30px;
+    line-height: 30px;
+    border-radius: 15px;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    -ms-border-radius: 15px;
+    -o-border-radius: 15px;
+    text-align: center;
+    background: #cb974d;
+    color: #ffffff;
+}
+
+.beauty {
+    width: 20%;
+    /* height: 40px; */
+    /* line-height: 40px; */
+    position: fixed;
+    top: 0;
+    right: 0px;
+    margin: 10px auto;
+    /* color: #B3A795; */
+    color: #ffffff;
+}
+
+.beauty img {
+    width: 25px;
+    height: 25px;
+    margin: auto;
+}
+
+.meiyan {
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    color: #cb974d;
+}
+
+input[type=range] {
+    margin-top: 0px;
+    outline: none;
+    -webkit-appearance: none;
+    /*清除系统默认样式*/
+    width: 80% !important;
+    /* background: -webkit-linear-gradient(#B3A795, #B3A795) no-repeat, #ddd; */
+    background: -webkit-linear-gradient(#cb974d, #cb974d) no-repeat, #343434;
+    background-size: 0% 100%;
+    /*设置左右宽度比例*/
+    height: 3px;
+    /*横条的高度*/
+}
+
+
+/*拖动块的样式*/
+
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    /*清除系统默认样式*/
+    height: 16px;
+    /*拖动块高度*/
+    width: 16px;
+    /*拖动块宽度*/
+    background: #cb974d;
+    /*拖动块背景*/
+    border-radius: 50%;
+    /*外观设置为圆形*/
+    /* border: solid 1px #B3A795; */
+    /*设置边框*/
+}
+
+.overblack {
+    position: fixed;
+    bottom: 105px;
+    left: 0;
+    top: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0);
+    z-index: 999;
+}
+
+.meiyanpart {
+    width: 100%;
+    line-height: 40px;
+    position: fixed;
+    bottom: 40px;
+    left: 0;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+}
+
+.voicepart {
+    bottom: 0px;
+}
+
+.selcetstyle {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 40px;
+    color: #ffffff;
+    background: rgba(0, 0, 0, 0.9);
+}
+
+.selcetstyle div.on {
+    color: #cb974d;
+    border-bottom: 2px solid #cb974d;
+}
+
+#loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #161922;
+    color: #ffffff;
+}
+
+.loadingimg {
+    height: 60px;
+    width: auto;
+}
+
+.Mvpart {
+    height: 80px;
+    width: 100%;
+    overflow-y: hidden;
+    overflow-x: scroll;
+}
+
+.Mvpart::-webkit-scrollbar {
+    display: none;
+}
+
+.MVitem {
+    height: 70px;
+    width: 70px;
+    color: #ffffff;
+    line-height: 20px;
+}
+
+.MVitem img {
+    height: 50px;
+    width: 50px;
+}

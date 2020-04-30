@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>我的森林</title>
+    <link rel="stylesheet" href="../../lib/iconfont2/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/new/reset.css">
+    <link rel="stylesheet" type="text/css" href="../../css/new/myMineral.css">
+    <script type="text/javascript" src="../../script/lib-flexible.js"></script>
+</head>
+
+<body class="has_header">
+    <div id="myforest" class='myMineral' v-cloak>
+        <header class="header">
+            <i class="iconfont icon-xiangzuo color_default1 fontSize16" @click="goBack()"></i>
+            <div>我的矿石</div>
+        </header>
+        <div class="cont">
+            <div class="nav">
+                <div class="navLi" :class="{'active':proid==1}" @click="switchover(1)">微型金矿</div>
+                <div class="navLi" :class="{'active':proid==2}" @click="switchover(2)">小型金矿</div>
+                <div class="navLi" :class="{'active':proid==3}" @click="switchover(3)">中型金矿</div>
+                <div class="navLi" :class="{'active':proid==4}" @click="switchover(4)">大型金矿</div>
+                <div class="navLi" :class="{'active':proid==5}" @click="switchover(5)">豪华型金矿</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    var myforest = new Vue({
+        el: "#myforest",
+        data: {
+            type: 1,
+            proid: 1,
+            pro_one_count: '',
+            pro_two_count: '',
+            pro_three_count: '',
+            pro_four_count: '',
+            pro_five_count: '',
+            langContent: {}
+        },
+        created: function() {
+            var that = this
+            apiready = function() {
+                api.setStatusBarStyle({
+                    style: 'dark',
+                    color: 'rgba(0,0,0,0)'
+                });
+                var height = $api.fixStatusBar($api.dom('.header'))
+                if (height > 0) {
+                    $api.css($api.dom('.cont'), 'margin-top:' + (height) + 'px;');
+                }
+                myforest.$data.langContent = GlobleLanguageContent.myforest;
+                that.type = api.pageParam.type
+                http(myProListUrl, 'post', {
+                    status: that.type,
+                    forest_id: that.proid
+                }, function(ret) {
+                    if (ret.code == 200) {
+                        that.pro_one_count = ret.data.one_count
+                        that.pro_two_count = ret.data.two_count
+                        that.pro_three_count = ret.data.three_count
+                        that.pro_four_count = ret.data.four_count
+                        that.pro_five_count = ret.data.five_count
+                    }
+                });
+                setTimeout(function() {
+                    that.openFrame()
+                }, 500);
+                api.addEventListener({
+                    name: 'viewdisappear'
+                }, function(ret, err) {
+                    api.setStatusBarStyle({
+                        style: 'light',
+                        color: 'rgba(0,0,0,0)'
+                    });
+                });
+                api.addEventListener({
+                    name: 'keyback'
+                }, function(ret, err) {
+                    that.goBack()
+                });
+            }
+        },
+        methods: {
+            goBack: function(name, animation) {
+                api.setStatusBarStyle({
+                    style: 'light',
+                    color: 'rgba(0,0,0,0)'
+                });
+                api.closeWin({
+                    name: name || '',
+                    animation: animation || {
+                        type: "push", //动画类型（详见动画类型常量）
+                        subType: "from_left", //动画子类型（详见动画子类型常量）
+                        duration: 300 //动画过渡时间，默认300毫秒
+                    }
+                });
+            },
+            switchover: function(proid_type) {
+                var that = this;
+                that.proid = proid_type
+                api.closeFrame({
+                    name: 'frame2_comment'
+                });
+                setTimeout(function() {
+                    that.openFrame()
+                }, 50);
+            },
+            openFrame: function() {
+                var that = this
+                api.openFrame({
+                    name: 'frame2_comment',
+                    url: 'frame2_comment.html',
+                    rect: {
+                        x: 0,
+                        y: $api.dom(".header").offsetHeight + $api.dom(".cont").offsetHeight,
+                        w: 'auto',
+                        h: api.frameHeight - $api.dom('.header').offsetHeight - $api.dom(".cont").offsetHeight
+                    },
+                    reload: true,
+                    pageParam: {
+                        type: api.pageParam.type,
+                        proid: that.proid
+                    }
+                })
+            },
+
+        }
+    })
+</script>

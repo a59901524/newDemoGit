@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>意见举报</title>
+    <link rel="stylesheet" href="../../lib/iconfont2/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <style>
+        .tomyfeed {
+            font-size: 1rem;
+            position: absolute;
+            right: 1rem;
+            /* height: 45px; */
+            /* line-height: 45px; */
+        }
+        
+        textarea {
+            font-size: 14px;
+            color: #B3A795;
+        }
+        
+        textarea::placeholder {
+            font-size: 14px;
+            color: #B3A795;
+        }
+        
+        input::placeholder {
+            font-size: 14px;
+            color: #B3A795;
+        }
+        
+        input::-ms-input-placeholder {
+            text-align: right;
+        }
+        
+        input::-webkit-input-placeholder {
+            text-align: right;
+        }
+        
+        input:disabled {
+            color: #B3A795;
+        }
+        
+        .camera {
+            width: 6rem;
+            /* height: 5.4rem; */
+            margin-left: 1rem;
+            border: 1px dashed #999999;
+        }
+        
+        .evalC_img_item {
+            width: 6rem;
+            height: 6rem;
+            position: relative;
+        }
+        
+        .evalC_img_item:nth-child(1) {
+            margin-left: 1rem;
+        }
+        
+        .evalC_img_item span {
+            position: absolute;
+            right: -5px;
+            background: #e74143;
+            border-radius: 100%;
+            width: 1.3rem;
+            height: 1.3rem;
+            font-size: 1rem;
+            top: -5px;
+            color: #fff;
+            text-align: center
+        }
+        
+        .BB1 {
+            border-bottom: 1px solid #000000;
+        }
+    </style>
+</head>
+
+<body class="has_header">
+    <div id="report" class="content color_default1" v-cloak>
+        <header class="header bbd">
+            <i class="iconfont icon-xiangzuo" onclick="goBack()"></i>
+            <div>{{(titles&&titles!='')?titles:'举报'}}</div>
+            <div class="tomyfeed" @click="getType('submit')">{{langContent.subbtn?langContent.subbtn:''}}</div>
+        </header>
+        <div class="flex_row_left bbd padding12 bg_white">
+            <span class="marginR5">{{langContent.retype?langContent.retype:''}}</span>
+            <span @click="choose()" class="color_999 flex_grow1">{{type}}</span>
+        </div>
+        <div class="padding12 bg_white">
+            <textarea style="font-size: 1rem;width: 100%; height: 120px; border-radius: 5px; outline: none;background: transparent;" rows="5" class="flex_1" :placeholder="langContent.text_inout" v-model="content"></textarea>
+        </div>
+
+        <div v-show="report_type==2" class="flex_row_left padding1 bbd padding12 bg_white">
+            <div style="white-space: nowrap;">{{langContent.img?langContent.img:''}}</div>
+            <div v-show="imgs&&imgs!=''" class="evalC_img_item marginR5 marginB5" style="flex: 1">
+                <span @click="deleteImg()">×</span>
+                <img :src="imgs?imgs:'../../image/img7.png'" alt="">
+            </div>
+            <div class="camera" v-if="imgs==''" @click="gopic()">
+                <img src="../../image/uppz.png" alt="">
+            </div>
+        </div>
+
+        <p v-show="report_type==2" class="color_999 padding1 bg_white">{{langContent.imgtip?langContent.imgtip:''}}</p>
+        <!-- <div class="common_submit_btn padding1" @click="getType('submit')">{{langContent.subbtn?langContent.subbtn:''}}</div> -->
+
+        <!-- <div> -->
+        <ul style="position: fixed;top: 8.2rem;width: 100%;background: #eeeeee;padding: 1rem;text-align: center;" v-if="showType">
+            <li class="marginT1 color_default1" v-for="item in typeList" @click="choose(item)">{{getCodetip.language_id==1?item.name:item.name_en}}</li>
+        </ul>
+        <!-- </div> -->
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script src="../../script/api.js" charset="utf-8"></script>
+<script src="../../lib/vue/vue.js" charset="utf-8"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script src="../../script/const.js" charset="utf-8"></script>
+<script src="../../script/common.js" charset="utf-8"></script>
+<script>
+    var report = new Vue({
+        el: "#report",
+        data: {
+            titles: '',
+            type: '请选择',
+            cate_id: 0,
+            showType: false,
+            typeList: [],
+            content: '',
+            imgs: '',
+            flag: true,
+            video_id: 0,
+            report_type: 1,
+            langContent: {},
+            getCodetip: {}
+        },
+        created: function() {
+            var that = this;
+            apiready = function() {
+                fixStatusbar('header,.header,.headers', '.content');
+                report.$data.langContent = GlobleLanguageContent.report;
+                report.$data.getCodetip = GlobleLanguageContent.getCode;
+                if (api.pageParam.video_id) {
+                    that.video_id = api.pageParam.video_id;
+                    that.titles = that.langContent.title1;
+                    that.report_type = 1;
+                } else {
+                    that.titles = that.langContent.title2;
+                    that.report_type = 2;
+                }
+                that.type = that.langContent.type
+                http(getreportcateUrl, 'post', {}, function(res) {
+                    if (res.code == 200) {
+                        that.typeList = res.data;
+                    }
+                })
+            }
+        },
+        methods: {
+            //选取图片
+            gopic: function() {
+                var that = this;
+                api.getPicture({
+                    sourceType: 'album',
+                    encodingType: 'jpg',
+                    mediaValue: 'pic',
+                    destinationType: 'base64',
+                    allowEdit: false,
+                    quality: 100,
+                    targetWidth: 720,
+                    targetHeight: 600,
+                    saveToPhotoAlbum: false
+                }, function(ret, err) {
+                    if (ret) {
+                        if (ret.base64Data && ret.base64Data != '') {
+                            that.imgs = ret.base64Data
+                        }
+                        // console.error(JSON.stringify(that.imgs))
+                    } else {
+                        // alert(err);
+                    }
+                });
+            },
+            deleteImg: function() {
+                var that = this;
+                that.imgs = ''
+            },
+            getType: function(params) {
+                var that = this;
+                if (this.cate_id == 0) {
+                    api.toast({
+                        msg: that.langContent.subtip,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return false
+                } else if (this.content == '') {
+                    api.toast({
+                        msg: that.langContent.content,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return false
+                }
+                var param = {
+                    category_id: that.cate_id,
+                    content: that.content,
+                    video_id: that.video_id
+                }
+                if (that.flag) {
+                    that.flag = false;
+                    http(getreportUrl, 'post', param,
+                        function(res) {
+                            that.flag = true;
+                            if (res.code == 200) {
+                                if (params == 'submit') {
+                                    api.toast({
+                                        msg: that.langContent.stutas,
+                                        duration: 2000,
+                                        location: 'bottom'
+                                    });
+                                    api.execScript({
+                                        name: 'root',
+                                        frameName: 'frame0',
+                                        script: 'frame0.closeFrames();'
+                                    });
+                                    setTimeout(function() {
+                                        goBack()
+                                    }, 500)
+                                } else {}
+                            }
+                        })
+                } else {
+                    api.toast({
+                        msg: that.langContent.wait,
+                        duration: 2000,
+                        location: 'top'
+                    });
+                }
+            },
+            choose: function(param) {
+                var that = this;
+                that.showType = !that.showType;
+                if (param) {
+                    if (that.getCodetip.language_id == 1) {
+                        that.type = param.name;
+                    } else {
+                        that.type = param.name_en;
+                    }
+                    that.cate_id = param.id
+                }
+            }
+        }
+    })
+</script>

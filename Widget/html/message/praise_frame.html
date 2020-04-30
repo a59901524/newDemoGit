@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="../../lib/iconfont/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <style>
+        #praise_frame {
+            min-height: 100%
+        }
+    </style>
+</head>
+
+<body>
+    <div id="praise_frame">
+        <div class='flex_row_left padding12 bbe' v-for="item in list" @click="toPage('discuss','../comment/discuss.html',{video_id:item.video_id})">
+            <img class='Bc' :src="item.headImg||'../../image/logo.png'" alt="" style='width: 45px;height: 45px;margin-right: 5px;'>
+            <div class='flex_grow1 color_default1 fontSize14 marginL1'>
+                <div class='marginT5' style="margin-top: 0.316rem;">{{item.nickname}}</div>
+                <div class='color_gray fontSize12 marginT5' style="line-height: 19px;margin-top: 0.716rem;">
+                    {{item.create_time}}</div>
+            </div>
+            <img :src="item.video_img" alt="" style='width: 65px;height: 65px;'>
+        </div>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    var praise_frame = new Vue({
+        el: "#praise_frame",
+        data: {
+            page: 2,
+            list: [],
+            getCodetip: {}
+        },
+        created: function() {
+            var that = this
+            apiready = function() {
+                praise_frame.$data.getCodetip = GlobleLanguageContent.getCode;
+                that.getList();
+                //上拉加载
+                api.addEventListener({
+                    name: 'scrolltobottom',
+                    extra: {
+                        threshold: 5 //设置距离底部多少距离时触发，默认值为0，数字类型
+                    }
+                }, function(ret, err) {
+                    that.getList('loadMore');
+                });
+                api.setRefreshHeaderInfo({
+                    visible: true,
+                    bgColor: 'rgba(0,0,0,0)',
+                    textColor: '#666',
+                    textDown: that.getCodetip.textDown,
+                    textUp: that.getCodetip.textUp,
+                    textLoading: that.getCodetip.textLoading,
+                    showTime: false,
+                }, function(ret, err) {
+                    that.page = 2;
+                    that.getList();
+                    api.addEventListener({
+                        name: 'scrolltobottom',
+                        extra: {
+                            threshold: 5 //设置距离底部多少距离时触发，默认值为0，数字类型
+                        }
+                    }, function(ret, err) {
+                        that.getList('loadMore');
+                    });
+                    that.toDoRequest()
+                });
+            }
+        },
+        methods: {
+            getList: function(type) {
+                var that = this;
+                var param
+                if (type) {
+                    param = {
+                        page: that.page
+                    }
+                } else {
+                    param = {
+                        page: 1,
+                    }
+                }
+                // console.log(JSON.stringify(param))
+                http(my_like_listUrl, 'post', param,
+                    function(ret) {
+                        if (ret.code == 200) {
+                            // console.log(JSON.stringify(ret))
+                            if (type == 'loadMore') {
+                                that.page++;
+                                // that.goodsList = ret.data;
+                                that.list = that.list.concat(ret.data.list);
+                                if (ret.data.list.length < 10) {
+                                    api.removeEventListener({
+                                        name: 'scrolltobottom'
+                                    })
+                                }
+                            } else {
+                                that.list = ret.data.list;
+                            }
+
+                        }
+                    });
+            },
+            // 刷新 初始化加载
+            toDoRequest: function() {
+                var that = this;
+                setTimeout(function() {
+                    api.refreshHeaderLoadDone(); //复位下拉刷新
+                    api.toast({
+                        msg: that.getCodetip.aready,
+                        duration: '1000',
+                        localtion: 'middle'
+                    });
+                }, 2000)
+            },
+            toPage: function(name, url, params) {
+                api.openWin({
+                    name: name,
+                    url: url,
+                    reload: true,
+                    animation: {
+                        type: "movein", //动画类型（详见动画类型常量）
+                        subType: "from_bottom", //动画子类型（详见动画子类型常量）
+                        duration: 300 //动画过渡时间，默认300毫秒
+                    },
+                    pageParam: params || {}
+                });
+            }
+        }
+    })
+</script>

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>联系商学院</title>
+    <link rel="stylesheet" href="../../lib/iconfont2/iconfont.css">
+    <link rel="stylesheet" href="../../css/common.css">
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        }
+        /*input::placeholder {
+            font-size: 14px;
+            color: #B3A795;
+        }*/
+        
+        input,
+        .copy {
+            width: calc(60% - 1.4rem);
+            padding: .3rem;
+            border: 1px solid #999999;
+            border-radius: .5rem;
+            display: inline-table;
+            text-align: center;
+            color: #B3A795;
+            background: #26252B;
+            opacity: 1;
+            height: 1.5rem;
+        }
+        /*input:disabled {
+            color: #B3A795;
+            background: #38373D;
+            opacity: 1;
+        }*/
+        
+        .flex_box_center {
+            display: flex;
+            flex: 1;
+            justify-content: space-around;
+            align-items: center;
+        }
+        
+        img {
+            margin: 0 auto;
+            width: 3rem;
+            height: 3rem;
+        }
+        
+        .guild_tite1 {
+            margin: 0 auto;
+            width: 10rem;
+            border: 1px solid #eeeeee;
+            border-radius: 5px;
+            padding: 0.5rem 0rem 0.5rem 0rem;
+            background-color: #fff;
+            color: #fff
+        }
+        
+        .guild_tite2 {
+            font-size: 1.3333rem;
+            text-align: center;
+            margin: 0 auto;
+            width: 10rem;
+            border-radius: 5px;
+            padding: 0.5rem 0rem 0.5rem 0rem;
+            margin: 0.5rem auto;
+        }
+        
+        .button {
+            text-align: center;
+        }
+        
+        .guild_center {
+            display: flex;
+            background-color: #38373d;
+            border: 1px solid #b3a795;
+            border-radius: 1rem;
+            margin-bottom: 1rem;
+            padding: 1rem 0rem;
+            justify-content: center;
+            margin: 0 auto;
+            width: 90%;
+        }
+        
+        .guild_center p {
+            padding: 0.3rem;
+            font-weight: 600;
+            font-size: 1.2rem;
+            color: #B3A795;
+        }
+        
+        button {
+            height: 2rem;
+            margin: 0 auto;
+        }
+        
+        .guild_lfte,
+        .manifesto,
+        .ghtx {
+            flex: 1;
+            /* text-align: center; */
+        }
+        
+        textarea {
+            font-size: 14px;
+            color: #B3A795;
+            width: calc(90% - 2rem);
+            font-size: 1rem;
+            /*
+            height: 120px;*/
+            outline: none;
+            background: transparent;
+            padding: 1rem;
+            border: 1px solid #b3a795;
+            border-radius: 1rem;
+        }
+        /*textarea::placeholder {
+            font-size: 14px;
+            color: #B3A795;
+        }*/
+        
+        .me_button {
+            margin: 1rem auto 0 auto;
+            width: 30%;
+            height: 2.5rem;
+            line-height: 2.5rem;
+            text-align: center;
+            border-radius: 1rem;
+            border: 1px solid #000;
+            background-color: #1b1d23;
+        }
+        
+        .ghicon {
+            height: 80px;
+            width: auto;
+            margin: 5px 1rem;
+            border-radius: 50%;
+        }
+        
+        .blackbg5r {
+            background: #161B21;
+            padding: 1rem;
+            border: 1px solid #333333;
+            border-radius: 5px;
+            width: 82%;
+            margin: auto;
+        }
+    </style>
+</head>
+
+<body class="has_header">
+    <div id="connectsxy" class="color_CC" v-cloak>
+        <header class="header bg_default1 color_default1">
+            <i class="iconfont icon-xiangzuo " onclick="goBack()"></i>
+            <div>{{langContent.title?langContent.title:''}}</div>
+        </header>
+        <div class="flex_box_center padding1 cont">
+        </div>
+        <div class="flex_row_center padding1 fontSize16">
+            <img class="ghicon" src="../../image/applogo.png" alt="" />
+            <!-- <div style="flex: 1;padding-left: 0.5rem;line-height: 35px;overflow: hidden;">
+                <p class="text-overflow_1">商学院昵称：{{info.name}} </p>
+            </div> -->
+        </div>
+        <div class="guild_tite2 color_black3">{{langContent.title?langContent.title:''}}</div>
+        <div class="padding1 fontSize14 bg_white color_black3" style="line-height: 30px;">
+            <!-- <div>商学院昵称：{{info.realname}} </div> -->
+            <!-- <div @click="copy(info.mobile)">商学院电话：{{info.mobile}}<span class="fontSize10">&nbsp;(点击复制)</span></div> -->
+            <div @click="copy(college_wechat)">{{langContent.wx?langContent.wx:''}}：{{college_wechat}}<span class="fontSize10">&nbsp;({{langContent.copy?langContent.copy:''}})</span></div>
+            <div @click="copy('yujianweilai166@163.com')">{{langContent.email?langContent.email:''}}：yujianweilai166@163.com<span class="fontSize10">&nbsp;({{langContent.copy?langContent.copy:''}})</span></div>
+            <!-- <div @click="copy(info.qq)">商学院 Q群：{{info.qq}}<span class="fontSize10">&nbsp;(点击复制)</span></div> -->
+        </div>
+        <!-- <div class="guild_tite2">商学院宣言</div>
+        <div class="padding1 blackbg5r fontSize14">{{info.remark}}</div> -->
+
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    var connectsxy = new Vue({
+        el: "#connectsxy",
+        data: {
+            info: {},
+            college_wechat: '',
+            langContent: {},
+            getCodetip: {}
+        },
+        created: function() {
+            var that = this
+            apiready = function() {
+                var height = $api.fixStatusBar($api.dom('.header'))
+                if (height > 0) {
+                    $api.css($api.dom('.cont'), 'margin-top:' + (height - 45) + 'px;');
+                }
+                connectsxy.$data.langContent = GlobleLanguageContent.connectsxy;
+                connectsxy.$data.getCodetip = GlobleLanguageContent.getCode;
+                that.getInfo();
+            }
+        },
+        methods: {
+            toPage: function(name, url, params) {
+                api.openWin({
+                    name: name,
+                    url: url,
+                    reload: true,
+                    pageParam: params || {}
+                });
+            },
+            copy: function(text) {
+                var that = this;
+                if (text == '') {
+                    return
+                }
+                var clipBoard = api.require('clipBoard');
+                clipBoard.set({
+                    value: text
+                }, function(ret, err) {
+                    if (ret) {
+                        api.toast({
+                            msg: that.getCodetip.copyStatu,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                        // alert(JSON.stringify(ret));
+                    } else {
+                        // alert(JSON.stringify(err));
+                    }
+                });
+            },
+            getInfo: function() {
+                var that = this;
+                // http(getUnionsUrl, 'post', {
+                //     uid: 1
+                // }, function(ret) {
+                //     if (ret.code == 200) {
+                //         that.info = ret.data;
+                //     }
+                // })
+                http(getsxywxUrl, 'post', {}, function(ret) {
+                    that.college_wechat = ret.data.info
+                        // console.error(JSON.stringify(ret))
+                })
+            },
+
+        }
+    })
+</script>

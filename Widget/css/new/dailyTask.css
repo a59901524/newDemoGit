@@ -1,0 +1,52 @@
+.dailyTask{
+	color: #ffffff;
+}
+.dailyTask .content2 .ul{
+	margin: 0.13rem 0.2rem 0;
+	background-image: url('../../image/new/mk.png');
+	background-repeat: no-repeat;
+	background-size: 100% 100%;
+	padding: 0.22rem 0.45rem;
+	font-size: 0.2rem;
+}
+.dailyTask .li{
+	display: flex;
+	justify-content: flex-start;
+}
+.dailyTask .li .liLeft{
+	width: 1.3rem;
+	height: 1.3rem;
+	border-radius: 50%;
+	background-color: rgba(37, 0, 115, 0.5);
+	position: relative;
+}
+.dailyTask .li .liLeft img{
+	width: 0.7rem;
+	height: 0.7rem;
+	position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+.dailyTask .li .liRight{
+	flex: 1;
+	margin-left: 0.35rem;
+	font-size: 0.26rem;
+}
+.dailyTask .li .liRight .title{
+	padding: 0.2rem 0 0.1rem;
+}
+.dailyTask .li .liRight p{
+	color: #fff606;
+	line-height: 0.35rem;
+}
+.dailyTask .btn{
+	height: 0.68rem;
+	line-height: 0.68rem;
+	text-align: center;
+	color: #0f56e3;
+	border-radius: 0.12rem;
+	font-size: 0.28rem;
+	background-image: linear-gradient(#1fe2ff, #007ff7);
+	margin: 0.24rem 0.25rem 0;
+}

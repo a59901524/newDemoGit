@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>交易中心列表内容</title>
+    <link rel="stylesheet" href="../../lib/iconfont2/iconfont.css">
+    <link rel="stylesheet" href="../../css/common.css">
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        }
+        
+        #frame3_comment {
+            min-height: 100%
+        }
+        
+        .check:nth-child(even) .item {
+            background: rgba(28, 131, 210, 0.4);
+        }
+        
+        .xian {
+            margin: 0 5px;
+        }
+        /* 头像 */
+        
+        .user_img {
+            width: 4rem;
+            height: 4rem;
+            border-radius: 50%;
+            margin-right: .5rem;
+        }
+        /* 图标 */
+        
+        .margin-left6 {
+            margin: 0rem .6rem;
+        }
+        
+        .margin-left2 {
+            margin: 0rem .2rem;
+        }
+        
+        .margin-right6 {
+            margin: 0rem .6rem;
+        }
+        
+        .jyuser {
+            width: 20px;
+            height: auto;
+            font-size: 20px;
+        }
+        
+        .jystyle {
+            width: 20px;
+            height: auto;
+            font-size: 20px;
+        }
+        /* 卖出按钮 */
+        
+        .maichu {
+            border-radius: 3px;
+            background: #2cc597;
+            color: #fff;
+            width: 3rem;
+            text-align: center;
+            font-size: 1.2rem;
+            padding: .3rem .6rem;
+        }
+        /* 交易信箱 */
+        
+        .onDeal_x1 {
+            color: #fff;
+            background-color: #ccaa7a;
+            border-top: solid 1px #ccaa7a !important;
+            border-bottom: solid 1px #ccaa7a !important;
+            border-left: solid 1px #ccaa7a !important;
+            border-radius: 5px 0px 0px 5px;
+            padding: .4rem 1.8rem;
+        }
+        
+        .onDeal_x2 {
+            color: #fff;
+            background-color: #ccaa7a;
+            border-top: solid 1px #ccaa7a !important;
+            border-bottom: solid 1px #ccaa7a !important;
+            border-right: solid 1px #ccaa7a !important;
+            padding: .4rem 1.8em;
+            border-radius: 0px 5px 5px 0px;
+        }
+        /* 买入 */
+        
+        .mairu_x1 {
+            border-top: solid 1px #dddddd;
+            border-bottom: solid 1px #dddddd;
+            border-left: solid 1px #dddddd;
+            border-radius: 5px 0px 0px 5px;
+            padding: .4rem 1.8rem;
+        }
+        /* 卖出 */
+        
+        .maichu_x2 {
+            border-top: solid 1px #dddddd;
+            border-bottom: solid 1px #dddddd;
+            border-right: solid 1px #dddddd;
+            border-radius: 0px 5px 5px 0px;
+            padding: .4rem 1.8em;
+        }
+        /* 完成 */
+        
+        .sta2 {
+            padding-right: 15px;
+        }
+        
+        .act {
+            color: #cb974d;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- <div class="flex_row_center color_default1  fontSize16" style="border-radius: 3px;background: #111111;padding: 5px 15px;" v-if="title=='买入'" @click="buy(item.id)">卖出</div> -->
+    <!-- <div class="flex_row_center color_default1  fontSize16" style="border-radius: 3px;background: #111111;padding: 5px 15px;" v-if="title=='卖出'" @click="buy(item.id)">购买</div> -->
+    <div id="frame3_comment" class="bg-white" v-cloak>
+        <div v-if="!showBox" @click="openFrame3()" class="bg_violet Bc colorFFF" style="height: 4rem; width: 4rem; text-align: center; line-height: 4rem;position: fixed; top: 50%; right: 0; ">显示</div>
+        <div v-if="title=='买入'||title=='卖出'" class=" color_black6">
+            <div class="flex_row_between fontSize12 padding1   bbd " v-for="(item,index) in list" :key="index">
+                <!-- 挂单用户头像 -->
+                <div><img :src="item.avatar?item.avatar:'../../image/logo.png'" alt="" class="user_img"></div>
+                <!-- 挂单用户手机号 -->
+                <div style="width: 85%;">
+                    <!-- 上 -->
+                    <div class="flex_row_between">
+                        <div class="fontSize18 flex_row_left ">
+                            <div class="color_black3">{{item.buyer_mobile?item.buyer_mobile:''}}</div>
+                            <img class="jyuser margin-left6" src="../../image/vip.svg" alt="" />
+                            <div class="fontSize14  flex_row_center">
+                                <img v-show="item.pay_type==1" class="jystyle " src="../../image/jywx.png" alt="" />
+                                <img v-show="item.pay_type==2" class="jystyle " src="../../image/jyzfb.png" alt="" />
+                                <!-- 以太坊 -->
+                                <i v-show="item.pay_type==3" class="iconfont icon-ETH jystyle  color_default1"></i>
+                                <img v-show="item.pay_type==4" class="jystyle" src="../../image/jyyhk.png" alt="" />
+                            </div>
+                        </div>
+                        <div class="fontSize16">
+                            {{item.trade_count}}<span class="xian">|</span>{{item.credit_value}}{{langContent.mark?langContent.mark:''}}
+                        </div>
+                    </div>
+                    <!-- 下 -->
+                    <div class="fontSize12  flex_row_between" style="height: 1.5rem; ;line-height: 1.5rem; margin-top: .5rem;">
+                        <div style="width: 35%;">
+                            {{langContent.num?langContent.num:''}}:<span class=" color_default1 fontSize18">{{item.num}}</span>
+                        </div>
+                        <div>
+                            {{langContent.price?langContent.price:''}}: ${{item.unit_price}}
+                        </div>
+                        <div class="flex_row_right " v-if="title=='买入'" @click="openBuy_aFrame(item.id)">
+                            <div class="flex_row_center color_default1  maichu">{{langContent.sell?langContent.sell:''}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- --------------------------------------------------------交易信箱 ---------------------------------------------------------->
+        <div class=" padding12 fontSize14 color_999 flex_row_between" style="padding-top: 1rem" v-if="title=='交易信箱'">
+            <div class="flex_row_left">
+                <div class="mairu_x1" :class="{'onDeal_x1':status==1}" @click="changeStatus(1)">{{langContent.status1?langContent.status1:''}}</div>
+                <div class="maichu_x2" :class="{'onDeal_x2':status==2}" @click="changeStatus(2)">{{langContent.status2?langContent.status2:''}}</div>
+            </div>
+            <div>
+                <div class="flex_row_left  fontSize14 color_999" v-if="title=='交易信箱'">
+                    <!-- 1:挂单中, 2:交易中, 3:已完成 -->
+                    <div v-show="status==1" class="sta2" :class="{'act':substatus==1}" @click="changesubStatus(1)">{{langContent.status4?langContent.status4:''}}</div>
+                    <div class="sta2" :class="{'act':substatus==2}" @click="changesubStatus(2)">{{langContent.status5?langContent.status5:''}}</div>
+                    <div :class="{'act':substatus==3}" @click="changesubStatus(3)">{{langContent.status6?langContent.status6:''}}</div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="bbd padding12" v-if="title=='交易信箱'" v-for="(item, index) in list" :key="index">
+            <div class="flex_row_between fontSize14  color_999 ">
+                <div>{{langContent.order?langContent.order:''}}：{{item.order_sn}}</div>
+                <div v-if="item.trade_status==1">
+                    {{item.create_time}}
+                </div>
+                <div v-if="item.trade_status!=1">
+                    {{item.trade_time}}
+                </div>
+            </div>
+            <div class="fontSize14  color_black3 marginT1">
+                {{item.show_msg}}
+            </div>
+
+            <div class="flex_row_between  color_999  fontSize14">
+                <!-- 卖家资料 -->
+                <div class="marginT1" v-if="status==1&&item.trade_status!=1&&item.trade_status!=4" style=" text-align: center;" @click="openBuyFrame(1,item.seller_uid,item.id,item.trade_status,item.num,item.unit_price,item.eth_price,item.type)">
+                    <i class="iconfont icon-ziliao fontSize14 " style="color: #009ad6;"></i> {{langContent.info1?langContent.info1:''}}
+                </div>
+                <!-- 买家资料 -->
+                <div class="marginT1" v-if="status==2&&item.trade_status!=1&&item.trade_status!=4" @click="openBuyFrame(3,item.buyer_uid,item.id,item.trade_status,item.num,item.unit_price,item.eth_price,item.type)">
+                    <i class="iconfont icon-ziliao fontSize14" style="color: #009ad6;"></i>{{langContent.info2?langContent.info2:''}}
+                </div>
+                <!-- 确认交易 -->
+                <!-- <div v-if="(status==1&&item.trade_status==2)||(status==2&&item.trade_status==3)" @click="openBuyFrame(2,item.user_ID,item.id,item.trade_status,item.num,item.unit_price,item.eth_price,item.type)">
+                    <i class="iconfont  icon-jiaoyi fontSize14 " style="color: #23ab3d;"></i> {{langContent.sure?langContent.sure:''}}
+                </div> -->
+                <div class="marginT1" v-if="(status==1&&item.trade_status==2)" @click="openBuyFrame(2,item.seller_uid,item.id,item.trade_status,item.num,item.unit_price,item.eth_price,item.type)">
+                    <i class="iconfont  icon-jiaoyi fontSize14 " style="color: #23ab3d;"></i> {{langContent.sure?langContent.sure:''}}
+                </div>
+                <div class="marginT1" v-if="(status==2&&item.trade_status==3)" @click="openBuyFrame(2,item.buyer_uid,item.id,item.trade_status,item.num,item.unit_price,item.eth_price,item.type)">
+                    <i class="iconfont  icon-jiaoyi fontSize14 " style="color: #23ab3d;"></i> {{langContent.sure?langContent.sure:''}}
+                </div>
+                <!-- <div class='' v-if="status==1&&item.trade_status==1">取消交易</div> -->
+                <!-- 买家投诉卖家 -->
+                <div class="marginT1" v-if="status==1&&item.trade_status!=1&&item.order_status!=3" @click="toPage(item.ts_status,'feedback','../my/feedback.html',{from:'jyzx',dingdan:item.order_sn,id:item.id,user_ID:item.seller_uid,type_id:1})">
+                    <i class="iconfont icon-jubao fontSize14 " style="color: #ff6262;"></i> {{langContent.report?langContent.report:''}}
+                </div>
+                <!-- 卖家投诉买家 -->
+                <div class="marginT1" v-if="status==2&&item.trade_status!=1&&item.order_status!=3" @click="toPage(item.ts_status,'feedback','../my/feedback.html',{from:'jyzx',dingdan:item.order_sn,id:item.id,user_ID:item.buyer_uid,type_id:1})">
+                    <i class="iconfont icon-jubao fontSize14 " style="color: #ff6262;"></i> {{langContent.report?langContent.report:''}}
+                </div>
+            </div>
+            <!-- <div v-if="(status!=3)&&item.trade_status==0" @click="cancel(item.id)" class="color_black6 flex_row_center fontSize14">
+                <i class="iconfont icon-quxiaodingdan fontSize14 marginR5 " style="color: #ff6262; "></i> 取消挂单
+            </div> -->
+            <!-- 取消挂单 1-->
+            <div v-if="(status!=3)&&item.trade_status==1" @click="openBuyFrame(0,item.buyer_uid,item.id,item.trade_status,item.num,item.unit_price,item.eth_price,item.type)" class="color_black6 flex_row_center fontSize14 marginT1">
+                <i class="iconfont icon-quxiaodingdan fontSize14 marginR5 " style="color: #ff6262; "></i> {{langContent.cancel?langContent.cancel:''}}
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    var frame3_comment = new Vue({
+        el: "#frame3_comment",
+        data: {
+            page: 1,
+            title: '',
+            type: '',
+            keywords: '',
+            buytype: '',
+            buytitle: '',
+            list: [{
+                trade_status: 2
+            }],
+            status: 1,
+            substatus: 1,
+            langContent: {},
+            getCodetip: {},
+            showBox: true
+        },
+        created: function() {
+            var that = this
+            apiready = function() {
+                that.title = api.pageParam.title;
+                that.type = api.pageParam.type;
+                that.keywords = api.pageParam.keywords;
+                that.buytype = api.pageParam.buytype;
+                that.buytitle = api.pageParam.buytitle;
+                that.showBox = api.pageParam.showBox; // 接收F3 传过来的false 才显示按钮
+                frame3_comment.$data.langContent = GlobleLanguageContent.frame3_comment;
+                frame3_comment.$data.getCodetip = GlobleLanguageContent.getCode;
+                that.changeStatus(1);
+                setTimeout(function() {
+                    that.changesubStatus(2);
+                }, 300);
+
+                //上拉加载
+                api.addEventListener({
+                    name: 'scrolltobottom',
+                    extra: {
+                        threshold: 5 //设置距离底部多少距离时触发，默认值为0，数字类型
+                    }
+                }, function(ret, err) {
+                    that.getGoods('loadMore');
+                });
+                api.setRefreshHeaderInfo({
+                    visible: true,
+                    bgColor: 'rgba(0,0,0,0)',
+                    textColor: '#666',
+                    textDown: that.getCodetip.textDown,
+                    textUp: that.getCodetip.textUp,
+                    textLoading: that.getCodetip.textLoading,
+                    showTime: false,
+                }, function(ret, err) {
+                    that.page = 1;
+                    that.getGoods();
+                    // 上拉加载
+                    api.addEventListener({
+                        name: 'scrolltobottom',
+                        extra: {
+                            threshold: 5 //设置距离底部多少距离时触发，默认值为0，数字类型
+                        }
+                    }, function(ret, err) {
+                        // if (api.pageParam.title == '交易信箱') {
+
+                        // } else {
+                        that.getGoods('loadMore');
+                        // }
+                    });
+                    that.toDoRequest()
+                });
+            }
+        },
+        methods: {
+            // 跳转到frnme3
+            openFrame3: function() {
+                var that = this;
+                api.execScript({
+                    name: 'root',
+                    frameName: 'frame3',
+                    script: 'frame3.hiddenshow()'
+                });
+            },
+            // 取消挂单
+            // cancel: function(id) {
+            //     var that = this
+            //     api.confirm({
+            //         title: '提示',
+            //         msg: '是否取消此订单',
+            //         buttons: ['是', '否']
+            //     }, function(ret, err) {
+            //         var index = ret.buttonIndex;
+            //         if (index == 1) {
+
+            //             http(delOrderUrl, 'post', {
+            //                 id: id
+            //             }, function(ret) {
+            //                 if (ret.code == 200) {
+            //                     api.toast({
+            //                         msg: ret.msg,
+            //                         duration: 2000,
+            //                         location: 'bottom'
+            //                     });
+            //                     that.getGoods()
+            //                     api.execScript({
+            //                         name: 'root',
+            //                         frameName: 'frame3',
+            //                         script: 'frame3.getHeader()'
+            //                     });
+            //                 }
+            //             })
+            //         }
+            //     });
+            // },
+            openBuyFrame: function(type, user_ID, id, trade_status, num, unit_price, eth_price, isShow_type) {
+                var that = this
+                    // 提示交易金额   看这里看这里
+                    // 卖家资料1  买家资料3  确认交易2 取消交易0
+                if (type == 1 || type == 2 || type == 3 || type == 0) {
+                    api.openFrame({
+                        name: 'material_tips',
+                        url: 'material_tips.html',
+                        reload: true,
+                        rect: {
+                            x: 0,
+                            y: 0,
+                            w: 'auto',
+                            h: 'auto'
+                        },
+                        pageParam: {
+                            type: type,
+                            user_ID: user_ID,
+                            id: id,
+                            trade_status: trade_status,
+                            num: num,
+                            unit_price: unit_price,
+                            status: that.status,
+                            eth_price: eth_price,
+                            isShow_type: isShow_type
+                        }
+                    });
+                }
+
+            },
+            // 新写的卖出拆分
+            openBuy_aFrame: function(id) {
+                api.openFrame({
+                    name: 'op_sell_JXA',
+                    url: 'op_sell_JXA.html',
+                    reload: true,
+                    rect: {
+                        x: 0,
+                        y: 0,
+                        w: 'auto',
+                        h: 'auto'
+                    },
+                    pageParam: {
+                        id: id,
+                    }
+                });
+            },
+
+            changeStatus: function(num) {
+                var that = this;
+                this.status = num;
+                if (num == 2 && that.substatus == 1) {
+                    that.substatus = 2
+                }
+                this.getGoods();
+            },
+            changesubStatus: function(num) {
+                this.substatus = num;
+                this.getGoods();
+            },
+            getGoods: function(type) {
+                var that = this;
+                var url
+                var param
+                if (that.title == '交易信箱') {
+                    //注意看这里 //我的订单,交易信箱
+                    url = tradeListUrl
+                    if (type) {
+                        that.page++;
+                        param = {
+                            type: that.status,
+                            page: that.page,
+                            keys: that.keywords,
+                            status: that.substatus
+                        }
+                    } else {
+                        param = {
+                            page: 1,
+                            type: that.status,
+                            keys: that.keywords,
+                            status: that.substatus
+                        }
+                    }
+                } else {
+                    //注意看这里  交易中心列表
+                    url = getOrderUrl
+                    if (type) {
+                        that.page++;
+                        param = {
+                            // range: that.buytype,
+                            page: that.page,
+                            keys: that.keywords,
+                            type: that.type
+                        }
+                    } else {
+                        param = {
+                            page: 1,
+                            // range: that.buytype,
+                            keys: that.keywords,
+                            type: that.type
+                        }
+                    }
+                }
+                http(url, 'post', param,
+                    function(ret) {
+                        if (ret.code == 200) {
+                            if (type == 'loadMore') {
+                                that.list = that.list.concat(ret.data.data);
+                                if (ret.data.length < 10) {
+                                    api.removeEventListener({
+                                        name: 'scrolltobottom'
+                                    })
+                                }
+                            } else {
+                                that.list = ret.data.data;
+                                if (ret.data.length < 10) {
+                                    api.removeEventListener({
+                                        name: 'scrolltobottom'
+                                    })
+                                }
+                            }
+                        }
+                    });
+            },
+            // 刷新 初始化加载
+            toDoRequest: function() {
+                var that = this;
+                setTimeout(function() {
+                    api.refreshHeaderLoadDone(); //复位下拉刷新
+                    api.toast({
+                        msg: that.getCodetip.aready,
+                        duration: '1000',
+                        localtion: 'middle'
+                    });
+                }, 2000)
+            },
+            // buy: function(id) {
+            //     var that = this;
+            //     var dialogBox = api.require('dialogBox');
+            //     dialogBox.input({
+            //         keyboardType: 'secure',
+            //         texts: {
+            //             title: '交易密码',
+            //             placeholder: '请输入密码',
+            //             leftBtnTitle: '取消',
+            //             rightBtnTitle: '确定'
+            //         },
+            //         styles: {
+            //             bg: '#fff',
+            //             corner: 2,
+            //             w: 300,
+            //             h: 140,
+            //             title: {
+            //                 h: 25,
+            //                 alignment: 'center',
+            //                 size: 14,
+            //                 color: '#000',
+            //                 marginT: 25,
+            //             },
+            //             input: {
+            //                 h: 30,
+            //                 y: 30,
+            //                 marginT: 15,
+            //                 marginLeft: 10,
+            //                 marginRight: 10,
+            //                 textSize: 14,
+            //                 textColor: '#000'
+            //             },
+            //             dividingLine: {
+            //                 width: 0.5,
+            //                 color: '#696969'
+            //             },
+            //             left: {
+            //                 bg: 'rgba(0,0,0,0)',
+            //                 color: '#007FFF',
+            //                 size: 14
+            //             },
+            //             right: {
+            //                 bg: 'rgba(0,0,0,0)',
+            //                 color: '#007FFF',
+            //                 size: 14
+            //             }
+            //         }
+            //     }, function(ret) {
+
+            //         if (ret.eventType == 'left') {
+            //             var dialogBox = api.require('dialogBox');
+            //             dialogBox.close({
+            //                 dialogName: 'input'
+            //             });
+            //         } else {
+            //             if (!ret.text) {
+            //                 api.toast({
+            //                     msg: '交易密码不能为空',
+            //                     duration: 2000,
+            //                     location: 'bottom'
+            //                 });
+            //                 return;
+            //             }
+            //             var dialogBox = api.require('dialogBox');
+            //             dialogBox.close({
+            //                 dialogName: 'input'
+            //             });
+            //             http(tradeUrl, 'post', {
+            //                 id: id,
+            //                 pwd: ret.text
+            //             }, function(res) {
+            //                 var dialogBox = api.require('dialogBox');
+            //                 dialogBox.close({
+            //                     dialogName: 'input'
+            //                 });
+            //                 api.toast({
+            //                     msg: res.msg,
+            //                     duration: 2000,
+            //                     location: 'middle'
+            //                 });
+            //                 if (res.code == 200) {
+            //                     that.getGoods();
+            //                     api.execScript({
+            //                         name: 'root',
+            //                         frameName: 'frame3',
+            //                         script: 'frame3.getHeader()'
+            //                     });
+            //                     var dialogBox = api.require('dialogBox');
+            //                     dialogBox.close({
+            //                         dialogName: 'input'
+            //                     });
+            //                 } else {
+            //                     var dialogBox = api.require('dialogBox');
+            //                     dialogBox.close({
+            //                         dialogName: 'input'
+            //                     });
+            //                     setTimeout(function() {
+            //                         if (res.msg == '请先实名认证才可以交易' || res.msg == '需完善微信,支付宝和银行卡才可以交易') {
+            //                             api.openWin({
+            //                                 name: 'personal_data',
+            //                                 url: '../my/personal_data.html',
+            //                                 reload: true,
+            //                                 pageParam: {}
+            //                             });
+            //                         }
+            //                     }, 1999);
+            //                 }
+            //             })
+            //         }
+            //     });
+            // },
+        }
+    })
+</script>

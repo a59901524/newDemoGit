@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>悬赏管理</title>
+    <link rel="stylesheet" href="../../../lib/vant/vant.css">
+    <link rel="stylesheet" href="../../../lib/iconfont2/iconfont.css">
+    <link rel="stylesheet" href="../../../css/common.css">
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        }
+
+        .b_header {
+            white-space: nowrap;
+            min-width: 15%;
+            text-align: center;
+            padding: 15px 10px;
+        }
+
+        .on {
+            font-weight: 600;
+            /* border-bottom: 2px solid; */
+            color: #cb974d;
+        }
+
+        .type_icon {
+            float: right;
+            width: 12px;
+            height: 12px;
+            line-height: 12px;
+            text-align: center;
+            margin-left: 1rem;
+        }
+        /********************** 任务列表 ****************/
+
+        .mission_list {
+            padding: 1rem;
+            margin-bottom: .5rem;
+        }
+
+        span {
+            color: #cb974d;
+        }
+        /* 循环列表 */
+
+        .mission_list_content {
+            background-color: #ffffff;
+            border: 1px solid #dddddd;
+            border-radius: 5px;
+            padding: .5rem;
+            margin-bottom: .5rem;
+        }
+
+        .mission_list_center_leftT {
+            height: 40px;
+            line-height: 30px;
+            text-align: center;
+            align-items: baseline;
+        }
+
+        .mission_list_left {
+            width: 60px;
+            height: 60px;
+        }
+
+        .mission_list_left>img {
+            width: 60px;
+            height: 60px;
+            border-radius: 5px;
+        }
+
+        .mission_list_center {
+            flex: 1;
+            overflow: hidden;
+            padding: 0 1rem;
+        }
+
+        .mission_list_right {
+            width: 80px;
+        }
+    </style>
+</head>
+
+<body class="has_header color_999">
+    <div id="mission_order" v-cloak>
+        <header class="header color_default1 ">
+            <i class="iconfont icon-xiangzuo " onclick="goBack()"></i>
+            <div>悬赏管理</div>
+        </header>
+        <div class="cont padding1 flex_row_around bg-white bbd">
+            <div class=" flex_row_left fontSize14 color_default1">{{myTitle}}</div>
+            <div class=" flex_row_right color_999" style="flex-wrap: nowrap;overflow-x: scroll;overflow-y: hidden;">
+                <div class="b_header" :class="{'on':type==1}" @click="switchover(1)" style="margin-left: 1px;">
+                    {{missionType}}<img src="../../../image/selectdown.png" alt="" class="type_icon" v-if="type!=1">
+                    <img src="../../../image/user_top.png" alt="" class="type_icon" v-if="type==1">
+                </div>
+                <div class="b_header" :class="{'on':type==2}" @click="switchover(2)">
+                    {{rewardType}}<img src="../../../image/selectdown.png" alt="" class="type_icon" v-if="type!=2">
+                    <img src="../../../image/user_top.png" alt="" class="type_icon" v-if="type==2">
+                </div>
+                <div class="b_header" :class="{'on':type==3}" @click="switchover(3)">
+                    <span class="color_999">{{propertyType}}</span><img src="../../../image/selectdown.png" alt="" class="type_icon" v-if="type!=3">
+                    <img src="../../../image/user_top.png" alt="" class="type_icon" v-if="type==3">
+                </div>
+            </div>
+
+        </div>
+        <van-popup v-model="showPicker" position="bottom">
+            <van-picker show-toolbar :columns="columns" :default-index="statusindex" @cancel="showPicker = false" @confirm="onConfirm" />
+        </van-popup>
+
+        <van-pull-refresh id="getList" v-model="downLoading" @refresh="getList">
+            <van-list class="" v-model="upLoading" :finished="finished" finished-text="--没有更多了--" @load="getList" :immediate-check="false">
+                <div class="mission_list">
+                    <div v-for="obj in list" class="mission_list_content flex_row_between" @click="toPage('mission_details','./mission_details.html',obj)">
+                        <div class="mission_list_left"><img :src="obj.img_url?obj.img_url:'../../../image/applogo.png'" alt=""></div>
+                        <div class="mission_list_center">
+                            <div class="fontSize14 text-overflow_1 mission_list_center_leftT text_left" style="text-align: left;;">{{obj.title?obj.title:''}}</div>
+
+
+                            <div class="fontSize10 mission_list_center_leftB flex_row_left">
+                                <!-- <img src="../../../image/dgjl.png" alt="" style="width: 2rem;height: 2rem;"> -->
+                                ❤
+                                <div style="width: .4rem"></div>
+                                <span>{{obj.finish_quantity?obj.finish_quantity:'0'}}</span>人已赚到赏金
+                            </div>
+                        </div>
+                        <div class="mission_list_right">
+                            <div class="flex_row_right mission_list_center_leftT"> <span class="fontSize16 mission_list_center_leftT">{{obj.bounty?obj.bounty:''}}</span>HDC </div>
+                            <div class="flex_row_right mission_list_center_leftB">剩余<span>{{obj.publish_quantity?(obj.publish_quantity - obj.accept_quantity):'0'}}</span>人</div>
+                        </div>
+                    </div>
+                </div>
+            </van-list>
+        </van-pull-refresh>
+
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../../lib/vant/vant.min.js"></script>
+<script type="text/javascript" src="../../../script/rsa.js"></script>
+<script type="text/javascript" src="../../../script/aes.js"></script>
+<script type="text/javascript" src="../../../script/const.js"></script>
+<script type="text/javascript" src="../../../script/common.js"></script>
+<script type="text/javascript">
+    var mission_order = new Vue({
+        el: "#mission_order",
+        data: {
+            type: 0,
+            words: '',
+            value: '',
+            showPicker: false,
+            columns: ['全部', '注册', '关注', '投票', '砍价', '转发', '其他'],
+            my: 0,
+            status: '',
+            myTitle: '',
+            missionType: '全部',
+            rewardType: '默认',
+            propertyType: '全部',
+            statusindex: 0,
+            page: 1,
+            downLoading: false,
+            upLoading: false,
+            finished: false,
+            list: [],
+            typeindex: 0,
+            rewardindex: 0,
+        },
+        created: function() {
+            var that = this
+            apiready = function() {
+                var height = $api.fixStatusBar($api.dom('.header'))
+                if (height > 0) {
+                    $api.css($api.dom('.cont'), 'margin-top:' + (height - 45) + 'px;');
+                }
+                that.my = api.pageParam.my
+                if (that.my == 1) {
+                    that.propertyType = api.pageParam.status
+                    that.columns = ['请选择', '待完成', '审核中', '已通过', '已驳回', '申诉中', '系统驳回'];
+                    that.columns.forEach(function(element, index) {
+                        if (element == api.pageParam.status) {
+                            that.statusindex = index
+                        }
+                    });
+                    that.myTitle = '我接的单'
+                } else if (that.my == 2) {
+                    that.propertyType = api.pageParam.status
+                    that.columns = ['已取消', '审核中', '已发布', '已完成', '已终止']
+                    that.columns.forEach(function(element, index) {
+                        if (element == api.pageParam.status) {
+                            that.statusindex = index
+                        }
+                    });
+                    that.myTitle = '我发的单'
+                }
+                console.log("CALL getList AT create");
+                that.getList()
+            }
+        },
+        methods: {
+            switchover: function(type) {
+                var that = this;
+                if (type == 1) {
+                    that.columns = ['全部', '注册', '关注', '投票', '砍价', '转发', '其他']
+                    that.showPicker = true
+                } else if (type == 2) {
+                    that.columns = ['默认', '赏金由高到低', '赏金由低到高']
+                    that.showPicker = true
+                } else if (type == 3) {
+                    if (that.my == 1) {
+                        // that.columns = ['请选择', '待完成', '审核中', '已通过', '已驳回', '申诉中', '系统驳回'];
+                        that.columns = ['待完成', '审核中', '已通过', '已驳回', '申诉中', '系统驳回'];
+                    } else {
+                        // that.columns = ['已取消', '审核中', '已发布', '已完成', '已终止']
+                        that.columns = ['审核中', '已发布', '已完成', '已取消']
+                    }
+                    that.showPicker = true
+                } else if (type == 'missionOrder') {
+                    that.missionOrder = 1
+                } else if (type == 'missionBill') {
+                    that.missionBill = 1
+                }
+                that.type = type
+            },
+
+            onConfirm: function(value, index) {
+                var that = this
+                if (that.type == 1) {
+                    that.typeindex = index
+                    that.missionType = value
+                } else if (that.type == 2) {
+                    that.rewardindex = index
+                    that.rewardType = value
+                } else if (that.type == 3) {
+                    that.statusindex = index
+                    that.propertyType = value
+                }
+                that.showPicker = false;
+                that.type = 0
+                console.log("CALL getList AT onConfirm");
+                that.getList()
+            },
+            getListonRefresh: function() {
+              console.log("CALL getList on refresh");
+            },
+            getListonLoad: function () {
+              //var that = this
+              console.log("CALL getList on OnLoad");
+
+              //that.getList()
+            },
+            getList: function() {
+                console.log("on getList function");
+                var that = this;
+                if (that.my == 1) {
+                    var url = myacceptUrl //我领取的任务
+                } else {
+                    var url = mypublishUrl //我发布的任务
+                }
+                if (that.upLoading) { //上拉加载
+                    that.page++;
+                    var param = {
+                        page: that.page,
+                        type: that.typeindex,
+                        bounty: that.rewardindex,
+                        status: that.statusindex,
+                    }
+                } else {
+                    that.page = 1; //刷新
+                    that.finished = true;
+                    var param = {
+                        page: 1,
+                        type: that.typeindex,
+                        bounty: that.rewardindex,
+                        status: that.statusindex,
+                    }
+                }
+                http(url, 'post', param, function(ret) {
+                    if (ret.code == 200) {
+                        if (that.upLoading) {
+                            that.list = that.list.concat(ret.data.data);
+                            that.upLoading = false;
+                        } else {
+                            that.list = ret.data.data;
+                            that.downLoading = false;
+                            that.finished = false;
+                        }
+                        if (ret.data && ret.data.data && ret.data.data.length < 15) {
+                            that.finished = true;
+                        }
+                    }
+                })
+            },
+            toPage: function(name, url, obj) {
+                var that = this
+                if (that.my == 1) {
+                    api.openWin({
+                        name: name,
+                        url: url,
+                        reload: true,
+                        pageParam: {
+                            id: obj.bounty_id,
+                        } || {}
+                    });
+                } else {
+                    api.openWin({
+                        name: name,
+                        url: url,
+                        reload: true,
+                        pageParam: {
+                            id: obj.id
+                        } || {}
+                    });
+                }
+
+            },
+        },
+    })
+</script>

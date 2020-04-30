@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="../../lib/iconfont2/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <style>
+        #news_assistant_frame {
+            min-height: 100%;
+        }
+        
+        .bg_red {
+            /* background: rgb(209, 66, 109);
+            padding: 3px 8px; */
+            padding: 3px 8px;
+            background-color: #ffffff;
+            border-radius: 40px;
+            border: solid 1px #cb974d;
+        }
+        
+        .emotion {
+            width: 18px;
+            height: 18px;
+            display: inline-block;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="news_assistant_frame" v-cloak>
+        <div class="flex_row_left padding12 bbe" v-for="item in list" v-if="title=='见习公告'" @click="toPage('affiche','affiche.html',{info:item})">
+            <img class="Bc" src="../../image/applogo.png" alt="" style="width: 40px;height: 40px;margin-right: 5px;">
+            <div class="marginL1" style="flex: 1;">
+                <div class="color_default1 fontSize14">{{item.title}}</div>
+                <div class="color_gray fontSize12 marginT5">{{item.desc}}</div>
+                <div class="color_gray fontSize10 marginT5">{{item.create_time}}</div>
+            </div>
+        </div>
+        <div class=" padding12 bbd bg_white" v-for="item in list" v-if="title=='系统消息'||title=='见习小助手'|| title == 'Meet assistant'">
+            <div class="flex_row_left">
+                <img class="Bc" src="../../image/applogo.png" alt="" style="width: 40px;height: 40px;margin-right: 5px;">
+                <div class="marginL1" style="flex: 1;overflow: hidden;">
+                    <div class="color_default1 fontSize16 text-overflow_1" style="word-wrap:break-word">{{item.title}}</div>
+                    <!-- <div class="color_gray fontSize16" style="word-wrap:break-word">{{item.content}}</div> -->
+                    <div class="color_gray fontSize14 text-overflow_1 marginT5" style="min-width: 50px;">{{item.create_time}}</div>
+                </div>
+                <div class="color_default1 bg_default1 bg_red" @click="toPage('affiche','affiche.html',{info:item})">{{langContent.look?langContent.look:''}}</div>
+            </div>
+        </div>
+        <div class="padding12 bbd bg_white" v-for="item in list" v-if="(title=='官方客服'||title=='Official support')&&item.me==0">
+            <div class="flex_row_left">
+                <img class="Bc" src="../../image/applogo.png" alt="" style="width: 40px;height: 40px;margin-right: 5px;">
+                <div class="marginL1" style="flex: 1;overflow: hidden;">
+                    <div v-show="item.content_type==1" v-html="translateText(item.content)" class="color_gray fontSize16" style="word-wrap:break-word">{{item.content}}</div>
+                    <img v-show="item.content_type==2" :src="item.content?item.content:''" alt="" style="width: 50%;height: auto;max-height: 100%;">
+                    <div class="color_gray fontSize14 text-overflow_1 marginT5" style="min-width: 50px;">{{changeDate(item.create_time)}}</div>
+                </div>
+                <div v-show="item.is_reply==1" class="color_default1 bg_default1 bg_red" @click="pitch_on(title,1)">{{langContent.back?langContent.back:''}}</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript" src="../../script/emotion.js"></script>
+<script type="text/javascript">
+    var news_assistant_frame = new Vue({
+        el: "#news_assistant_frame",
+        data: {
+            url: '',
+            page: 2,
+            list: [],
+            title: '',
+            langContent: {},
+            getCodetip: {}
+        },
+        created: function() {
+            var that = this
+            apiready = function() {
+                news_assistant_frame.$data.langContent = GlobleLanguageContent.message;
+                news_assistant_frame.$data.getCodetip = GlobleLanguageContent.getCode;
+                that.title = api.pageParam.title;
+                // if (api.pageParam.title == '见习公告') {
+                //     that.url = system_notice_listUrl
+                // } else {
+                //     that.url = my_notice_listUrl
+                // }
+                if (api.pageParam.title == '见习小助手' || api.pageParam.title == 'Meet assistant') {
+                    // that.url = getChatUrl
+                    // that.url = getchatnoticeUrl
+                    that.getNotice()
+                } else {
+                    that.url = getChatUrl
+                    that.getGoods();
+                }
+                api.execScript({
+                    name: 'root',
+                    frameName: 'frame4',
+                    script: 'frame4.getInfo()'
+                });
+                //上拉加载
+                api.addEventListener({
+                    name: 'scrolltobottom',
+                    extra: {
+                        threshold: 5 //设置距离底部多少距离时触发，默认值为0，数字类型
+                    }
+                }, function(ret, err) {
+                    if (api.pageParam.title == '见习小助手' || api.pageParam.title == 'Meet assistant') {
+                        that.getNotice('loadMore')
+                    } else {
+                        that.getGoods('loadMore');
+                    }
+                });
+                api.setRefreshHeaderInfo({
+                    visible: true,
+                    bgColor: 'rgba(0,0,0,0)',
+                    textColor: '#666',
+                    textDown: that.getCodetip.textDown,
+                    textUp: that.getCodetip.textUp,
+                    textLoading: that.getCodetip.textLoading,
+                    showTime: false,
+                }, function(ret, err) {
+                    that.page = 2;
+                    if (api.pageParam.title == '见习小助手' || api.pageParam.title == 'Meet assistant') {
+                        that.getNotice()
+                    } else {
+                        that.getGoods();
+                    }
+                    api.addEventListener({
+                        name: 'scrolltobottom',
+                        extra: {
+                            threshold: 5 //设置距离底部多少距离时触发，默认值为0，数字类型
+                        }
+                    }, function(ret, err) {
+                        if (api.pageParam.title == '见习小助手' || api.pageParam.title == 'Meet assistant') {
+                            that.getNotice('loadMore')
+                        } else {
+                            that.getGoods('loadMore');
+                        }
+                    });
+                    that.toDoRequest()
+                });
+            }
+        },
+        methods: {
+            changeDate: function(datetimes) {
+                var needdate = new Date(datetimes * 1000);
+                Y = needdate.getFullYear() + '/';
+                M = (needdate.getMonth() + 1 < 10 ? '0' + (needdate.getMonth() + 1) : needdate.getMonth() + 1) + '/';
+                D = needdate.getDate() + ' ';
+                h = (needdate.getHours() < 10 ? '0' + needdate.getHours() : needdate.getHours()) + ':';
+                m = (needdate.getMinutes() < 10 ? '0' + needdate.getMinutes() : needdate.getMinutes()) + ':';
+                s = (needdate.getSeconds() < 10 ? '0' + needdate.getSeconds() : needdate.getSeconds());
+                //      年 月 日 时 分 秒
+                return Y + M + D + h + m + s;
+            },
+            //文本表情转化
+            translateText: function(text) {
+                if (text == '' || text == undefined) {
+                    return;
+                }
+                msg = text;
+                var emotionObj = emotion;
+                var regx = /\[(.*?)\]/gm;
+                var translateMSg = text.replace(regx, function(math) {
+                    var imgSrc = emotionObj[math];
+                    if (!imgSrc) {
+                        return math;
+                    }
+                    var img = '<img src="../../res/emotion/' + imgSrc + '.png" class="emotion">'
+                    return img;
+                })
+                return translateMSg;
+            },
+            pitch_on: function(nickname, id) {
+                api.openWin({
+                    name: 'chat_win',
+                    url: '../chat/chat_win.html',
+                    bounces: false,
+                    pageParam: {
+                        nickname: nickname,
+                        id: id
+                    }
+                });
+            },
+            getNotice: function(type) {
+                var that = this;
+                var param
+                if (type) {
+                    var param = {
+                        page: that.page,
+                    }
+                } else {
+                    var param = {
+                        page: 1,
+                    }
+                }
+                http(getchatnoticeUrl, 'post', param,
+                    function(ret) {
+                        if (ret.code == 200) {
+                            if (type == 'loadMore') {
+                                that.page++;
+                                that.list = that.list.concat(ret.data.info.data);
+                                if (ret.data.info.data.length < 15) {
+                                    api.removeEventListener({
+                                        name: 'scrolltobottom'
+                                    })
+                                }
+                            } else {
+                                that.list = ret.data.info.data;
+                                if (ret.data.info.data.length < 15) {
+                                    api.removeEventListener({
+                                        name: 'scrolltobottom'
+                                    })
+                                }
+                            }
+                        }
+                    });
+            },
+            getGoods: function(type) {
+                var that = this;
+                var param
+                if (type) {
+                    var param = {
+                        to_user: 1,
+                        page: that.page,
+                    }
+                } else {
+                    var param = {
+                        to_user: 1,
+                        page: 1,
+                    }
+                }
+                http(that.url, 'post', param,
+                    function(ret) {
+                        if (ret.code == 200) {
+                            if (type == 'loadMore') {
+                                that.page++;
+                                that.list = that.list.concat(ret.data.chats.data);
+                                if (ret.data.chats.length < 15) {
+                                    api.removeEventListener({
+                                        name: 'scrolltobottom'
+                                    })
+                                }
+                            } else {
+                                that.list = ret.data.chats.data;
+                                if (ret.data.chats.data.length < 15) {
+                                    api.removeEventListener({
+                                        name: 'scrolltobottom'
+                                    })
+                                }
+                            }
+                        }
+                    });
+            },
+            // 刷新 初始化加载
+            toDoRequest: function() {
+                var that = this;
+                setTimeout(function() {
+                    api.refreshHeaderLoadDone(); //复位下拉刷新
+                    api.toast({
+                        msg: that.getCodetip.aready,
+                        duration: '1000',
+                        localtion: 'middle'
+                    });
+                }, 2000)
+            },
+            toPage: function(name, url, params) {
+                api.openWin({
+                    name: name,
+                    url: url,
+                    reload: true,
+                    pageParam: params || {}
+                });
+            }
+        }
+    })
+</script>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>帮助中心</title>
+    <link rel="stylesheet" href="../../../lib/iconfont2/iconfont.css">
+    <link rel="stylesheet" href="../../../css/common.css">
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+            background-color: #fff;
+            color: rgba(5, 5, 5, 0.918);
+        }
+
+        .b_header {
+            padding: 15px;
+            white-space: nowrap;
+            min-width: 15%;
+            text-align: center;
+        }
+
+        p {
+            margin-left: 1rem;
+        }
+
+        .cont>div {
+            margin-left: 1rem;
+            margin: .3rem 0 .3rem 1rem;
+            padding: 0 1rem 0 1rem;
+        }
+    </style>
+</head>
+
+<body class="has_header">
+    <div id="mission_help">
+        <header class="header bbd">
+            <i class="iconfont icon-xiangzuo " onclick="goBack()"></i>
+            <div>发布须知</div>
+        </header>
+        <div class="cont fontSize12 padding1  color_999 bg-white">
+            <div style="height: 1rem"></div>
+            <strong class="fontSize16 color_default1">任务发布</strong>
+            <h3 class="bbd"></h3>
+            <p> 1.如何发布任务?</p>
+            <div> 点击发布,按照发布要求填写内容,提交示例图,等待后台审核,审核通过后自动发布,该状态变为已发布。</div>
+
+            <p>2.哪些人可以发布任务?</p>
+            <div>所有已经实名认证的用户均可发布任务。</div>
+
+            <p>3.发布任务有定价吗?</p>
+            <!-- <div>注册类型:注册并且需要下载APP支付实名认证费用的单,单个奖励金额1HDC;</div>
+            <div>需注册下载实名认证的单,单个奖励金额1HDC;</div>
+            <div>仅需注册下载的单,单个奖励金额1HDC;</div>
+            <div>投票类型:任务单个金额需1HDC</div>
+            <div>砍价类型:任务单个金额需1HDC</div>
+            <div>转发类型:任务单个金额需1HDC</div>
+            <div>加群引流:任务单个金额需1HDC</div>
+            <div>申请信用卡:任务单个金额需1HDC</div>
+            <div>其他类型:任务单个金额需1HDC</div> -->
+            <div>
+                任务单个金额不能少于0.5 HDC
+            </div>
+
+            <p>4.发布任务有什么注意的地方吗?</p>
+            <div>严禁发布虚假信息及任务,利用见习任务悬赏引流,刷单等。发布需严格遵循《发布任务规则》 ,不符合规则的任务一律无法通过。</div>
+            <p> 5.发布任务有数量限制吗?</p>
+            <div>最多1000</div>
+            <p>6.发布任务需要审核吗? 多久审核?</p>
+            <div>以提交时间开始算起，24h内审核。</div>
+            <p>7.发布任务审核不通过可以申诉吗?</p>
+            <div>不可以申诉,但是可以修改,进入悬赏中心,找到我发的单--已驳回,选择驳回的单,往下拉找到"重新发单",根据驳回原因修改后重新提交审核。</div>
+            <p>8.发单后可以取消吗？</p>
+            <div>多久取消?在任务结束前,可以终止该任务以防止用户继续领取,如果领取该任务的人都做完了任务,可以取消该任务。</div>
+            <p>9.发布成功的任务可以删除吗?</p>
+            <div>不能删除。</div>
+            <p>10.发单需要押金吗?</p>
+            <div>见习回馈用户,发单接单无任何押金,保证金,会员费等,一旦注册,永久免费。</div>
+            <p>11.发单人可以限定接单人完成任务的时间吗?</p>
+            <div>可以限定，发布任务时,记得选择接单人最晚完成时间,目前支持 1小时,2小时, 3小时, 6小时, 12小时, 24时,六个时间段,也可以选择无限制,如到期后,接单人没有在规定时间内完成任务,那么发单人可以取消该单,释放该名额。</div>
+            <!-- <p>12.发单人主动取消任务超时的单,是否扣接单人每日免费取消的次数？</p> -->
+            <!-- <div>不扣次数,如超时发单人没有取消,那么接单人仍然可以继续完成任务,提交任务截图。</div> -->
+
+
+
+
+            <div style="height: 1rem"></div>
+            <strong class="fontSize16 color_default1">任务接单</strong>
+            <h3 class="bbd"></h3>
+            <p>1.如何接单?</p>
+            <div>进入见习悬赏大厅,找到任务名称,选择心仪的任务,点击并浏览任务详情,知悉任务,点击【我要接单】即可。</div>
+
+            <p>2.哪些人可以接单?</p>
+            <div>所有已经实名认证的用户均可接单。</div>
+
+            <p>3.接单多久必须完成?</p>
+            <div>接单后必须在任务截止时间内完成并上传截图(如果发单人设定了任务最晚完成时间,则需要在任务最晚完成时间内完成,否则发单人可以取消该单) ,逾期未完成或者未上传完成截图的,视为放弃,则无奖励。</div>
+
+            <p>4.一个人可以接多少个单?</p>
+            <!-- <div> 0-1级的用户只能接一个单,2级以上的用户无限制。</div> -->
+            <div>一次最多接五个任务</div>
+
+            <p>5.任务过期了,还没完成任务,是否可以继续完成?</p>
+            <div>如果发单人没有清理超时任务,可以继续完成。</div>
+
+            <p>6.如果我完成的单，提交审核不通过怎么办?</p>
+            <div>请勿提交虚假完成截图,如果被发单人驳回,可以进入我接的单一已驳回，点击列表下方的重新提交，上传新的完成图,等待发单人审核,如果确实发单人审核有失误的地方,可以点击"客服介入",客服介入后,根据发单人与接单人任务情况描述情况,完成情况进行终审,作出公平公正的判断，给出最终结果。</div>
+            <p>7.我接单了不想做,可以取消吗?</p>
+            <!-- <div>不可以取消，每天可以免费取消2次，超过2次,每次扣除2经验,如果无经验扣除,将暂停7天接单,请谨慎使用取消次数。</div> -->
+            <div>不可以，只能等任务完成限时时间过期，发布者释放超时任务即可。</div>
+        </div>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../../script/const.js"></script>
+<script type="text/javascript" src="../../../script/common.js"></script>
+<script type="text/javascript">
+    var reward = new Vue({
+        el: "#mission_help",
+        data: {
+
+        },
+        created: function() {
+            var that = this
+            apiready = function() {
+                var height = $api.fixStatusBar($api.dom('.header'))
+                if (height > 0) {
+                    $api.css($api.dom('.cont'), 'margin-top:' + (height - 45) + 'px;');
+                }
+            }
+        },
+        methods: {
+
+        }
+    })
+</script>

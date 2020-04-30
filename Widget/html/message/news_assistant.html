@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="../../lib/iconfont2/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+</head>
+
+<body class="has_header">
+    <div id="news_assistant">
+        <header class="header  bbd">
+            <i class="iconfont icon-xiangzuo" onclick="goBack()"></i>
+            <div>{{title}}</div>
+        </header>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    new Vue({
+        el: "#news_assistant",
+        data: {
+            title: ''
+        },
+        created: function() {
+            var that = this
+            apiready = function() {
+                that.title = api.pageParam.title
+                fixStatusbar('header,.header,.headers');
+                that.openFrame()
+            }
+        },
+        methods: {
+            openFrame: function() {
+                var that = this
+                api.openFrame({
+                    name: 'news_assistant_frame',
+                    url: 'news_assistant_frame.html',
+                    reload: true,
+                    rect: {
+                        x: 0,
+                        y: $api.dom('.header').offsetHeight,
+                        w: 'auto',
+                        h: 'auto'
+                    },
+                    pageParam: {
+                        title: that.title
+                    },
+                });
+            }
+        }
+    })
+</script>

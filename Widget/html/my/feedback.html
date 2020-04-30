@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>意见反馈</title>
+    <link rel="stylesheet" href="../../lib/iconfont2/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <style>
+        .tomyfeed {
+            font-size: 1rem;
+            position: absolute;
+            right: 1rem;
+        }
+        
+        textarea {
+            font-size: 14px;
+            color: #B3A795;
+        }
+        
+        textarea::placeholder {
+            font-size: 14px;
+            color: #B3A795;
+        }
+        
+        input {
+            flex: 1;
+        }
+        
+        input::placeholder {
+            font-size: 14px;
+            color: #B3A795;
+        }
+        /* input::-ms-input-placeholder {
+            text-align: right;
+        }
+        
+        input::-webkit-input-placeholder {
+            text-align: right;
+        } */
+        
+        input:disabled {
+            color: #B3A795;
+        }
+        
+        .camera {
+            width: 6rem;
+            margin-left: 1rem;
+            border: 1px dashed #999999;
+        }
+        
+        .evalC_img_item {
+            width: 6rem;
+            height: 6rem;
+            position: relative;
+        }
+        
+        .evalC_img_item:nth-child(1) {
+            margin-left: 1rem;
+        }
+        
+        .evalC_img_item span {
+            position: absolute;
+            right: -5px;
+            background: #e74143;
+            border-radius: 100%;
+            width: 1.3rem;
+            height: 1.3rem;
+            font-size: 1rem;
+            top: -5px;
+            color: #fff;
+            text-align: center
+        }
+        
+        .BB1 {
+            border-bottom: 1px solid #000000;
+        }
+    </style>
+</head>
+
+<body class="has_header">
+    <div id="feedback" class="content color_default1" v-cloak>
+        <header class="header  bbd">
+            <i class="iconfont icon-xiangzuo" onclick="goBack()"></i>
+            <div>{{(titles&&titles!='')?titles:langContent.title}}</div>
+            <div class="tomyfeed" @click="getType('submit')">{{langContent.btn?langContent.btn:''}}</div>
+        </header>
+        <div v-show="!onlyshow " class="color_black3 bg_white">
+            <div v-if="isFomeYJ" class="flex_row_between bbd padding12">
+                <span>{{langContent.tsdd?langContent.tsdd:''}}</span>
+                <span class="color_default1">{{dingdan}}</span>
+            </div>
+            <div class="flex_row_between bbd padding12">
+                <span class="marginR5">{{langContent.fklx?langContent.fklx:''}}</span>
+                <span v-if="isFomeYJ" class="color_default1" style="flex: 1;">{{type}}</span>
+                <span v-if="!isFomeYJ" @click="choose()" class="color_default1" style="flex: 1;">{{type}}</span>
+                <i class="iconfont icon-direction_right color_default1 fontSize18 "></i>
+            </div>
+            <div class="flex_row_left bbd padding12">
+                <span style="white-space: nowrap;" class="marginR5">{{langContent.bt?langContent.bt:''}}</span>
+                <input type="text" :placeholder="langContent.bt_input" class="color_default1" v-model="title" style="flex: 5;">
+            </div>
+            <div class="flex_row_left bbd padding12" v-show="type=='投诉/举报'">
+                <span style="white-space: nowrap;" class="marginR5">{{langContent.tel?langContent.tel:''}}</span>
+                <input type="tel" :placeholder="langContent.tel_input" class="color_default1" v-model="bts_mobile" style="flex: 4;" disabled>
+            </div>
+        </div>
+        <div class="padding12 color_999 bg_white bbd">
+            <textarea style="font-size: 1rem;width: calc(100% - 2rem); height: 120px; border-radius: 5px; outline: none;background: transparent;padding: 1rem;" rows="5" class="flex_1" :placeholder="langContent.text_input" v-model="content"></textarea>
+        </div>
+
+        <div class="flex_row_left bbd padding12 bg_white">
+            <div style="white-space: nowrap;" class="marginR5 color_black3">{{langContent.img?langContent.img:''}}</div>
+            <div class="evalC_img_item marginR5 marginB5" v-for="(obj,index) in imgs">
+                <span @click="deleteImg(imgs,index)">×</span>
+                <img :src="obj?obj:'../../image/img7.png'" alt="">
+            </div>
+            <div class="camera" v-if="imgs.length < 3" @click="gopic()">
+                <img src="../../image/uppz.png" alt="">
+            </div>
+        </div>
+
+        <p class="color_999 padding1 bg_white">{{langContent.tip?langContent.tip:''}}</p>
+        <!-- <div class="common_submit_btn padding1" @click="getType('submit')">{{langContent.btn?langContent.btn:''}}</div> -->
+
+        <ul style="position: fixed;top: 8.3rem;width: 100%;background: #eeeeee;padding: 1rem;text-align: center;" v-if="showType">
+            <li class="marginT1 color_default1" v-for="item in typeList" @click="choose(item)">{{getCodetip.language_id==1?item.name:item.name_en}}</li>
+        </ul>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script src="../../script/api.js" charset="utf-8"></script>
+<script src="../../lib/vue/vue.js" charset="utf-8"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script src="../../script/const.js" charset="utf-8"></script>
+<script src="../../script/common.js" charset="utf-8"></script>
+<script>
+    var feedback = new Vue({
+        el: "#feedback",
+        data: {
+            titles: '',
+            type: '请选择',
+            showType: false,
+            typeList: [],
+            title: '',
+            content: '',
+            service: {},
+            bts_mobile: '',
+            imgs: [],
+            isFomeYJ: Boolean,
+            dingdan: '',
+            flag: true,
+            type_id: 0,
+            selcttype: 0,
+            onlyshow: false,
+            langContent: {},
+            getCodetip: {},
+        },
+        created: function() {
+            var that = this;
+            apiready = function() {
+                fixStatusbar('header,.header,.headers', '.content');
+                feedback.$data.langContent = GlobleLanguageContent.feedback;
+                feedback.$data.getCodetip = GlobleLanguageContent.getCode;
+                that.type = feedback.$data.langContent.select;
+                that.type_id = api.pageParam.type_id;
+                if (api.pageParam && api.pageParam.from == 'jyzx') {
+                    that.titles = that.langContent.titles;
+                    that.type = feedback.$data.langContent.feedtype;
+                    that.dingdan = api.pageParam.dingdan
+                    that.isFomeYJ = true;
+                    //对方资料
+                    http(tradeUser, 'post', {
+                        uid: api.pageParam.user_ID
+                    }, function(ret) {
+                        if (ret.code == 200) {
+                            that.bts_mobile = ret.data.mobile;
+                        }
+                    })
+                } else if (api.pageParam && api.pageParam.from == 'continuefeed') {
+                    that.isFomeYJ = false;
+                    that.onlyshow = true;
+                } else {
+                    that.isFomeYJ = false
+                }
+                http(feedcateUrl, 'post', {}, function(res) {
+                    if (res.code == 200) {
+                        feedback.$data.typeList = res.data;
+                    }
+                })
+            }
+        },
+        methods: {
+            //选取图片
+            gopic: function() {
+                var that = this;
+                api.getPicture({
+                    sourceType: 'album',
+                    encodingType: 'jpg',
+                    mediaValue: 'pic',
+                    destinationType: 'base64',
+                    allowEdit: false,
+                    quality: 100,
+                    targetWidth: 720,
+                    targetHeight: 600,
+                    saveToPhotoAlbum: false
+                }, function(ret, err) {
+                    if (ret) {
+                        if (ret.base64Data && ret.base64Data != '') {
+                            that.imgs.push(ret.base64Data)
+                        }
+                    } else {
+                        // alert(err);
+                    }
+                });
+            },
+            deleteImg: function(item, index) {
+                item.splice(index, 1);
+            },
+            getType: function(params) {
+                var that = this;
+                if ((that.type == '投诉/举报' || that.type == 'Complaint/Report') && that.bts_mobile == '') {
+                    api.toast({
+                        msg: '请输入被投诉人手机号',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return;
+                }
+                if (that.type == '投诉/举报' || that.type == 'Complaint/Report') {
+                    var param = {
+                        order_id: api.pageParam.id,
+                        title: that.title,
+                        content: that.content,
+                        category_id: that.selcttype,
+                        bts_mobile: that.bts_mobile,
+                        imgs: that.imgs,
+                        type_id: that.type_id
+                    }
+                } else if (that.onlyshow) {
+                    var param = {
+                        feedback_id: api.pageParam.id,
+                        reply_content: that.content,
+                        reply_img: that.imgs
+                    }
+                } else {
+                    var param = {
+                        order_id: '',
+                        bts_mobile: '',
+                        title: that.title,
+                        content: that.content,
+                        type_id: that.type_id,
+                        category_id: that.selcttype,
+                        imgs: that.imgs
+                    }
+                }
+                if ((this.type == '请选择' || this.type == 'Please select') && !that.onlyshow) {
+                    api.toast({
+                        msg: that.langContent.notype,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return false
+                } else if (this.title == '' && !that.onlyshow) {
+                    api.toast({
+                        msg: that.langContent.nobt,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return false
+                } else if (this.content == '') {
+                    api.toast({
+                        msg: that.langContent.nocon,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return false
+                }
+                if (that.onlyshow) {
+                    var url = replyUrl
+                } else {
+                    var url = myAskcateUrl
+                }
+                if (that.flag) {
+                    that.flag = false;
+                    http(url, 'post', param,
+                        function(res) {
+                            that.flag = true;
+                            if (res.code == 200) {
+                                if (params == 'submit') {
+                                    if (that.onlyshow) {
+                                        api.execScript({
+                                            name: 'feeddetail',
+                                            script: 'feeddetail.getInfo()'
+                                        });
+                                    } else {
+                                        api.execScript({
+                                            name: 'feedlist',
+                                            script: 'feedlist.getInfo()'
+                                        });
+                                    }
+                                    api.toast({
+                                        msg: that.langContent.sucess,
+                                        duration: 2000,
+                                        location: 'bottom'
+                                    });
+                                    setTimeout(function() {
+                                        goBack()
+                                    }, 500)
+                                } else {}
+                            }
+                        })
+                } else {
+                    api.toast({
+                        msg: that.langContent.wait,
+                        duration: 2000,
+                        location: 'top'
+                    });
+                }
+            },
+            choose: function(param) {
+                var that = this;
+                that.showType = !that.showType;
+                if (param) {
+                    that.selcttype = param.id;
+                    if (that.getCodetip.language_id == 1) {
+                        that.type = param.name;
+                    } else {
+                        that.type = param.name_en;
+                    }
+                }
+
+            }
+        }
+    })
+</script>

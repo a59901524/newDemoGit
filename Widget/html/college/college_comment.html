@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>商学院</title>
+    <link rel="stylesheet" href="../../lib/iconfont2/iconfont.css">
+    <link rel="stylesheet" href="../../css/common.css">
+    <style>
+        .video_left1 {
+            flex: 1;
+            line-height: 30px;
+            overflow: hidden;
+            color: #333333;
+        }
+        
+        .video_right {
+            width: 40%;
+            height: 100px;
+            margin-right: 1rem;
+        }
+        /* 音频 */
+        
+        .voice_img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%
+        }
+        /* .bgc {
+            background: #38373D;
+        } */
+        
+        .playicon {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            bottom: 20px;
+            width: 40px;
+            height: 40px;
+        }
+        
+        .playicon1 {
+            position: absolute;
+            top: 20px;
+            left: calc(50% - 30px);
+            bottom: 20px;
+            width: 60px;
+            height: 60px;
+        }
+        
+        .development {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 180px;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 8px;
+            z-index: 10;
+            overflow: hidden;
+            display: none;
+        }
+    </style>
+</head>
+
+<body class="bg-white">
+    <div id="college_comment" class="color_black3 " v-cloak>
+        <!-- <div v-if="type==1" class="text_center color_gray">暂无数据</div> -->
+        <!-- <div v-if="type==2" class="text_center color_gray">暂无数据</div> -->
+        <!-- 视频区 -->
+        <div v-if="type==1" class="bg-white">
+            <div v-for="obj in list" class="flex_row_between padding12  bbd" @click="toPage('college_mv','./college_mv.html',{item:obj})">
+                <div class="video_right posi_relative">
+                    <img :src="obj.url?obj.url+'?vframe/jpg/offset/1':'../../image/applogo.png'" alt="">
+                    <img class="playicon1" src="../../image/playmp3.png" alt="" />
+                </div>
+                <div class="video_left1">
+                    <div class="fontSize14  text-overflow_1">{{obj.title?obj.title:langContent.tip1}}</div>
+                    <div class="color_gray text-overflow_1">{{obj.create_time?obj.create_time:''}}</div>
+                </div>
+
+            </div>
+        </div>
+        <!-- 音频区 -->
+        <div v-if="type==2" class="bg-white">
+            <div v-for="(obj,index) in list" @click="playaudio(obj.id,obj.url)" class="flex_row_between padding12 bbd">
+                <div class="posi_relative">
+                    <img src="../../image/applogo.png" alt="" class="voice_img">
+                    <img v-if="playid!=obj.id" class="playicon" src="../../image/playmp3.png" alt="">
+                    <img v-if="playid==obj.id" class="playicon" src="../../image/pusemp3.png" alt="">
+                </div>
+                <div class="video_left1" style="padding-left: 10px">
+                    <div class="fontSize14 text-overflow_2">{{obj.title?obj.title:langContent.tip1}}</div>
+                    <div class="color_gray text-overflow_1">{{obj.create_time?obj.create_time:''}}</div>
+                </div>
+            </div>
+        </div>
+        <!-- 分享千聊区 -->
+        <div v-if="type==5" class="bg-white">
+            <div v-for="obj in list" class="flex_row_between padding12  bbd">
+                <div class="video_right flex_row_center" style="width: 22%;">
+                    <img style="width: 100%;height: auto;max-height: 100%;" :src="obj.thumb?obj.thumb:'../../image/applogo.png'" alt="">
+                </div>
+                <div class="video_left1">
+                    <div v-show="getCodetip.language_id == 1" class="fontSize14  text-overflow_1">{{obj.title?obj.title:langContent.tip1}}</div>
+                    <div v-show="getCodetip.language_id == 2" class="fontSize14  text-overflow_1">{{obj.title_en?obj.title_en:langContent.tip1}}</div>
+                    <div class="color_gray text-overflow_1">{{obj.create_time?obj.create_time:''}}</div>
+                </div>
+                <img @click="shareql(obj)" style="width: 40px;" src="../../image/sxyshare.png" alt="" />
+            </div>
+        </div>
+        <!-- 新手指南 -->
+        <div v-if="type==3" class="bg-white">
+            <!-- 写好新页面后再把点击函数加上 因为暂时没有内容 -->
+            <div @click="toPage('about_us','../my/about_us.html',{title:'新手指南',id:item.id})" v-for="item in list" class="padding1  bbd">
+                <!-- <div v-for="item in list" class="padding1  bbd"> -->
+                <div class="fontSize14 text-overflow_1">
+                    {{item.title}}
+                </div>
+                <div class="color_gray marginT5">
+                    {{item.create_time}}
+                </div>
+            </div>
+        </div>
+        <!-- 开发中 -->
+        <div class="flex_col_center development">
+            <i class="iconfont icon-development  text_shadow color_white" style="font-size: 100px;"></i>
+            <div class="color_white fontSize14">{{getCodetip.develop?getCodetip.develop:''}}</div>
+        </div>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    var college_comment = new Vue({
+        el: "#college_comment",
+        data: {
+            type: '',
+            page: 2,
+            list: [],
+            playid: 0,
+            isplay: false,
+            isShow: '',
+            langContent: {},
+            getCodetip: {}
+        },
+        created: function() {
+            var that = this
+            apiready = function() {
+                that.type = api.pageParam.type;
+                that.isShow = api.pageParam.isShow;
+                college_comment.$data.langContent = GlobleLanguageContent.college_comment;
+                college_comment.$data.getCodetip = GlobleLanguageContent.getCode;
+                api.refreshHeaderLoadDone();
+                that.getList();
+                //上拉加载
+                api.addEventListener({
+                    name: 'scrolltobottom',
+                    extra: {
+                        threshold: 5 //设置距离底部多少距离时触发，默认值为0，数字类型
+                    }
+                }, function(ret, err) {
+                    if (that.type == 3) {} else {
+                        that.getList('loadMore');
+
+                    }
+                });
+                api.setRefreshHeaderInfo({
+                    visible: true,
+                    bgColor: 'rgba(0,0,0,0)',
+                    textColor: '#666',
+                    textDown: that.getCodetip.textDown,
+                    textUp: that.getCodetip.textUp,
+                    textLoading: that.getCodetip.textLoading,
+                    showTime: false,
+                }, function(ret, err) {
+                    that.page = 2;
+                    that.getList();
+                    api.addEventListener({
+                        name: 'scrolltobottom',
+                        extra: {
+                            threshold: 5 //设置距离底部多少距离时触发，默认值为0，数字类型
+                        }
+                    }, function(ret, err) {
+                        that.getList('loadMore');
+                    });
+                    that.toDoRequest()
+                });
+                if (api.pageParam.type == 4) {
+                    $api.css($api.dom('.development'), 'display:flex;');
+                    setTimeout(function() {
+                        $api.css($api.dom('.development'), 'display:none;');
+                    }, 2000);
+                    return;
+                }
+            }
+        },
+        methods: {
+            changeDate: function(datetimes) {
+                var needdate = new Date(datetimes * 1000);
+                Y = needdate.getFullYear() + '/';
+                M = (needdate.getMonth() + 1 < 10 ? '0' + (needdate.getMonth() + 1) : needdate.getMonth() + 1) + '/';
+                D = needdate.getDate() + ' ';
+                h = (needdate.getHours() < 10 ? '0' + needdate.getHours() : needdate.getHours()) + ':';
+                m = (needdate.getMinutes() < 10 ? '0' + needdate.getMinutes() : needdate.getMinutes()) + ':';
+                s = (needdate.getSeconds() < 10 ? '0' + needdate.getSeconds() : needdate.getSeconds());
+                //      年 月 日 时 分 秒
+                return Y + M + D + h + m + s;
+            },
+            toPage: function(name, url, params) {
+                api.openWin({
+                    name: name,
+                    url: url,
+                    reload: true,
+                    pageParam: params || {}
+                });
+            },
+            shareql: function(item) {
+                var that = this;
+                var wx = api.require('wx');
+                wx.shareWebpage({
+                    apiKey: '',
+                    scene: 'session',
+                    title: that.langContent.sharetitle,
+                    description: that.getCodetip.language_id == 1 ? item.title : item.title_en,
+                    thumb: 'widget://image/applogo.png',
+                    contentUrl: item.description
+                }, function(ret, err) {
+                    if (ret.status) {} else {
+                        if (err.code == -1) {
+                            api.toast({
+                                msg: that.langContent.shareStatu1,
+                                duration: 2000,
+                                location: 'bottom'
+                            });
+                        } else if (err.code == 2) {
+                            api.toast({
+                                msg: that.langContent.shareStatu2,
+                                duration: 2000,
+                                location: 'bottom'
+                            });
+                        } else if (err.code == 3) {
+                            api.toast({
+                                msg: that.langContent.shareStatu3,
+                                duration: 2000,
+                                location: 'bottom'
+                            });
+                        }
+                    }
+                });
+            },
+            getList: function(act) {
+                var that = this;
+                var param;
+                var url;
+                if (that.type == 5) {
+                    url = helplistUrl;
+                    if (act) {
+                        param = {
+                            page: that.page,
+                            pid: 10
+                        }
+                    } else {
+                        param = {
+                            page: 1,
+                            pid: 10
+                        }
+                    }
+                } else {
+                    url = getcollegelistUrl;
+                    if (act) {
+                        param = {
+                            page: that.page,
+                            type: that.type
+                        }
+                    } else {
+                        param = {
+                            page: 1,
+                            type: that.type
+                        }
+                    }
+                }
+                //商学院信息列表
+                http(url, 'post', param, function(ret) {
+                    if (ret.code == 200) {
+                        if (act == 'loadMore') {
+                            that.page++;
+                            that.list = that.list.concat(ret.data.data);
+                            if (ret.data && ret.data.data && ret.data.data.length < 10) {
+                                api.removeEventListener({
+                                    name: 'scrolltobottom'
+                                })
+                            }
+                        } else {
+                            that.list = ret.data.data;
+                        }
+                    }
+                })
+            },
+            playaudio: function(id, mp3url) {
+                var that = this;
+                if (that.playid == id) {
+                    that.playid = 0;
+                    api.stopPlay();
+                    return;
+                } else {
+                    that.playid = id;
+                    api.stopPlay();
+                }
+                api.showProgress({
+                    title: that.langContent.voice,
+                    text: that.langContent.wait,
+                    modal: false
+                });
+                api.download({
+                    url: mp3url,
+                    savePath: 'fs://ShortAudio/' + mp3url.substring(mp3url.lastIndexOf('/') + 1),
+                    report: true,
+                    cache: true,
+                    allowResume: true
+                }, function(ret, err) {
+                    if (ret.state == 1) {
+                        //下载成功
+                        api.hideProgress();
+                        api.startPlay({
+                            path: 'fs://ShortAudio/' + mp3url.substring(mp3url.lastIndexOf('/') + 1),
+                        }, function(ret, err) {
+                            if (ret) {} else {}
+                        });
+                    }
+                });
+            },
+            // 刷新 初始化加载
+            toDoRequest: function() {
+                var that = this;
+                setTimeout(function() {
+                    api.refreshHeaderLoadDone(); //复位下拉刷新
+                    api.toast({
+                        msg: that.getCodetip.aready,
+                        duration: '1000',
+                        localtion: 'middle'
+                    });
+                }, 2000)
+            }
+        }
+    })
+</script>

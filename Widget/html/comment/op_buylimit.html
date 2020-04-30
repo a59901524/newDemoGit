@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <title>购买HDC</title>
+    <link rel="stylesheet" href="../../lib/iconfont/iconfont.css">
+    <!-- <link rel="stylesheet" href="../../css/common.css"> -->
+    <link rel="stylesheet" type="text/css" href="../../css/new/reset.css">
+    <link rel="stylesheet" type="text/css" href="../../lib/vant/vant.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/new/home.css">
+    <style>
+        .flex_col_center {
+            height: 100%;
+            display: flex;
+            align-content: center;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 0.24rem;
+        }
+    </style>
+    <script src="../../script/lib-flexible.js"></script>
+</head>
+
+<body>
+    <div id="op_buylimit" class="flex_col_center color_black6 padding1" style="height: 100%;" v-cloak>
+        <div class="sell bjTu">
+            <div class="title">买入HDC</div>
+            <div class="input">
+                <label class="fontSize28">购买数量</label>
+                <input type="tel" placeholder="0" v-model="num">
+            </div>
+            <div class="input">
+                <label class="fontSize28">购买单价（$）</label>
+                <input type="number" placeholder="" v-model="unit_price" disabled>
+            </div>
+            <div class="input jt" @click="isShow=true">
+                <label class="fontSize28">交易方式</label>
+                <input type="text" v-model='title' disabled>
+            </div>
+            <div class="input">
+                <label class="fontSize28">交易密码</label>
+                <input type="password" :placeholder="langContent.psw_input" v-model="pwd">
+            </div>
+            <div class="content fontSize24">
+                <span class="colffffff">请注意：</span>{{langContent.tip2?langContent.tip2:''}}<br/>{{langContent.tip3?langContent.tip3:''}}
+            </div>
+            <div class="foot">
+                <div class="btn confirm"  @click="submit">确认</div>
+                <div class="btn cacel"  @click="cancel">取消</div>
+            </div>
+        </div>
+        <van-popup
+            v-model="isShow"
+            position="bottom"
+            :style="{ height: '30%' }"
+          >
+              <van-picker
+                show-toolbar
+                title="支付方式"
+                :columns="columns"
+                @cancel="onCancel"
+                @confirm="onConfirm"
+              />
+          </van-popup>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../lib/vant/vant.min.js"></script>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    var op_buylimit = new Vue({
+        el: "#op_buylimit",
+        data: {
+            isShow: false,
+            title: '微信',
+            columns: ['微信', '支付宝', '银行卡'],
+            unit_price: '',
+            num: '',
+            check: 1,
+            pwd: '',
+            langContent: {},
+            getCodetip: {},
+            flag: true,
+            default_sort: ''
+
+        },
+        created: function() {
+            var that = this
+            apiready = function() {
+                op_buylimit.$data.langContent = GlobleLanguageContent.op_buylimit;
+                op_buylimit.$data.getCodetip = GlobleLanguageContent.getCode;
+                that.title = op_buylimit.$data.langContent.wx
+                that.getinfo();
+            }
+        },
+        methods: {
+            getinfo: function() {
+                var that = this
+                http(getJyzxUrl, 'post', {}, function(ret) {
+                    if (ret.code == 200) {
+                        that.unit_price = ret.data.trade_yjl_today_price;
+                    }
+                })
+                http(getuserinfoUrl, 'post', {}, function(ret) {
+                    if (ret.code == 200) {
+                        // 获取用户区号
+                        that.default_sort = ret.data.area_code
+                        if (ret.data.area_code != '86') {
+                            that.title = that.langContent.ytf
+                        }
+                    }
+                })
+            },
+            onCancel () {
+                this.isShow = false
+            },
+            onConfirm (value) {
+                this.changePay(value)
+            },
+            cancel: function() {
+                api.closeFrame({
+                    name: 'op_buylimit'
+                });
+            },
+            changePay: function(title) {
+                this.isShow = !this.isShow;
+                this.title = title;
+                if (title == '银行卡' || title == 'Bank Card') {
+                    this.check = 4;
+                } else if (title == '支付宝' || title == 'Alipay') {
+                    this.check = 2;
+                } else if (title == '微信' || title == 'WeChat') {
+                    this.check = 1;
+                } else if (title == '以太坊' || title == 'Ethereum') {
+                    this.check = 3;
+                }
+            },
+            toPage: function(name, url, params) {
+                api.openWin({
+                    name: name,
+                    url: url,
+                    reload: true,
+                    pageParam: params || {}
+                });
+            },
+            submit: function() {
+                var that = this
+                var reg = /^[1-9]?[0-9]*\.[0-9]*$/; //任务数量控制整数
+                if (!that.num) {
+                    api.toast({
+                        msg: that.langContent.nonum,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return
+                }
+                if (!that.unit_price) {
+                    api.toast({
+                        msg: that.langContent.noprice,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return
+                }
+                if (reg.test(that.num) == true) {
+                    api.toast({
+                        msg: that.langContent.noinit,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return
+                }
+
+                var param = {
+                    num: that.num,
+                    password: that.pwd,
+                    pay_type: that.check,
+                }
+
+                if (that.flag) {
+                    that.flag = false
+                    http(putOrderUrl, 'post', param, function(ret) {
+                        that.flag = true
+                        if (ret.code == 200) {
+                            api.toast({
+                                msg: ret.msg,
+                                duration: 2000,
+                                location: 'bottom'
+                            });
+                            api.execScript({
+                                name: 'root',
+                                frameName: 'frame3',
+                                script: 'frame3.getHeader()'
+                            });
+                            setTimeout(function() {
+                                api.closeFrame()
+                            }, 2000);
+                            that.flag = true
+                        } else if (ret.code == 405) {
+                            api.toast({
+                                msg: ret.msg,
+                                duration: 2000,
+                                location: 'bottom'
+                            });
+                            setTimeout(function() {
+                                api.openWin({
+                                    name: 'personal_data',
+                                    url: '../my/personal_data.html',
+                                    reload: true,
+                                    pageParam: {}
+                                });
+                                that.cancel();
+                            }, 1999);
+                        }
+                    })
+                } else {
+                    api.toast({
+                        msg: that.getCodetip.submit_tips,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+
+            }
+        }
+    })
+</script>

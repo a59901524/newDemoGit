@@ -1,0 +1,93 @@
+input::placeholder {
+    font-size: 14px;
+    color: #B3A795;
+}
+
+.register {
+    /* color: #5CA4F1; */
+    border: 1px solid;
+    padding: .2rem .5rem;
+    border-radius: 0.5rem;
+    background-color: #fff;
+    /* min-width: 6.2rem; */
+}
+
+.lo_logo {
+    margin: 2rem 0;
+}
+
+.lo_logo img {
+    width: 8.4rem;
+    height: 8.4rem;
+}
+
+.lo_info {
+    padding: 0 3rem;
+}
+
+.lo_info input {
+    font-size: 1.167rem;
+    padding: 1rem 0rem !important;
+    text-indent: 1rem;
+}
+
+.lo_info>div {
+    -webkit-box-pack: start;
+    -webkit-justify-content: flex-start;
+    -ms-flex-pack: start;
+    justify-content: flex-start;
+    font-size: 1.2rem;
+}
+
+.lo_info>div>i {
+    font-style: normal;
+    font-size: 2rem;
+}
+
+.lo_info input,
+.a_info input {
+    /*border: none;*/
+    padding-left: 10px;
+    /*height: 2rem;*/
+    /* background: #141623; */
+    /* color: white; */
+}
+
+.lo_btn {
+    width: 75%;
+    /* background: linear-gradient(to right,#F53689, #328EF9); */
+    /* background: #D49E74; */
+    height: 2rem;
+    line-height: 2rem;
+    text-align: center;
+    letter-spacing: 5px;
+    margin: 2.5rem auto 0;
+    padding: .5rem 0;
+}
+
+input {
+    flex: 1;
+    color: #B3A795;
+}
+
+.lo_account,
+.lo_password {
+    background-image: url(../image/input_bg.png);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+}
+
+.lo_account div {
+    width: 70px!important;
+    white-space: nowrap;
+}
+
+.lo_password div {
+    width: 70px;
+    white-space: nowrap;
+}
+
+.lo_icon {
+    width: 20px;
+    height: auto;
+}

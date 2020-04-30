@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+    <style>
+        #upgrade {
+            min-height: calc(100vh - 56px);
+            padding-bottom: 56px;
+            background: #0FACF1;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="upgrade" class="flex_col_center color_white">
+        <!-- <div class="fontSize18 padding1 text_center color_default1">Meet JXA</div> -->
+        <div class="color_white fontSize16" style="padding: 1px 2%;">{{langContent.title?langContent.title:''}}</div>
+        <img style="width: 100%;height: auto;max-height: 50%;" src="../image/update.gif" alt="">
+        <div class="fontSize14">{{langContent.time?langContent.time:''}}：{{starttime?starttime:''}}{{langContent.to?langContent.to:''}}{{endtime?endtime:''}}</div>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../script/const.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript">
+    var upgrade = new Vue({
+        el: "#upgrade",
+        data: {
+            starttime: '',
+            endtime: '',
+            langContent: {},
+        },
+        created: function() {
+            var that = this
+            apiready = function() {
+                if (api.deviceModel == 'iPhone10,3' || api.deviceModel == 'iPhone10,6' || api.deviceModel == 'iPhone11,8' || api.deviceModel == 'iPhone11,2' || api.deviceModel == 'iPhone11,6' || api.deviceModel == 'iPhone11,4') {
+                    bottomheight = api.safeArea.bottom + 56;
+                    $api.css($api.dom('#frame4'), 'padding-bottom: ' + bottomheight + 'px');
+                }
+                var height = $api.fixStatusBar(document.querySelector('header'));
+                var minheight = api.winHeight - height - 56;
+                $api.css($api.dom('#frame4'), 'min-height:' + minheight + 'px');
+                that.starttime = api.pageParam.starttime;
+                that.endtime = api.pageParam.endtime;
+                upgrade.$data.langContent = GlobleLanguageContent.main;
+                setTimeout(function() {
+                    api.closeWin({
+                        name: 'login'
+                    });
+                }, 2000);
+            }
+        },
+        methods: {
+
+        }
+    })
+</script>

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no">
+    <title>选择联系人</title>
+    <link rel="stylesheet" type="text/css" href="../../lib/iconfont2/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <style>
+        #contacts {
+            min-height: calc(100% - 69px)
+        }
+        
+        .inputarea {
+            background: #ffffff;
+            border-radius: 35px;
+            /* width: 92%; */
+            margin: 0px auto;
+        }
+        
+        .inputarea img {
+            width: 22px;
+            height: 22px;
+            margin: 0 5px 0 10px;
+        }
+        
+        input {
+            color: #999999;
+            flex: 1;
+            height: 25px;
+            line-height: 25px;
+            font-size: 14px;
+        }
+        
+        input::placeholder {
+            font-size: 14px;
+            color: #999999;
+            line-height: 25px;
+        }
+        
+         ::-webkit-input-placeholder {
+            font-size: 14px;
+            color: #999999;
+            line-height: 25px;
+        }
+        /* 使用webkit内核的浏览器 */
+        
+         :-moz-placeholder {
+            font-size: 14px;
+            color: #999999;
+            line-height: 25px;
+        }
+        /* Firefox版本4-18 */
+        
+         ::-moz-placeholder {
+            font-size: 14px;
+            color: #999999;
+            line-height: 25px;
+        }
+        /* Firefox版本19+ */
+        
+         :-ms-input-placeholder {
+            font-size: 14px;
+            color: #999999;
+            line-height: 25px;
+        }
+        
+        input::-webkit-input-placeholder {
+            line-height: 25px;
+        }
+        
+        .user_data {
+            padding: 3px 8px;
+            background-color: #ffffff;
+            border-radius: 40px;
+            border: solid 1px #cb974d;
+        }
+        
+        .fontSize20 {
+            margin: 0 10px;
+            font-size: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="contacts" class="content" v-cloak>
+        <header class="header  posi_relative">
+            <i class="iconfont icon-xiangzuo " onclick="goBack()"></i>
+            <div>{{langContent.title?langContent.title:''}}</div>
+        </header>
+        <div class="padding1">
+            <div class="inputarea flex_row_between ">
+                <i class="iconfont icon-sousuo fontSize20 color_default1"></i>
+                <input type="text" :placeholder="langContent.search" v-model="keyword" v-on:input="changeInfo(keyword)" onpaste="return true" @keyup.enter="changeInfo">
+                <img @click="clear();" src="../../image/seachcan.png" alt="" />
+            </div>
+        </div>
+        <!-- <div class="fontSize12 color_CC marginT1 marginB1" style="padding-left:1rem">{{langContent.my?langContent.my:''}}</div> -->
+
+        <div class="flex_row_between padding1 bbd bg_white" style="padding-bottom: 1rem;padding-top: 1rem;" v-for="(item, index) in list" :key="index" @click="pitch_on(item.nickname,item.uid)">
+            <div class="flex_row_left" style="width: 80%;">
+                <img class="Bc" :src="item.avatar||'../../image/logo.png'" alt="" style="width: 50px;height: 50px;margin-right: 5px;">
+                <div style="width: 80%;">
+                    <div class="color_black3 fontSize14">{{item.nickname}}</div>
+                    <div class="color_gray fontSize12 marginT5 text-overflow_1 ">{{item.signature}}</div>
+                </div>
+            </div>
+            <div class="user_data color_default1" @click.stop="toPerson(item.uid,index)">
+                {{langContent.look?langContent.look:''}}
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    var contacts = new Vue({
+        el: "#contacts",
+        data: {
+            keyword: '',
+            list: [],
+            type: '',
+            langContent: {},
+        },
+        created: function() {
+            var that = this
+            apiready = function() {
+                fixStatusbar('header,.header,.headers', '.content');
+                var height = $api.fixStatusBar(document.querySelector('header'));
+                var minheight = api.winHeight - height;
+                $api.css($api.dom('#contacts'), 'min-height:' + minheight + 'px');
+                that.type = api.pageParam.type;
+                contacts.$data.langContent = GlobleLanguageContent.contacts;
+                that.getInfo()
+            }
+        },
+        methods: {
+            clear: function() {
+                var that = this;
+                that.keyword = '';
+                that.getInfo()
+            },
+            // 查看关注人资料
+            toPerson: function(id, index) {
+                var that = this;
+                // if (that.isPlay) {
+                //     that.controVideo(index)
+                // }
+                api.sendEvent({
+                    name: 'pause',
+                    extra: {}
+                });
+                api.openWin({
+                    name: 'other',
+                    url: '../my/other.html',
+                    bounces: true,
+                    pageParam: {
+                        uid: id,
+                        from: 'contacts'
+                    }
+                });
+            },
+            getInfo: function() {
+                var that = this;
+                that.keyword = ''
+                http(idollistUrl, 'post', {},
+                    function(ret) {
+                        if (ret.code == 200) {
+                            that.list = ret.data
+                        }
+                    });
+            },
+            changeInfo: function() {
+                var that = this;
+                http(search_focus_user_listUrl, 'post', {
+                        keyword: that.keyword
+                    },
+                    function(ret) {
+                        if (ret.code == 200) {
+                            that.list = ret.data
+                        }
+                    });
+            },
+            pitch_on: function(nickname, id) {
+                    // if (this.type != 1) {
+                    //     api.sendEvent({
+                    //         name: 'details',
+                    //         extra: nickname
+                    //     });
+                    //     goBack()
+                    // }
+                    api.openWin({
+                        name: 'chat_win',
+                        url: '../chat/chat_win.html',
+                        bounces: false,
+                        pageParam: {
+                            nickname: nickname,
+                            id: id
+                        }
+                    });
+                }
+                // toPage: function (name, url, params) {
+                //     api.openWin({
+                //         name: name,
+                //         url: url,
+                //         reload: true,
+                //         pageParam: params || {}
+                //     });
+                // }
+        }
+    })
+</script>

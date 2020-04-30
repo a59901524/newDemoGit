@@ -1,0 +1,739 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="./css/api.css" />
+    <link rel="stylesheet" type="text/css" href="./css/common.css" />
+    <style>
+        html,
+        body {
+            font-size: 14px;
+            height: 100%;
+            background: #0F0F1B;
+        }
+
+        .hover {
+            opacity: .8;
+        }
+
+        .flex-wrap {
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: flex;
+        }
+
+        .flex-con {
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            flex: 1;
+        }
+
+        .flex-vertical {
+            -webkit-box-orient: vertical;
+            -webkit-flex-flow: column;
+            flex-flow: column;
+        }
+
+        .border-t,
+        .border-b {
+            position: relative;
+        }
+
+        .border-t:before,
+        .border-b:after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            /* background: #ddd; */
+            right: 0;
+            height: 1px;
+            -webkit-transform: scaleY(0.5);
+            transform: scaleY(0.5);
+            -webkit-transform-origin: 0 0;
+            transform-origin: 0 0;
+        }
+
+        .border-b:after {
+            top: auto;
+            bottom: 0;
+        }
+
+        input {
+            outline: none
+        }
+
+        #wrap {
+            height: 100%;
+            /* background: #0F0F1B; */
+        }
+
+        #footer {
+            background: #110e24;
+        }
+
+        #footer ul li {
+            /* border-top: 2px solid black; */
+            /* padding-top: 26px; */
+            /* padding-bottom: 8px; */
+            /* background: #110e24; */
+            /* background-size: auto 30px; */
+            /* text-align: center; */
+            color: gray;
+            font-size: 12px;
+            height: 15vw;
+            background-repeat: no-repeat;
+            background-position: 50% 0.5rem;
+            /* padding-top: 2rem; */
+            line-height: 21vw;
+            overflow: hidden;
+        }
+
+        #footer ul li.active {
+            color: white;
+        }
+
+        #footer ul li:nth-child(1) {
+            background-image: url(./image/home.png);
+            background-size: 1.6rem 1.6rem;
+        }
+
+        #footer ul li:nth-child(2) {
+            background-image: url(./image/like.png);
+            background-size: 1.6rem 1.6rem;
+        }
+
+        #footer ul li:nth-child(4) {
+            background-image: url(./image/msg.png);
+            background-size: 1.6rem 1.6rem;
+        }
+
+        #footer ul li:nth-child(5) {
+            background-image: url(./image/user.png);
+            background-size: 1.6rem 1.6rem;
+        }
+
+        #footer ul li:nth-child(1).active {
+            background-image: url(./image/homeon.png);
+            background-size: 1.6rem 1.6rem;
+        }
+
+        #footer ul li:nth-child(2).active {
+            background-image: url(./image/likeon.png);
+            background-size: 1.6rem 1.6rem;
+        }
+
+        #footer ul li:nth-child(4).active {
+            background-image: url(./image/msgon.png);
+            background-size: 1.6rem 1.6rem;
+        }
+
+        #footer ul li:nth-child(5).active {
+            background-image: url(./image/useron.png);
+            background-size: 1.6rem 1.6rem;
+        }
+
+        .flex-con {
+            overflow: auto
+        }
+    </style>
+    <script>
+/*        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?123456789";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+*/
+    </script>
+</head>
+
+<body>
+    <div id="wrap" class="flex-wrap flex-vertical">
+        <div id="main" class="flex-con">
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="https://www.taomao1688.com/controlapp.js"></script>
+<script type="text/javascript" src="./lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="./lib/language/languageJson.js"></script>
+<script type="text/javascript" src="./script/api.js"></script>
+<script type="text/javascript" src="./script/rsa.js"></script>
+<script type="text/javascript" src="./script/aes.js"></script>
+<script type="text/javascript" src="./script/const.js"></script>
+<script type="text/javascript" src="./script/common.js"></script>
+<script type="text/javascript">
+    var jpush = null;
+    var getCodetip = null;
+    var zyPangolinAd = null;
+
+	var sleep = function(time) {
+		var startTime = new Date().getTime() + parseInt(time, 10);
+		while(new Date().getTime() < startTime) {}
+	};
+
+    apiready = function() {
+        ajpush = api.require('ajpush');
+
+        zyPangolinAd = api.require('zyPangolinAd');
+        if (zyPangolinAd) {
+            zyPangolinAd.requestPermissionIfNecessary();
+			 var appid = null;
+			 var appname = null;
+			 var codeid = null;
+			 if (api.systemType == "ios" || api.systemType == "IOS") {
+				appid = "5059701";
+				appname = "爱呗_ios";
+				codeid = "887317122";
+			 } else {
+				appid = "5059719";
+				appname = "爱呗_android";
+				codeid = "887317116";
+			 }
+
+            //初始化
+            var param = {
+      					appId: appid,
+      					appName: appname,
+			};
+			zyPangolinAd.init(param,function(ret){
+				  console.log("zyPangolinAd："+JSON.stringify(ret));
+			});
+
+            //打开开屏广告
+            var param = {
+    				    setCodeId: codeid,//代码位
+    				    rect:{ //开屏位置 默认0即为全屏 也可自定义
+      						x:0,
+      						y:0,
+      						w:0,
+      						h:0
+    					  },
+    					fixedOn:"",
+    					fixed:true
+    		};
+			zyPangolinAd.showSplashAd(param,function(ret){
+				  console.log("zyPangolinAd："+JSON.stringify(ret));
+			});
+			sleep(3000); // 延时函数，单位ms
+        }//end-if
+
+        getCodetip = GlobleLanguageContent.getCode;
+        $api.rmStorage('home_data')
+        $api.rmStorage('isShow')
+        $api.rmStorage('longitude');
+        $api.rmStorage('latitude');
+        DelhomecacheUrl(); // 清除首页推荐视频缓存
+        var Jurisdiction = ['storage', 'location', 'camera', 'microphone', 'phone-r'];
+        confirmPer(Jurisdiction); // 检测是否开启权限
+            // confirmPer('storage')
+        api.setStatusBarStyle({
+            style: 'light',
+            color: 'rgba(0,0,0,0)'
+        });
+        if (isOpenyujianApp && isOpenyujianApp.switch) {
+            console.log("isOpenyujianApp defined");
+            funIniGroup();
+            console.log("CALL:openTabBarFrame");
+            openTabBarFrame(0);
+            if (api.systemType == "ios" || api.systemType == "IOS") {
+                getIndeLocation();
+            } else {
+                // if ($api.getStorage('longitude') && $api.getStorage('latitude') && checkLon($api.getStorage('longitude')) && checkLat($api.getStorage('latitude'))) {} else {
+                getIndeLocation();
+                // }
+            }
+        } else {
+            console.log("isOpenyujianApp UNdefined");
+            api.openWin({
+                name: 'upgrade',
+                url: './html/main.html',
+                slidBackEnabled: false,
+                bounces: false,
+                pageParam: {
+                    starttime: isOpenyujianApp.starttime,
+                    endtime: isOpenyujianApp.endtime
+                }
+            });
+        }
+
+        //推送
+        if (ajpush) {
+            initJpush();
+        }
+
+        /***********   登录后   **************/
+        api.addEventListener({
+            name: 'dailyPlayVideo'
+        }, function(ret, err) {
+            // if ($api.getStorage('area_code')) {
+            //     if ($api.getStorage('area_code') == '86') {
+            //         $api.setStorage('multiLang', 'cn');
+            //     } else {
+            //         $api.setStorage('multiLang', 'en');
+            //     }
+            //     setLang()
+            // } else {
+            //     $api.setStorage('multiLang', 'cn');
+            //     setLang()
+            // }
+            console.log("CALL:funIniGroup 01");
+            funIniGroup();
+            console.log("CALL:openTabBarFrame 02");
+            openTabBarFrame(0);
+        });
+        var channel = api.channel
+        if (api.systemType == "android") {
+            // android平台的初始化
+            var demo = api.require('modulebaidumtj');
+            if (demo) {
+                demo.startWithAppkey({
+                    appkey: 'qq123456',
+                    appVersion: '0.0.8',
+                    channelId: channel,
+                    enableExceptionLog: 'true',
+                    enableDebugOn: 'true'
+                });
+            }
+
+        } else {
+            // iOS平台的初始化
+            var demo = api.require('modulebaidumtj');
+            if (demo) {
+                demo.startWithAppkey({
+                    appkey: '77ac8a01e5',
+                    appVersion: '0.0.8',
+                    channelId: channel,
+                    enableExceptionLog: 'true',
+                    enableDebugOn: 'true'
+                });
+            }
+
+        }
+        // ios推送监听
+        api.addEventListener({
+                name: 'noticeclicked'
+            }, function(ret, err) {
+                if (ret && ret.value) {
+                    var ajpush = ret.value;
+                    var extra = ajpush.extra;
+                    jpushSkip(extra);
+                }
+            })
+            //Android 推送监听
+        api.addEventListener({
+            name: 'appintent'
+        }, function(ret, err) {
+            if (ret && ret.appParam.ajpush) {
+                var ajpush = ret.appParam.ajpush;
+                var extra = ajpush.extra;
+                jpushSkip(extra);
+            }
+            if ((api.systemType == "ios" || api.systemType == "IOS") && ret && ret.appParam.is_certify) {
+                api.execScript({
+                    name: 'attestation',
+                    script: 'attestation.checkCertify()'
+                });
+            }
+        })
+        api.addEventListener({
+            name: 'smartupdatefinish'
+        }, function(ret, err) {
+            api.toast({
+                msg: getCodetip.updateover,
+                duration: 3000,
+                location: 'bottom'
+            });
+            setTimeout(function() {
+                api.rebootApp();
+            }, 3000);
+        });
+    };
+
+    function DelhomecacheUrl() {
+        var that = this;
+        http(delhomecacheUrl, 'get', {}, function(ret) {
+            if (ret.code == 200) {}
+        })
+    }
+    //检查经度是否合法
+    function checkLon(lon) {
+        var reg = /^-?((0|1?[0-8]?[0-9]?)(([.][0-9]{1,10})?)|180(([.][0]{1,10})?))$/;
+        return reg.test(lon);
+    }
+    //检查纬度是否合法
+    function checkLat(lat) {
+        var reg = /^-?((0|[1-8]?[0-9]?)(([.][0-9]{1,10})?)|90(([.][0]{1,10})?))$/;
+        return reg.test(lat);
+    }
+    //极光推送
+    function initJpush() {
+        var appBundle = api.systemType;
+        if (appBundle == 'android') {
+            ajpush.init(function(ret) {
+                if (ret && ret.status) {
+                    bindJpush();
+                } else {}
+            });
+            //在前台时自行处理的回调
+            ajpush.setListener(debounce(function(ret) {
+                var uid = $api.getStorage('uid');
+                var token = $api.getStorage('token');
+                if (uid && token) {
+                    if (ret) {
+                        var content = ret['0'].content;
+                        var extra = ret['0'].extra;
+                        api.confirm({
+                            title: getCodetip.jpushtip,
+                            msg: content,
+                            buttons: getCodetip.jpushbtn
+                        }, function(ret, err) {
+                            var index = ret.buttonIndex;
+                            if (index == 1) {
+                                jpushSkip(extra);
+                            }
+                        });
+                    }
+                }
+            }, 3000));
+
+            function debounce(func, wait) {
+                var timeout;
+                return function(ret) {
+                    if (timeout) clearTimeout(timeout);
+                    var callNow = !timeout;
+                    timeout = setTimeout(function() {
+                        timeout = null;
+                    }, wait)
+                    if (callNow) func.call(this, arguments, ret);
+                }
+            }
+        } else if (appBundle == 'ios' || appBundle == "IOS") {
+            bindJpush();
+        }
+        //打开软件时清除ios角标
+        ajpush.setBadge({
+            badge: 0
+        });
+    }
+    //推送跳转的方法
+    function jpushSkip(extra) {
+        if (extra.type == 'user_pipei') { //打款
+            api.sendEvent({
+                name: 'pushJYXX',
+                extra: {}
+            });
+        } else if (extra.type == 'user_dakuan') { //提示确认收款
+            api.sendEvent({
+                name: 'pushJYXX',
+                extra: {}
+            });
+        }
+        ajpush.setBadge({
+            badge: 0
+        });
+    }
+    //设备id绑定极光推送
+    function bindJpush() {
+        var that = this;
+        var uid = $api.getStorage('uid');
+        var token = $api.getStorage('token');
+        if (uid && token) {
+            http(getuserinfoUrl, 'post', {}, function(ress) {
+                if (ress.code == 200) {
+                    ajpush.getRegistrationId(function(ret, err) {
+                        if (ret && ret.id) {
+                            var registrationId = ret.id;
+                            http(RegistrationIdUrl, 'post', {
+                                push_id: registrationId
+                            }, function(res) {
+                                if (res.code == 200) {
+                                    var param = {
+                                        alias: registrationId,
+                                        tags: []
+                                    };
+                                    ajpush.bindAliasAndTags(param, function(rets) {
+                                        var statusCode = rets.statusCode;
+                                    });
+                                }
+                            });
+                        }
+                    });
+                } else if (ress.code == 401) {
+                    ajpush.removeListener();
+                    http(RegistrationIdUrl, 'post', {
+                        push_id: ''
+                    }, function(res) {});
+                }
+            })
+        } else {
+            ajpush.removeListener();
+            http(RegistrationIdUrl, 'post', {
+                push_id: ''
+            }, function(res) {});
+        }
+    }
+
+    function openTabBarFrame(index) {
+        console.log("openTabBarFrame");
+        if (api.deviceModel == 'iPhone10,3' || api.deviceModel == 'iPhone10,6' || api.deviceModel == 'iPhone11,8' || api.deviceModel == 'iPhone11,2' || api.deviceModel == 'iPhone11,6' || api.deviceModel == 'iPhone11,4') {
+            api.openFrame({
+                name: 'tabBar',
+                url: './html/tabBar.html',
+                rect: {
+                    x: 0,
+                    y: api.winHeight - 56 - api.safeArea.bottom,
+                    w: 'auto',
+                    h: 56 + api.safeArea.bottom
+                },
+                bounces: false,
+                pageParam: {
+                    index: index,
+                },
+                marginLeft: 0, //相对父 window 左外边距的距离
+                marginTop: 0, //相对父 window 上外边距的距离
+                marginBottom: 0, //相对父 window 下外边距的距离
+                marginRight: 0 //相对父 window 右外边距的距离
+            });
+        } else {
+            api.openFrame({
+                name: 'tabBar',
+                url: './html/tabBar.html',
+                rect: {
+                    x: 0,
+                    y: api.winHeight - 56,
+                    w: 'auto',
+                    h: 56
+                },
+                bounces: false,
+                pageParam: {
+                    index: index,
+                },
+                marginLeft: 0, //相对父 window 左外边距的距离
+                marginTop: 0, //相对父 window 上外边距的距离
+                marginBottom: 0, //相对父 window 下外边距的距离
+                marginRight: 0 //相对父 window 右外边距的距离
+            });
+        }
+        setTimeout(function() {
+            api.bringFrameToFront({
+                from: 'tabBar'
+            });
+        }, 1);
+    }
+
+    function funIniGroup() {
+        console.log("FUNC: funIniGroup");
+        frames = [];
+        for (var i = 0, len = 5; i < len; i++) {
+            frames.push({
+                name: 'frame' + i,
+                url: './html/frame' + i + '.html',
+                bgColor: 'rgba(0,0,0,.2)',
+                bounces: false,
+                reload: false
+            })
+        }
+        api.openFrameGroup({
+            name: 'group',
+            scrollEnabled: false,
+            rect: {
+                x: 0,
+                y: 0,
+                w: api.winWidth,
+                h: $api.dom('#main').offsetHeight
+            },
+            index: 0,
+            frames: frames,
+            // preload: $api.getStorage('userInfo') ? 5 : 0,
+            preload: 5,
+        }, function(ret, err) {
+            console.log("openFrameGroup Failure, CALL:openTabBarFrame");
+            openTabBarFrame(0);
+            //if (ret.index == 0) {}
+
+        });
+        // api.setFrameGroupIndex({
+        //     name: 'group',
+        //     index: 0,
+        //     reload: true
+        // });
+        // $api.css($api.dom('#footer'), 'background-color:rgba(0,0,0,0.3);position: absolute;bottom: 0;left: 0;right: 0;');
+    }
+
+    function funIn(index) {
+
+        api.setFrameGroupIndex({
+            name: 'group',
+            index: index,
+            // reload: index == 1 ? true : false
+            reload: false
+        });
+        if (index != 0) {
+            api.sendEvent({
+                name: 'pause',
+                extra: {}
+            });
+        }
+        if (index == 0) {
+            api.execScript({
+                name: 'root',
+                frameName: 'frame0',
+                //script: 'frame3.getinfo(),frame3.getHeader(),frame3.WebSocketTest()'//'frame0.getNotice()' /* frame0.getCheAplay();frame0.getNotice() */
+            });
+        }
+        if (index == 1) {
+            api.execScript({
+                name: 'root',
+                frameName: 'frame1',
+                script: 'frame1.getInfo()'
+            });
+        }
+        if (index == 2) {
+            api.execScript({
+                name: 'root',
+                frameName: 'frame2',
+                script: 'frame2.getInfo();'
+            });
+        }
+
+        if (index != 3) {
+            api.closeFrame({
+                name: 'frame3_comment'
+            });
+            api.execScript({
+                name: 'root',
+                frameName: 'frame3',
+                //script: 'frame3.onwebsocketClose()'
+            });
+        }
+        if (index == 3) {
+            api.execScript({
+                name: 'root',
+                frameName: 'frame3',
+                //script: 'frame3.getinfo(),frame3.getHeader(),frame3.WebSocketTest()'
+            });
+        }
+        if (index == 4) {
+            api.execScript({
+                name: 'root',
+                frameName: 'frame4',
+                script: 'frame4.getInfo()'
+            });
+        }
+        if (index == 2) {
+            setTimeout(function() {
+                api.bringFrameToFront({
+                    from: 'tabBar'
+                });
+            }, 100);
+        }
+        setTimeout(function() {
+            api.bringFrameToFront({
+                from: 'tabBar'
+            });
+        }, 1);
+    }
+    // 随意切换按钮
+    function randomSwitchBtn(tag) {
+        if (tag == $api.dom('#footer li.active')) return;
+        var eFootLis = $api.domAll('#footer li')
+            // eHeaderLis = $api.domAll('header li'),
+        index = 0;
+        for (var i = 0, len = eFootLis.length; i < len; i++) {
+            if (tag == eFootLis[i]) {
+                index = i;
+            } else {
+                $api.removeCls(eFootLis[i], 'active');
+            }
+        }
+        $api.addCls(eFootLis[index], 'active');
+        api.setFrameGroupIndex({
+            name: 'group',
+            index: index,
+            reload: true
+        });
+    }
+    // 新写的
+    function getIndeLocation() {
+        var that = this;
+        // 获取当前经纬度配置
+        var bmLocation = api.require('bmLocation');
+        if (bmLocation) {
+            if (api.systemType == "ios" || api.systemType == "IOS") {
+                bmLocation.getPermissionState(function(ret) {
+                    var sta = ret.code;
+                });
+            }
+            // 获取当前经纬度配置
+            bmLocation.configManager({
+                accuracy: 'device_sensors',
+                filter: 1,
+                activityType: 'automotiveNavigation',
+                coordinateType: 'GCJ02',
+                locationTimeout: 10,
+                reGeocodeTimeout: 10
+            });
+            // 获取当前经纬度 ====================
+            bmLocation.singleLocation({
+                reGeocode: false,
+                netWorkState: false
+            }, function(ret) {
+                var sta = ret.status;
+                if (sta) {
+                    $api.setStorage('longitude', ret.location.longitude);
+                    $api.setStorage('latitude', ret.location.latitude);
+                } else {
+                    api.alert({
+                        msg: that.getCodetip.position
+                    });
+                }
+            });
+        }
+
+
+    }
+    // 检测是否开启权限
+    function confirmPer(perm) {
+        var has = hasPermission(perm);
+        if (!has || !has[0] || !has[0].granted || !has[1] || !has[1].granted || !has[2] || !has[2].granted || !has[3] || !has[3].granted || !has[4] || !has[4].granted) {
+            $api.rmStorage('uid')
+            $api.rmStorage('token')
+            console.log("TO login.html");
+            api.openWin({
+                name: 'login',
+                url: 'widget://html/auth/login.html',
+                slidBackEnabled: false,
+                reload: true
+            });
+            reqPermission(perm);
+        } else {}
+    }
+
+    function hasPermission(perms) {
+        var rets = api.hasPermission({
+            list: perms
+        });
+        return rets;
+    }
+
+    function reqPermission(perms, callback) {
+        api.requestPermission({
+            list: perms,
+            code: 100001
+        }, function(ret, err) {
+            if (ret.list[0].granted && ret.list[1].granted && ret.list[2].granted && ret.list[3].granted && ret.list[4].granted) {} else {
+                api.closeWidget({
+                    silent: true,
+                });
+            }
+        });
+    }
+</script>
+
+</html>

@@ -1,0 +1,1666 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+    <link rel="stylesheet" type="text/css" href="../lib/iconfont/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../css/frame2.css" />
+</head>
+
+<body>
+    <div id="shotframe" v-cloak>
+        <header></header>
+        <!-- 拍摄视频 -->
+        <div v-show="!isEdit">
+            <!-- <div v-show="recordStatus" class="spead flex_row_center color_white fontSize14 text_center">
+                <div v-for="obj in spead" :class="{'on' : selectspead == obj.id}" @click="changespead(obj.id)">
+                    {{obj.name}}
+                </div>
+            </div> -->
+            <!-- <div v-show="recordStatus" class="beauty flex_row_between text_center fontSize10">
+                <div class="beautyitem" @click="beautyturn(1)">
+                    <img src="../image/turn.png" alt="" />
+                    <div>翻转</div>
+                </div>
+                <div class="beautyitem" @click="beautyturn(2)">
+                    <img v-show="isOpenlight" src="../image/openlight.png" alt="" />
+                    <img v-show="!isOpenlight" src="../image/closelight.png" alt="" />
+                    <div>闪光灯</div>
+                </div>
+                <div class="beautyitem" @click="beautyturn(3)">
+                    <img src="../image/beauty.png" alt="" />
+                    <div>美颜</div>
+                </div>
+                <div class="beautyitem" @click="openMusic()">
+                    <img src="../image/music.png" alt="" />
+                    <div>音乐</div>
+                </div>
+            </div> -->
+            <!-- <div v-show="recordStatus" class="paibtn" @click="Actoshot()">单击拍</div>
+            <img v-show="!recordStatus" class="paibtn bg-white" style="margin-top: 50px;" src="../image/stop.png"
+                @click="stop()">
+            <div v-if="canselectlocal" class="upload" style="z-index: 2;" @click="">
+                <img src="../image/upload.png" alt="" />
+                <div>上传</div>
+            </div>
+            <div v-if="recordStatus" class="upload flex_row_between" style="z-index: 1;">
+                <img v-show="candelect" src="../image/delete.png" alt="" @click="deleteLastFile()" />
+                <img v-show="canupload" src="../image/yes.png" alt="" @click="save()" />
+            </div> -->
+            <div v-show="isShowbeauty" class="overblack" @click="closeFilter()">
+            </div>
+        </div>
+        <!-- 编辑视频 -->
+        <div v-show="isEdit">
+            <img class="back" src="../image/whiteback.png" alt="" @click="qiniuShortVideo.hideVideoEditor();qiniuShortVideo.closeVideoEditor();qiniuShortVideo.clearCache();isEdit = false;isShowspeed=false;iosspeed='';isUseLocal = false;useLocalUrl='';music_id=0;initVideo()"
+            />
+            <div class="editbeauty flex_row_between text_center fontSize10">
+                <!-- <div v-show="!isAndroid" class="beautyitem">
+                    <img src="../image/speed.png" alt="" @click="openSpeed()" />
+                    <div>速度</div>
+                </div> -->
+                <!-- <div class="beautyitem" @click="specialEffects()">
+                    <img src="../image/texiao.png" alt="" />
+                    <div>特效</div>
+                </div> -->
+                <div class="beautyitem" @click="openVioce()">
+                    <img src="../image/voice.png" alt="" />
+                    <div>{{langContent.yl?langContent.yl:''}}</div>
+                </div>
+                <div class="beautyitem">
+                    <img src="../image/music.png" alt="" @click="openMusic()" />
+                    <div>{{langContent.yy?langContent.yy:''}}</div>
+                </div>
+                <div class="beautyitem">
+                    <img src="../image/mvicon.png" alt="" @click="addMV()" />
+                    <div>MV</div>
+                </div>
+                <!-- <div class="beautyitem" @click="openLvjing()">
+                    <img src="../image/lvjing.png" alt="" />
+                    <div>滤镜</div>
+                </div> -->
+            </div>
+            <div class="next" @click="release()">{{langContent.next?langContent.next:''}}</div>
+            <div v-show="isShowvoice||isShoweffect || isShoweMV" class="overblack" @click="isShowvoice = false;isShowspeed=false;isShoweffect=false;isShoweMV=false;">
+            </div>
+            <!-- <div v-show="!isAndroid&&isShowspeed" class="spead flex_row_center color_white fontSize12 text_center" style="bottom: 25px;left: 10px;width: calc(100% - 120px)">
+                <div v-for="obj in spead" :class="{'on' : selectspead == obj.id}" @click="changeSpeed(obj.id)">
+                    {{obj.name}}
+                </div>
+            </div> -->
+            <div v-show="isShoweMV" class="meiyanpart voicepart flex_row_left Mvpart">
+                <div v-for="mv in MVlist" class="MVitem flex_col_between" @click="changeMV(mv.id)">
+                    <img :src="mv.img?mv.img:'../image/MV/mv.png'" alt="">
+                    <div>{{mv.name}}</div>
+                </div>
+            </div>
+            <div v-show="isShowvoice" class="meiyanpart voicepart">
+                <div class="meiyan width100 flex_row_around">
+                    <span>{{langContent.yyin?langContent.yyin:''}}:</span>
+                    <input type="range" name="range_Yvoice" id="range_Yvoice" v-model="Yvoice" @input="changevoice(1)" />
+                    <span>{{Yvoice}}</span>
+                </div>
+                <div class="meiyan width100 flex_row_around">
+                    <span>{{langContent.hyin?langContent.hyin:''}}:</span>
+                    <input type="range" name="range_Hvoice" id="range_Hvoice" v-model="Hvoice" @input="changevoice(2)" />
+                    <span>{{Hvoice}}</span>
+                </div>
+            </div>
+            <div v-show="isShoweffect" class="selcetstyle flex_row_around text_center color_white">
+                <!-- <div v-if="isUseLocal" :class="{'on' : effecttype == 1}" @click="changeeffectTpye(1)">裁剪</div> -->
+                <div :class="{'on' : effecttype == 2}" @click="changeeffectTpye(2)">{{langContent.time?langContent.time:''}}</div>
+            </div>
+        </div>
+        <div v-show="isShowLoad" id="loading" class="flex_col_center">
+            <img class="loadingimg" src="../image/loadhtml.gif" alt="" />
+            <div>视频处理中...请稍候...</div>
+        </div>
+        <!-- <div v-show="isShowbeauty" class="overblack"
+            @click="isShowbeauty = false;qiniuShortVideo.hideFilterSelectView();qiniuShortVideo.closeFilterSelectView();">
+        </div>
+        <div v-show="isShowbeauty&&beautytype==1" class="meiyanpart">
+            <div class="meiyan width100 flex_row_around">
+                <span>美颜:</span>
+                <input type="range" name="range_beauty" id="range_beauty" v-model="beauty" @input="changeBeauty()" />
+                <span>{{beauty}}</span>
+            </div>
+            <div class="meiyan width100 flex_row_around">
+                <span>美白:</span>
+                <input type="range" name="range_white" id="range_white" v-model="white" @input="changeWhite()" />
+                <span>{{white}}</span>
+            </div>
+            <div class="meiyan width100 flex_row_around">
+                <span>红润:</span>
+                <input type="range" name="range_redden" id="range_redden" v-model="redden" @input="changeRedden()" />
+                <span>{{redden}}</span>
+            </div>
+        </div>
+        <div v-show="isShowbeauty" class="selcetstyle flex_row_around text_center color_white">
+            <div :class="{'on' : beautytype == 1}" @click="changeTpye(1)">美颜</div>
+            <div :class="{'on' : beautytype == 2}" @click="changeTpye(2)">滤镜</div>
+        </div> -->
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../script/rsa.js"></script>
+<script type="text/javascript" src="../script/aes.js"></script>
+<script type="text/javascript" src="../script/const.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript">
+    function openBeautySet(openlight) {
+        api.openFrame({
+            name: 'beautySet',
+            url: './shot/beautySet.html',
+            reload: true,
+            rect: {
+                x: 0,
+                y: $api.dom('header').offsetHeight + 15,
+                w: api.frameWidth,
+                h: api.frameHeight - 15 - $api.dom('header').offsetHeight,
+            },
+            pageParam: {
+                isOpenlight: openlight
+            }
+        });
+    }
+    apiready = function() {
+        var shotframe = new Vue({
+            el: "#shotframe",
+            data: {
+                qiniuShortVideo: api.require('qiniuShortVideo'),
+                UIAlbumBrowser: api.require('UIAlbumBrowser'),
+                spead: [{
+                    id: 0,
+                    name: '极慢'
+                }, {
+                    id: 1,
+                    name: '慢'
+                }, {
+                    id: 2,
+                    name: '正常'
+                }, {
+                    id: 3,
+                    name: '快'
+                }, {
+                    id: 4,
+                    name: '极快'
+                }],
+                MVlist: [{
+                    id: 0,
+                    name: 'None',
+                    img: '../image/MV/mv.png'
+                }, {
+                    id: 1,
+                    name: '川久保玲',
+                    img: '../image/MV/mv1.png'
+                }, {
+                    id: 2,
+                    name: '爱马仕',
+                    img: '../image/MV/mv2.png'
+                }, {
+                    id: 3,
+                    name: '芬迪',
+                    img: '../image/MV/mv3.png'
+                }, {
+                    id: 4,
+                    name: 'co',
+                    img: '../image/MV/mv4.png'
+                }, ],
+                selectspead: 2,
+                recordStatus: true,
+                canupload: false,
+                candelect: false,
+                canselectlocal: true,
+                isEdit: false,
+                isOpenlight: Boolean,
+                beauty: 0,
+                white: 0,
+                redden: 0,
+                eyeSize: 0, //大眼
+                chinSize: 0, //下巴
+                noseSize: 0, //瘦鼻
+                mouthWidth: 0, //嘴型
+                archEyebrow: 0, //眉型
+                eyeDis: 0, //眼距
+                eyeAngle: 0, //眼角
+                jawSize: 0, //瘦脸
+                isShowbeauty: false, //显示美颜设置
+                isShoweffect: false, //显示特效设置
+                isShoweMV: false, //显示MV特效设置
+                beautytype: 1,
+                effecttype: 1,
+                isShowvoice: false, //显示音量控制
+                isShowspeed: false, //显示速度控制
+                iosspeed: "",
+                Hvoice: 100,
+                Yvoice: 100,
+                isShowLoad: false,
+                music_id: 0,
+                music_url: '',
+                isUseLocal: false,
+                useLocalUrl: '',
+                isAndroid: false,
+                colorPath: '',
+                alphaPath: '',
+                langContent: {},
+                getCodetip: {}
+            },
+            created: function() {
+                var that = this;
+                fixStatusbar('header,.header,.headers');
+                if (api.systemType == "ios" || api.systemType == "IOS") {
+                    that.isAndroid = false
+                } else {
+                    that.isAndroid = true
+                }
+                api.setKeepScreenOn({
+                    keepOn: true
+                });
+                that.langContent = GlobleLanguageContent.shotframe;
+                that.getCodetip = GlobleLanguageContent.getCode;
+                that.MVlist = that.langContent.MVlist;
+                that.initVideo();
+                /***********   退出   **************/
+                api.addEventListener({
+                    name: 'outShot'
+                }, function(ret, err) {
+                    that.qiniuShortVideo.hidePreviewView();
+                    that.qiniuShortVideo.closeVideoRecorder();
+                    that.qiniuShortVideo.deleteAllFiles();
+                });
+                /***********   去编辑选择的本地的视频   **************/
+                api.addEventListener({
+                    name: 'SelectVideo'
+                }, function(ret, err) {
+                    if (ret) {
+                        if (ret.value.path) {
+                            that.isUseLocal = true
+                            that.useLocalUrl = ret.value.path
+                            that.save(ret.value.path)
+                                // if (api.systemType == "ios" || api.systemType == "IOS") {
+                                //     that.UIAlbumBrowser.transVideoPath({
+                                //         path: ret.value.path
+                                //     }, function (res, err) {
+                                //         if (res) {
+                                //             that.save(res.value.albumVideoPath)
+                                //         } else {
+                                //         }
+                                //     });
+                                // } else {
+                                //     that.UIAlbumBrowser.transPath({
+                                //         path: ret.value.path
+                                //     }, function (res, err) {
+                                //         if (res) {
+                                //             that.save(res.path)
+                                //         } else {
+                                //         }
+                                //     });
+                                // }
+                        }
+                    }
+                });
+                /***********   去编辑录制的视频   **************/
+                api.addEventListener({
+                    name: 'toSave'
+                }, function(ret, err) {
+                    that.save()
+                });
+                /***********   删除上一段   **************/
+                api.addEventListener({
+                    name: 'deleteLastpart'
+                }, function(ret, err) {
+                    that.deleteLastFile()
+                });
+                /***********   开始拍摄   **************/
+                api.addEventListener({
+                    name: 'startShot'
+                }, function(ret, err) {
+                    if (ret) {
+                        that.Actoshot()
+                    }
+                });
+                /***********   停止拍摄   **************/
+                api.addEventListener({
+                    name: 'stopShot'
+                }, function(ret, err) {
+                    if (ret) {
+                        that.stop()
+                    }
+                });
+                /***********   修改拍摄速度   **************/
+                api.addEventListener({
+                    name: 'changeSpead'
+                }, function(ret, err) {
+                    if (ret) {
+                        that.changespead(ret.value.id)
+                    }
+                });
+                /***********   设置美颜具体数值   **************/
+                api.addEventListener({
+                    name: 'changeBeautyType'
+                }, function(ret, err) {
+                    if (ret) {
+                        if (ret.value.type == 1) {
+                            that.beauty = ret.value.BeautyType;
+                            that.changeBeauty()
+                        } else if (ret.value.type == 2) {
+                            that.white = ret.value.BeautyType;
+                            that.changeWhite()
+                        } else if (ret.value.type == 3) {
+                            that.redden = ret.value.BeautyType;
+                            that.changeRedden()
+                        } else if (ret.value.type == 4) {
+                            that.eyeSize = ret.value.BeautyType;
+                            that.setmicroPlastic(ret.value.type)
+                        } else if (ret.value.type == 5) {
+                            that.chinSize = ret.value.BeautyType;
+                            that.setmicroPlastic(ret.value.type)
+                        } else if (ret.value.type == 6) {
+                            that.noseSize = ret.value.BeautyType;
+                            that.setmicroPlastic(ret.value.type)
+                        } else if (ret.value.type == 7) {
+                            that.mouthWidth = ret.value.BeautyType;
+                            that.setmicroPlastic(ret.value.type)
+                        } else if (ret.value.type == 8) {
+                            that.archEyebrow = ret.value.BeautyType;
+                            that.setmicroPlastic(ret.value.type)
+                        } else if (ret.value.type == 9) {
+                            that.eyeDis = ret.value.BeautyType;
+                            that.setmicroPlastic(ret.value.type)
+                        } else if (ret.value.type == 10) {
+                            that.eyeAngle = ret.value.BeautyType;
+                            that.setmicroPlastic(ret.value.type)
+                        } else if (ret.value.type == 11) {
+                            that.jawSize = ret.value.BeautyType;
+                            that.setmicroPlastic(ret.value.type)
+                        }
+                    }
+                });
+                /***********   关闭滤镜   **************/
+                api.addEventListener({
+                    name: 'closeFilter'
+                }, function(ret, err) {
+                    that.qiniuShortVideo.hideFilterSelectView();
+                    that.qiniuShortVideo.closeFilterSelectView();
+                });
+                /***********   设置美颜部分   **************/
+                api.addEventListener({
+                    name: 'setBeauty'
+                }, function(ret, err) {
+                    if (ret) {
+                        that.beautyturn(ret.value.setnum, ret.value.beautytype)
+                    }
+                });
+                /***********   添加背景音乐   **************/
+                api.addEventListener({
+                    name: 'usemusic'
+                }, function(ret, err) {
+                    if (that.isEdit) {
+                        that.music_id = ret.value.music_id
+                        that.music_url = ret.value.url
+                        that.addMusic(ret.value.url)
+                    }
+                });
+                /***********   关闭相机预览   **************/
+                api.addEventListener({
+                    name: 'closeFrame2'
+                }, function(ret, err) {
+                    that.close()
+                });
+                /***********   初始化相机预览   **************/
+                api.addEventListener({
+                    name: 'initFrame2'
+                }, function(ret, err) {
+                    that.qiniuShortVideo.clearCache();
+                    that.qiniuShortVideo.hidePreviewView();
+                    that.qiniuShortVideo.closeVideoRecorder();
+                    that.qiniuShortVideo.cancelRecording();
+                    that.canupload = false
+                    that.initVideo()
+                });
+            },
+            watch: {
+                // 如果 `recordStatus` 发生改变，这个函数就会运行
+                // recordStatus: function (new, old) {}
+            },
+            methods: {
+                addMV: function() {
+                    var that = this;
+                    that.isShoweMV = true;
+                },
+                changeMV: function(id) {
+                    var that = this;
+                    if (id == 0) {
+                        that.colorPath = '';
+                        that.alphaPath = '';
+                        that.qiniuShortVideo.addMVLayer({
+                            colorPath: '',
+                            alphaPath: ''
+                        });
+                    } else {
+                        if (that.isAndroid) {
+                            api.showProgress({
+                                title: that.langContent.loadmv,
+                                text: that.langContent.wait,
+                                modal: false
+                            });
+                            var fs = api.require('fs');
+                            fs.exist({
+                                path: 'fs://MVvideo/' + id + '.mp4',
+                            }, function(ret, err) {
+                                if (ret.exist) {
+                                    that.colorPath = 'fs://MVvideo/' + id + '.mp4';
+                                    fs.exist({
+                                        path: 'fs://MVvideo/' + id + 'gj.mp4',
+                                    }, function(res, err) {
+                                        if (res.exist) {
+                                            that.alphaPath = 'fs://MVvideo/' + id + 'gj.mp4';
+                                            api.hideProgress();
+                                            that.qiniuShortVideo.addMVLayer({
+                                                colorPath: 'fs://MVvideo/' + id + '.mp4',
+                                                alphaPath: 'fs://MVvideo/' + id + 'gj.mp4',
+                                            });
+                                        } else {
+                                            fs.copyTo({
+                                                oldPath: 'widget://res/MV/' + id + 'gj.mp4',
+                                                newPath: 'fs://MVvideo'
+                                            }, function(res, err) {
+                                                if (res.status) {
+                                                    that.alphaPath = 'fs://MVvideo/' + id + 'gj.mp4';
+                                                    api.hideProgress();
+                                                    that.qiniuShortVideo.addMVLayer({
+                                                        colorPath: 'fs://MVvideo/' + id + '.mp4',
+                                                        alphaPath: 'fs://MVvideo/' + id + 'gj.mp4',
+                                                    });
+                                                } else {}
+                                            });
+                                        }
+                                    });
+                                } else {
+                                    fs.copyTo({
+                                        oldPath: 'widget://res/MV/' + id + '.mp4',
+                                        newPath: 'fs://MVvideo'
+                                    }, function(ret, err) {
+                                        if (ret.status) {
+                                            that.colorPath = 'fs://MVvideo/' + id + '.mp4';
+                                        } else {}
+                                    });
+                                    fs.exist({
+                                        path: 'fs://MVvideo/' + id + 'gj.mp4',
+                                    }, function(res, err) {
+                                        if (res.exist) {
+                                            that.alphaPath = 'fs://MVvideo/' + id + 'gj.mp4';
+                                            api.hideProgress();
+                                            that.qiniuShortVideo.addMVLayer({
+                                                colorPath: 'fs://MVvideo/' + id + '.mp4',
+                                                alphaPath: 'fs://MVvideo/' + id + 'gj.mp4',
+                                            });
+                                        } else {
+                                            fs.copyTo({
+                                                oldPath: 'widget://res/MV/' + id + 'gj.mp4',
+                                                newPath: 'fs://MVvideo'
+                                            }, function(res, err) {
+                                                if (res.status) {
+                                                    that.alphaPath = 'fs://MVvideo/' + id + 'gj.mp4';
+                                                    api.hideProgress();
+                                                    that.qiniuShortVideo.addMVLayer({
+                                                        colorPath: 'fs://MVvideo/' + id + '.mp4',
+                                                        alphaPath: 'fs://MVvideo/' + id + 'gj.mp4',
+                                                    });
+                                                } else {}
+                                            });
+                                        }
+                                    });
+                                }
+                            });
+                        } else {
+                            that.colorPath = 'widget://res/MV/' + id + '.mp4';
+                            that.alphaPath = 'widget://res/MV/' + id + 'gj.mp4';
+                            that.qiniuShortVideo.addMVLayer({
+                                colorPath: 'widget://res/MV/' + id + '.mp4',
+                                alphaPath: 'widget://res/MV/' + id + 'gj.mp4'
+                            });
+                        }
+                    }
+
+                },
+                setmicroPlastic: function(type) { //微整形
+                    var that = this;
+                    if (type == 4) {
+                        that.qiniuShortVideo.microPlastic({
+                            key: 'eyeSize',
+                            'precent': (that.eyeSize / 100)
+                        });
+                    } else if (type == 5) {
+                        that.qiniuShortVideo.microPlastic({
+                            key: 'chinSize',
+                            'precent': (that.chinSize / 100)
+                        });
+                    } else if (type == 6) {
+                        that.qiniuShortVideo.microPlastic({
+                            key: 'noseSize',
+                            'precent': (that.noseSize / 100)
+                        });
+                    } else if (type == 7) {
+                        that.qiniuShortVideo.microPlastic({
+                            key: 'mouthWidth',
+                            'precent': (that.mouthWidth / 100)
+                        });
+                    } else if (type == 8) {
+                        that.qiniuShortVideo.microPlastic({
+                            key: 'archEyebrow',
+                            'precent': (that.archEyebrow / 100)
+                        });
+                    } else if (type == 9) {
+                        that.qiniuShortVideo.microPlastic({
+                            key: 'eyeDis',
+                            'precent': (that.eyeDis / 100)
+                        });
+                    } else if (type == 10) {
+                        that.qiniuShortVideo.microPlastic({
+                            key: 'eyeAngle',
+                            'precent': (that.eyeAngle / 100)
+                        });
+                    } else if (type == 11) {
+                        that.qiniuShortVideo.microPlastic({
+                            key: 'jawSize',
+                            'precent': (that.jawSize / 100)
+                        });
+                    }
+                },
+                specialEffects: function() { //打开特效
+                    var that = this;
+                    that.isShoweffect = true;
+                    that.isShowspeed = false;
+                    that.isShowvoice = false;
+                    that.isShoweMV = false;
+                },
+                changeeffectTpye: function(num) { //切换特效
+                    var that = this;
+                    that.effecttype = num;
+                    if (num == 1) {
+                        // that.qiniuShortVideo.cutVideo({
+                        //     path: that.useLocalUrl,
+                        //     begin: 1234567890,
+                        //     end: 1234567899,
+                        //     outPath: 'fs://123456.mp4'
+                        // }, function(ret) {
+                        //     alert(JSON.stringify(ret))
+                        // });
+                    } else {
+                        that.qiniuShortVideo.configurationReverserEffect({
+                            path: that.useLocalUrl
+                        });
+                        that.qiniuShortVideo.startReversing();
+                        that.qiniuShortVideo.isReversing(function(ret) {
+                            if (ret) {
+                                alert(JSON.stringify(ret));
+                            }
+                        });
+                    }
+                },
+                closeFilter: function() { //关闭滤镜
+                    var that = this;
+                    that.isShowbeauty = false
+                    that.qiniuShortVideo.hideFilterSelectView();
+                    that.qiniuShortVideo.closeFilterSelectView();
+                    that.qiniuShortVideo.isTorchOn(function(ret) { //检测是否开启闪光灯
+                        if (ret) {
+                            that.isOpenlight = ret.isTorchOn
+                            openBeautySet(that.isOpenlight);
+                        }
+                    });
+                },
+                addMusic: function(mp3url) { //添加背景音乐
+                    var that = this;
+                    that.qiniuShortVideo.addMusic({
+                        musicPath: mp3url,
+                    });
+                },
+                openMusic: function() { //打开音乐选择
+                    api.openFrame({
+                        name: 'music',
+                        url: './shot/music.html',
+                        bounces: false,
+                        rect: {
+                            x: 0,
+                            y: $api.dom('header').offsetHeight,
+                            w: 'auto',
+                            h: 'auto'
+                        }
+                    });
+                },
+                openLvjing: function() { //打开滤镜
+                    var that = this;
+                },
+                openVioce: function() { //打开音量调节
+                    var that = this;
+                    that.isShowspeed = false;
+                    that.isShoweffect = false;
+                    that.isShoweMV = false;
+                    that.isShowvoice = true;
+                    var YvoicevalStr = that.Yvoice + "% 100%";
+                    $api.css($api.dom('#range_Yvoice'), 'background-size:' + YvoicevalStr);
+                    var HvoicevalStr = that.Hvoice + "% 100%";
+                    $api.css($api.dom('#range_Hvoice'), 'background-size:' + HvoicevalStr);
+                },
+                openSpeed: function() { //打开ios速度调节
+                    var that = this;
+                    that.isShowvoice = false;
+                    that.isShoweffect = false;
+                    that.isShoweMV = false;
+                    that.isShowspeed = !that.isShowspeed;
+                },
+                // changeSpeed: function(id) { //设置iOS导出速率
+                //     var that = this;
+                //     that.selectspead = id;
+                //     if (id == 0) {
+                //         that.iosspeed = 'slow';
+                //         // that.qiniuShortVideo.scaleAsset({rateType:'slow'});
+                //     } else if (id == 1) {
+                //         that.iosspeed = 'topSlow';
+                //         // that.qiniuShortVideo.scaleAsset({rateType:'topSlow'});
+                //     } else if (id == 2) {
+                //         that.iosspeed = '';
+                //         // that.qiniuShortVideo.scaleAsset({rateType:'normal'});
+                //     } else if (id == 3) {
+                //         that.iosspeed = 'fast';
+                //         // that.qiniuShortVideo.scaleAsset({rateType:'fast'});
+                //     } else if (id == 4) {
+                //         that.iosspeed = 'topFast';
+                //         // that.qiniuShortVideo.scaleAsset({rateType:'topFast'});
+                //     }
+                // },
+                changevoice: function(type) { //音量调节
+                    var that = this;
+                    if (type == 1) {
+                        var YvoicevalStr = that.Yvoice + "% 100%";
+                        $api.css($api.dom('#range_Yvoice'), 'background-size:' + YvoicevalStr);
+                    } else {
+                        var HvoicevalStr = that.Hvoice + "% 100%";
+                        $api.css($api.dom('#range_Hvoice'), 'background-size:' + HvoicevalStr);
+                    }
+                    that.qiniuShortVideo.setVolume({
+                        volume: (that.Yvoice / 100),
+                        bgVolume: (that.Hvoice / 100),
+                    });
+                },
+                changeTpye: function(num) { //切换美颜滤镜
+                    var that = this;
+                    that.beautytype = num;
+                    if (num == 2) {
+                        var Viewheight = that.qiniuShortVideo.getFilterViewHeight();
+                        var yheight = api.winWidth * 4 / 3 - Viewheight
+                        that.qiniuShortVideo.openFilterSelectView({
+                            y: yheight
+                        });
+                        that.qiniuShortVideo.showFilterSelectView();
+                    } else if (num == 1) {
+                        that.qiniuShortVideo.hideFilterSelectView();
+                        that.qiniuShortVideo.closeFilterSelectView();
+                    }
+                },
+                changeBeauty: function() { //设置美颜
+                    var that = this;
+                    // var beautyvalStr = that.beauty + "% 100%";
+                    // $api.css($api.dom('#range_beauty'), 'background-size:' + beautyvalStr);
+                    // document.getElementById("range_beauty").style.backgroundSize=beautyvalStr;
+                    that.qiniuShortVideo.setBeautify({
+                        beautify: (that.beauty / 100)
+                    });
+                },
+                changeWhite: function() { //设置白皙
+                    var that = this;
+                    // var whitevalStr = that.white + "% 100%";
+                    // $api.css($api.dom('#range_white'), 'background-size:' + whitevalStr);
+                    that.qiniuShortVideo.setWhiten({
+                        setWhiten: (that.white / 100)
+                    });
+                },
+                changeRedden: function() { //设置红润
+                    var that = this;
+                    // var valStr = that.redden + "% 100%";
+                    // $api.css($api.dom('#range_redden'), 'background-size:' + valStr);
+                    that.qiniuShortVideo.setRedden({
+                        redden: (that.redden / 100)
+                    });
+                },
+                initVideo: function() { //初始化
+                    var that = this;
+                    that.qiniuShortVideo.clearCache();
+                    that.qiniuShortVideo.deleteAllFiles();
+                    that.qiniuShortVideo.configuration({
+                        rect: {
+                            x: 0,
+                            y: 0,
+                            w: api.frameWidth,
+                            h: ((api.frameWidth * 16 / 9) > api.frameHeight) ? api.frameHeight : (api.frameWidth * 16 / 9)
+                        },
+                        maxDuration: 120,
+                        minDuration: 10,
+                        videoSize: that.isAndroid ? '1280*720' : {
+                            w: 720, //数字类型；视频录制分辨率的width
+                            h: 1280, //数字类型；视频录制分辨率的height
+                        },
+                        cameraPreviewSizeLevel: '1200P',
+                        encodingBitrate: 8000,
+                        videoFrameRate: 60,
+                        fillMode: 'stretch'
+                    });
+                    that.qiniuShortVideo.startCaptureSession();
+                    that.qiniuShortVideo.showPreviewView();
+                    that.qiniuShortVideo.setPreviewViewRect({
+                        rect: {
+                            x: 0,
+                            y: 0,
+                            w: api.frameWidth,
+                            h: ((api.frameWidth * 16 / 9) > api.frameHeight) ? api.frameHeight : (api.frameWidth * 16 / 9)
+                        }
+                    });
+                    // that.qiniuShortVideo.startCaptureSession();
+                    // that.getTotalDuration()
+                    // that.getFilesCount()
+                    setTimeout(function() {
+                        that.qiniuShortVideo.isTorchOn(function(ret) { //检测是否开启闪光灯
+                            if (ret) {
+                                that.isOpenlight = ret.isTorchOn
+                                openBeautySet(that.isOpenlight);
+                            }
+                        });
+                    }, 150);
+                },
+                Actoshot: function() { //开始拍摄
+                    var that = this
+                    that.qiniuShortVideo.startRecording();
+                    that.recordStatus = false;
+                    that.canselectlocal = false;
+
+                    that.canupload = true;
+                    api.sendEvent({
+                        name: 'isCanupload',
+                        extra: {
+                            canupload: that.canupload
+                        }
+                    });
+
+                },
+                stop: function() { //停止拍摄
+                    var that = this
+                    that.qiniuShortVideo.stopRecording();
+                    that.recordStatus = true;
+                    // that.getTotalDuration()
+                    // that.getFilesCount()
+                },
+                beautyturn: function(num, beatype) { //转换摄像头，开启关闭闪光灯，打开美颜
+                    var that = this
+                    if (num == 1) {
+                        that.qiniuShortVideo.toggleCamera();
+                    } else if (num == 2) {
+                        if (that.isOpenlight) {
+                            that.qiniuShortVideo.torchOn({
+                                torchOn: false
+                            });
+                        } else {
+                            that.qiniuShortVideo.torchOn({
+                                torchOn: true
+                            });
+                        }
+                        that.isOpenlight = !that.isOpenlight;
+                    } else if (num == 3) {
+                        // that.isShowbeauty = true;
+                        if (beatype && beatype == 2) {
+                            // var Viewheight = that.qiniuShortVideo.getFilterViewHeight();
+                            var videoHeight = ((api.frameWidth * 16 / 9) > api.frameHeight) ? api.frameHeight : (api.frameWidth * 16 / 9)
+                            var yheight = videoHeight - 120
+                                // var yheight = api.frameHeight - 150
+                            that.qiniuShortVideo.openFilterSelectView({
+                                y: yheight
+                            });
+                            that.qiniuShortVideo.showFilterSelectView();
+                            that.isShowbeauty = true;
+                        } else if (beatype && (beatype == 1 || beatype == 3)) {
+                            that.qiniuShortVideo.hideFilterSelectView();
+                            that.qiniuShortVideo.closeFilterSelectView();
+                            that.isShowbeauty = false;
+                        }
+                        that.qiniuShortVideo.setBeautifyModeOn({
+                            on: true
+                        });
+                    }
+                },
+                deleteLastFile: function() { //删除上一个录制的视频段(也会将本地存储的视频删除，删除的视频段的时长也会从总时长中减去）
+                    var that = this;
+                    that.qiniuShortVideo.deleteLastFile();
+                    that.getTotalDuration()
+                    that.getFilesCount()
+                },
+                save: function(url) { //保存编辑的视频
+                    var that = this;
+                    that.isEdit = true;
+                    api.closeFrame({
+                        name: 'beautySet'
+                    });
+                    that.qiniuShortVideo.hidePreviewView();
+                    that.qiniuShortVideo.closeVideoRecorder();
+                    if (url && url != '') {
+                        that.qiniuShortVideo.configurationVideoEditor({
+                            path: url,
+                            rect: {
+                                x: 0,
+                                y: 70,
+                                w: api.frameWidth,
+                                h: api.frameHeight - 150
+                            },
+                            // videoSize: {
+                            //     w: 'auto',
+                            //     h: api.frameHeight - 205
+                            // },
+                            loopEnabled: true,
+                            fillMode: 'stretch'
+                        });
+                    } else {
+                        that.qiniuShortVideo.configurationVideoEditor({
+                            rect: {
+                                x: 0,
+                                y: 70,
+                                w: api.frameWidth,
+                                h: api.frameHeight - 150
+                            },
+                            // videoSize: {
+                            //     w: 'auto',
+                            //     h: api.frameHeight - 205
+                            // },
+                            loopEnabled: true,
+                            fillMode: 'stretch'
+                        });
+                    }
+                    if (api.systemType == "ios" || api.systemType == "IOS") {
+                        that.qiniuShortVideo.editorFillMode({
+                            fillMode: 'stretch'
+                        });
+                        that.qiniuShortVideo.setVideoSize({
+                            w: 'auto',
+                            h: api.frameHeight - 150
+                        });
+                    }
+                    that.qiniuShortVideo.startEditing();
+                    that.qiniuShortVideo.showVideoEditor();
+
+                    that.qiniuShortVideo.editorSetWaterMark({
+                        path: 'widget://res/waterMark.png',
+                        origin: {
+                            x: 15,
+                            y: 15
+                        }
+                    });
+                    that.qiniuShortVideo.setVolume({
+                        volume: (that.Yvoice / 100),
+                        bgVolume: (that.Hvoice / 100),
+                    });
+                },
+                release: function() { //保存并发布视频
+                    var that = this;
+                    api.actionSheet({
+                        cancelTitle: that.langContent.cancel,
+                        buttons: that.langContent.uptitle
+                    }, function(ret, err) {
+                        var index = ret.buttonIndex;
+                        if (index == 1) {
+                            if (api.systemType == 'android') {
+                                api.showProgress({
+                                    title: '',
+                                    text: that.getCodetip.saving,
+                                    modal: true
+                                });
+                                if (!that.isUseLocal) {
+                                    that.qiniuShortVideo.saveVideo(function(res) {
+                                        if (res.status) {
+                                            api.saveMediaToAlbum({
+                                                path: 'fs://ShortVideo/' + res.filePath.substring(res.filePath.lastIndexOf('/') + 1),
+                                                groupName: 'MeetJXA'
+                                            }, function(ret, err) {
+                                                if (ret && ret.status) {
+                                                    api.hideProgress();
+                                                    api.toast({
+                                                        msg: that.getCodetip.saveSuc,
+                                                        duration: 2000,
+                                                        location: 'bottom'
+                                                    });
+                                                    setTimeout(function() {
+                                                        that.isUseLocal = false;
+                                                        that.useLocalUrl = '';
+                                                        that.music_id = 0;
+                                                        that.qiniuShortVideo.hideVideoEditor();
+                                                        that.qiniuShortVideo.closeVideoEditor();
+                                                        that.isEdit = false;
+                                                        api.sendEvent({
+                                                            name: 'outShot',
+                                                            extra: {}
+                                                        });
+                                                        setTimeout(function() {
+                                                            api.closeFrame({
+                                                                name: 'beautySet'
+                                                            });
+                                                            api.closeFrame({});
+                                                        }, 500);
+                                                    }, 1500);
+                                                } else {
+                                                    api.hideProgress();
+                                                    api.toast({
+                                                        msg: that.getCodetip.saveFail,
+                                                        duration: 2000,
+                                                        location: 'bottom'
+                                                    });
+                                                }
+                                            });
+                                        }
+                                    });
+                                } else {
+                                    that.qiniuShortVideo.saveVideo(function(res) {
+                                        if (res.status) {
+                                            api.saveMediaToAlbum({
+                                                // path: 'fs://localVideo/' + res.filePath.substring(res.filePath.lastIndexOf('/') + 1),
+                                                path: res.filePath,
+                                                groupName: 'MeetJXA'
+                                            }, function(ret, err) {
+                                                if (ret && ret.status) {
+                                                    api.hideProgress();
+                                                    api.toast({
+                                                        msg: that.getCodetip.saveSuc,
+                                                        duration: 2000,
+                                                        location: 'bottom'
+                                                    });
+                                                    setTimeout(function() {
+                                                        that.isUseLocal = false;
+                                                        that.useLocalUrl = '';
+                                                        that.music_id = 0;
+                                                        that.qiniuShortVideo.hideVideoEditor();
+                                                        that.qiniuShortVideo.closeVideoEditor();
+                                                        that.isEdit = false;
+                                                        api.sendEvent({
+                                                            name: 'outShot',
+                                                            extra: {}
+                                                        });
+                                                        setTimeout(function() {
+                                                            api.closeFrame({
+                                                                name: 'beautySet'
+                                                            });
+                                                            api.closeFrame({});
+                                                        }, 500);
+                                                    }, 1500);
+                                                } else {
+                                                    api.hideProgress();
+                                                    api.toast({
+                                                        msg: that.getCodetip.saveFail,
+                                                        duration: 2000,
+                                                        location: 'bottom'
+                                                    });
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+
+                            } else {
+                                api.showProgress({
+                                    title: '',
+                                    text: that.getCodetip.saving,
+                                    modal: true
+                                });
+                                if (!that.isUseLocal) {
+                                    var fs = api.require('fs');
+                                    fs.readDir({
+                                        path: '/var/mobile/Containers/Data/Application/4084AFFF-2A64-4C28-B851-ED0A9AC316F4/Documents/PLShortVideoRootFolder/PLShortVideo'
+                                    }, function(ret, err) {
+                                        if (ret.status) {
+                                            // var pathss = []
+                                            // var newarry = ret.data;
+                                            // if (newarry && newarry.length > 0) {
+                                            //     newarry.forEach(function (element) {
+                                            //         pathss.push('fs://IOSShortVideo/' + element)
+                                            //         var fss = api.require('fs');
+                                            //         fss.copyTo({
+                                            //             oldPath: '/var/mobile/Containers/Data/Application/4084AFFF-2A64-4C28-B851-ED0A9AC316F4/Documents/PLShortVideoRootFolder/PLShortVideo/' + element,
+                                            //             newPath: 'fs://IOSShortVideo'
+                                            //         }, function (res, err) {
+                                            //             if (res.status) {
+                                            //             }
+                                            //         });
+                                            //     });
+                                            //     setTimeout(function () {
+                                            //         that.qiniuShortVideo.movieCompose({
+                                            //             paths: pathss
+                                            //         });
+                                            //         that.qiniuShortVideo.addEventListener({
+                                            //             name: 'movieCompose',
+                                            //         }, function (ret) {
+                                            //             if (ret.progress == 1) {
+                                            //             }
+                                            //         });
+                                            //     }, 2000);
+                                            // }
+                                            that.qiniuShortVideo.assetExport({
+                                                isExportMovieToPhotosAlbum: true,
+                                                path: '/var/mobile/Containers/Data/Application/4084AFFF-2A64-4C28-B851-ED0A9AC316F4/Documents/PLShortVideoRootFolder/PLShortVideo/' + ret.data[0],
+                                                movieSettings: {
+                                                    volume: (that.Yvoice / 100)
+                                                },
+                                                audioSettings: {
+                                                    musicPath: that.music_url,
+                                                    volume: (that.Hvoice / 100)
+                                                        // rateType: that.iosspeed
+                                                },
+                                                waterMarkSettings: {
+                                                    waterMarkPath: 'widget://res/waterMark.png', //（可选项）字符串类型；水印图片的路径，要求本地路径（widget://、fs://）；默认值：不传则不设置水印，没有此字段则以下字段无效
+                                                    size: { //（可选项）JSON 对象；水印大小；默认值：水印图片大小
+                                                        w: 100, //（可选项）数字类型；水印的宽；默认值：水印图片的宽
+                                                        h: 39, //（可选项）数字类型；水印的高；默认值：水印图片的高
+                                                    },
+                                                    point: { //（可选项）JSON 对象；水印位置；默认值：坐标原点
+                                                        x: 15, //（可选项）数字类型；水印位置x坐标；默认值：0         
+                                                        y: 15, //（可选项）数字类型；水印位置y坐标；默认值：0
+                                                    }
+                                                },
+                                                colorPath: that.colorPath,
+                                                alphaPath: that.alphaPath
+                                            });
+                                            that.qiniuShortVideo.addEventListener({
+                                                name: 'assetExport',
+                                            }, function(ret) {
+                                                if (ret) {
+                                                    if (ret.progress == 1 || ret.filePath) {
+                                                        api.hideProgress();
+                                                        api.toast({
+                                                            msg: that.getCodetip.saveSuc,
+                                                            duration: 2000,
+                                                            location: 'bottom'
+                                                        });
+                                                        setTimeout(function() {
+                                                            api.hideProgress();
+                                                            that.qiniuShortVideo.removeEventListener({
+                                                                name: 'assetExport'
+                                                            });
+                                                            that.qiniuShortVideo.clearCache();
+                                                            that.colorPath = '';
+                                                            that.alphaPath = '';
+                                                            that.iosspeed = '';
+                                                            that.isUseLocal = false;
+                                                            that.useLocalUrl = '';
+                                                            that.music_id = 0;
+                                                            that.qiniuShortVideo.hideVideoEditor();
+                                                            that.qiniuShortVideo.closeVideoEditor();
+                                                            that.isEdit = false;
+                                                            api.sendEvent({
+                                                                name: 'outShot',
+                                                                extra: {}
+                                                            });
+                                                            setTimeout(function() {
+                                                                api.closeFrame({
+                                                                    name: 'beautySet'
+                                                                });
+                                                                api.closeFrame({});
+                                                            }, 500);
+                                                        }, 1000);
+                                                    }
+                                                }
+                                            });
+
+                                        } else {
+                                            // alert(JSON.stringify(err));
+                                        }
+                                    });
+
+                                } else {
+                                    that.qiniuShortVideo.assetExport({
+                                        isExportMovieToPhotosAlbum: true,
+                                        path: that.useLocalUrl,
+                                        movieSettings: {
+                                            volume: (that.Yvoice / 100)
+                                        },
+                                        audioSettings: {
+                                            musicPath: that.music_url,
+                                            volume: (that.Hvoice / 100)
+                                                // rateType: that.iosspeed
+                                        },
+                                        waterMarkSettings: {
+                                            waterMarkPath: 'widget://res/waterMark.png', //（可选项）字符串类型；水印图片的路径，要求本地路径（widget://、fs://）；默认值：不传则不设置水印，没有此字段则以下字段无效
+                                            size: { //（可选项）JSON 对象；水印大小；默认值：水印图片大小
+                                                w: 100, //（可选项）数字类型；水印的宽；默认值：水印图片的宽
+                                                h: 39, //（可选项）数字类型；水印的高；默认值：水印图片的高
+                                            },
+                                            point: { //（可选项）JSON 对象；水印位置；默认值：坐标原点
+                                                x: 15, //（可选项）数字类型；水印位置x坐标；默认值：0         
+                                                y: 15, //（可选项）数字类型；水印位置y坐标；默认值：0
+                                            }
+                                        },
+                                        colorPath: that.colorPath,
+                                        alphaPath: that.alphaPath
+                                    });
+                                    that.qiniuShortVideo.addEventListener({
+                                        name: 'assetExport',
+                                    }, function(ret) {
+                                        if (ret) {
+                                            if (ret.progress == 1 || ret.filePath) {
+                                                api.toast({
+                                                    msg: that.getCodetip.saveSuc,
+                                                    duration: 2000,
+                                                    location: 'bottom'
+                                                });
+                                                setTimeout(function() {
+                                                    api.hideProgress();
+                                                    that.qiniuShortVideo.removeEventListener({
+                                                        name: 'assetExport'
+                                                    });
+                                                    that.qiniuShortVideo.clearCache();
+                                                    that.colorPath = '';
+                                                    that.alphaPath = '';
+                                                    that.iosspeed = '';
+                                                    that.isUseLocal = false;
+                                                    that.useLocalUrl = '';
+                                                    that.music_id = 0;
+                                                    that.qiniuShortVideo.hideVideoEditor();
+                                                    that.qiniuShortVideo.closeVideoEditor();
+                                                    that.isEdit = false;
+                                                    api.sendEvent({
+                                                        name: 'outShot',
+                                                        extra: {}
+                                                    });
+                                                    setTimeout(function() {
+                                                        api.closeFrame({
+                                                            name: 'beautySet'
+                                                        });
+                                                        api.closeFrame({});
+                                                    }, 500);
+                                                }, 1000);
+                                            }
+                                        }
+                                    });
+                                }
+                            }
+                        } else if (index == 2) {
+                            if (api.systemType == 'android') { //安卓
+                                api.showProgress({
+                                    title: that.langContent.save,
+                                    text: that.langContent.wait,
+                                    modal: false
+                                });
+                                if (!that.isUseLocal) {
+                                    that.qiniuShortVideo.saveVideo(function(res) {
+                                        if (res.status) {
+                                            api.saveMediaToAlbum({
+                                                path: 'fs://ShortVideo/' + res.filePath.substring(res.filePath.lastIndexOf('/') + 1),
+                                                groupName: 'MeetJXA'
+                                            }, function(ret, err) {
+                                                if (ret && ret.status) {
+                                                    api.hideProgress();
+                                                    api.toast({
+                                                        msg: that.langContent.release,
+                                                        duration: 2000,
+                                                        location: 'bottom'
+                                                    });
+                                                } else {
+                                                    api.hideProgress();
+                                                    api.toast({
+                                                        msg: that.getCodetip.saveFail,
+                                                        duration: 2000,
+                                                        location: 'bottom'
+                                                    });
+                                                }
+                                            });
+                                            http(gettokenUrl, 'post', {
+                                                bucket: 'video',
+                                                // key: res.filePath.substring(res.filePath.lastIndexOf('/') + 1)
+                                            }, function(ret) {
+                                                if (ret.code == 200) {
+                                                    that.qiniuShortVideo.uploadVideoFile({
+                                                        path: 'fs://ShortVideo/' + res.filePath.substring(res.filePath.lastIndexOf('/') + 1),
+                                                        videoKey: ret.data.key,
+                                                        token: ret.data.info
+                                                    });
+                                                    setTimeout(function() {
+                                                        api.hideProgress();
+                                                        api.openWin({
+                                                            name: 'release',
+                                                            url: './shot/release.html',
+                                                            bounces: false,
+                                                            allowEdit: true,
+                                                            pageParam: {
+                                                                videoName: ret.data.key,
+                                                                music_id: that.music_id
+                                                            }
+                                                        });
+                                                        that.isUseLocal = false;
+                                                        that.useLocalUrl = '';
+                                                        that.music_id = 0;
+                                                        that.qiniuShortVideo.hideVideoEditor();
+                                                        that.qiniuShortVideo.closeVideoEditor();
+                                                        that.isEdit = false;
+                                                        api.sendEvent({
+                                                            name: 'outShot',
+                                                            extra: {}
+                                                        });
+                                                        setTimeout(function() {
+                                                            api.closeFrame({
+                                                                name: 'beautySet'
+                                                            });
+                                                            api.closeFrame({
+                                                                name: 'shotframe'
+                                                            });
+                                                        }, 500);
+                                                    }, 2000);
+                                                }
+                                            }, function(err) {
+                                                // alert(JSON.stringify(err));
+                                            });
+                                        }
+                                    });
+                                } else {
+                                    that.qiniuShortVideo.saveVideo(function(res) {
+                                        if (res.status) {
+                                            api.saveMediaToAlbum({
+                                                path: res.filePath,
+                                                groupName: 'MeetJXA'
+                                            }, function(rets, err) {
+                                                if (rets && rets.status) {
+                                                    api.hideProgress();
+                                                    api.toast({
+                                                        msg: that.getCodetip.saveSuc,
+                                                        duration: 2000,
+                                                        location: 'bottom'
+                                                    });
+
+                                                } else {
+                                                    api.hideProgress();
+                                                    api.toast({
+                                                        msg: that.getCodetip.saveFail,
+                                                        duration: 2000,
+                                                        location: 'bottom'
+                                                    });
+                                                }
+                                            });
+                                            http(gettokenUrl, 'post', {
+                                                bucket: 'video',
+                                                // key: res.filePath.substring(res.filePath.lastIndexOf('/') + 1)
+                                            }, function(ret) {
+                                                if (ret.code == 200) {
+                                                    that.qiniuShortVideo.uploadVideoFile({
+                                                        path: res.filePath,
+                                                        videoKey: ret.data.key,
+                                                        token: ret.data.info
+                                                    });
+                                                    setTimeout(function() {
+                                                        api.hideProgress();
+                                                        api.openWin({
+                                                            name: 'release',
+                                                            url: './shot/release.html',
+                                                            bounces: false,
+                                                            allowEdit: true,
+                                                            pageParam: {
+                                                                videoName: ret.data.key,
+                                                                music_id: that.music_id
+                                                            }
+                                                        });
+                                                        that.isUseLocal = false;
+                                                        that.useLocalUrl = '';
+                                                        that.music_id = 0;
+                                                        that.qiniuShortVideo.hideVideoEditor();
+                                                        that.qiniuShortVideo.closeVideoEditor();
+                                                        that.isEdit = false;
+                                                        api.sendEvent({
+                                                            name: 'outShot',
+                                                            extra: {}
+                                                        });
+                                                        setTimeout(function() {
+                                                            api.closeFrame({
+                                                                name: 'beautySet'
+                                                            });
+                                                            api.closeFrame({
+                                                                name: 'shotframe'
+                                                            });
+                                                        }, 500);
+                                                    }, 2000);
+                                                }
+                                            }, function(err) {
+                                                // alert(JSON.stringify(err));
+                                            });
+                                        }
+                                    });
+
+                                    // http(gettokenUrl, 'post', {
+                                    //     bucket: 'video',
+                                    //     key: that.useLocalUrl.substring(that.useLocalUrl.lastIndexOf('/') + 1)
+                                    // }, function(ret) {
+                                    //     if (ret.code == 200) {
+                                    //         that.qiniuShortVideo.uploadVideoFile({
+                                    //             path: that.useLocalUrl,
+                                    //             videoKey: ret.data.key,
+                                    //             token: ret.data.info
+                                    //         });
+                                    //         setTimeout(function() {
+                                    //             api.hideProgress();
+                                    //             api.openWin({
+                                    //                 name: 'release',
+                                    //                 url: './shot/release.html',
+                                    //                 bounces: false,
+                                    //                 allowEdit: true,
+                                    //                 pageParam: {
+                                    //                     videoName: ret.data.key,
+                                    //                     music_id: that.music_id
+                                    //                 }
+                                    //             });
+                                    //             that.isUseLocal = false;
+                                    //             that.useLocalUrl = '';
+                                    //             that.music_id = 0;
+                                    //             that.qiniuShortVideo.hideVideoEditor();
+                                    //             that.qiniuShortVideo.closeVideoEditor();
+                                    //             that.isEdit = false;
+                                    //             api.sendEvent({
+                                    //                 name: 'outShot',
+                                    //                 extra: {}
+                                    //             });
+                                    //             setTimeout(function() {
+                                    //                 api.closeFrame({
+                                    //                     name: 'beautySet'
+                                    //                 });
+                                    //                 api.closeFrame({
+                                    //                     name: 'shotframe'
+                                    //                 });
+                                    //             }, 500);
+                                    //         }, 2000);
+                                    //     }
+                                    // }, function(err) {
+                                    //     // alert(JSON.stringify(err));
+                                    // });
+                                }
+
+                            } else { //iOS
+                                api.showProgress({
+                                    title: that.langContent.save,
+                                    text: that.langContent.wait,
+                                    modal: false
+                                });
+                                if (!that.isUseLocal) {
+                                    var fs = api.require('fs');
+                                    fs.readDir({
+                                        path: '/var/mobile/Containers/Data/Application/4084AFFF-2A64-4C28-B851-ED0A9AC316F4/Documents/PLShortVideoRootFolder/PLShortVideo'
+                                    }, function(ret, err) {
+                                        if (ret.status) {
+                                            that.qiniuShortVideo.assetExport({
+                                                isExportMovieToPhotosAlbum: true,
+                                                path: '/var/mobile/Containers/Data/Application/4084AFFF-2A64-4C28-B851-ED0A9AC316F4/Documents/PLShortVideoRootFolder/PLShortVideo/' + ret.data[0],
+                                                movieSettings: {
+                                                    volume: (that.Yvoice / 100)
+                                                },
+                                                audioSettings: {
+                                                    musicPath: that.music_url,
+                                                    volume: (that.Hvoice / 100)
+                                                        // rateType: that.iosspeed
+                                                },
+                                                waterMarkSettings: {
+                                                    waterMarkPath: 'widget://res/waterMark.png', //（可选项）字符串类型；水印图片的路径，要求本地路径（widget://、fs://）；默认值：不传则不设置水印，没有此字段则以下字段无效
+                                                    size: { //（可选项）JSON 对象；水印大小；默认值：水印图片大小
+                                                        w: 100, //（可选项）数字类型；水印的宽；默认值：水印图片的宽
+                                                        h: 39, //（可选项）数字类型；水印的高；默认值：水印图片的高
+                                                    },
+                                                    point: { //（可选项）JSON 对象；水印位置；默认值：坐标原点
+                                                        x: 15, //（可选项）数字类型；水印位置x坐标；默认值：0         
+                                                        y: 15, //（可选项）数字类型；水印位置y坐标；默认值：0
+                                                    }
+                                                },
+                                                colorPath: that.colorPath,
+                                                alphaPath: that.alphaPath
+                                            });
+                                            that.qiniuShortVideo.addEventListener({
+                                                name: 'assetExport',
+                                            }, function(res) {
+                                                if (res) {
+                                                    if (res.filePath) {
+                                                        api.hideProgress();
+                                                        api.toast({
+                                                            msg: that.getCodetip.saveSuc,
+                                                            duration: 2000,
+                                                            location: 'bottom'
+                                                        });
+                                                        http(gettokenUrl, 'post', {
+                                                            bucket: 'video',
+                                                            // key: ret.data[0]
+                                                        }, function(rets) {
+                                                            if (rets.code == 200) {
+                                                                that.qiniuShortVideo.uploadVideoFile({
+                                                                    path: res.filePath,
+                                                                    videoKey: rets.data.key,
+                                                                    token: rets.data.info
+                                                                });
+                                                                setTimeout(function() {
+                                                                    api.hideProgress();
+                                                                    that.qiniuShortVideo.removeEventListener({
+                                                                        name: 'assetExport'
+                                                                    });
+                                                                    api.openWin({
+                                                                        name: 'release',
+                                                                        url: './shot/release.html',
+                                                                        allowEdit: true,
+                                                                        bounces: false,
+                                                                        pageParam: {
+                                                                            videoName: rets.data.key,
+                                                                            music_id: that.music_id
+                                                                        }
+                                                                    });
+                                                                    that.colorPath = '';
+                                                                    that.alphaPath = '';
+                                                                    that.iosspeed = '';
+                                                                    that.isUseLocal = false;
+                                                                    that.useLocalUrl = '';
+                                                                    that.music_id = 0;
+                                                                    that.qiniuShortVideo.clearCache();
+                                                                    that.qiniuShortVideo.hideVideoEditor();
+                                                                    that.qiniuShortVideo.closeVideoEditor();
+                                                                    that.isEdit = false;
+                                                                    api.sendEvent({
+                                                                        name: 'outShot',
+                                                                        extra: {}
+                                                                    });
+                                                                    setTimeout(function() {
+                                                                        api.closeFrame({
+                                                                            name: 'beautySet'
+                                                                        });
+                                                                        api.closeFrame({
+                                                                            name: 'shotframe'
+                                                                        });
+                                                                    }, 500);
+                                                                }, 1000);
+                                                            }
+                                                        }, function(err) {
+                                                            // alert(JSON.stringify(err));
+                                                        });
+                                                    }
+                                                }
+                                            });
+                                        } else {
+                                            // alert(JSON.stringify(err));
+                                        }
+                                    });
+                                } else {
+                                    that.qiniuShortVideo.assetExport({
+                                        isExportMovieToPhotosAlbum: true,
+                                        path: that.useLocalUrl,
+                                        movieSettings: {
+                                            volume: (that.Yvoice / 100)
+                                        },
+                                        audioSettings: {
+                                            musicPath: that.music_url,
+                                            volume: (that.Hvoice / 100)
+                                                // rateType: that.iosspeed
+                                        },
+                                        waterMarkSettings: {
+                                            waterMarkPath: 'widget://res/waterMark.png', //（可选项）字符串类型；水印图片的路径，要求本地路径（widget://、fs://）；默认值：不传则不设置水印，没有此字段则以下字段无效
+                                            size: { //（可选项）JSON 对象；水印大小；默认值：水印图片大小
+                                                w: 100, //（可选项）数字类型；水印的宽；默认值：水印图片的宽
+                                                h: 39, //（可选项）数字类型；水印的高；默认值：水印图片的高
+                                            },
+                                            point: { //（可选项）JSON 对象；水印位置；默认值：坐标原点
+                                                x: 15, //（可选项）数字类型；水印位置x坐标；默认值：0         
+                                                y: 15, //（可选项）数字类型；水印位置y坐标；默认值：0
+                                            }
+                                        },
+                                        colorPath: that.colorPath,
+                                        alphaPath: that.alphaPath
+                                    });
+                                    that.qiniuShortVideo.addEventListener({
+                                        name: 'assetExport',
+                                    }, function(ret) {
+                                        if (ret) {
+                                            if (ret.filePath) {
+                                                api.toast({
+                                                    msg: that.getCodetip.saveSuc,
+                                                    duration: 2000,
+                                                    location: 'bottom'
+                                                });
+                                                http(gettokenUrl, 'post', {
+                                                    bucket: 'video',
+                                                    // key: ret.filePath.substring(ret.filePath.lastIndexOf('/') + 1)
+                                                }, function(rets) {
+                                                    if (rets.code == 200) {
+                                                        that.qiniuShortVideo.uploadVideoFile({
+                                                            path: ret.filePath,
+                                                            videoKey: rets.data.key,
+                                                            token: rets.data.info
+                                                        });
+                                                        setTimeout(function() {
+                                                            api.hideProgress();
+                                                            that.qiniuShortVideo.removeEventListener({
+                                                                name: 'assetExport'
+                                                            });
+                                                            api.openWin({
+                                                                name: 'release',
+                                                                url: './shot/release.html',
+                                                                bounces: false,
+                                                                allowEdit: true,
+                                                                pageParam: {
+                                                                    videoName: rets.data.key,
+                                                                    music_id: that.music_id
+                                                                }
+                                                            });
+                                                            that.colorPath = '';
+                                                            that.alphaPath = '';
+                                                            that.iosspeed = '';
+                                                            that.isUseLocal = false;
+                                                            that.useLocalUrl = '';
+                                                            that.music_id = 0;
+                                                            that.qiniuShortVideo.hideVideoEditor();
+                                                            that.qiniuShortVideo.closeVideoEditor();
+                                                            that.isEdit = false;
+                                                            api.sendEvent({
+                                                                name: 'outShot',
+                                                                extra: {}
+                                                            });
+                                                            setTimeout(function() {
+                                                                api.closeFrame({
+                                                                    name: 'beautySet'
+                                                                });
+                                                                api.closeFrame({
+                                                                    name: 'shotframe'
+                                                                });
+                                                            }, 500);
+                                                        }, 1000);
+                                                    }
+                                                }, function(err) {
+                                                    // alert(JSON.stringify(err));
+                                                });
+                                            }
+                                        }
+                                    });
+
+                                }
+                            }
+                        }
+                    });
+                },
+                getTotalDuration: function() { //获取所有录制的视频段加起来的总时长（从调用configuration接口算起）
+                    var that = this;
+                    that.qiniuShortVideo.getTotalDuration(function(ret) {
+                        if (ret) {
+                            // alert(JSON.stringify(ret.totalDuration));
+                            // if (Number(ret.totalDuration) / 100 > 5) {
+                            //     that.canupload = true;
+                            // } else {
+                            //     that.canupload = false
+                            // }
+                            api.sendEvent({
+                                name: 'isCanupload',
+                                extra: {
+                                    canupload: that.canupload
+                                }
+                            });
+                        }
+                    });
+                },
+                getFilesCount: function() { //获取录制的视频段的总数目（从调用configuration接口算起）
+                    var that = this;
+                    that.qiniuShortVideo.getFilesCount(function(ret) {
+                        if (ret) {
+                            // alert(JSON.stringify(ret));
+                            if (Number(ret.count) > 0) {
+                                that.candelect = true;
+                                that.canselectlocal = false;
+                            } else {
+                                that.candelect = false;
+                                that.canselectlocal = true;
+                            }
+                            api.sendEvent({
+                                name: 'isCandelect',
+                                extra: {
+                                    candelect: that.candelect
+                                }
+                            });
+                        }
+                    });
+                },
+                close: function() { //关闭相机
+                    var that = this;
+                    that.qiniuShortVideo.closeVideoRecorder();
+                    that.qiniuShortVideo.hidePreviewView();
+                    that.qiniuShortVideo.hideVideoEditor();
+                    api.closeFrame({
+                        name: 'beautySet'
+                    });
+                },
+                changespead: function(id) { //改变速度
+                    var that = this;
+                    that.selectspead = id;
+                    if (id == 0) {
+                        that.qiniuShortVideo.recoderRate({
+                            recoderRate: 'topSlow'
+                        });
+                    } else if (id == 1) {
+                        that.qiniuShortVideo.recoderRate({
+                            recoderRate: 'slow'
+                        });
+                    } else if (id == 2) {
+                        that.qiniuShortVideo.recoderRate({
+                            recoderRate: 'normal'
+                        });
+                    } else if (id == 3) {
+                        that.qiniuShortVideo.recoderRate({
+                            recoderRate: 'fast'
+                        });
+                    } else if (id == 4) {
+                        that.qiniuShortVideo.recoderRate({
+                            recoderRate: 'topFast'
+                        });
+                    }
+                }
+
+            },
+        })
+    }
+</script>

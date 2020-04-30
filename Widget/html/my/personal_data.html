@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>个人资料</title>
+    <link rel="stylesheet" href="../../lib/iconfont2/iconfont.css">
+    <link rel="stylesheet" href="../../css/common.css">
+    <link rel="stylesheet" type="text/css" href="../../css/new/reset.css">
+    <link rel="stylesheet" type="text/css" href="../../css/new/personalData.css">
+    <script type="text/javascript" src="../../script/lib-flexible.js"></script>
+</head>
+
+<body class="has_header">
+    <div id="personal_data" class="personalData" v-cloak>
+        <header class="header">
+            <i class="iconfont icon-xiangzuo " onclick="goBack()"></i>
+            <div>{{langContent.title?langContent.title:''}}</div>
+        </header>
+        <div class="h88"></div>
+        <div class="top">
+            <div class="topLeft">
+                <div class="img fl" @click="toPage('printscreen','printscreen.html')"><img :src="info.avatar||'../../image/logo.png'" alt=""></div>
+                <div class="title fl">
+                    <div class="cont2" @click="toPage('printscreen','printscreen.html')">点击修改头像</div>
+                </div>
+            </div>
+            <div class="nav">
+                <div class="navLi">
+                    <div class="fontSize22">上级号码</div>
+                    <div class="name fontSize24 col00fbfd">{{info.pid_mobile}}</div>
+                </div>
+                <div class="navLi">
+                    <div class="fontSize22">我的手机号</div>
+                    <div class="name fontSize24 col00fbfd">{{info.mobile}}</div>
+                </div>
+                <div class="navLi">
+                    <div class="fontSize22">我的等级</div>
+                    <div class="name fontSize24 col00fbfd" v-show="info.level_id==1">{{langContent.level1?langContent.level1:''}}</div>
+                    <div class="name fontSize24 col00fbfd" v-show="info.level_id==2">{{langContent.level2?langContent.level2:''}}</div>
+                    <div class="name fontSize24 col00fbfd" v-show="info.level_id==3">{{langContent.level3?langContent.level3:''}}</div>
+                    <div class="name fontSize24 col00fbfd" v-show="info.level_id==4">{{langContent.level4?langContent.level4:''}}</div>
+                    <div class="name fontSize24 col00fbfd" v-show="info.level_id==5">{{langContent.level5?langContent.level5:''}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="content2">
+            <div class="conUl bj bjTu">
+                <div class="conLi gr">
+                    <label for="">手机号验证</label>
+                    <input type="text" :value="info.mobile" disabled>
+                </div>
+                <div class="conLi" :class="{'gr': info.auth_primary==1 }" @click="isRz('certifylist','certifylist.html',info.auth_primary)">
+                    <label for="">实名验证</label>
+                    <input type="text" :value="(info.realname&&info.realname!=0&&(info.auth_primary==1))?info.realname:'未认证'" disabled>
+                    <label for="" class="colabbdff" >等级验证
+                      <span v-show="info.auth_primary==0">{{langContent.nosmrz?langContent.nosmrz:''}}</span>
+                      <span v-if="info.auth_primary==1">{{langContent.lv?langContent.lv:''}}</span>
+                    </label>
+                </div>
+                <div class="conLi" :class="{'gr': info.bank_card&&info.bank_card!='', 'jtRight': info.bank_card&&info.bank_card==''}" @click="goBindBank()">
+                    <label for="">绑定银行卡</label>
+                    <input type="text" :value="(info.bank_card&&info.bank_card!=0)?info.bank_card:'未绑定'"  disabled>
+                    <!-- <label for="" class="colabbdff" v-if="!info.bank_card||info.bank_card==''">{{langContent.nocard?langContent.nocard:''}}</label> -->
+                </div>
+                <div class="conLi" :class="{'gr': info.wechat&&info.wechat!='', 'jtRight': !info.wechat}" @click="toPage('bind_wx','bind_wx.html')">
+                    <label for="">添加微信</label>
+                    <input type="text" :value="langContent.noadd?langContent.noadd:''" placeholder="未添加" disabled>
+                </div>
+                <div class="conLi" :class="{'gr': info.alipay&&info.alipay!='', 'jtRight': !info.alipay}" @click="toPage('bind_alipay','bind_alipay.html')">
+                    <label for="">添加支付宝</label>
+                    <input type="text" :value="langContent.noadd?langContent.noadd:''" placeholder="未添加" disabled>
+                </div>
+                <div class="conLi jtRight"  @click="toPage('change_password','change_password.html',{isShow:1})">
+                    <label for="">修改登录密码</label>
+                    <input type="text" disabled>
+                </div>
+                <div class="conLi c7 jtRight" @click="toPage('change_password','change_password.html',{isShow:2})">
+                    <label for="">修改交易密码</label>
+                    <input type="text" disabled>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    var personal_data = new Vue({
+        el: "#personal_data",
+        data: {
+            info: {},
+            isCheck: false,
+            bankcard: '',
+            langContent: {},
+            getCodetip: {}
+        },
+        created: function() {
+            var that = this
+            apiready = function() {
+                var height = $api.fixStatusBar($api.dom('.header'))
+                if (height > 0) {
+                    $api.css($api.dom('.cont'), 'margin-top:' + (height - 45) + 'px;');
+                }
+                personal_data.$data.langContent = GlobleLanguageContent.personal_data;
+                personal_data.$data.getCodetip = GlobleLanguageContent.getCode;
+                that.getInfo();
+                setTimeout(function() {
+                    api.setStatusBarStyle({
+                        style: 'dark',
+                        color: 'rgba(0,0,0,0)'
+                    });
+                }, 100);
+            }
+        },
+        methods: {
+            goBindBank: function() {
+                let that = this
+                // if (this.info.auth_primary == 0) {
+                //     api.toast({
+                //         msg: that.getCodetip.needsmrz,
+                //         duration: 2000,
+                //         location: 'bottom'
+                //     });
+                //     return;
+                // }
+                toPage('bank_bind', 'bank_bind.html')
+            },
+            goBinding: function() {
+                if (this.info.auth_primary == 0) {
+                    api.toast({
+                        msg: that.getCodetip.needsmrz,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return;
+                }
+                api.openWin({
+                    name: 'eth_bind',
+                    url: 'eth_bind.html',
+                    bounces: false,
+                    allowEdit: true,
+                    pageParam: {}
+                });
+                // 1. openFrame 时allowEdit设置为true。
+
+                // 2. body添加css属性：    -webkit-user-select:all 。
+
+                // toPage('eth_bind', 'eth_bind.html')
+            },
+            toPage: function(name, url, params) {
+                api.openWin({
+                    name: name,
+                    url: url,
+                    reload: true,
+                    pageParam: params || {}
+                });
+            },
+            isRz: function(name, url, status) {
+                var that = this;
+                if (that.info.auth_primary == 0) { //未认证
+                    // if (that.info && that.info.smrz_flag == 0) { //今日未认证
+                    if (that.info && that.info.pay_certify_status == 2 && that.info.area_code == 86) { //待支付状态
+                        api.confirm({
+                            title: that.langContent.paytit,
+                            msg: that.langContent.paycon,
+                            buttons: that.langContent.paybtn,
+                        }, function(ret, err) {
+                            var index = ret.buttonIndex;
+                            if (index == 1) { //去支付
+                                that.surePay(that.info.order_sn)
+                            }
+                        });
+                    } else {
+                        api.openWin({
+                            name: name,
+                            url: url,
+                            reload: true,
+                            pageParam: {
+                                status: status,
+                            }
+                        });
+                    }
+
+                    // } else {
+                    //     api.toast({
+                    //         msg: '您今日已经认证申请过，请明日再来~',
+                    //         duration: 2000,
+                    //         location: 'bottom'
+                    //     });
+                    //     return;
+                    // }
+                } else if (that.info.auth_primary == 1) { //已认证
+                    api.openWin({
+                        name: name,
+                        url: url,
+                        reload: true,
+                        pageParam: {
+                            status: status
+                        }
+                    });
+                }
+                // http(smrzStatusUrl, 'post', {}, function(ret) {
+                //         if (ret.code == 200) {
+                //             if (ret.data.status != 1) {
+                //                 api.toast({
+                //                     msg: ret.msg,
+                //                     duration: 3000,
+                //                     location: 'bottom'
+                //                 });
+                //                 setTimeout(function() {
+                //                     api.openWin({
+                //                         name: name,
+                //                         url: url,
+                //                         reload: true,
+                //                         pageParam: {
+                //                             status: status
+                //                         }
+                //                     });
+                //                 }, 2000)
+                //             } else {
+                //                 api.toast({
+                //                     msg: ret.msg,
+                //                     duration: 2000,
+                //                     location: 'bottom'
+                //                 });
+                //             }
+                //         }
+                //     })
+            },
+            surePay: function(orderid) { //去付款
+                var that = this;
+                // var paramss = {
+                //     paySite: 'recharge',
+                //     payType: 'alipay',
+                //     payId: orderid,
+                // }
+                http(getPaySignStr, 'post', {}, function(res) {
+                        if (res.code == 200) { //支付宝支付
+                            that.aliPay(res.data.info);
+                        }
+                    },
+                    function(err) {});
+            },
+            aliPay: function(params) { // 支付宝
+                var that = this
+                var aliPayPlus = api.require('aliPayPlus');
+                aliPayPlus.payOrder({
+                    orderInfo: params
+                }, function(ret, err) {
+                    if (ret.code == 9000) {
+                        api.execScript({
+                            name: 'personal_data',
+                            script: 'personal_data.getInfo()'
+                        });
+                        api.toast({
+                            msg: that.getCodetip.paysucess,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                    } else if (ret.code == 4000) {
+                        api.toast({
+                            msg: that.getCodetip.payfail,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                    } else if (ret.code == 6001) {
+                        api.toast({
+                            msg: that.getCodetip.cancelpay,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+
+                    } else if (ret.code == 6002) {
+                        api.toast({
+                            msg: that.getCodetip.interneterr,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                    }
+
+                });
+            },
+            getInfo: function() {
+                var that = this;
+                http(getuserinfoUrl, 'post', {}, function(ret) {
+                        if (ret.code == 200) {
+                            that.info = ret.data;
+                            if (!that.isCheck && that.info.auth_primary == 0) {
+                                http(checkCertifyUrl, 'post', {}, function(res) {
+                                    that.isCheck = true
+                                    if (res) {
+                                        setTimeout(function() {
+                                            api.execScript({
+                                                name: 'personal_data',
+                                                script: 'personal_data.getInfo()'
+                                            });
+                                        }, 100);
+                                    }
+                                })
+                            }
+                        }
+                    })
+                    // http(bingEth, 'get', {},
+                    //     function(res) {
+                    //         if (res.code == 200) {
+                    //             that.bankcard = res.data.eth_address
+                    //         }
+
+                //     }
+                // )
+            },
+        }
+    })
+</script>

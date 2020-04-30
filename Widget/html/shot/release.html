@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection"  content="telephone=no,email=no,date=no,address=no">
+        <title>视频发布</title>
+        <link rel="stylesheet" type="text/css" href="../../lib/vant/vant.css" />
+        <link rel="stylesheet" type="text/css" href="../../lib/iconfont2/iconfont.css" />
+        <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+        <style>
+            html,
+            body {
+                /* height: 100%; */
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+            }
+            
+            #release {
+                width: 100vw;
+                min-height: 100vh;
+                color: #cccccc;
+            }
+            
+            #release::-webkit-scrollbar {
+                display: none;
+            }
+            
+            .paswdimg {
+                width: 46px;
+                height: 46px;
+                position: absolute;
+                top: -23px;
+                left: 50%;
+                transform: translate(-50%);
+            }
+            
+            input {
+                color: #999999;
+                /* width: 100%; */
+                flex: 1;
+                height: 30px;
+                line-height: 30px;
+                text-indent: 15px;
+                /* background-color: #ffffff; */
+                border-radius: 5px;
+                /* border: solid 1px #cfa767; */
+            }
+            
+            input::placeholder {
+                font-size: 14px;
+                color: #999999;
+                line-height: 30px;
+            }
+            
+             ::-webkit-input-placeholder {
+                font-size: 14px;
+                color: #999999;
+                line-height: 30px;
+            }
+            /* 使用webkit内核的浏览器 */
+            
+             :-moz-placeholder {
+                font-size: 14px;
+                color: #999999;
+                line-height: 30px;
+            }
+            /* Firefox版本4-18 */
+            
+             ::-moz-placeholder {
+                font-size: 14px;
+                color: #999999;
+                line-height: 30px;
+            }
+            /* Firefox版本19+ */
+            
+             :-ms-input-placeholder {
+                font-size: 14px;
+                color: #999999;
+                line-height: 30px;
+            }
+            
+            .btn {
+                width: 48%;
+                height: 40px;
+                background-color: #cfa767;
+                border-radius: 5px;
+                color: #ffffff;
+                line-height: 40px;
+                text-align: center;
+                font-size: 14px;
+            }
+            
+            .btn1 {
+                background-color: #fdecb8;
+                color: #333333;
+            }
+            
+            .loginbtn {
+                width: 92%;
+                height: 50px;
+                line-height: 50px;
+                background: #ccaa7a;
+                margin: auto;
+                text-align: center;
+                font-size: 16px;
+                border-radius: 5px;
+                color: #ffffff;
+            }
+            
+            .loginicon img {
+                height: 50px;
+                width: 50px;
+                border-radius: 50%;
+                background: #ffffff;
+                margin: 0 10px;
+            }
+            
+            textarea {
+                flex: 1;
+                height: 170px;
+                border: none;
+                border-style: none;
+                outline: none;
+                padding: 10px;
+            }
+            
+            .dingwei {
+                width: 20px;
+                height: 20px;
+                margin-right: 10px;
+            }
+            
+            .city {
+                flex: 1;
+                height: 20px;
+                /* line-height: 20px; */
+                /* color: #969696; */
+                font-size: 14px;
+            }
+            
+            .iconimg {
+                height: 50px;
+                width: 50px;
+                border-radius: 50%;
+                background: #707070;
+                margin: auto 10px;
+            }
+            
+            .item {
+                width: 25%;
+                margin: 10px 0;
+            }
+            
+            .disable {
+                pointer-events: none !important;
+            }
+            
+            .active {
+                /* border-bottom: 2px solid #cfa767; */
+                color: #cfa767;
+                /* font-weight: 600 */
+            }
+            
+            .radio {
+                width: 1.2rem;
+                height: 1.2rem;
+                border-radius: 50%;
+                border: 1px solid #666666;
+                position: relative;
+                margin-right: 20px;
+            }
+            
+            .radio.on {
+                background: #23ab3d;
+                border: 1px solid #23ab3d;
+            }
+            
+            .radio.on::before {
+                position: absolute;
+                content: "";
+                width: 5px;
+                height: 10px;
+                top: 0rem;
+                left: 0.3rem;
+                border: 2px solid #fff;
+                border-top: none;
+                border-left: none;
+                -webkit-transform: rotate(45deg);
+                transform: rotate(45deg);
+            }
+            
+            .meal {
+                margin: 15px 0;
+                font-size: 14px;
+            }
+            
+            .meal img {
+                height: 20px;
+                width: 20px;
+            }
+            
+            .BB1 {
+                border-bottom: 1px solid #4a4949;
+            }
+            
+            .custom_title {
+                text-align: left;
+                color: #999999;
+            }
+            /* 兴趣标签样式 */
+            
+            .labels {
+                width: calc(100% / 4 - 14px);
+                height: 30px;
+                line-height: 30px;
+                overflow: hidden;
+                margin: 6px;
+                border: 1px solid #eeeeee;
+                border-radius: 5px;
+                text-align: center;
+                color: #666666;
+            }
+            /* 兴趣标签样式 */
+            
+            .labels.labels_checked {
+                width: calc(100% / 4 - 14px);
+                height: 30px;
+                line-height: 30px;
+                text-align: center;
+                overflow: hidden;
+                margin: 6px;
+                border: 1px solid #ccaa7a;
+                border-radius: 5px;
+                color: #cb974d;
+            }
+            /* .lo_btn {
+                width: 55%;
+                height: 2rem;
+                line-height: 2rem;
+                text-align: center;
+                letter-spacing: 5px;
+                margin: .5rem auto 0;
+                padding: .5rem;
+            } */
+            
+            .sumup_JXA_style {
+                padding: .5rem;
+                width: 18rem;
+                margin: auto;
+                background-color: #cfa767;
+                color: #333333;
+                margin-top: 1rem;
+                border-radius: 5px;
+            }
+            
+            .link_JXA_style {
+                padding: 1rem;
+                margin: auto;
+            }
+            
+            .black_overlay1 {
+                position: fixed;
+                top: 0%;
+                left: 0%;
+                bottom: 0;
+                right: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, .5);
+                z-index: 10001;
+            }
+            /* //单选按钮  */
+            
+            .common_radio {
+                width: 1.4rem;
+                height: 1.4rem;
+                min-width: 1.4rem;
+                min-height: 1.4rem;
+                border-radius: 50%;
+                border: 1px solid #999999;
+                position: relative;
+                display: inline-block;
+                background: #ffffff;
+            }
+            
+            .common_radio.on {
+                background: #23ab3d !important;
+                border: 1px solid #23ab3d;
+            }
+            
+            .common_radio.on::before {
+                position: absolute;
+                content: "";
+                width: 5px;
+                height: 10px;
+                top: 0.1rem;
+                left: 0.45rem;
+                border: 2px solid #fff;
+                border-top: none;
+                border-left: none;
+                -webkit-transform: rotate(45deg);
+                transform: rotate(45deg);
+            }
+            
+            .color_golds {
+                color: #f3d577;
+            }
+            
+            .fontSize20 {
+                font-size: 20px;
+            }
+            
+            .popups {
+                position: fixed;
+                width: 100%;
+                bottom: 0rem;
+                z-index: 99999;
+            }
+            
+            .freebox {
+                padding: 0.4rem 1rem;
+                color: #999999;
+                border: 1px solid #dddddd;
+                white-space: nowrap;
+                background: #ffffff;
+            }
+            
+            .color_select {
+                color: #ffffff;
+                background: #ccaa7a;
+            }
+            
+            .noblt {
+                border-left: none;
+            }
+            
+            .brleft {
+                border-radius: 5px 0 0 5px;
+            }
+            
+            .brright {
+                border-radius: 0 5px 5px 0;
+            }
+            
+            .ffcontent {
+                white-space: nowrap;
+            }
+            
+            .color_red {
+                color: #ff6262;
+            }
+            
+            .feetype {
+                position: fixed;
+                left: 0;
+                right: 0;
+                z-index: 10;
+            }
+            
+            .btnpart {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                border-top: 1px solid #dddddd;
+            }
+        </style>
+</head>
+
+<body>
+    <div id="release" class="content">
+        <header class="header color_default1">
+            <i class="iconfont icon-xiangzuo color_default1 fontSize16" onclick="goBack()"></i>
+            <div>{{langContent.title?langContent.title:''}}</div>
+        </header>
+        <!-- 密码输入框 -->
+        <div v-show="isShow" class="black_overlay1 flex_row_center publicpsw" @touchmove.prevent>
+            <div class="publicpswitem posi_relative padding1 bg-white">
+                <img class="paswdimg" src="../../image/tree/password.svg" alt="">
+                <div class="flex_row_left">
+                    <input type="password" :placeholder="langContent.psw_input" v-model="password">
+                </div>
+                <div class="flex_row_between marginT1">
+                    <div @click.stop="submitpay()" class="btn">{{langContent.surebtn?langContent.surebtn:''}}</div>
+                    <div @click.stop="password='';isShow=false;" class="btn btn1">{{langContent.cancel?langContent.cancel:''}}</div>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="flex_row_around color_CC fontSize16 padding1">
+            <div class="flex_row_around" :class="{'color_default1':videostyle == 1}" @click="videostyle=1">
+                <div class="common_radio marginR10" :class="{'on':videostyle == 1}"></div>
+                {{langContent.mfvideo?langContent.mfvideo:''}}
+            </div>
+            <div class="flex_row_around" :class="{'color_default1':videostyle == 2}" @click="videostyle=2;getPutlist(2);changeListtype(2)">
+                <div class="common_radio marginR10" :class="{'on':videostyle == 2}"></div>
+                {{langContent.ffvideo?langContent.ffvideo:''}}
+            </div>
+        </div> -->
+        <div class="padding1 flex_row_left color_999 feetype bg_eee">
+            <div class="padding1 freebox brleft" :class="{'color_select':videostyle == 1}" @click="videostyle=1">{{langContent.mfvideo?langContent.mfvideo:''}}</div>
+            <div class="padding1 freebox brright noblt" :class="{'color_select':videostyle == 2}" @click="videostyle=2;getPutlist(2);changeListtype(2)">{{langContent.ffvideo?langContent.ffvideo:''}}</div>
+
+            <div v-show="videostyle==2" class="flex_row_around fontSize14" style="max-width: 50%;flex: 1;">
+                <!-- 添加链接 -->
+                <div class="ffcontent" :class="{'active':moneytype==2}" @click="changeListtype(2)">{{langContent.add?langContent.add:''}}</div>
+                <!-- 仅上热门 -->
+                <div class="ffcontent" :class="{'active':moneytype==1}" @click="changeListtype(1)">{{langContent.only?langContent.only:''}}</div>
+            </div>
+        </div>
+        <!-- 上传视频的展示 -->
+        <div class="videopart">
+            <div class="flex_row_between bg_white padding1">
+                <textarea class="color_CC" :placeholder="langContent.text_input" v-model="remak" maxlength="200">
+            </textarea>
+                <div class="" style="height: 170px;width: 30%;overflow: hidden;margin: 0px;">
+                    <video width="100%" height="100%" style="object-fit: cover;object-position: 50% 50%;" :src="videoUrl?videoUrl:''" poster="../../image/loading.gif" webkit-playsinline playsinline x5-playsinline="" x-webkit-airplay="allow" loop="loop" autoplay="autoplay"></video>
+                </div>
+            </div>
+        </div>
+        <!-- 发布付费视频    大页面   ----------------------------------------------------------------------------------------- -->
+        <div v-show="videostyle==2" class="width100">
+            <!-- 选择城市 -->
+            <!-- <div class="color_black3">{{langContent.selectcity?langContent.selectcity:''}}</div> -->
+            <div @click="checkAdd()" class="inputarea padding1 flex_row_left bg_white color_black3">
+                <div class="fontSize12">{{langContent.city?langContent.city:''}}：</div>
+                <div class="city text-overflow_1">
+                    {{globalcity?globalcity:''}}
+                </div>
+                <i class="iconfont icon-direction_right fontSize20 color_default1"></i>
+            </div>
+            <div class="popups">
+                <div>
+                    <!-- 选择国家   后获取省份数据 -->
+                    <van-tree-select v-show="isShowGlobal" :items="countrylist" :main-active-index="mainActiveIndex" @click-nav="onClickNav">
+                        <!-- 选择省份  后获取市区数据 -->
+                        <van-tree-select :items="areaList" :main-active-index="mainActiveIndexByCity" :active-id="activeId" @click-nav="onClickNavList" slot="content" @click-item="onClickItem" max="1" />
+                        <van-tree-select/>
+                </div>
+                <div class="flex_row_between bg_white" v-show="isShowGlobal">
+                    <div class="btn" @click="affirm">{{langContent.qrxz?langContent.qrxz:''}}</div>
+                    <div class="btn btn1" @click="cancels">{{langContent.qxxz?langContent.qxxz:''}}</div>
+                </div>
+            </div>
+            <!-- info.is_partner==1   是城市合伙人   "hhrzl": '发布合伙人专利视频（免费）', -->
+            <div class="fontSize16 text_left padding1 flex_row_left bg_white color_black6" v-show="info.is_partner==1" style="padding-left: 2.8rem;" @click="is_partner_click">
+                <div class="common_radio marginR10" :class="{'on':partner == true}" style="vertical-align: middle; "></div>
+                {{langContent.hhrzl?langContent.hhrzl:''}}
+            </div>
+            <!-- 一个月只能发布一次，请谨慎选择 -->
+            <p class="color_default1 fontSize14" v-show="info.is_partner==1" style="padding-left: 2rem;">{{langContent.hhrtip?langContent.hhrtip:''}}</p>
+
+            <!-- 点击添加链接 -->
+            <div v-show="moneytype==2">
+                <div class="padding1">
+                    <p class="color_red">{{langContent.tip?langContent.tip:''}}</p>
+                    <p class="color_999 marginT1">https://www.taomao1688.com/DL/index.htm</p>
+                </div>
+                <!-- 实例链接 -->
+                <div class="inputarea padding1 color_gray fontSize12">
+                    <div class="color_gray">{{langContent.tip1?langContent.tip1:''}}</div>
+                    <div class="color_gray">https://item.taobao.com/item.html?<span class="color_default1">id=</span>593919946343
+                    </div>
+                    <div class="color_gray">{{langContent.tip2?langContent.tip2:''}},<span class="color_default1">{{langContent.tip3?langContent.tip3:''}}</span>,{{langContent.tip4?langContent.tip4:''}}</div>
+                </div>
+                <div class="bg_white">
+                    <!-- 商品链接 -->
+                    <div class="inputarea padding1 flex_row_left bbd">
+                        <div class="color_black3">{{langContent.link?langContent.link:''}}</div>
+                        <input class="flex_grow1 fontSize14" type="text" :placeholder="langContent.link_input" v-model="shopurl">
+                    </div>
+                    <!-- 商品名字 -->
+                    <div class="inputarea padding1 flex_row_left bbd">
+                        <div class="color_black3">{{langContent.name?langContent.name:''}}</div>
+                        <input class="flex_grow1 fontSize14" type="text" :placeholder="langContent.name_input" v-model="goods_name">
+                    </div>
+                    <!-- 商品描述 -->
+                    <div class="inputarea padding1 flex_row_left bbd">
+                        <div class="color_black3">{{langContent.desc?langContent.desc:''}}</div>
+                        <input class="flex_grow1 fontSize14" type="text" :placeholder="langContent.desc_input" v-model="goods_introduce">
+                    </div>
+                    <!-- 商品图片 -->
+                    <div class="inputarea padding1 flex_row_left bbd">
+                        <div class="color_black3">{{langContent.img?langContent.img:''}}</div>
+                        <div class="" style="margin-left: 15px;border: 1px solid #dddddd;">
+                            <img @click.stop="getImg" :src="goods_images||'../../image/uppz.png'" alt="" style="width: 80px;height: 80px;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 仅添加商品链接 的JXA 提示 -->
+            <div class="link_JXA_style padding1" v-if="moneytype==2">
+                {{langContent.pay1?langContent.pay1:''}} <span class="color_red">{{link_JXA}}JXA</span> {{langContent.pay2?langContent.pay2:''}}
+            </div>
+            <!-- 点击选择播放套餐 -->
+            <div @click="isShowMeal=!isShowMeal" style="margin-bottom:0; margin-top:0;" class="meal padding1 flex_row_between color_black3 bg_white">
+                <div class="" style="white-space: nowrap;">{{langContent.meal?langContent.meal:''}}</div>
+                <div class="text-overflow_1 color_999" style="margin-left: 0px;">{{selectedMeal?selectedMeal:''}}</div>
+                <i class="iconfont icon-direction_right  fontSize18 color_default1"></i>
+            </div>
+            <!-- 套餐列表 -->
+            <div v-show="isShowMeal" class="flex_row_left padding1 color_black3 bg_white" v-for="obj in putlist_obj" @click="changeMeal(obj.quantity,obj.JXA,obj.money)">
+                <div class="radio" :class="{'on':recomendnum == obj.quantity}"></div>
+                <span class="flex_grow1">{{langContent.bfl?langContent.bfl:''}}{{obj.quantity}}{{langContent.sf?langContent.sf:''}}{{obj.money}}{{langContent.rmb?langContent.rmb:''}}{{obj.JXA}}JXA</span>
+            </div>
+            <!-- 一共需要支付多少JXAK提示 -->
+            <!-- <div class="text_center fontSize14">
+                <p class="sumup_JXA_style">{{langContent.total?langContent.total:''}}<span class="fontSize18">  {{sumup_JXA}}</span> JXA</p>
+            </div> -->
+        </div>
+        <!-- 发布免费视频    大页面   就videostyle==1一个大DIV----------------------------------------------------------------------------------------- -->
+        <div v-show="videostyle==1" class="flex_row_left color_black3 padding1 bg-white">
+            <div class="marginR10 fontSize12">{{langContent.incity?langContent.incity:''}}</div>
+            <!-- 发布城市 -->
+            <div class="city text-overflow_1">
+                {{city?city:''}}
+            </div>
+            <!-- <i class="iconfont icon-direction_right fontSize20 color_default1"></i> -->
+        </div>
+
+        <!-- 兴趣标签 -->
+        <p class="custom_title fontSize14 padding1">{{langContent.label?langContent.label:''}}</p>
+        <div class="flex_row_left flex_wrap fontSize12 bg_white padding1">
+            <div class="labels text_center fontSize14" v-for="obj in label_obj" @click="labeldatalist(obj)" :class="{'labels_checked fontSize14':obj.checked}">
+                <div class="">{{obj.name}}</div>
+            </div>
+        </div>
+        <!-- 同意协议 -->
+        <div class="padding1 flex_row_left bg_white color_black3">
+            <div class="common_radio marginR10 text_center" :class="{'on':videochangesss == true}" @click="videoonclick"></div>
+            <div>{{langContent.read?langContent.read:''}}</div>
+            <div><span class="color_default1" onclick="toPage('hot_agreement','../home/hot_agreement.html')">{{langContent.fwxy?langContent.fwxy:''}}</span> {{langContent.and?langContent.and:''}}
+                <span class="color_default1" onclick="toPage('hot_require','../home/hot_require.html')">{{langContent.tfyq?langContent.tfyq:''}}</span></div>
+        </div>
+        <!-- 分享 -->
+        <div class="padding1 color_999">{{langContent.share?langContent.share:''}}</div>
+        <div class="list flex_row_center flex_wrap fontSize14 color_999">
+            <div class="item flex_col_center">
+                <img v-show="type==1" class="iconimg bg-white" src="../../image/wechaticon.png" @click="type=0" alt="" />
+                <img v-show="type==0||type==2" class="iconimg" src="../../image/unwechat.png" @click="type=1" alt="" />
+                <div>{{langContent.wx?langContent.wx:''}}</div>
+            </div>
+            <div class="item flex_col_center">
+                <img v-show="type==2" class="iconimg bg-white" src="../../image/friend.png" @click="type=0" alt="" />
+                <img v-show="type==0||type==1" class="iconimg" src="../../image/unfriend.png" @click="type=2" alt="" />
+                <div>{{langContent.pyq?langContent.pyq:''}}</div>
+            </div>
+        </div>
+        <div style="height: 72px;"></div>
+        <!-- 确认发布 -->
+        <div class="btnpart padding1 bg_white">
+            <div class="loginbtn" @click="release()" :class="{disable:isClick == false}">
+                <span v-show="videostyle==2">{{langContent.total?langContent.total:''}}{{sumup_JXA}} JXA,</span> {{langContent.sure?langContent.sure:''}}
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script src="../../lib/vant/vant.min.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    var release = new Vue({
+        el: "#release",
+        data: {
+            videoName: '',
+            music_id: '',
+            videoUrl: '',
+            remak: '',
+            type: 0,
+            city: '', //免费默认的本地城市
+            globalcity: '', //付费的 全球城市
+            isClick: true,
+            shopurl: '', //商品链接
+            goods_introduce: '', //商品介绍
+            goods_name: '', //商品名称
+            goods_images: '', //商品图片
+            videostyle: 1,
+            moneytype: 2,
+            isShowMeal: false,
+            isShowGlobal: false,
+            meal: 0,
+            // areaList: {}, // 城市列表
+            areaList: [], // 省份城市列表,
+            activeId: [], //最后选择的城市
+            mainActiveIndex: 0, //全球选中 国家的number
+            mainActiveIndexByCity: 0, //国家选中城市的number
+            max: 1,
+            globally: {
+                // 导航名称
+                text: '所有城市',
+                // 禁用选项
+                disabled: false,
+                // 该导航下所有的可选项
+                children: []
+            }, //全球地址
+            isShowselect: false,
+            countrylist: [],
+            // 标签
+            label_obj: [],
+            label_xinshuzu: [],
+            isShow: false,
+            password: '',
+            spread_city: 0,
+            putlist_obj: [],
+            recomendnum: 0,
+            videochangesss: false,
+            partner: false, // 城市人视频
+            is_partner: 0,
+            info: Object, // 获取城市合伙人信息  判断是否  info.is_partner==1 是城市合伙人
+            switch: false,
+            setmeal_JXA: 0, //null
+            link_JXA: 0, //null
+            sumup_JXA: 0, //null
+            langContent: {},
+            getCodetip: {},
+            selectedMeal: ''
+        },
+        created: function() {
+            var that = this;
+            apiready = function() {
+                fixStatusbar('header,.header,.headers', '.content');
+                var height = $api.fixStatusBar(document.querySelector('header'));
+                var paddingheight = height - 20;
+                $api.css($api.dom('.videopart'), 'margin-top:' + paddingheight + 'px');
+                that.videoName = api.pageParam.videoName;
+                that.music_id = api.pageParam.music_id;
+                that.videoUrl = VideoBaseUrl + api.pageParam.videoName;
+                release.$data.langContent = GlobleLanguageContent.release;
+                release.$data.getCodetip = GlobleLanguageContent.getCode;
+                setTimeout(function() {
+                    that.videoUrl = VideoBaseUrl + api.pageParam.videoName
+                }, 1000);
+                that.getGlobally() //获取全球列表
+                    //根据经纬度获取城市名称
+                http(getCityUrl, 'post', {
+                    // lng: $api.getStorage('longitude'),
+                    // lat: $api.getStorage('latitude') ,
+                    lat: $api.getStorage('latitude') || '23.137197',
+                    lng: $api.getStorage('longitude') || '113.271429',
+                }, function(res) {
+                    // console.log(JSON.stringify(res) + '//获取城市名字');
+                    if (res.code == 200) {
+                        that.city = res.data.info;
+                        that.globalcity = res.data.info;
+                    }
+                }, function(err) {
+                    // alert(JSON.stringify(err));
+                });
+
+                //获取视频标签列表
+                http(videoLabel, 'post', {}, function(ret) {
+                        // console.log(JSON.stringify(ret) + '获取视频标签列表');
+                        if (ret.code == 200) {
+                            that.label_obj = ret.data.info
+                            for (var i = 0; i < ret.data.info.length; i++) {
+                                that.label_obj[i].checked = false
+                            }
+                            that.label_obj = JSON.parse(JSON.stringify(that.label_obj))
+                        }
+                    })
+                    //获取判断是否合伙人
+                http(getuserinfoUrl, 'post', {}, function(ret) {
+                    // console.log(JSON.stringify(ret.data.is_partner) + '//获取判断是否合伙人');
+                    if (ret.code == 200) {
+                        that.info = ret.data;
+                    }
+                })
+
+                // 获取本月是否发过城市合伙人视频
+                http(checkCityFreeVideo, 'post', {}, function(ret) {
+                    // console.log(JSON.stringify(ret) + '//获取本月是否发过城市合伙人视频');
+                    if (ret.code == 200) {
+                        that.switch = true
+                    } else {
+                        that.switch = false
+                    }
+                })
+            }
+        },
+        methods: {
+            //确认城市
+            affirm: function() {
+                var that = this;
+                // // 这是选择国家
+                // that.spread_city = that.mainActiveIndex;
+                // //这是选择省份
+                // that.spread_city = that.mainActiveIndexByCity;
+                that.isShowGlobal = !that.isShowGlobal;
+            },
+            // 取消选择
+            cancels: function() {
+                var that = this;
+                that.isShowGlobal = !that.isShowGlobal;
+            },
+            // 显示选择城市
+            checkAdd: function() {
+                var that = this;
+                // this.isShowselect = true;
+                that.isShowGlobal = !that.isShowGlobal;
+            },
+
+
+            // 左侧导航点击时，触发的事件 event.detail.index：被点击的导航的索引  这是选择国家
+            onClickNav: function(event) {
+                var that = this;
+                that.mainActiveIndex = event;
+                that.getCitylist(that.countrylist[event].id);
+                that.isShowGlobal = true;
+                that.globalcity = that.countrylist[event].text;
+                // 传给后台的id
+                that.spread_city = that.countrylist[event].id;
+            },
+            // 左侧导航点击时，触发的事件 event.detail.index：被点击的导航的索引  这是选择省份
+            onClickNavList: function(event) {
+                var that = this;
+                that.mainActiveIndexByCity = event;
+                that.getCitylistUrl(that.areaList[event].id, event);
+                that.isShowGlobal = true;
+                that.globalcity = that.areaList[event].text;
+                // 传给后台的id
+                that.spread_city = that.areaList[event].id;
+
+            },
+            // 右侧选择项被点击时，会触发的事件 	event.detail: 该点击项的数据
+            onClickItem: function(event) {
+                var that = this
+                that.spread_city = event.id;
+                that.globalcity = event.text;
+                that.isShowGlobal = false;
+                // console.log(JSON.stringify(event));
+                // console.log(that.spread_city);
+                // console.log(event.text);
+
+            },
+            //获取全球列表
+            getGlobally: function() {
+                var that = this;
+                http(getQuhao, 'post', {}, function(ret) {
+                    // console.error(JSON.stringify(ret) + '//获取全球城市列表');
+                    if (ret.code == 200) {
+                        // that.globally.children = ret.data.info;
+                        var arryiinfo = ret.data.info;
+                        arryiinfo.forEach(function(element) {
+                            that.countrylist.push({
+                                text: element.name + '(' + element.name_en + ')',
+                                id: element.id
+                            })
+                        });
+                        setTimeout(function() {
+                            // that.isShowGlobal = true;
+                            that.getCitylist(that.countrylist[0].id)
+                        }, 1000);
+                    }
+                    // console.log(JSON.stringify(arryiinfo) + '//获取全球城市列表');
+                })
+            },
+            //获取   省份城市列表  
+            getCitylist: function(id) {
+                var that = this;
+                http(GloballyUrl, 'post', {
+                    pid: id
+                }, function(ret) {
+                    // console.error(JSON.stringify(ret) + '//获取城市列表');
+                    if (ret.code == 200) {
+                        that.areaList = [];
+                        var arryiinfolist = ret.data.info;
+                        arryiinfolist.forEach(function(element) {
+                            that.areaList.push({
+                                text: element.name + '(' + element.name_en + ')',
+                                id: element.id
+                            })
+                        });
+                        that.areaList = JSON.parse(JSON.stringify(that.areaList))
+                            // that.areaList = ret.data;
+                            // console.log(JSON.stringify(that.areaList) + '//获取城市列表');
+                    }
+
+                })
+            },
+            //获取   城市列表    市市市市市市
+            getCitylistUrl: function(id, index) {
+                var that = this;
+                http(GloballyUrl, 'post', {
+                    pid: id
+                }, function(ret) {
+                    // console.error(JSON.stringify(ret) + '// 市市市市市市列表');
+                    if (ret.code == 200) {
+                        // that.activeId = [];
+                        var children = [];
+                        var arryiinfolistUrl = ret.data.info;
+                        arryiinfolistUrl.forEach(function(element) {
+                            children.push({
+                                text: element.name + '(' + element.name_en + ')',
+                                id: element.id,
+                                disabled: false
+                            })
+                        });
+                        that.areaList[index].children = children;
+                        that.areaList = JSON.parse(JSON.stringify(that.areaList))
+                        if (children.length == 0) {
+                            // console.log('没有市区');
+                            that.spread_city = that.areaList[index].id
+                            that.isShowGlobal = false
+                            that.globalcity = that.areaList[index].text
+                                // console.log(that.spread_city);
+                        } else {
+                            that.spread_city = 0
+                                // console.log(that.spread_city + '默认全国');
+                        }
+                        // console.log(that.spread_city);
+                        // console.log(JSON.stringify(that.areaList) + '//获取城市列表');
+                    }
+
+                })
+            },
+
+            // 上传视频图片
+            getImg: function() {
+                var that = this
+                api.getPicture({
+                    sourceType: 'album',
+                    encodingType: 'jpg',
+                    mediaValue: 'pic',
+                    destinationType: 'base64',
+                    allowEdit: false,
+                    quality: 50,
+                    targetWidth: 750,
+                    targetHeight: 750,
+                    saveToPhotoAlbum: false
+                }, function(ret, err) {
+                    if (ret) {
+                        that.goods_images = ret.base64Data;
+                    }
+                });
+            },
+            //视频上热门城市合伙人（专利）
+            is_partner_click: function() {
+                var that = this
+                if (that.switch) {
+                    // that.partner = !that.partner
+                    that.partner = true
+                    if (that.partner) {
+                        that.is_partner = 1
+                    } else {
+                        that.is_partner = 0
+                    }
+                } else {
+                    api.toast({
+                        msg: that.langContent.nonum,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+            },
+            // 单选按钮
+            videoonclick: function() {
+                var that = this;
+                that.videochangesss = !that.videochangesss
+                return that.videochangesss
+            },
+            getPutlist: function(id) {
+                var that = this;
+                // 获取推送量价格列表
+                http(putList, 'post', {
+                    type: id
+                }, function(ret) {
+                    // console.log(JSON.stringify(ret) + '//获取推送量价格列表');
+                    if (ret.code == 200) {
+                        that.putlist_obj = ret.data.list
+                        that.link_JXA = ret.data.default // 仅添加链接的JXA
+                    }
+                })
+            },
+            // label_obj:   兴趣数据控制选择
+            labeldatalist: function(obj) {
+                var that = this
+                if (!obj.checked) {
+                    if (that.label_xinshuzu.length < 3) {
+                        obj.checked = !obj.checked
+                        that.label_xinshuzu.push(obj.id)
+                    } else {
+                        api.toast({
+                            msg: that.langContent.more,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                        return
+                    }
+                } else {
+                    if (that.label_xinshuzu.length == 1) {
+                        api.toast({
+                            msg: that.langContent.least,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                        return
+                    } else {
+                        obj.checked = !obj.checked
+                        for (var i = 0; i < that.label_xinshuzu.length; i++) {
+                            if (that.label_xinshuzu[i] == obj.id) {
+                                that.label_xinshuzu.splice(i, 1)
+                            }
+                        }
+                    }
+                }
+            },
+            // 发布付费视频  2添加链接   1仅上热门
+            changeListtype: function(id) {
+                var that = this;
+                if (that.moneytype != id) {
+                    that.recomendnum = 0;
+                    that.setmeal_JXA = 0;
+                    that.sumup_JXA = Number(that.link_JXA)
+                    that.selectedMeal = ''
+                }
+                that.moneytype = id;
+                if (id == 2) {
+                    that.sumup_JXA = that.link_JXA + that.setmeal_JXA
+                } else {
+                    that.sumup_JXA = that.setmeal_JXA
+                }
+                that.getPutlist(id)
+            },
+            //  套餐列表 选择
+            changeMeal: function(item, JXA, money) {
+                var that = this;
+                if (that.moneytype == 2) {
+                    if (that.recomendnum == item) {
+                        that.recomendnum = 0;
+                        that.setmeal_JXA = 0;
+                        that.sumup_JXA = Number(that.link_JXA)
+                        that.selectedMeal = ''
+                    } else {
+                        that.recomendnum = item;
+                        that.setmeal_JXA = Number(JXA)
+                        that.sumup_JXA = Number(JXA) + Number(that.link_JXA)
+                        that.selectedMeal = that.langContent.bfl + item + that.langContent.sf + money + that.langContent.rmb + JXA + 'JXA'
+                    }
+                } else {
+                    that.recomendnum = item;
+                    that.setmeal_JXA = Number(JXA)
+                    that.sumup_JXA = Number(JXA)
+                    that.selectedMeal = that.langContent.bfl + item + that.langContent.sf + money + that.langContent.rmb + JXA + 'JXA'
+                }
+            },
+            // 确认发布免费视频
+            release: function() {
+                var that = this;
+                if (that.videochangesss == false) {
+                    api.toast({
+                        msg: that.langContent.noagree,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return;
+                }
+                if (that.label_xinshuzu == [] || that.label_xinshuzu.length == 0) {
+                    api.toast({
+                        msg: that.langContent.nolab,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return;
+                } else {
+                    var labels = ''
+                    if (that.label_xinshuzu.length > 0) {
+                        that.label_xinshuzu.forEach(function(element) {
+                            labels = labels + element + ','
+                        });
+                    }
+                }
+                if (that.videostyle == 1) { //免费视频
+                    that.isClick = false;
+                    var param = {
+                            file_name: that.videoName, // 视频名字
+                            title: that.remak, //视频内容
+                            video_type: that.videostyle, // 免费视频1  付费视频2
+                            lon: $api.getStorage('longitude') || '113.271429',
+                            lat: $api.getStorage('latitude') || '23.137197',
+                            music_id: that.music_id, // 视频音乐
+                            is_partner: that.is_partner, //其他视频0  城市合伙人视频1
+                            spread_city: 0, //城市id 默认是全国
+                            put_quantity: 0, //选择套餐 默认没有
+                            tags: labels, //兴趣标签
+                            // partner: that.partner, // 判断是否是城市合伙人视频
+                        }
+                        // console.log(param);
+                    http(addVideoUrl, 'post', param, function(ret) {
+                        // console.log(JSON.stringify(ret) + '普通发布');
+                        if (ret && ret.code == 200) {
+                            api.toast({
+                                msg: that.langContent.sucess,
+                                duration: 3000,
+                                location: 'bottom'
+                            });
+                            setTimeout(function() {
+                                that.share(that.type, ret.data.url)
+                            }, 2000);
+                            // 存储分享
+                            setTimeout(function() {
+                                api.closeWin();
+                            }, 3000);
+                        } else {
+                            that.isClick = true;
+                            api.toast({
+                                msg: ret.msg,
+                                duration: 2000,
+                                location: 'bottom'
+                            });
+                        }
+                    }, function(err) {
+                        // alert(err);
+                    });
+
+                } else { //付费视频
+                    if (that.moneytype == 2) { //添加链接
+                        if (that.shopurl == '' || that.goods_name == '' || that.goods_introduce == '' || that.goods_images == '') {
+                            api.toast({
+                                msg: that.langContent.noinfo,
+                                duration: 2000,
+                                location: 'bottom'
+                            });
+                            return;
+                        }
+                    }
+                    if (that.moneytype == 1 && that.recomendnum == 0) { //仅上热门
+                        api.toast({
+                            msg: that.langContent.nomeal,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                        return;
+                    }
+                    if (that.moneytype == 1) {
+                        that.shopurl = '';
+                        that.goods_name = '';
+                        that.goods_introduce = '';
+                        that.goods_images = ''
+                    }
+                    that.isShow = true;
+                    return;
+                }
+            },
+            // 付费发布
+            submitpay: function() {
+                var that = this;
+                if (that.password == '') {
+                    api.toast({
+                        msg: that.langContent.nopsw,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return;
+                } else if (that.spread_city == 0) {
+                    api.toast({
+                        msg: '请选择推广城市',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return;
+                } else {
+                    var labels = ''
+                    if (that.label_xinshuzu.length > 0) {
+                        that.label_xinshuzu.forEach(function(element) {
+                            labels = labels + element + ','
+                        });
+                    }
+                    var param = {
+                        file_name: that.videoName, // 视频名字
+                        title: that.remak, // 视频内容
+                        video_type: that.videostyle, // 免费视频1  付费视频2
+                        lon: $api.getStorage('longitude'),
+                        lat: $api.getStorage('latitude'),
+                        music_id: that.music_id, // 视频音乐
+                        is_partner: that.is_partner, //其他视频0  城市合伙人视频1
+                        spread_city: that.spread_city, //城市id 默认是全国
+                        put_quantity: that.recomendnum, //选择套餐 默认没有
+                        tags: labels, //兴趣标签
+                        // partner: that.partner, // 判断是否是城市合伙人视频
+                        password: that.password, //交易密码
+                        goods_url: encodeURIComponent(that.shopurl), //添加链接
+                        goods_name: that.goods_name, //商品名字
+                        goods_images: that.goods_images, //商品图片
+                        goods_introduce: that.goods_introduce, // 商品描述
+                    }
+                }
+                // console.log(JSON.stringify(param) + '付费传参');
+                http(addVideoUrl, 'post', param, function(ret) {
+                    that.isClick = true;
+                    // console.log(JSON.stringify(ret) + '付费发布');
+                    if (ret && ret.code == 200) {
+                        that.isShow = false;
+                        api.toast({
+                            msg: that.langContent.sucess,
+                            duration: 3000,
+                            location: 'bottom'
+                        });
+                        setTimeout(function() {
+                            that.share(that.type, ret.data.url)
+                        }, 2000);
+                        // 存储分享
+                        setTimeout(function() {
+                            api.closeWin();
+                        }, 3000);
+                    } else {
+                        that.isClick = true;
+                        api.toast({
+                            msg: ret.msg,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                    }
+                }, function(err) {
+                    // alert(err);
+                });
+            },
+            share: function(type, share_url) {
+                var that = this;
+                if (type == 1) {
+                    var wx = api.require('wx');
+                    wx.shareWebpage({
+                        apiKey: '',
+                        scene: 'session',
+                        title: that.langContent.sharetitle,
+                        // description: '我在见习JXA看到一个很好看的视频,快来跟我一起围观吧~',
+                        thumb: 'widget://image/applogo.png',
+                        contentUrl: share_url
+                    }, function(ret, err) {
+                        if (ret.status) {
+                            api.toast({
+                                msg: that.langContent.shareStatu,
+                                duration: 2000,
+                                location: 'bottom'
+                            });
+                        } else {
+                            if (err.code == -1) {
+                                api.toast({
+                                    msg: that.langContent.shareStatu1,
+                                    duration: 2000,
+                                    location: 'bottom'
+                                });
+                            } else if (err.code == 2) {
+                                api.toast({
+                                    msg: that.langContent.shareStatu2,
+                                    duration: 2000,
+                                    location: 'bottom'
+                                });
+                            } else if (err.code == 3) {
+                                api.toast({
+                                    msg: that.langContent.shareStatu3,
+                                    duration: 2000,
+                                    location: 'bottom'
+                                });
+                            }
+                        }
+                    });
+                } else if (type == 2) {
+                    var wx = api.require('wx');
+                    wx.shareWebpage({
+                        apiKey: '',
+                        scene: 'timeline',
+                        title: that.langContent.sharetitle,
+                        // description: '我在见习JXA看到一个很好看的视频,快来跟我一起围观吧~',
+                        thumb: 'widget://image/applogo.png',
+                        contentUrl: share_url
+                    }, function(ret, err) {
+                        if (ret.status) {
+                            api.toast({
+                                msg: that.langContent.shareStatu,
+                                duration: 2000,
+                                location: 'bottom'
+                            });
+                        } else {
+                            if (err.code == -1) {
+                                api.toast({
+                                    msg: that.langContent.shareStatu1,
+                                    duration: 2000,
+                                    location: 'bottom'
+                                });
+                            } else if (err.code == 2) {
+                                api.toast({
+                                    msg: that.langContent.shareStatu2,
+                                    duration: 2000,
+                                    location: 'bottom'
+                                });
+                            } else if (err.code == 3) {
+                                api.toast({
+                                    msg: that.langContent.shareStatu3,
+                                    duration: 2000,
+                                    location: 'bottom'
+                                });
+                            }
+                        }
+                    });
+                } else {
+                    return;
+                }
+            },
+        }
+    })
+</script>

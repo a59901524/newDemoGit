@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>设置</title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../lib/iconfont2/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/edit.css" />
+</head>
+
+<body>
+    <div id="myfans" class="content" v-cloak>
+        <header class="header bbd">
+            <i class="iconfont icon-xiangzuo" onclick="goBack()"></i>
+            <div class="color_default1">{{title?title:''}}</div>
+        </header>
+        <!--
+        <div class="histroy padding1 flex_row_between" v-for="user in list">
+            <img class="userimg Bc" :src="user.headImg?user.headImg:'../../image/logo.png'" alt="" />
+            <div class="info">
+                <div class="color_white fontSize14">{{user.nickname}}</div>
+                <div class="colorgray fontSize12">ID:{{user.number}} 粉丝:{{user.fans_count}}</div>
+                <div class="colorgray fontSize12">{{user.sign_text}}</div>
+            </div>
+            <div class="flow" v-show="user.is_focus==0" @click="attention(user,1)">关注</div>
+            <div class="flow" v-show="user.is_focus==1" @click="attention(user,0)">已关注</div>
+        </div>
+        <p v-show="isAll&&list.length>0" class="color_gray text_center padding1">没有更多了</p>
+        <p v-show="list.length<=0" class="color_gray text_center" style="padding-top:50%;">暂无数据</p> -->
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    var myfans = new Vue({
+        el: '#myfans',
+        data: {
+            type: 1,
+            page: 1,
+            params: {},
+            list: [],
+            isAll: false,
+            title: '',
+            langContent: {},
+        },
+        created: function() {
+            var that = this;
+            apiready = function() {
+                fixStatusbar('header,.header,.headers', '.content');
+                that.type = api.pageParam.type;
+                myfans.$data.langContent = GlobleLanguageContent.myfans;
+                if (api.pageParam.isMe == 0) {
+                    if (api.pageParam.type == 1) {
+                        that.title = myfans.$data.langContent.title1
+                    } else {
+                        that.title = myfans.$data.langContent.title2
+                    }
+                } else {
+                    if (api.pageParam.type == 1) {
+                        that.title = myfans.$data.langContent.title3
+                    } else {
+                        that.title = myfans.$data.langContent.title4
+                    }
+                }
+                that.openFan()
+            }
+        },
+        methods: {
+            openFan: function() {
+                api.openFrame({
+                    name: 'myfans_frame',
+                    url: 'myfans_frame.html',
+                    bounces: true,
+                    rect: {
+                        x: 0,
+                        y: $api.dom('.header').offsetHeight,
+                        w: 'auto',
+                        h: 'auto'
+                    },
+                    pageParam: {
+                        type: api.pageParam.type,
+                        uid: api.pageParam.uid
+                    }
+                });
+            }
+
+        }
+    });
+</script>

@@ -1,0 +1,60 @@
+.account{
+	color: #ffffff;
+}
+.content{
+	padding: 0 0.2rem;
+}
+.account .ct{
+	height: 0.4rem;
+	padding-left: 0.2rem;
+	margin-bottom: 0.36rem;
+	overflow: auto;
+}
+.navList {
+	margin-top: 1rem;
+}
+.account .ct::-webkit-scrollbar {
+	display: none
+}
+.account .nav{
+	display: flex;
+	justify-content: space-between;
+	font-size: 0.25rem;
+	height: 0.4rem;
+	line-height: 0.4rem;
+	width: 120%;
+}
+.account .nav .navLi{
+	padding: 0 0.25rem;
+	background-color: rgba(37, 0, 115, 0.5);
+	border-radius: 0.4rem;
+	text-align: center;
+	color: #768ff6;
+}
+.account .nav .active{
+	background: #006cff;
+	color: #ffffff;
+}
+.account .li{
+	padding: 0.28rem;
+	display: flex;
+	justify-content: flex-start;
+	border-bottom: 0.01rem solid #370e9f;
+}
+.account .li:last-child{
+	border-bottom: none;
+}
+.account .left{
+	display: flex;
+	align-items: center;
+	color: #fd5300;
+}
+.account .li .liRight{
+	flex: 1;
+}
+.account .li .liRight .title{
+	margin-bottom: 0.34rem;
+}
+.bj{
+	padding: 0 0.18rem;
+}

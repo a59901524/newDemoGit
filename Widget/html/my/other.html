@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>用户资料</title>
+    <link rel="stylesheet" href="../../lib/vant/vant.css">
+    <link rel="stylesheet" type="text/css" href="../../lib/iconfont2/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <style>
+        #other {
+            width: 100%;
+            min-height: 100%;
+        }
+
+        .f4_header {
+            height: auto;
+            background: url(../../image/f4_header1.png) no-repeat center;
+            background-size: 100% 100%;
+        }
+
+        .on {
+            border-bottom: 2px solid #B3A795;
+            /* color: white; */
+            font-weight: 600;
+        }
+
+        .infolab {
+            background: #ffffff;
+            border-radius: 30px;
+            padding: 3px 12px;
+            background: #2c2f3d;
+        }
+
+        .infolab1 {
+            border-radius: 3px;
+            padding: 3px 1rem;
+            color: #cb974d;
+            font-size: 12px;
+        }
+
+        .bgblack1 {
+            background: #110e24;
+        }
+
+        .userinfo {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+        }
+
+        .userimg {
+            width: 22px;
+            height: 22px;
+            margin: 0 5px 0 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="other" class="color_999" v-cloak>
+        <header class="header" style="background: rgba(0, 0, 0, 0);">
+            <i class="iconfont icon-xiangzuo color-white" onclick="goBack()"></i>
+        </header>
+        <div class="f4_header">
+            <!-- <i class="iconfont icon-xiangzuo fontSize16 color_default1" style="position: absolute;top: 35px;" @click="goBack()"></i> -->
+            <div class="flex_row_between padding1">
+                <div class="Bc">
+                    <img :src="usInfo.avatar?usInfo.avatar:'../../image/logo.png'" class="Bc" alt="" style="width: 85px;height: 85px;">
+                </div>
+                <!-- <div class="flex_row_right margin1 Bc" style="float:right;margin-top: 65px;">
+                <img onclick="toPage('edit','my/edit.html')" src="../../image/bianji.png" alt=""
+                    style="width: 22px;height: 22px;margin-right: 25px;">
+                <img onclick="toPage('setting','my/setting.html')" src="../../image/setting.png" alt=""
+                    style="width: 22px;height: 22px;">
+            </div> -->
+                <div v-show="usInfo.is_me==0" class="flex_row_right Bc">
+                    <div v-show="usInfo.is_focus == 1" @click="pitch_on()" class="infolab  flex_row_center marginR5" style="background: #ea387f;color: #ffffff;">
+                        <img src="../../image/sixin.png" alt="" style="width: 22px;height: 22px;"> {{langContent.sx?langContent.sx:''}}
+                    </div>
+                    <div v-show="usInfo.is_focus == 0" @click="attention()" class="infolab flex_row_center marginR5" style="background: #ea387f;color: #ffffff;">
+                        {{langContent.add?langContent.add:''}}
+                    </div>
+                    <div v-show="usInfo.is_focus == 1" @click="attention()" class="infolab flex_row_center marginR5" style="background: #ea387f;color: #ffffff;">
+                        <img src="../../image/yiguanzhu.png" alt="" style="width: 22px;height: 22px;">
+                    </div>
+                </div>
+            </div>
+            <div class="bg_white color_999">
+                <div class="font_bold padding1 color_black3" style="font-size: 18px;padding-bottom: 0;">
+                    {{usInfo.nickname?usInfo.nickname:''}}</div>
+                <div class="fontSize14 padding1" style="padding-top:0;border-bottom: .5px solid #eeeeee">
+                    ID:{{usInfo.user_sn?usInfo.user_sn:''}}</div>
+                <div class="fontSize12  padding1">
+                    {{usInfo.signature?usInfo.signature:langContent.sign}}
+                </div>
+                <div class="flex_row_left padding1" style="padding-top:0;">
+                    <div class="infolab1 bg_f8f8f8 flex_row_center marginR5">
+                        <span>{{usInfo.sex_text?usInfo.sex_text:langContent.unknow}}</span>
+                    </div>
+                    <div class="infolab1 bg_f8f8f8 flex_row_center marginR5">
+                        {{usInfo.age?usInfo.age:'0'}}{{langContent.old?langContent.old:''}}
+                    </div>
+                    <!-- <div class="infolab1 bg_f8f8f8 flex_row_center marginR5">
+                    {{usInfo.city?usInfo.city:langContent.nocity}}
+                </div> -->
+                </div>
+            </div>
+            <div class="flex_row_left  fontSize14  font_bold bg_white">
+                <div class="flex_row_center padding12">
+                    <span class=" marginR5 color_default1">{{usInfo.like_count?usInfo.like_count:'0'}}</span>
+                    <span class="">{{langContent.zan?langContent.zan:''}}</span>
+                </div>
+                <div class="flex_row_center padding12" @click="toFanPage(2)">
+                    <span class=" marginR5 color_default1">{{usInfo.focus_count?usInfo.focus_count:'0'}}</span>
+                    <span class="">{{langContent.gz?langContent.gz:''}}</span>
+                </div>
+                <div class="flex_row_center padding12" @click="toFanPage(1)">
+                    <span class=" marginR5 color_default1">{{usInfo.fans_count?usInfo.fans_count:'0'}}</span>
+                    <span class="">{{langContent.fs?langContent.fs:''}}</span>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="flex_row_around">
+            <div class="flex_row_center padding12 fontSize14" style="padding: 0.8rem 0;margin: 0.2rem 0;" :class="{'on':type==1}" @click="choice(1)">
+                <div class="marginR5">{{langContent.work?langContent.work:''}}</div>
+                <div class="color_default1">{{usInfo.works_count?usInfo.works_count:'0'}}</div>
+            </div>
+
+            <div class="flex_row_center padding12 fontSize14" style="padding: 0.8rem 0;margin: 0.2rem 0;" :class="{'on':type==2}" @click="choice(2)">
+                <div class="marginR5">{{langContent.like?langContent.like:''}}</div>
+                <div class="color_default1">{{usInfo.love_count?usInfo.love_count:'0'}}</div>
+            </div>
+        </div>
+        <div v-show="type == 1">
+            <div class="histroy flex_row_left flex_wrap color_white">
+                <div class="posi_relative" style="height: 44.5vw;width: calc(100% / 3 - 6px);overflow: hidden;margin: 1px;" v-for="(item, index) in works_list" :key="index" @click="todetailPage(works_list,index,1)">
+                    <!-- <video :class="'v'+index" width="100%" height="100%" style="object-fit: cover;object-position: 50% 50%;" :src="item.video_url?item.video_url:''" :poster="item.img?item.img:'../image/loading.gif'" webkit-playsinline playsinline x5-playsinline="" x-webkit-airplay="allow"
+                        preload="auto"></video> -->
+                    <img style="object-fit: cover;object-position: 50% 50%;vertical-align: middle;" :src="item.video_img?item.video_img:'../../image/loading.gif'" alt="" />
+                    <div class="userinfo width100">
+                        <div class="fontSize14 padding1 text-overflow_1 text_shadow" style="padding-bottom: 0;">
+                            {{item.title?item.title:''}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div v-show="type == 2">
+            <div class="histroy flex_row_left flex_wrap color_white">
+                <div class="posi_relative" style="height: 44.5vw;width: calc(100% / 3 - 6px);overflow: hidden;margin: 1px;" v-for="(item, index) in love_list" :key="index" @click="todetailPage(love_list,index,2)">
+                    <!-- <video :class="'v'+index" width="100%" height="100%" style="object-fit: cover;object-position: 50% 50%;" :src="item.video_url?item.video_url:''" :poster="item.img?item.img:'../image/loading.gif'" webkit-playsinline playsinline x5-playsinline="" x-webkit-airplay="allow"
+                        preload="auto"></video> -->
+                    <img style="object-fit: cover;object-position: 50% 50%;vertical-align: middle;" :src="item.video_img?item.video_img:'../../image/loading.gif'" alt="" />
+                    <div class="userinfo width100">
+                        <div class="flex_row_left padding1">
+                            <img class="userimg Bc" src="../../image/love.png" alt="" />
+                            <div class="text-overflow_1 text_shadow" style="flex: 1;">
+                                {{item.like_count?item.like_count:'1'}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../lib/vant/vant.min.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    var other = new Vue({
+        el: "#other",
+        data: {
+            type: 1,
+            works_list: [],
+            love_list: [],
+            usInfo: {},
+            page: 1,
+            params: {},
+            langContent: {},
+            getCodetip: {}
+        },
+        created: function() {
+            var that = this
+            apiready = function() {
+                api.setWinAttr({
+                    bounces: true
+                });
+                var height = $api.fixStatusBar(document.querySelector('header'));
+                $api.css($api.dom('.f4_header'), 'padding-top:' + height + 'px');
+                if (api.pageParam.from && api.pageParam.from == 'frame0') {
+                    $api.setStorage('curframename', 'frame4');
+                }
+                other.$data.langContent = GlobleLanguageContent.myvideo;
+                other.$data.getCodetip = GlobleLanguageContent.getCode;
+                that.getInfo()
+                api.addEventListener({
+                    name: 'scrolltobottom',
+                    extra: {
+                        threshold: 5 //设置距离底部多少距离时触发，默认值为0，数字类型
+                    }
+                }, function(ret, err) {
+                    that.getInfo('loadMore');
+                });
+                api.addEventListener({
+                    name: 'viewdisappear'
+                }, function(ret, err) {
+                    if (api.pageParam.from && api.pageParam.from == 'frame0') {
+                        $api.setStorage('curframename', 'frame0');
+                        api.execScript({
+                            name: 'root',
+                            frameName: 'frame0',
+                            script: 'frame0.getCheAplay()'
+                        });
+                    }
+                });
+                api.addEventListener({
+                    name: 'keyback'
+                }, function(ret, err) {
+                    that.goBack()
+                });
+            }
+        },
+        methods: {
+            pitch_on: function(nickname) {
+                var that = this;
+                api.openWin({
+                    name: 'chat_win',
+                    url: '../chat/chat_win.html',
+                    bounces: false,
+                    pageParam: {
+                        nickname: that.usInfo.nickname,
+                        id: api.pageParam.uid,
+                    }
+                });
+            },
+            goBack: function(name, animation) {
+                if (api.pageParam.from && api.pageParam.from == 'frame0') {
+                    $api.setStorage('curframename', 'frame0');
+                    api.execScript({
+                        name: 'root',
+                        frameName: 'frame0',
+                        script: 'frame0.getCheAplay()'
+                    });
+                }
+                api.closeWin({
+                    name: name || '',
+                    animation: animation || {
+                        type: "push", //动画类型（详见动画类型常量）
+                        subType: "from_left", //动画子类型（详见动画子类型常量）
+                        duration: 300 //动画过渡时间，默认300毫秒
+                    }
+                });
+            },
+            todetailPage: function(list, index, type) {
+                var that = this;
+                var newArry = [];
+                newArry = list.concat()
+                    // newArry = [...list]
+                setTimeout(function() {
+                    if (index > 9) {
+                        var zhengshu = parseInt((index + 1) / 5)
+                        var param_page = Math.ceil((index + 1) / 5) //page根据index向上取整
+                        var param_index = index - ((param_page - 1) * 5) //此时的index为取到的真实
+                            // if (((((index + 1) % 5) == 0))) {
+                            //     newArry.splice(0, ((zhengshu - 1) * 5));
+                            // } else {
+                            //     newArry.splice(0, (zhengshu * 5));
+                            // }
+                        if ((index % 10) == 0) {
+                            newArry.splice(0, ((zhengshu - 1) * 5));
+                            param_index = index - ((param_page - 2) * 5) //此时的index为取到的真实
+                        } else if (((((index + 1) % 5) == 0))) {
+                            newArry.splice(0, ((zhengshu - 1) * 5));
+                        } else {
+                            newArry.splice(0, (zhengshu * 5));
+                        }
+                    } else {
+                        if (newArry.length > 10) {
+                            newArry.slice(0, 10);
+                        } else {}
+                        if (index > 4) {
+                            var param_page = 2
+                        } else {
+                            var param_page = 1
+                        }
+                        var param_index = index
+                    }
+                    api.openWin({
+                        name: 'homevideo_info',
+                        url: '../home/homevideo_info.html',
+                        reload: true,
+                        pageParam: {
+                            from: 'othercenter',
+                            list: newArry,
+                            index: param_index,
+                            page: param_page,
+                            type: type,
+                            uid: api.pageParam.uid,
+                            otherParam: 'otherPage'
+                        }
+                    });
+                }, 10);
+
+            },
+            toFanPage: function(type) {
+                var that = this;
+                api.openWin({
+                    name: 'myfans',
+                    url: 'myfans.html',
+                    reload: true,
+                    pageParam: {
+                        type: type,
+                        isMe: that.usInfo.is_me,
+                        uid: api.pageParam.uid
+                    }
+                });
+            },
+            attention: function() {
+                var that = this;
+                http(focusUrl, 'post', {
+                        focus_id: api.pageParam.uid
+                    }, function(ret) {
+                        if (ret.code == 200) {
+                            api.toast({
+                                msg: ret.msg,
+                                duration: 2000,
+                                location: 'bottom'
+                            });
+                            that.usInfo.is_focus = ret.data.is_focus
+                            if (api.pageParam.from && api.pageParam.from == 'fanspage') {
+                                api.execScript({
+                                    name: 'fans',
+                                    frameName: 'fans_comment',
+                                    script: 'fans_comment.getList()'
+                                });
+                            }
+                            if (api.pageParam.from && api.pageParam.from == 'frame0') {
+                                api.sendEvent({
+                                    name: 'followChange',
+                                    extra: {
+                                        uid: api.pageParam.uid,
+                                        is_focus: ret.data.is_focus
+                                    }
+                                });
+                            }
+                        }
+                    },
+                    function(err) {
+                        alert(JSON.stringify(err));
+                    });
+            },
+            getInfo: function(act) {
+                var that = this;
+                if (act && act == 'loadMore') {
+                    that.page++;
+                    that.params = {
+                        page: that.page,
+                        uid: api.pageParam.uid,
+                        limit: 9
+                    }
+                } else {
+                    that.page = 1;
+                    that.params = {
+                        page: 1,
+                        uid: api.pageParam.uid,
+                        limit: 9
+                    }
+                }
+                http(videouserInfo, 'post', that.params, function(res) {
+                    if (res.code == 200) {
+                        that.usInfo = res.data;
+                        if (that.type == 1) {
+                            if (act && act == 'loadMore') {
+                                that.works_list = that.works_list.concat(res.data.works_list);
+                                if (res.data && res.data.works_list && res.data.works_list.length == 0) {
+                                    api.removeEventListener({
+                                        name: 'scrolltobottom'
+                                    })
+                                }
+                            } else {
+                                that.works_list = res.data.works_list;
+                                if (res.data && res.data.works_list && res.data.works_list.length == 0) {
+                                    api.removeEventListener({
+                                        name: 'scrolltobottom'
+                                    })
+                                }
+                            }
+                        } else if (that.type == 2) {
+                            if (act && act == 'loadMore') {
+                                that.love_list = that.love_list.concat(res.data.love_list);
+                                if (res.data && res.data.love_list && res.data.love_list.length == 0) {
+                                    api.removeEventListener({
+                                        name: 'scrolltobottom'
+                                    })
+                                }
+                            } else {
+                                that.love_list = res.data.love_list;
+                                if (res.data && res.data.love_list && res.data.love_list.length == 0) {
+                                    api.removeEventListener({
+                                        name: 'scrolltobottom'
+                                    })
+                                }
+                            }
+                        }
+                    } else if (res.code == 401) {
+                        api.sendEvent({
+                            name: 'pause',
+                            extra: {}
+                        });
+                        console.log("TO login.html");
+                        toPage('login', '../auth/login.html', {
+                            from: 'other'
+                        });
+                    }
+                }, function(err) {});
+            },
+            toPage: function(name, url, params) {
+                api.openWin({
+                    name: name,
+                    url: url,
+                    reload: true,
+                    pageParam: params || {}
+                });
+            },
+            choice: function(num) {
+                var that = this;
+                if (that.type != num) {
+                    that.works_list = [];
+                    that.love_list = [];
+                }
+                that.type = num;
+                that.page = 1;
+                that.getInfo()
+            }
+        }
+    })
+</script>

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="../../lib/iconfont/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <style>
+        #discuss_frame {
+            min-height: 100%;
+            background: #161823;
+        }
+        
+        .inputarea {
+            background: #1e1d35;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+        
+        .inputarea input {
+            background: #2b2b3e;
+            color: #ffffff;
+            flex: 1;
+            height: 25px;
+            line-height: 25px;
+            text-indent: 15px;
+            border-radius: 25px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="discuss_frame">
+        <div class='padding12' v-for="item in info.list">
+            <div class='flex_row_between'>
+                <div class='flex_row_left'>
+                    <img class='Bc' :src="item.headImg||'../../image/logo.png'" alt="" style='width: 35px;height: 35px;'>
+                    <div class='marginL1'>
+                        <div>
+                            <span class='color_gray fontSize12'>{{item.nickname}}</span>
+                            <!-- <span class='color_white fontSize10' style='background: red;padding: 1px 3px'>作者</span> -->
+                        </div>
+                        <div class='marginT5'>
+                            <span class='color_white fontSize12 marginR5'>{{item.content}}</span><span class='fontSize10 color_gray'>{{item.demo_create_time}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class='flex_col_center color_gray fontSize10' style='min-width: 30px;'>
+                    <img src="../../image/love.png" alt="" style='width: 20px;height: 20px;' v-if="item.is_like==0">
+                    <img src="../../image/loved.png" alt="" style='width: 20px;height: 20px;' v-if="item.is_like==1">
+                    <div>{{item.like_count}}</div>
+                </div>
+            </div>
+            <div class='marginT1' style='padding-left: 3rem' v-for="i in item.child_list">
+                <div class='flex_row_left fontSize12 color_gray'>
+                    <img class='Bc marginR5' :src="i.headImg||'../../image/logo.png'" alt="" style='width: 25px;height: 25px;'>
+                    <div>{{i.nickname}}</div>
+                </div>
+                <div class='flex_row_left marginT5'>
+                    <div class='marginR5 color_white fontSize12'>{{i.content}}</div>
+                    <div class='color_gray text-overflow_1 fontSize10' style='min-width: 40px;white-space: nowrap'>
+                        {{i.demo_create_time}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="inputarea padding1 flex_row_between">
+            <input type="text" :placeholder="langContent.comment_input" v-model="comment">
+            <!-- <div style="margin: 0 10px;">@</div> -->
+            <div class='color_white' @click="send()">{{langContent.send?langContent.send:''}}</div>
+        </div>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    var discuss_frame = new Vue({
+        el: "#discuss_frame",
+        data: {
+            page: 2,
+            comment: '',
+            video_id: '',
+            info: {
+                list: [{
+                    child_list: []
+                }]
+            },
+            langContent: {},
+            getCodetip: {},
+        },
+        created: function() {
+            var that = this
+            apiready = function() {
+                that.video_id = api.pageParam.video_id;
+                discuss_frame.$data.langContent = GlobleLanguageContent.comment;
+                discuss_frame.$data.getCodetip = GlobleLanguageContent.getCode;
+                that.getList();
+                //上拉加载
+                api.addEventListener({
+                    name: 'scrolltobottom',
+                    extra: {
+                        threshold: 5 //设置距离底部多少距离时触发，默认值为0，数字类型
+                    }
+                }, function(ret, err) {
+                    that.getList('loadMore');
+                });
+                api.setRefreshHeaderInfo({
+                    visible: true,
+                    bgColor: 'rgba(0,0,0,0)',
+                    textColor: '#666',
+                    textDown: that.getCodetip.textDown,
+                    textUp: that.getCodetip.textUp,
+                    textLoading: that.getCodetip.textLoading,
+                    showTime: false,
+                }, function(ret, err) {
+                    that.page = 2;
+                    that.getList();
+                    api.addEventListener({
+                        name: 'scrolltobottom',
+                        extra: {
+                            threshold: 5 //设置距离底部多少距离时触发，默认值为0，数字类型
+                        }
+                    }, function(ret, err) {
+                        that.getList('loadMore');
+                    });
+                    that.toDoRequest()
+                });
+            }
+        },
+        methods: {
+            getList: function(type) {
+                var that = this;
+                var param
+                if (type) {
+                    param = {
+                        page: that.page,
+                        video_id: that.video_id
+                    }
+                } else {
+                    param = {
+                        page: 1,
+                        video_id: that.video_id
+                    }
+                }
+                http(commentListUrl, 'post', param,
+                    function(ret) {
+                        if (ret.code == 200) {
+                            api.sendEvent({
+                                name: 'dis',
+                                extra: {
+                                    comment_count: ret.data.comment_count
+                                }
+                            });
+                            // console.log(JSON.stringify(ret))
+                            if (type == 'loadMore') {
+                                that.page++;
+                                // that.goodsList = ret.data;
+                                that.info.list = that.info.list.concat(ret.data.list);
+                                if (ret.data.list.length < 10) {
+                                    api.removeEventListener({
+                                        name: 'scrolltobottom'
+                                    })
+                                }
+                            } else {
+                                that.info = ret.data;
+                            }
+
+                        }
+                    });
+            },
+            // 刷新 初始化加载
+            toDoRequest: function() {
+                var that = this;
+                setTimeout(function() {
+                    api.refreshHeaderLoadDone(); //复位下拉刷新
+                    api.toast({
+                        msg: that.getCodetip.aready,
+                        duration: '1000',
+                        localtion: 'middle'
+                    });
+                }, 2000)
+            },
+            toPage: function(name, url, params) {
+                api.openWin({
+                    name: name,
+                    url: url,
+                    reload: true,
+                    pageParam: params || {}
+                });
+            },
+            send: function() {
+                var that = this;
+                if (that.comment == '') {
+                    api.toast({
+                        msg: that.langContent.tip,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+                http(commentVideoUrl, 'post', {
+                        video_id: that.video_id,
+                        comment: that.comment
+                    },
+                    function(ret) {
+                        if (ret.code == 200) {
+                            api.toast({
+                                msg: that.langContent.success,
+                                duration: 2000,
+                                location: 'bottom'
+                            });
+                            that.comment = '';
+                            that.getList()
+                        }
+                    },
+                    function(err) {
+                        // alert(JSON.stringify(err));
+                    });
+            }
+        }
+    })
+</script>

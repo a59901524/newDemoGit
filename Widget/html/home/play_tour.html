@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>打赏</title>
+    <link rel="stylesheet" type="text/css" href="../../lib/iconfont2/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <!-- <link rel="stylesheet" type="text/css" href="../../css/music.css" /> -->
+    <style>
+        body,
+        html,
+        #play_tour {
+            border-radius: 5px 5px 0 0;
+            background: #ffffff;
+        }
+        
+        #play_tour {
+            background: #ffffff;
+            width: 100vw;
+            height: 100vh;
+        }
+        
+        .submit_style {
+            width: 48%;
+            text-align: center;
+            padding: .8rem 0rem;
+            color: aliceblue;
+            background-color: #cfa867;
+            border-radius: 5px;
+        }
+        
+        .item {
+            padding: 1rem 2rem;
+        }
+        
+        .cancel_style {
+            width: 48%;
+            text-align: center;
+            padding: .8rem 0rem;
+            color: #000;
+            background-color: #fdecb8;
+            border-radius: 5px;
+        }
+        
+        .input_box {
+            /* background-color: #1a1d29; */
+            border: 1px solid #dddddd;
+            border-radius: 5px;
+            height: 3rem;
+            line-height: 3rem;
+        }
+        
+        input {
+            text-indent: 1rem;
+            font-size: 16px;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body class="">
+    <div id="play_tour" v-cloak>
+        <div class="fontSize14 item">
+            <div class="text_center color_default1 fontSize18">{{langContent.ds?langContent.ds:''}}</div>
+            <!-- <div class=" fontSize14 marginT1 ">
+                喜欢的我作品就给我打赏吧！谢谢打赏君
+            </div> -->
+            <div class=" fontSize14 marginT1 text_center color_time">
+                {{langContent.title?langContent.title:''}}
+            </div>
+            <div class="marginT1 color_black6">{{langContent.num?langContent.num:''}}</div>
+            <div class="input_box marginT1">
+                <input type="tel" v-model="num" placeholder="0">
+            </div>
+            <div class="marginT1 color_black6">{{langContent.psw?langContent.psw:''}}</div>
+            <div class="input_box marginT1">
+                <input type="password" v-model="pwd" :placeholder="langContent.psw_input">
+            </div>
+            <div class="flex_row_between marginT1">
+                <div class=" submit_style color_white" @click="submit">
+                    {{langContent.sure?langContent.sure:''}}
+                </div>
+                <div class=" cancel_style" @click="close">
+                    {{langContent.cancel?langContent.cancel:''}}
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    var play_tour = new Vue({
+        el: "#play_tour",
+        data: {
+            item: {},
+            video_img: '',
+            num: '',
+            pwd: '',
+            flag: true,
+            langContent: {},
+        },
+        created: function() {
+            var that = this;
+            apiready = function() {
+                that.item = api.pageParam.item
+                play_tour.$data.langContent = GlobleLanguageContent.play_tour;
+            }
+        },
+        methods: {
+            // 关闭
+            close: function() {
+                api.sendEvent({
+                    name: 'CanSwiper',
+                    extra: {}
+                });
+                api.closeFrame({});
+            },
+            submit: function() {
+                var that = this
+                var reg = /^[1-9]?[0-9]*\.[0-9]*$/; //任务数量控制整数
+                if (!that.num) {
+                    api.toast({
+                        msg: that.langContent.renum,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return
+                }
+                if (that.num < 0) {
+                    api.toast({
+                        msg: that.langContent.renum,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return
+                }
+                if (reg.test(that.num) == true) {
+                    api.toast({
+                        msg: that.langContent.intnum,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return
+                }
+                if (!that.pwd) {
+                    api.toast({
+                        msg: that.langContent.inpsw,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return
+                }
+                var param = {
+                    give_uid: that.item.uid,
+                    num: that.num,
+                    password: that.pwd,
+                    // video_id: that.item.video_id
+                }
+                if (that.flag) {
+                    that.flag = false;
+                    http(give_video_giftUrl, 'post', param, function(ret) {
+                        that.flag = true;
+                        if (ret.code == 200) {
+                            api.toast({
+                                msg: ret.msg,
+                                duration: 2000,
+                                location: 'bottom'
+                            });
+                            setTimeout(function() {
+                                api.sendEvent({
+                                    name: 'CanSwiper',
+                                    extra: {}
+                                });
+                                api.closeFrame({});
+                            }, 2000);
+
+                        }
+                    })
+                } else {
+                    api.toast({
+                        msg: that.langContent.subing,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+            },
+        }
+    })
+</script>

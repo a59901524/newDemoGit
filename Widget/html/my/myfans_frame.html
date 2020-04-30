@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>设置</title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../lib/iconfont/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/edit.css" />
+</head>
+
+<body>
+    <div id="myfans_frame" class="" style="min-height: 100%;" v-cloak>
+        <div class="padding1 flex_row_between bg_white bbd" v-for="user in list">
+            <img class="userimg Bc" :src="user.avatar?user.avatar:'../../image/logo.png'" alt="" />
+            <div class="info">
+                <div class="color_black3 fontSize14">{{user.nickname}}</div>
+                <div class="color_black6 fontSize12">ID:{{user.user_sn}} {{langContent.fans?langContent.fans:''}}:{{user.fans_count}}</div>
+                <div class="color_black6 fontSize12">{{user.signature}}</div>
+            </div>
+            <div class="flow color_default1" v-show="user.is_focus==1" @click="attention(user,0)">{{langContent.sta1?langContent.sta1:''}}</div>
+            <div class="flow color_default1" v-show="user.is_focus==0" @click="attention(user,1)">{{langContent.sta2?langContent.sta2:''}}</div>
+        </div>
+        <p v-show="isAll&&list.length>0" class="color_gray text_center padding1">{{getCodetip.nomore?getCodetip.nomore:''}}</p>
+        <p v-show="list.length<=0" class="color_gray text_center" style="padding-top:50%;">{{getCodetip.nocontent?getCodetip.nocontent:''}}</p>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    var myfans_frame = new Vue({
+        el: '#myfans_frame',
+        data: {
+            type: 1,
+            page: 1,
+            params: {},
+            list: [],
+            isAll: false,
+            langContent: {},
+            getCodetip: {}
+        },
+        created: function() {
+            var that = this;
+            apiready = function() {
+                that.type = api.pageParam.type;
+                myfans_frame.$data.langContent = GlobleLanguageContent.myfans;
+                myfans_frame.$data.getCodetip = GlobleLanguageContent.getCode;
+                if (that.type == 1) {
+                    that.getFans();
+                } else {
+                    that.getIdol();
+                }
+                api.setRefreshHeaderInfo({
+                    visible: true,
+                    bgColor: 'rgba(0,0,0,0)',
+                    textColor: '#666',
+                    textDown: that.getCodetip.textDown,
+                    textUp: that.getCodetip.textUp,
+                    textLoading: that.getCodetip.textLoading,
+                    showTime: false,
+                }, function(ret, err) {
+                    that.isAll = false;
+                    if (that.type == 1) {
+                        that.getFans();
+                    } else {
+                        that.getIdol();
+                    }
+                    setTimeout(function() {
+                        api.refreshHeaderLoadDone(); //复位下拉刷新
+                        api.toast({
+                            msg: that.getCodetip.aready,
+                            duration: '1000',
+                            localtion: 'middle'
+                        });
+                    }, 2000)
+                    api.addEventListener({
+                        name: 'scrolltobottom',
+                        extra: {
+                            threshold: 5 //设置距离底部多少距离时触发，默认值为0，数字类型
+                        }
+                    }, function(ret, err) {
+                        if (that.type == 1) {
+                            that.getFans('loadMore');
+                        } else {
+                            that.getIdol('loadMore');
+                        }
+                    });
+                });
+                api.addEventListener({
+                    name: 'scrolltobottom',
+                    extra: {
+                        threshold: 5 //设置距离底部多少距离时触发，默认值为0，数字类型
+                    }
+                }, function(ret, err) {
+                    if (that.type == 1) {
+                        that.getFans('loadMore');
+                    } else {
+                        that.getIdol('loadMore');
+                    }
+                });
+
+            }
+        },
+        methods: {
+            attention: function(obj, num) {
+                var that = this;
+                http(focusUrl, 'post', {
+                    focus_id: obj.uid
+                }, function(ret) {
+                    if (ret.code == 200) {
+                        api.toast({
+                            msg: ret.msg,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                        obj.is_focus = num
+                    }
+                    api.execScript({
+                        name: 'myvideo',
+                        script: 'myvideo.getInfo()'
+                    });
+                }, function(err) {
+                    // alert(JSON.stringify(err));
+                });
+            },
+            getFans: function(act) {
+                var that = this;
+                if (act == 'loadMore') {
+                    that.page++;
+                    if (api.pageParam.uid) {
+                        that.params = {
+                            page: that.page,
+                            uid: api.pageParam.uid
+                        }
+                    } else {
+                        that.params = {
+                            page: that.page,
+                        }
+                    }
+                } else {
+                    that.page = 1;
+                    if (api.pageParam.uid) {
+                        that.params = {
+                            page: 1,
+                            uid: api.pageParam.uid
+                        }
+                    } else {
+                        that.params = {
+                            page: 1,
+                        }
+                    }
+                }
+                http(fanlistUrl, 'post', that.params, function(res) {
+                    if (res.code == 200) {
+                        if (act == 'loadMore') {
+                            that.list = that.list.concat(res.data);
+                            if (res.data && res.data.length == 0) {
+                                api.removeEventListener({
+                                    name: 'scrolltobottom'
+                                })
+                                that.isAll = true;
+                            }
+                        } else {
+                            that.list = res.data;
+                            if (res.data && res.data.length < 10) {
+                                api.removeEventListener({
+                                    name: 'scrolltobottom'
+                                })
+                                that.isAll = true;
+                            }
+                        }
+                    }
+                }, function(err) {
+                    // console.error(JSON.stringify(err));
+                })
+            },
+            getIdol: function(act) {
+                var that = this;
+                if (act == 'loadMore') {
+                    that.page++;
+                    if (api.pageParam.uid) {
+                        that.params = {
+                            page: that.page,
+                            uid: api.pageParam.uid
+                        }
+                    } else {
+                        that.params = {
+                            page: that.page,
+                        }
+                    }
+                } else {
+                    that.page = 1;
+                    if (api.pageParam.uid) {
+                        that.params = {
+                            page: 1,
+                            uid: api.pageParam.uid
+                        }
+                    } else {
+                        that.params = {
+                            page: 1,
+                        }
+                    }
+                }
+                http(idollistUrl, 'post', that.params, function(res) {
+                    if (res.code == 200) {
+                        if (act == 'loadMore') {
+                            that.list = that.list.concat(res.data);
+                            if (res.data && res.data.length == 0) {
+                                api.removeEventListener({
+                                    name: 'scrolltobottom'
+                                })
+                                that.isAll = true;
+                            }
+                        } else {
+                            that.list = res.data;
+                            if (res.data && res.data.length < 10) {
+                                api.removeEventListener({
+                                    name: 'scrolltobottom'
+                                })
+                                that.isAll = true;
+                            }
+                        }
+                        // that.list.forEach(function (element) {
+                        //     element.is_focus = 1
+                        // });
+                        // that.list = JSON.parse(JSON.stringify(that.list))
+                    }
+                }, function(err) {
+                    // console.error(JSON.stringify(err));
+                })
+            },
+
+        }
+    });
+</script>

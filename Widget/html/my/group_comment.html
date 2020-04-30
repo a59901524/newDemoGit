@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>队员列表</title>
+    <link rel="stylesheet" href="../../lib/iconfont2/iconfont.css">
+    <link rel="stylesheet" href="../../css/common.css">
+    <link rel="stylesheet" type="text/css" href="../../css/new/reset.css">
+    <link rel="stylesheet" type="text/css" href="../../css/new/myCommunity.css">
+    <script type="text/javascript" src="../../script/lib-flexible.js"></script>
+</head>
+
+<body class="color_CC">
+    <div id="group_comment" class="posi_relative myCommunity" v-cloak>
+        <div class="search">
+            <input type="tel" :placeholder="langContent.tel_input" v-model="keyword" v-on:input="getList()" @keyup.enter="getList()">
+        </div>
+        <div class="comList bj bjTu">
+            <div class="cL">
+                <div class="comLeft">
+                    队员： <span class="col00d3fc">0</span>
+                </div>
+                <div class="comRight">
+                    <div class="li col00d3fc">注册时间</div>
+                    <div class="li">团队人数</div>
+                    <div class="li">会员等级</div>
+                </div>
+            </div>
+            <div class="ul">
+                <div class="li" v-for="item in list">
+                    <div class="img"><img :src="item.avatar?item.avatar:'../../image/logo.png'" alt=""></div>
+                    <div class="content2">
+                        <div class="ptop">
+                            <div class="left">{{item.mobile}}<span v-show="item.auth_primary>0"><img :src="ysm" alt=""></span></div>
+                        </div>
+                        <div class="pbot fontSize22">
+                            <div class="item" style="display: flex; align-items: flex-end;">
+                                <div v-if="item.level_id == 1">{{langContent.type1?langContent.type1:''}}</div>
+                                <div v-if="item.level_id == 2">{{langContent.type2?langContent.type2:''}}</div>
+                                <div v-if="item.level_id == 3">{{langContent.type3?langContent.type3:''}}</div>
+                                <div v-if="item.level_id == 4">{{langContent.type4?langContent.type4:''}}</div>
+                                <div v-if="item.level_id == 5">{{langContent.type5?langContent.type5:''}}</div>
+                                <div v-if="item.level_id == 6">{{langContent.type6?langContent.type6:''}}</div>
+                                <div>{{langContent.time?langContent.time:''}}&nbsp;{{item.create_time}}</div>
+                            </div>
+                            <div class="item">
+                                <div class="itemLi"><span>活跃度</span>{{fixTwo(item.total_lively)?fixTwo(item.total_lively):'0'}}</div>
+                                <div class="itemLi"><span>团队</span>{{item.team_number?item.team_number:'0'}}</div>
+                            </div>
+                            <div class="item">
+                                <div class="itemLi"><span>森林</span>{{item.forest_number?item.forest_number:'0'}}</div>
+                                <div class="itemLi"><span>直推</span>{{item.underling_number?item.underling_number:'0'}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p v-show="isAll&&list.length>0" class="color_gray text_center padding1">{{getCodetip.nomore?getCodetip.nomore:''}}</p>
+            <p v-show="list.length<=0" class="color_gray text_center" style="padding-top:50%;">{{getCodetip.nocontent?getCodetip.nocontent:''}}</p>
+        </div>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    var group_comment = new Vue({
+        el: "#group_comment",
+        data: {
+            type: '',
+            page: 1,
+            keyword: '',
+            ysm: '../../image/vip.svg',
+            wsm: '../../image/wsm.png',
+            langContent: {},
+            getCodetip: {},
+            list: {},
+            isAll: false,
+            sort: 1,
+            isShow: false,
+            info: {},
+        },
+        created: function() {
+            var that = this
+            apiready = function() {
+                that.type = api.pageParam.type;
+                group_comment.$data.langContent = GlobleLanguageContent.group_comment;
+                group_comment.$data.getCodetip = GlobleLanguageContent.getCode;
+                that.getList()
+                that.getInfo();
+                //上拉加载
+                api.addEventListener({
+                    name: 'scrolltobottom',
+                    extra: {
+                        threshold: 5 //设置距离底部多少距离时触发，默认值为0，数字类型
+                    }
+                }, function(ret, err) {
+                    // if (api.pageParam.title == '交易信箱') {
+
+                    // } else {
+                    that.getList('loadMore');
+                    // }
+                });
+                api.setRefreshHeaderInfo({
+                    visible: true,
+                    bgColor: 'rgba(0,0,0,0)',
+                    textColor: '#666',
+                    textDown: that.getCodetip.textDown,
+                    textUp: that.getCodetip.textUp,
+                    textLoading: that.getCodetip.textLoading,
+                    showTime: false,
+                }, function(ret, err) {
+                    that.page = 1;
+                    that.getList();
+                    api.addEventListener({
+                        name: 'scrolltobottom',
+                        extra: {
+                            threshold: 5 //设置距离底部多少距离时触发，默认值为0，数字类型
+                        }
+                    }, function(ret, err) {
+                        that.getList('loadMore');
+                    });
+                    that.toDoRequest()
+                });
+            }
+        },
+        filters: {
+            // 过滤时间戳
+            format: function(value) {    
+                var time = new Date(value * 1000);
+                var y = time.getFullYear();
+                var m = time.getMonth() + 1;
+                var d = time.getDate();   
+                return y + '.' + m + '.' + d
+            }
+        },
+        methods: {
+            getInfo: function() {
+                var that = this;
+                http(getuserinfoUrl, 'post', {}, function(ret) {
+                    if (ret.code == 200) {
+                        that.info = ret.data;
+                    }
+                })
+            },
+            // 选中类型
+            pitch_on: function(num) {
+                var that = this;
+                that.sort = num;
+                setTimeout(function() {
+                    that.isShow = !that.isShow
+                }, 500);
+                that.getList();
+                api.toast({
+                    msg: that.getCodetip.textLoading,
+                    duration: 3000,
+                    location: 'bottom'
+                });
+            },
+            // 隐藏显示类型列表
+            changeList: function() {
+                var that = this
+                that.isShow = !that.isShow
+            },
+            // 删除搜索内容
+            clear: function() {
+                var that = this
+                this.keyword = ''
+                that.getList();
+            },
+            toPage: function(name, url, params) {
+                api.openWin({
+                    name: name,
+                    url: url,
+                    reload: true,
+                    pageParam: params || {}
+                });
+            },
+            fixTwo: function(num) {
+                if (num && num != 0 && Number(num) != 0) {
+                    return Number(num).toFixed(2);
+                } else {
+                    return 0.00;
+                }
+            },
+            getList: function(act) {
+                var that = this;
+                var param;
+                var Url;
+                if (act == 'loadMore') {
+                    that.page++;
+                    param = {
+                        page: that.page,
+                        sort: that.sort,
+                        keyword: that.keyword
+                    }
+                } else {
+                    param = {
+                        page: 1,
+                        sort: that.sort,
+                        keyword: that.keyword
+                    }
+                }
+                if (that.type == 1) {
+                    // console.log(JSON.stringify(ret) + '这里是我的全部团队成员列表')
+                    Url = myTeamList
+                } else if (that.type == 4) {
+                    // console.log(JSON.stringify(ret) + '这里是我的团队列表')
+                    Url = myUnderlingList
+                } else if (that.type == 2) {
+                    // console.log(JSON.stringify(ret) + '这里是已实名')
+                    Url = primary_List_Ysm
+                } else if (that.type == 3) {
+                    // console.log(JSON.stringify(ret) + '这里是未实名')
+                    Url = primary_List_Wsm
+                }
+                http(Url, 'post', param, function(ret) {
+                    // console.log(JSON.stringify(ret) + '这里是我的全部团队成员列表')
+                    if (ret.code == 200) {
+                        if (act == 'loadMore') {
+                            that.list = that.list.concat(ret.data.data);
+                            if (ret.data && ret.data.data && ret.data.data.length < 10) {
+                                api.removeEventListener({
+                                    name: 'scrolltobottom'
+                                })
+                                that.isAll = true;
+                            }
+                        } else {
+                            that.list = ret.data.data;
+                            if (ret.data && ret.data.data && ret.data.data.length < 10) {
+                                api.removeEventListener({
+                                    name: 'scrolltobottom'
+                                })
+                                that.isAll = true;
+                            }
+                        }
+                    }
+                })
+            },
+            // 刷新 初始化加载
+            toDoRequest: function() {
+                var that = this;
+                var that = this;
+                setTimeout(function() {
+                    api.refreshHeaderLoadDone(); //复位下拉刷新
+                    api.toast({
+                        msg: that.getCodetip.aready,
+                        duration: '1000',
+                        localtion: 'middle'
+                    });
+                }, 2000)
+            },
+        }
+    })
+</script>

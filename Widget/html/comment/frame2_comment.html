@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>我的矿石</title>
+    <link rel="stylesheet" href="../../css/common.css">
+    <link rel="stylesheet" type="text/css" href="../../css/new/reset.css">
+    <link rel="stylesheet" type="text/css" href="../../css/new/myMineral.css">
+    <script type="text/javascript" src="../../script/lib-flexible.js"></script>
+</head>
+
+<body>
+    <div id="frame2_comment" class='myMineral' v-cloak>
+        <div class="content2">
+            <div class="contLi contNo" v-if='!goodsList.list.length'>
+                <div class="cont colabbdff">
+                    <p>暂未购买此类矿机</p>
+                    <p>建议前去矿机市场购买</p>
+                </div>
+            </div>
+            <div class="contLi" v-for="item in goodsList.list">
+                <div class="left" v-if="type==1"><img :src="'../../image/new/d'+proid+'.png'" alt=""></div>
+                <div class="left" v-if="type==2"><img :src="'../../image/new/d'+proid+'.png'" alt=""></div>
+                <div class="right">
+                    <div class="title fontSize26">{{item.forest_name}}</div>
+                    <div class="p dis">
+                        <div class="p1">开采率：<span class="col00fbfd">{{item.calculation_power}}/h</span></div>
+                        <div class="p2"><span class="colff8900">{{item.status}}</span></div>
+                    </div>
+                    <div class="p">开采总量：{{item.profit_total}}HDC</div>
+                    <div class="p">生长周期：<span class="col00fbfd">{{item.run}}/{{item.cycle}}h</span></div>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="text_center color_default1" style="padding-top: 1rem;" v-if="goodsList.list.length == 0 && ishow && type == 1">
+            <div>{{langContent.no1?langContent.no1:''}}</div>
+            <div>{{langContent.tip1?langContent.tip1:''}}</div>
+        </div>
+        <div class="text_center color_default1" style="padding-top: 1rem;" v-if="goodsList.list.length == 0 && ishow && type == 2">
+            <div>{{langContent.no2?langContent.no2:''}}</div>
+            <div>{{langContent.tip2?langContent.tip2:''}}</div>
+        </div> -->
+        <!-- <div class="flex_row_between padding1 list bg_white" style="align-items: flex-start;" v-for="item in goodsList.list">
+            <img v-if="type==1" class="treetumb Bc marginR5" :src="'../../image/tree/tree'+proid+'sz.png'" alt="">
+            <img v-if="type==2" class="treetumb Bc marginR5" :src="'../../image/tree/tree'+proid+'gq.png'" alt="">
+            <div class="color_999 l_left fontSize12" style="align-items: flex-start;">
+                <div class="flex_row_between">
+                    <div class="fontSize16 colorfe font_bold">{{item.forest_name}}</div>
+                    <div class="marginT1  text-overflow_1" style="color: #2cc597;" v-if="type==1">
+                        {{item.status}}
+                    </div>
+                    <div class="marginT1  text-overflow_1 color_default" v-if="type==2">
+                        {{item.status}}
+                    </div>
+                </div>
+                <div class="flex_row_between" style="align-items: flex-end;">
+                    <div style="flex: 1;">
+                        <div class="marginT1">{{langContent.kcl?langContent.kcl:''}}：{{item.calculation_power}}/h</div>
+                        <div class="marginT1">{{langContent.kczl?langContent.kczl:''}}：{{item.profit_total}} HDC</div>
+                        <div class="marginT1">{{langContent.szzq?langContent.szzq:''}}：{{item.run}}/{{item.cycle}}h</div>
+                    </div>
+                    <div class=" marginT1" v-if="type==1" style="padding: 5px 10px;border-radius: 5px;background: #f8f8f8;color: #cb974d;" @click="toPage('trees_details','trees_details.html',{id:item.id,proid:proid})">
+                        {{langContent.look?langContent.look:''}}
+                    </div>
+                </div>
+            </div>
+        </div> -->
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    var frame2_comment = new Vue({
+        el: "#frame2_comment",
+        data: {
+            type: '',
+            page: 2,
+            goodsList: {
+                list: []
+            },
+            proid: 0,
+            ishow: false,
+            langContent: {},
+            getCodetip: {}
+        },
+        created: function() {
+            var that = this
+            apiready = function() {
+                frame2_comment.$data.langContent = GlobleLanguageContent.frame2_comment;
+                frame2_comment.$data.getCodetip = GlobleLanguageContent.getCode;
+                that.type = api.pageParam.type;
+                that.proid = api.pageParam.proid;
+                that.getGoods();
+                // //上拉加载
+                // api.addEventListener({
+                //     name: 'scrolltobottom',
+                //     extra: {
+                //         threshold: 5 //设置距离底部多少距离时触发，默认值为0，数字类型
+                //     }
+                // }, function(ret, err) {
+                //     that.getGoods('loadMore');
+                // });
+                // api.setRefreshHeaderInfo({
+                //     visible: true,
+                //     bgColor: '#1a1d29',
+                //     textColor: '#ffffff',
+                //     textDown: that.getCodetip.textDown,
+                //     textUp: that.getCodetip.textUp,
+                //     textLoading: that.getCodetip.textLoading,
+                //     showTime: false,
+                // }, function(ret, err) {
+                //     that.page = 2;
+                //     that.getGoods();
+                //     api.addEventListener({
+                //         name: 'scrolltobottom',
+                //         extra: {
+                //             threshold: 5 //设置距离底部多少距离时触发，默认值为0，数字类型
+                //         }
+                //     }, function(ret, err) {
+                //         that.getGoods('loadMore');
+                //     });
+                //     that.toDoRequest()
+                // });
+                api.addEventListener({
+                    name: 'details'
+                }, function(ret, err) {
+                    if (ret.value) {
+                        that.type = ret.value;
+                        that.getGoods();
+                    }
+                })
+            }
+        },
+        methods: {
+            toPage: function(name, url, params) {
+                api.openWin({
+                    name: name,
+                    url: url,
+                    reload: true,
+                    pageParam: params || {}
+                });
+            },
+            getGoods: function(type) {
+                var that = this;
+                var param
+                    // if (type == 'loadMore') {
+                    //     param = {
+                    //         type: that.type,
+                    //         page: that.page,
+                    //         pro_id: that.proid
+                    //     }
+                    // } else {
+                param = {
+                        // page: 1,
+                        status: that.type,
+                        forest_id: that.proid
+                    }
+                    // }
+                http(myProListUrl, 'post', param,
+                    function(ret) {
+                        if (ret.code == 200) {
+                            if (type == 'loadMore') {
+                                that.page++;
+                                // that.goodsList = ret.data;
+                                that.goodsList.list = that.goodsList.list.concat(ret.data.list);
+                                // if (ret.data.list.length < 10) {
+                                //     api.removeEventListener({
+                                //         name: 'scrolltobottom'
+                                //     })
+                                // }
+                            } else {
+                                that.goodsList = ret.data;
+                                that.ishow = true
+                            }
+
+                        }
+                    });
+            },
+            // 刷新 初始化加载
+            toDoRequest: function() {
+                var that = this;
+                setTimeout(function() {
+                    api.refreshHeaderLoadDone(); //复位下拉刷新
+                    api.toast({
+                        msg: that.getCodetip.aready,
+                        duration: '1000',
+                        localtion: 'middle'
+                    });
+                }, 2000)
+            }
+        }
+    })
+</script>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>粉丝列表</title>
+    <link rel="stylesheet" type="text/css" href="../../lib/iconfont2/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <style>
+        #fans {
+            position: absolute;
+            top: 45px;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body class="has_header">
+
+    <div id="fans">
+        <header class="header  color_default1">
+            <i class="iconfont icon-xiangzuo" onclick="goBack()"></i>
+            <div>{{langContent.title?langContent.title:''}}</div>
+        </header>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    var fans = new Vue({
+        el: "#fans",
+        data: {
+            langContent: {},
+        },
+        created: function() {
+            var that = this
+            apiready = function() {
+                fixStatusbar('header,.header,.headers', '.content');
+                fans.$data.langContent = GlobleLanguageContent.fans_comment;
+                that.openFrame()
+            }
+        },
+        methods: {
+            openFrame: function() {
+                api.openFrame({
+                    name: 'fans_comment',
+                    url: 'fans_comment.html',
+                    rect: {
+                        x: 0,
+                        y: $api.dom(".header").offsetHeight,
+                        w: 'auto',
+                        h: 'auto'
+                    },
+                    reload: true,
+                    pageParam: {}
+                })
+            },
+            toPage: function(name, url, params) {
+                api.openWin({
+                    name: name,
+                    url: url,
+                    reload: true,
+                    pageParam: params || {}
+                });
+            }
+        }
+    })
+</script>

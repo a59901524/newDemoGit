@@ -1,0 +1,2371 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>地图</title>
+    <!-- <link rel="stylesheet" type="text/css" href="../../css/api.css" /> -->
+    <link rel="stylesheet" type="text/css" href="../../lib/iconfont2/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <style>
+        /* 工作室 */
+        
+        img {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+        }
+        
+        .padding_t_b {
+            padding-top: 1rem;
+        }
+        
+        .box_left {
+            width: 72%;
+        }
+        
+        .box_right {
+            width: 28%;
+        }
+        
+        .null {
+            margin-top: 250px;
+        }
+        
+        .path {
+            height: 3rem;
+            width: 3rem;
+            font-size: 10px;
+            line-height: 3rem;
+            text-align: center;
+            background-color: #007acc;
+            border-radius: 50%;
+            color: #fff;
+        }
+        
+        .Brd1 {
+            width: 2rem;
+            height: 2rem;
+            line-height: 2rem;
+            text-align: center;
+            border-radius: 50%;
+            background: #f8f8f8;
+            color: #cb974d;
+            margin: .4rem 0rem;
+        }
+        
+        .box_left_name {
+            width: 20%;
+        }
+        
+        .text-overflow_1 {
+            width: 80%;
+        }
+    </style>
+</head>
+
+<body class="">
+    <div id="Bmap" class="content color_black6" v-cloak>
+        <header class="header  color_default1">
+            <i class="iconfont icon-xiangzuo" onclick="goBack()"></i>
+            <div class="fontSize16">{{langContent.title?langContent.title:''}}</div>
+        </header>
+        <!-- 工作室 -->
+        <div class="null"></div>
+        <div class="flex_row_between bg-white padding1 bbd" v-for="map_data in mapdatalist">
+            <div class="box_left" @click="details(map_data)">
+                <div class="color_black3 fontSize16">{{map_data.studioName}}</div>
+                <div class="padding_t_b ">
+                    <div class="flex_row_left">
+                        <div class="box_left_name">{{map_data.userName}}</div>
+                        <div>{{map_data.mobile}}</div>
+
+                    </div>
+
+                    <div class="flex_row_left">
+                        <div class="box_left_name">{{langContent.site?langContent.site:''}}</div>
+                        <div class="text-overflow_1"> {{map_data.site}}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="box_right" @click="onpenNavigation(map_data)">
+                <div class="flex_row_right">
+                    <div>
+                        {{map_data.distance?map_data.distance:'0'}} km
+                    </div>
+                </div>
+                <div class="flex_row_right ">
+                    <div class=" Brd1">
+                        <i class="iconfont icon-luxian"></i>
+                    </div>
+                </div>
+                <div>
+                    <div class="flex_row_right">
+                        <div class="fontSize10">{{langContent.lx?langContent.lx:''}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    var Bmap = new Vue({
+        el: '#Bmap',
+        data: {
+            langContent: {},
+            getCodetip: {},
+            mapdatalist: [{
+                    id: 3,
+                    lon: 114.2091600000,
+                    lat: 22.6489930000,
+                    studioName: '深圳市星梦社区工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '吴成兴', //负责人名字
+                    mobile: '15811822196', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '深圳龙岗区横岗地铁C口', //工作室地址
+                    area: 60, //面积
+                    receptionNum: 20, // 接待人数
+                    capacity: '是', //具备讲师能力
+                    weChat: 'iriszhang68', //微信号
+                    postbox: '690648434@qq.com',
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/shenzhen1.jpg',
+                        'http://yjvideo.stockhome.com.cn/shenzhen2.jpg',
+                        'http://yjvideo.stockhome.com.cn/shenzhen3.jpg',
+                        'http://yjvideo.stockhome.com.cn/shenzhen4.jpg',
+                    ]
+                }, {
+                    id: 5,
+                    lon: 114.4299090000,
+                    lat: 23.0393700000,
+                    studioName: '惠州市币胜客社区工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '胡伟霞', //负责人名字
+                    mobile: '13824239098', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '惠州市惠城区河南岸富龙翡翠欧庭11号楼108号', //工作室地址
+                    area: 60, //面积
+                    receptionNum: 20, // 接待人数
+                    capacity: '是', //具备讲师能力
+                    weChat: '13824239098', //微信号
+                    postbox: '', //邮箱
+                    imgdata: [
+                        // 'http://yjvideo.stockhome.com.cn/kong.png',
+                        // 'http://yjvideo.stockhome.com.cn/kong.png',
+                        // 'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+                }, {
+                    id: 7,
+                    lon: 120.6923600000,
+                    lat: 31.3558810000,
+                    studioName: '苏州市雪影社区工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '刘凌松', //负责人名字
+                    mobile: '18556735420', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '苏州市工业园区唯和路2号都市VIP1栋', //工作室地址
+                    area: 62, //面积
+                    receptionNum: 20, // 接待人数
+                    capacity: '是', //具备讲师能力
+                    weChat: '18556735420', //微信号
+                    postbox: '834204730@qq.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/suzhou1.jpg',
+                        'http://yjvideo.stockhome.com.cn/suzhou2.jpg',
+                        'http://yjvideo.stockhome.com.cn/suzhou3.jpg',
+                        'http://yjvideo.stockhome.com.cn/suzhou4.jpg',
+                    ]
+                }, {
+                    id: 8,
+                    lon: 108.4006000000,
+                    lat: 22.8071100000,
+                    studioName: '南宁市缘分社区工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '黄成忠', //负责人名字
+                    mobile: '18907741299', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '南宁市东盟商务区合作路3号 .印度尼西亚园', //工作室地址
+                    area: 100, //面积
+                    receptionNum: 30, // 接待人数
+                    capacity: '是', //具备讲师能力
+                    weChat: '13788306584', //微信号
+                    postbox: '13807740908@163.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/nanning1.JPG',
+                        'http://yjvideo.stockhome.com.cn/nanning2.JPG',
+                        'http://yjvideo.stockhome.com.cn/nanning3.JPG',
+                        'http://yjvideo.stockhome.com.cn/nanning4.JPG',
+                        'http://yjvideo.stockhome.com.cn/nanning5.JPG',
+                    ]
+                }, {
+                    id: 4,
+                    lon: 113.6727980000,
+                    lat: 22.8146990000,
+                    studioName: '东莞市工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '邓耀恒', //负责人名字
+                    mobile: '18681057783', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '东莞市虎门镇外环岛路', //工作室地址
+                    area: 300, //面积
+                    receptionNum: 30, // 接待人数
+                    capacity: '是', //具备讲师能力
+                    weChat: '623258716', //微信号
+                    postbox: '623258716@qq.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+                }, {
+                    id: 9,
+                    lon: 119.8943600000,
+                    lat: 29.4506900000,
+                    studioName: '金华市努力社区工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '黄漾', //负责人名字
+                    mobile: '15669625888', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '金华市浦江县大桥北路49号', //工作室地址
+                    area: 120, //面积
+                    receptionNum: 30, // 接待人数
+                    capacity: '是', //具备讲师能力
+                    weChat: '15669625888', //微信号
+                    postbox: '2099445661@qq.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/jinhua1.jpg',
+                        'http://yjvideo.stockhome.com.cn/jinhua2.jpg',
+                        'http://yjvideo.stockhome.com.cn/jinhua3.jpg',
+                    ]
+                }, {
+                    id: 10,
+                    lon: 110.2555080000,
+                    lat: 25.2710700000,
+                    studioName: '桂林市缘分社区工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '谢莉艳', //负责人名字
+                    mobile: '18907734733', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '桂林市秀峰区清华园商业街308室', //工作室地址
+                    area: 120, //面积
+                    receptionNum: 30, // 接待人数
+                    capacity: '是', //具备讲师能力
+                    weChat: '18907734733', //微信号
+                    postbox: '1152299758@qq.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/guilin1.jpg',
+                        'http://yjvideo.stockhome.com.cn/guilin2.jpg',
+                        'http://yjvideo.stockhome.com.cn/guilin3.jpg',
+                        'http://yjvideo.stockhome.com.cn/guilin4.jpg',
+                    ]
+                }, {
+                    id: 11,
+                    lon: 113.2154010000,
+                    lat: 35.2230110000,
+                    studioName: '焦作市工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '王广花', //负责人名字
+                    mobile: '18137209375', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '焦作市普济路云达国际酒店对面3楼', //工作室地址
+                    area: 60, //面积
+                    receptionNum: 30, // 接待人数
+                    capacity: '是', //具备讲师能力
+                    weChat: '18137209375', //微信号
+                    postbox: '2072653178@qq.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+                },
+
+                {
+                    id: 14,
+                    lon: 113.1246000000,
+                    lat: 28.2447900000,
+                    studioName: '长沙市工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '帅林霞', //负责人名字
+                    mobile: '18229426626', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '长沙市长沙县当代广场宜尚酒店1002', //工作室地址
+                    area: 70, //面积
+                    receptionNum: 20, // 接待人数
+                    capacity: '是', //具备讲师能力
+                    weChat: '18229426626', //微信号
+                    postbox: '', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+                }, {
+                    id: 16,
+                    lon: 115.9116770000,
+                    lat: 28.6553060000,
+                    studioName: '南昌市未来联盟社区工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '戴亿帮', //负责人名字
+                    mobile: '13037219498', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '南昌市西湖区国贸酒店B座602', //工作室地址
+                    area: 75, //面积
+                    receptionNum: 20, // 接待人数
+                    capacity: '是', //具备讲师能力
+                    weChat: 'hsp2510', //微信号
+                    postbox: '1227779999@qq.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+                }, {
+                    id: 17,
+                    lon: 121.2419700000,
+                    lat: 37.4965400000,
+                    studioName: '烟台市星河社区工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '蔡娟', //负责人名字
+                    mobile: '13605352119', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '烟台市福山区县府街枫林家纺', //工作室地址
+                    area: 300, //面积
+                    receptionNum: 30, // 接待人数
+                    capacity: '是', //具备讲师能力
+                    weChat: 'juan793977', //微信号
+                    postbox: '70031416@qq.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/yantai1.jpg',
+                        'http://yjvideo.stockhome.com.cn/yantai2.jpg',
+                        'http://yjvideo.stockhome.com.cn/yantai3.jpg',
+                    ]
+                },
+
+                {
+                    id: 18,
+                    lon: 118.7907180000,
+                    lat: 25.0170100000,
+                    studioName: '泉州市励志社区工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '傅章峰', //负责人名字
+                    mobile: '18458096588', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '泉州市惠安县(建煌豪园)霞东村林柄168-309号汽车南站旁', //工作室地址
+                    area: 300, //面积
+                    receptionNum: 30, // 接待人数
+                    capacity: '是', //具备讲师能力
+                    weChat: '18458096588', //微信号
+                    postbox: 'fuzhangfen721@qq.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/quanzhou1.jpg',
+                        'http://yjvideo.stockhome.com.cn/quanzhou2.jpg',
+                        'http://yjvideo.stockhome.com.cn/quanzhou3.jpg',
+                        'http://yjvideo.stockhome.com.cn/quanzhou4.jpg',
+                    ]
+                }, {
+                    id: 19,
+                    lon: 114.5408780000,
+                    lat: 38.0269500000,
+                    studioName: '石家庄市无色云社区工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '云孟喜', //负责人名字
+                    mobile: '18931911666', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '石家庄市社裕华区槐中路308-121', //工作室地址
+                    area: 72, //面积
+                    receptionNum: 20, // 接待人数
+                    capacity: '是', //具备讲师能力
+                    weChat: '18931911666', //微信号
+                    postbox: '13931905633@126.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/shijiazhuang1.jpg',
+                        'http://yjvideo.stockhome.com.cn/shijiazhuang2.jpg',
+                        'http://yjvideo.stockhome.com.cn/shijiazhuang3.jpg',
+                        'http://yjvideo.stockhome.com.cn/shijiazhuang4.jpg',
+                    ]
+                }, {
+                    id: 22,
+                    lon: 120.6207660000,
+                    lat: 28.0185070000,
+                    studioName: '温州市瓯江联盟社区工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '谭莉璇', //负责人名字
+                    mobile: '18970888686', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '温州鹿城区鞋都大道1070号b栋501', //工作室地址
+                    area: 85, //面积
+                    receptionNum: 20, // 接待人数
+                    capacity: '是', //具备讲师能力
+                    weChat: '18970888686', //微信号
+                    postbox: '545007006@qq.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/wenzhou1.jpg',
+                        'http://yjvideo.stockhome.com.cn/wenzhou2.jpg',
+                        'http://yjvideo.stockhome.com.cn/wenzhou3.jpg',
+                        'http://yjvideo.stockhome.com.cn/wenzhou4.jpg',
+                        'http://yjvideo.stockhome.com.cn/wenzhou5.jpg',
+                    ]
+                }, {
+                    id: 24,
+                    lon: 109.1809900000,
+                    lat: 27.6906600000,
+                    studioName: '铜仁市真爱社区工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '张伟', //负责人名字
+                    mobile: '15885077439', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '铜仁市高铁火车站转盘旁D区8号楼', //工作室地址
+                    area: 86, //面积
+                    receptionNum: 30, // 接待人数
+                    capacity: '是', //具备讲师能力
+                    weChat: '18867780813', //微信号
+                    postbox: '2959302559@qq.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/tongren1.jpg',
+                        'http://yjvideo.stockhome.com.cn/tongren2.jpg',
+                        'http://yjvideo.stockhome.com.cn/tongren3.jpg',
+                        'http://yjvideo.stockhome.com.cn/tongren4.jpg',
+                    ]
+                }, {
+                    id: 25,
+                    lon: 116.5650600000,
+                    lat: 35.4116300000,
+                    studioName: '济宁市泰山社区工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '田冰', //负责人名字
+                    mobile: '18553744399', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '济宁市济安桥北路复兴街137号', //工作室地址
+                    area: 100, //面积
+                    receptionNum: 30, // 接待人数
+                    capacity: '是', //具备讲师能力
+                    weChat: '18553744399', //微信号
+                    postbox: '15053727988@163.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+                }, {
+                    id: 26,
+                    lon: 120.3546000000,
+                    lat: 36.0855800000,
+                    studioName: '青岛市工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '李海云', //负责人名字
+                    mobile: '15963231971', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '青岛市北区台东六路28号', //工作室地址
+                    area: 85, //面积
+                    receptionNum: 20, // 接待人数
+                    capacity: '是', //具备讲师能力
+                    weChat: '15963231971', //微信号
+                    postbox: '2461564527@qq.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+                }, {
+                    id: 28,
+                    lon: 112.6129760000,
+                    lat: 26.8938080000,
+                    studioName: '衡阳市见习缘分社区工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '陈友鹏', //负责人名字
+                    mobile: '18177371217', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '衡阳市雁峰区爱民路113号1栋3单元802', //工作室地址
+                    area: 72, //面积
+                    receptionNum: 20, // 接待人数
+                    capacity: '是', //具备讲师能力
+                    weChat: '18007836340', //微信号
+                    postbox: '996319230@qq.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+                }, {
+                    id: 29,
+                    lon: 109.4093980000,
+                    lat: 24.3036090000,
+                    studioName: '柳州市缘分社区工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '黄性明', //负责人名字
+                    mobile: '18907731928', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '柳州市飞鹅二路谷埠街国际商城K2栋8-30号', //工作室地址
+                    area: 76, //面积
+                    receptionNum: 20, // 接待人数
+                    capacity: '是', //具备讲师能力
+                    weChat: '18907731928', //微信号
+                    postbox: 'rayjet@vip.qq.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/liuzhou1.jpg',
+                        'http://yjvideo.stockhome.com.cn/liuzhou2.jpg',
+                        'http://yjvideo.stockhome.com.cn/liuzhou3.jpg',
+                        'http://yjvideo.stockhome.com.cn/liuzhou4.jpg',
+                    ]
+                }, {
+                    id: 38,
+                    lon: 117.1846200000,
+                    lat: 36.6901800000,
+                    studioName: '济南市拾亿联盟社区工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '邢兆虎', //负责人名字
+                    mobile: '18963091476', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '历城区雪山合苑', //工作室地址
+                    area: 80, //面积
+                    receptionNum: 20, // 接待人数
+                    capacity: '是', //具备讲师能力
+                    weChat: 'yvwen521', //微信号
+                    postbox: 'chaud521@163.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+                }, {
+                    id: 41,
+                    lon: 110.1739730000,
+                    lat: 22.6303120000,
+                    studioName: '玉林市缘分社区工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '蒋玉玲', //负责人名字
+                    mobile: '19907730965', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '玉林市玉州区玉州周边广场东路843号', //工作室地址
+                    area: 72, //面积
+                    receptionNum: 20, // 接待人数
+                    capacity: '是', //具备讲师能力
+                    weChat: '13517733148', //微信号
+                    postbox: '1505186323@qq.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/yulin1.jpg',
+                        'http://yjvideo.stockhome.com.cn/yulin2.jpg',
+                        'http://yjvideo.stockhome.com.cn/yulin3.jpg',
+                    ]
+                }, {
+                    id: 43,
+                    lon: 117.2559430000,
+                    lat: 31.8291320000,
+                    studioName: '合肥市缘分社区工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '罗丹凤', //负责人名字
+                    mobile: '18907734755', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '合肥市蜀山区十里庙西湖国际广场写字楼3单元503室', //工作室地址
+                    area: 70, //面积
+                    receptionNum: 20, // 接待人数
+                    capacity: '否', //具备讲师能力
+                    weChat: '19997936701', //微信号
+                    postbox: '1256949846@qq.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+                },
+
+                {
+                    id: 46,
+                    lon: 115.6567150000,
+                    lat: 34.4377630000,
+                    studioName: '商丘市王牌社区工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '郝黑孩', //负责人名字
+                    mobile: '18939199375', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '商丘市文化路与神火大道交叉口喜来登一号楼六楼', //工作室地址
+                    area: 80, //面积
+                    receptionNum: 20, // 接待人数
+                    capacity: '是', //具备讲师能力
+                    weChat: '18939199375', //微信号
+                    postbox: '2072653178@qq.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+                }, {
+                    id: 52,
+                    lon: 113.8865100000,
+                    lat: 35.3167700000,
+                    studioName: '新乡市王牌社区工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '赵勇军', //负责人名字
+                    mobile: '13069453812', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '新乡市牧野区和平大道87号', //工作室地址
+                    area: 60, //面积
+                    receptionNum: 20, // 接待人数
+                    capacity: '是', //具备讲师能力
+                    weChat: '13069453812', //微信号
+                    postbox: '2072653178@qq.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/xinxiang1.jpg',
+                        'http://yjvideo.stockhome.com.cn/xinxiang2.jpg',
+                        'http://yjvideo.stockhome.com.cn/xinxiang3.jpg',
+                        'http://yjvideo.stockhome.com.cn/xinxiang4.jpg',
+                    ]
+                }, {
+                    id: 53,
+                    lon: 123.8623500000,
+                    lat: 42.3090900000,
+                    studioName: '铁岭市显峰社区工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '张振强', //负责人名字
+                    mobile: '18641063660', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '辽宁省铁岭市调兵山大街永城公馆508室', //工作室地址
+                    area: 78, //面积
+                    receptionNum: 20, // 接待人数
+                    capacity: '是', //具备讲师能力
+                    weChat: 'zx342619560', //微信号
+                    postbox: '342619560@qq.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/tieling1.jpg',
+                        'http://yjvideo.stockhome.com.cn/tieling2.jpg',
+                        'http://yjvideo.stockhome.com.cn/tieling3.jpg',
+                        'http://yjvideo.stockhome.com.cn/tieling4.jpg',
+                    ]
+                },
+
+
+                {
+                    id: 58,
+                    lon: 114.3239290000,
+                    lat: 36.1098550000,
+                    studioName: '安阳市纵队社区工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '周新明', //负责人名字
+                    mobile: '13839177301', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '安阳市方林街', //工作室地址
+                    area: 60, //面积
+                    receptionNum: 20, // 接待人数
+                    capacity: '是', //具备讲师能力
+                    weChat: '13839177301', //微信号
+                    postbox: '945888151@qq.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/anyang1.jpg',
+                        'http://yjvideo.stockhome.com.cn/anyang2.jpg',
+                        'http://yjvideo.stockhome.com.cn/anyang3.jpg',
+                        'http://yjvideo.stockhome.com.cn/anyang4.jpg',
+                    ]
+                },
+
+                {
+                    id: 60,
+                    lon: 115.1068150000,
+                    lat: 30.2013660000,
+                    studioName: '黄石市幸福社区工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '王捷', //负责人名字
+                    mobile: '13451047731', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '黄石市西塞山区中窑湾路', //工作室地址
+                    area: 60, //面积
+                    receptionNum: 20, // 接待人数
+                    capacity: '是', //具备讲师能力
+                    weChat: 'fsh151618', //微信号
+                    postbox: '506111023@qq.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/huangshi1.jpg',
+                        'http://yjvideo.stockhome.com.cn/huangshi2.jpg',
+                        'http://yjvideo.stockhome.com.cn/huangshi3.jpg',
+                        'http://yjvideo.stockhome.com.cn/huangshi4.jpg',
+                    ]
+                }, {
+                    id: 63,
+                    lon: 115.2817030000,
+                    lat: 40.4861140000,
+                    studioName: '张家口市阔德社区工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '张永宁', //负责人名字
+                    mobile: '18231817717', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '张家口市瑞城孵化基地', //工作室地址
+                    area: 60, //面积
+                    receptionNum: 20, // 接待人数
+                    capacity: '是', //具备讲师能力
+                    weChat: '18231817717', //微信号
+                    postbox: '479622418@qq.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/zhangjiakou1.jpg',
+                        'http://yjvideo.stockhome.com.cn/zhangjiakou2.jpg',
+                        'http://yjvideo.stockhome.com.cn/zhangjiakou3.jpg',
+                        'http://yjvideo.stockhome.com.cn/zhangjiakou4.jpg',
+                    ]
+                },
+
+
+
+                {
+                    id: 66,
+                    lon: 109.5955610000,
+                    lat: 23.1089320000,
+                    studioName: '贵港市缘分社区工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '朱长青', //负责人名字
+                    mobile: '13807740908', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '贵港市港北区联邦国际写字楼2单元601室', //工作室地址
+                    area: 70, //面积
+                    receptionNum: 20, // 接待人数
+                    capacity: '是', //具备讲师能力
+                    weChat: '18078444220', //微信号
+                    postbox: '13807740908@163.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/guigang1.jpg',
+                        'http://yjvideo.stockhome.com.cn/guigang2.jpg',
+                        'http://yjvideo.stockhome.com.cn/guigang3.jpg',
+                        'http://yjvideo.stockhome.com.cn/guigang4.jpg',
+                    ]
+                }, {
+                    id: 69,
+                    lon: 114.3215370000,
+                    lat: 34.8124480000,
+                    studioName: '开封市纵队社区工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '冯玉萍', //负责人名字
+                    mobile: '13223911388', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '开封市黄河路与金耀路交叉口向西二十米路北', //工作室地址
+                    area: 60, //面积
+                    receptionNum: 20, // 接待人数
+                    capacity: '是', //具备讲师能力
+                    weChat: '13223911388', //微信号
+                    postbox: '2805712017@qq.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kaifeng1.jpg',
+                        'http://yjvideo.stockhome.com.cn/kaifeng2.jpg',
+                        'http://yjvideo.stockhome.com.cn/kaifeng3.jpg',
+                        'http://yjvideo.stockhome.com.cn/kaifeng4.jpg',
+                    ]
+                }, {
+                    id: 72,
+                    lon: 120.2580190000,
+                    lat: 31.9965070000,
+                    studioName: '泰州市极光社区工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '朱剑', //负责人名字
+                    mobile: '18066006777', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '泰州市靖江中州路中洲华庭1幢', //工作室地址
+                    area: 80, //面积
+                    receptionNum: 20, // 接待人数
+                    capacity: '是', //具备讲师能力
+                    weChat: '18066006777', //微信号
+                    postbox: '334277660@qq.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/taizhou1.jpg',
+                        'http://yjvideo.stockhome.com.cn/taizhou2.jpg',
+                        'http://yjvideo.stockhome.com.cn/taizhou3.jpg',
+                        'http://yjvideo.stockhome.com.cn/taizhou4.jpg',
+                    ]
+
+                }, {
+                    id: 75,
+                    lon: 111.2824770000,
+                    lat: 30.7085240000,
+                    studioName: '宜昌市极光社区工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '刘松波', //负责人名字
+                    mobile: '13980778305', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '宜昌市西陵区方堰路四方宴小区', //工作室地址
+                    area: 75, //面积
+                    receptionNum: 20, // 接待人数
+                    capacity: '是', //具备讲师能力
+                    weChat: '19986642345', //微信号
+                    postbox: '619396911@qq.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+
+                }, {
+                    id: 77,
+                    lon: 99.8193170000,
+                    lat: 39.3777330000,
+                    studioName: '张掖市梵天社区工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '张美楠', //负责人名字
+                    mobile: '13369362664', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '张掖市高台县东关盘旋路向北200米', //工作室地址
+                    area: 140, //面积
+                    receptionNum: 30, // 接待人数
+                    capacity: '是', //具备讲师能力
+                    weChat: '13369362664', //微信号
+                    postbox: '353660683@qq.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+
+                }, {
+                    id: 80,
+                    lon: 114.3366530000,
+                    lat: 30.3678010000,
+                    studioName: '仙桃市皇朝公会社区工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '黄新安', //负责人名字
+                    mobile: '15027267378', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '江汉平原天门华西农贸大市场西门33B-109', //工作室地址
+                    area: 70, //面积
+                    receptionNum: 20, // 接待人数
+                    capacity: '是', //具备讲师能力
+                    weChat: '15027267378', //微信号
+                    postbox: '2913920593@qq.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/xiantao1.jpg',
+                        'http://yjvideo.stockhome.com.cn/xiantao2.jpg',
+                        'http://yjvideo.stockhome.com.cn/xiantao3.jpg',
+                        'http://yjvideo.stockhome.com.cn/xiantao4.jpg',
+                    ]
+
+                },
+
+
+                {
+                    id: 87,
+                    lon: 111.2641060000,
+                    lat: 23.4777750000,
+                    studioName: '梧州市缘分社区工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '徐喜珍', //负责人名字
+                    mobile: '13549750349', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '梧州市新兴二路300号鸿润广场五单元304房', //工作室地址
+                    area: 115, //面积
+                    receptionNum: 30, // 接待人数
+                    capacity: '是', //具备讲师能力
+                    weChat: '18907741299', //微信号
+                    postbox: 'acai021@qq.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/wuzhou1.jpg',
+                        'http://yjvideo.stockhome.com.cn/wuzhou2.jpg',
+                        'http://yjvideo.stockhome.com.cn/wuzhou3.jpg',
+                        'http://yjvideo.stockhome.com.cn/wuzhou4.jpg',
+                    ]
+                },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                {
+                    id: 89,
+                    lon: 112.8512740000,
+                    lat: 35.4975530000,
+                    studioName: '晋城市乾坤社区工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '皓瑞彬', //负责人名字
+                    mobile: '18235676281', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '待提交...', //工作室地址
+                    area: 0, //面积
+                    receptionNum: 5, // 接待人数
+                    capacity: '否', //具备讲师能力
+                    weChat: '18235676281', //微信号
+                    postbox: '804643044@qq.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+
+                },
+
+                {
+                    id: 88,
+                    lon: 114.0264050000,
+                    lat: 33.5758550000,
+                    studioName: '漯河市工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '蒋俊玲', //负责人名字
+                    mobile: '13523125956', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '待提交...', //工作室地址
+                    area: 0, //面积
+                    receptionNum: 5, // 接待人数
+                    capacity: '否', //具备讲师能力
+                    weChat: 'www28272522', //微信号
+                    postbox: '3504527089@qq.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+
+                },
+
+                {
+                    id: 86,
+                    lon: 116.7044410000,
+                    lat: 39.5239270000,
+                    studioName: '廊坊市工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '余应花', //负责人名字
+                    mobile: '18831624898', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '待提交...', //工作室地址
+                    area: 0, //面积
+                    receptionNum: 5, // 接待人数
+                    capacity: '否', //具备讲师能力
+                    weChat: '18831624898', //微信号
+                    postbox: '', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+
+                }, {
+                    id: 85,
+                    lon: 119.4612080000,
+                    lat: 35.4285880000,
+                    studioName: '日照市工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '师蕊', //负责人名字
+                    mobile: '18678763135', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '待提交...', //工作室地址
+                    area: 0, //面积
+                    receptionNum: 5, // 接待人数
+                    capacity: '否', //具备讲师能力
+                    weChat: '18678763135', //微信号
+                    postbox: '329056444@qq.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+
+                }, {
+                    id: 84,
+                    lon: 119.0212650000,
+                    lat: 33.5975060000,
+                    studioName: '淮安市兄弟社区工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '陈章良', //负责人名字
+                    mobile: '15996117370', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '待提交...', //工作室地址
+                    area: 0, //面积
+                    receptionNum: 5, // 接待人数
+                    capacity: '否', //具备讲师能力
+                    weChat: 'c15996117370', //微信号
+                    postbox: '531036349@qq.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+
+                }, {
+                    id: 83,
+                    lon: 115.4648040000,
+                    lat: 38.8740620000,
+                    studioName: '保定市工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '秦翠敏', //负责人名字
+                    mobile: '13739772081', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '待提交...', //工作室地址
+                    area: 0, //面积
+                    receptionNum: 5, // 接待人数
+                    capacity: '否', //具备讲师能力
+                    weChat: '13739772081', //微信号
+                    postbox: '281551898@qq.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+
+                }, {
+                    id: 82,
+                    lon: 119.1070780000,
+                    lat: 36.7092500000,
+                    studioName: '潍坊市工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '李灿灿', //负责人名字
+                    mobile: '13721902590', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '待提交...', //工作室地址
+                    area: 0, //面积
+                    receptionNum: 5, // 接待人数
+                    capacity: '否', //具备讲师能力
+                    weChat: '13721902590', //微信号
+                    postbox: '', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+
+                }, {
+                    id: 81,
+                    lon: 120.1399980000,
+                    lat: 33.3776310000,
+                    studioName: '盐城市兄弟社区工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '陈海波', //负责人名字
+                    mobile: '13404180246', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '待提交...', //工作室地址
+                    area: 0, //面积
+                    receptionNum: 5, // 接待人数
+                    capacity: '否', //具备讲师能力
+                    weChat: '13404180246', //微信号
+                    postbox: '531036349@qq.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+
+                },
+
+                {
+                    id: 79,
+                    lon: 122.0703170000,
+                    lat: 46.0762680000,
+                    studioName: '兴安盟众鑫社区工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '张秀明', //负责人名字
+                    mobile: '13948284441', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '待提交...', //工作室地址
+                    area: 0, //面积
+                    receptionNum: 5, // 接待人数
+                    capacity: '否', //具备讲师能力
+                    weChat: '13948284441', //微信号
+                    postbox: '912508935@qq.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+
+                }, {
+                    id: 78,
+                    lon: 104.6419170000,
+                    lat: 30.1222110000,
+                    studioName: '资阳市工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '万飞', //负责人名字
+                    mobile: '15756615859', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '待提交...', //工作室地址
+                    area: 0, //面积
+                    receptionNum: 5, // 接待人数
+                    capacity: '否', //具备讲师能力
+                    weChat: '15756615859', //微信号
+                    postbox: '283983409@qq.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+
+                }, {
+                    id: 76,
+                    lon: 104.3986510000,
+                    lat: 31.1279910000,
+                    studioName: '德阳市流年社区工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '吕艳丽', //负责人名字
+                    mobile: '18228080420', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '待提交...', //工作室地址
+                    area: 0, //面积
+                    receptionNum: 5, // 接待人数
+                    capacity: '否', //具备讲师能力
+                    weChat: 'twj6564', //微信号
+                    postbox: '', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+
+                }, {
+                    id: 74,
+                    lon: 105.5713310000,
+                    lat: 30.5133110000,
+                    studioName: '遂宁市财神社区工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '陈慧', //负责人名字
+                    mobile: '18161291655', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '待提交...', //工作室地址
+                    area: 0, //面积
+                    receptionNum: 5, // 接待人数
+                    capacity: '否', //具备讲师能力
+                    weChat: '18081115119', //微信号
+                    postbox: '100506958@.qqcom', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+
+                }, {
+                    id: 73,
+                    lon: 114.6978020000,
+                    lat: 23.7462660000,
+                    studioName: '河源市工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '胡勋杰', //负责人名字
+                    mobile: '13902622894', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '待提交...', //工作室地址
+                    area: 0, //面积
+                    receptionNum: 5, // 接待人数
+                    capacity: '否', //具备讲师能力
+                    weChat: '13902622894', //微信号
+                    postbox: '', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+
+                },
+
+                {
+                    id: 71,
+                    lon: 103.8317880000,
+                    lat: 30.0483180000,
+                    studioName: '眉山市工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '李明传', //负责人名字
+                    mobile: '18086824662', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '待提交...', //工作室地址
+                    area: 0, //面积
+                    receptionNum: 5, // 接待人数
+                    capacity: '否', //具备讲师能力
+                    weChat: '18086824662', //微信号
+                    postbox: '283983409@qq.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+
+                }, {
+                    id: 70,
+                    lon: 113.9266560000,
+                    lat: 30.9264230000,
+                    studioName: '孝感市工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '孙晓增', //负责人名字
+                    mobile: '13972934345', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '待提交...', //工作室地址
+                    area: 0, //面积
+                    receptionNum: 5, // 接待人数
+                    capacity: '否', //具备讲师能力
+                    weChat: '13972934345', //微信号
+                    postbox: '810566383@qq.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+
+                }, {
+                    id: 68,
+                    lon: 112.2381300000,
+                    lat: 30.3268570000,
+                    studioName: '荆州市工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '艾平', //负责人名字
+                    mobile: '15027269934', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '待提交...', //工作室地址
+                    area: 0, //面积
+                    receptionNum: 5, // 接待人数
+                    capacity: '否', //具备讲师能力
+                    weChat: '15027269934', //微信号
+                    postbox: '2913920593@qq.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+                },
+
+
+                {
+                    id: 67,
+                    lon: 116.1175820000,
+                    lat: 24.2991120000,
+                    studioName: '梅州市工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '曾小娟', //负责人名字
+                    mobile: '13590451529', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '待提交....', //工作室地址
+                    area: 0, //面积
+                    receptionNum: 5, // 接待人数
+                    capacity: '否', //具备讲师能力
+                    weChat: '13590451529', //微信号
+                    postbox: '297015772@qq.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+                },
+
+                {
+                    id: 65,
+                    lon: 122.1163940000,
+                    lat: 37.5096910000,
+                    studioName: '威海市光辉社区工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '潘海东', //负责人名字
+                    mobile: '15323517666', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '待提交...', //工作室地址
+                    area: 0, //面积
+                    receptionNum: 5, // 接待人数
+                    capacity: '否', //具备讲师能力
+                    weChat: '16659306010', //微信号
+                    postbox: '761822345@qq.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+                }, {
+                    id: 64,
+                    lon: 116.3557330000,
+                    lat: 23.5437780000,
+                    studioName: '揭阳市工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '赖思荣', //负责人名字
+                    mobile: '17876654190', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '待提交...', //工作室地址
+                    area: 0, //面积
+                    receptionNum: 5, // 接待人数
+                    capacity: '否', //具备讲师能力
+                    weChat: '17876654190', //微信号
+                    postbox: '', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+                }, {
+                    id: 62,
+                    lon: 105.0579870000,
+                    lat: 29.5801480000,
+                    studioName: '内江市工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '段卓池', //负责人名字
+                    mobile: '13618018950', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '待提交...', //工作室地址
+                    area: 0, //面积
+                    receptionNum: 5, // 接待人数
+                    capacity: '否', //具备讲师能力
+                    weChat: '13618018950', //微信号
+                    postbox: '', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+                }, {
+                    id: 61,
+                    lon: 104.7417220000,
+                    lat: 31.4640200000,
+                    studioName: '绵阳市工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '徐世华', //负责人名字
+                    mobile: '18683691949', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '待提交...', //工作室地址
+                    area: 0, //面积
+                    receptionNum: 5, // 接待人数
+                    capacity: '否', //具备讲师能力
+                    weChat: '18683691949', //微信号
+                    postbox: '283983409@qq.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+                }, {
+                    id: 59,
+                    lon: 109.9782400000,
+                    lat: 27.5500820000,
+                    studioName: '怀化市超越社区工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '戴洁凯', //负责人名字
+                    mobile: '18668085551', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '待提交...', //工作室地址
+                    area: 0, //面积
+                    receptionNum: 5, // 接待人数
+                    capacity: '否', //具备讲师能力
+                    weChat: 'kxnhyx0', //微信号
+                    postbox: '283764708@qq.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+                },
+
+
+                {
+                    id: 57,
+                    lon: 107.9774880000,
+                    lat: 26.5833520000,
+                    studioName: '黔东南苗族侗族自治州工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '许燕之', //负责人名字
+                    mobile: '18285600845', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '待提交...', //工作室地址
+                    area: 0, //面积
+                    receptionNum: 5, // 接待人数
+                    capacity: '否', //具备讲师能力
+                    weChat: '18286882916', //微信号
+                    postbox: '2733312272@qq.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+                }, {
+                    id: 56,
+                    lon: 113.0949420000,
+                    lat: 22.5904310000,
+                    studioName: '江门市工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '付卫芹', //负责人名字
+                    mobile: '18672845618', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '待提交...', //工作室地址
+                    area: 0, //面积
+                    receptionNum: 5, // 接待人数
+                    capacity: '否', //具备讲师能力
+                    weChat: '18672845618', //微信号
+                    postbox: '2913920593@qq.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+                }, {
+                    id: 55,
+                    lon: 119.5270820000,
+                    lat: 26.6592410000,
+                    studioName: '宁德市工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '黄月娥', //负责人名字
+                    mobile: '15106023697', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '待提交...', //工作室地址
+                    area: 0, //面积
+                    receptionNum: 5, // 接待人数
+                    capacity: '否', //具备讲师能力
+                    weChat: '15106023697', //微信号
+                    postbox: '', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+                }, {
+                    id: 54,
+                    lon: 114.3911370000,
+                    lat: 27.8043000000,
+                    studioName: '宜春市工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '赵意明', //负责人名字
+                    mobile: '18270572721', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '待提交...', //工作室地址
+                    area: 0, //面积
+                    receptionNum: 5, // 接待人数
+                    capacity: '否', //具备讲师能力
+                    weChat: '18270572721', //微信号
+                    postbox: '', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+                }, {
+                    id: 51,
+                    lon: 113.0148500000,
+                    lat: 25.7706300000,
+                    studioName: '郴州市工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '邓传兴', //负责人名字
+                    mobile: '13975757776', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '待提交...', //工作室地址
+                    area: 0, //面积
+                    receptionNum: 5, // 接待人数
+                    capacity: '否', //具备讲师能力
+                    weChat: 'dcx7878', //微信号
+                    postbox: '1907803695@qq.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+                }, {
+                    id: 50,
+                    lon: 103.8341700000,
+                    lat: 36.0613800000,
+                    studioName: '兰州市黄河社区工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '周妍琳', //负责人名字
+                    mobile: '18293177877 ', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '待提交...', //工作室地址
+                    area: 0, //面积
+                    receptionNum: 5, // 接待人数
+                    capacity: '否', //具备讲师能力
+                    weChat: 'Q17793176099 ', //微信号
+                    postbox: '83034811@qq.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+                }, {
+                    id: 49,
+                    lon: 106.1107300000,
+                    lat: 30.8373100000,
+                    studioName: '南充市工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '冯金慧', //负责人名字
+                    mobile: '18408243957', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '待提交...', //工作室地址
+                    area: 0, //面积
+                    receptionNum: 5, // 接待人数
+                    capacity: '否', //具备讲师能力
+                    weChat: '18408243957', //微信号
+                    postbox: '', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+                }, {
+                    id: 48,
+                    lon: 114.6969500000,
+                    lat: 33.6258300000,
+                    studioName: '周口市工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '王小停', //负责人名字
+                    mobile: '18739148586', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '待提交...', //工作室地址
+                    area: 0, //面积
+                    receptionNum: 5, // 接待人数
+                    capacity: '否', //具备讲师能力
+                    weChat: '18739148586', //微信号
+                    postbox: '', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+                }, {
+                    id: 47,
+                    lon: 114.0229900000,
+                    lat: 33.0114200000,
+                    studioName: '驻马店市工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '李刚', //负责人名字
+                    mobile: '13697077785', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '待提交...', //工作室地址
+                    area: 0, //面积
+                    receptionNum: 5, // 接待人数
+                    capacity: '否', //具备讲师能力
+                    weChat: 'MrLi501775936', //微信号
+                    postbox: '501775936@qq.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+                },
+
+
+
+                {
+                    id: 45,
+                    lon: 117.3893200000,
+                    lat: 32.9154800000,
+                    studioName: '蚌埠市工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '薛宋', //负责人名字
+                    mobile: '13505617960', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '待提交...', //工作室地址
+                    area: 0, //面积
+                    receptionNum: 5, // 接待人数
+                    capacity: '否', //具备讲师能力
+                    weChat: '13505617960', //微信号
+                    postbox: '', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+                },
+
+                {
+                    id: 44,
+                    lon: 112.1225500000,
+                    lat: 32.0090000000,
+                    studioName: '襄阳市工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '陈德成', //负责人名字
+                    mobile: '18016025885', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '待提交...', //工作室地址
+                    area: 0, //面积
+                    receptionNum: 5, // 接待人数
+                    capacity: '否', //具备讲师能力
+                    weChat: '18016025885', //微信号
+                    postbox: '717352441@qq.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+                },
+
+                {
+                    id: 42,
+                    lon: 114.5391800000,
+                    lat: 36.6255600000,
+                    studioName: '邯郸市工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '李新连', //负责人名字
+                    mobile: '15993721277', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '待提交...', //工作室地址
+                    area: 0, //面积
+                    receptionNum: 5, // 接待人数
+                    capacity: '否', //具备讲师能力
+                    weChat: '15993721277', //微信号
+                    postbox: '', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+                }, {
+                    id: 40,
+                    lon: 116.8386900000,
+                    lat: 38.3044100000,
+                    studioName: '沧州市东方雄狮社区工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '于军', //负责人名字
+                    mobile: '13832711766', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '待提交...', //工作室地址
+                    area: 0, //面积
+                    receptionNum: 5, // 接待人数
+                    capacity: '否', //具备讲师能力
+                    weChat: '13832711766', //微信号
+                    postbox: '1009863285@qq.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+                }, {
+                    id: 39,
+                    lon: 111.0069900000,
+                    lat: 35.0262800000,
+                    studioName: '运城市云长社区工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '刘伟强', //负责人名字
+                    mobile: '19935110581', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '待提交...', //工作室地址
+                    area: 0, //面积
+                    receptionNum: 5, // 接待人数
+                    capacity: '否', //具备讲师能力
+                    weChat: '19935110581', //微信号
+                    postbox: 'lwq466090519@163.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+                }, {
+                    id: 37,
+                    lon: 115.6705400000,
+                    lat: 37.7388600000,
+                    studioName: '衡水市利箭社区工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '张志强', //负责人名字
+                    mobile: '13313188315', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '待提交...', //工作室地址
+                    area: 0, //面积
+                    receptionNum: 5, // 接待人数
+                    capacity: '否', //具备讲师能力
+                    weChat: '13313188315', //微信号
+                    postbox: '', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+                }, {
+                    id: 36,
+                    lon: 119.2229500000,
+                    lat: 34.5966900000,
+                    studioName: '连云港市兄弟社区工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '陈海涛', //负责人名字
+                    mobile: '18360635108', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '待提交...', //工作室地址
+                    area: 0, //面积
+                    receptionNum: 5, // 接待人数
+                    capacity: '否', //具备讲师能力
+                    weChat: '18360635108', //微信号
+                    postbox: '531036349@qq.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+                },
+
+                {
+                    id: 35,
+                    lon: 106.6302400000,
+                    lat: 26.6470200000,
+                    studioName: '贵阳市工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '李秋阳', //负责人名字
+                    mobile: '15985138105', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '待提交...', //工作室地址
+                    area: 0, //面积
+                    receptionNum: 5, // 接待人数
+                    capacity: '否', //具备讲师能力
+                    weChat: '15985138105', //微信号
+                    postbox: '122159827@qq.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+                }, {
+                    id: 34,
+                    lon: 112.4536100000,
+                    lat: 34.6181200000,
+                    studioName: '洛阳市工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '马加林', //负责人名字
+                    mobile: '13137935558', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '待提交...', //工作室地址
+                    area: 0, //面积
+                    receptionNum: 5, // 接待人数
+                    capacity: '否', //具备讲师能力
+                    weChat: '13137935558', //微信号
+                    postbox: '947097257@qq.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+                }, {
+                    id: 33,
+                    lon: 118.3564600000,
+                    lat: 35.1046500000,
+                    studioName: '临沂市工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '侯庆华', //负责人名字
+                    mobile: '18005308889', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '待提交...', //工作室地址
+                    area: 0, //面积
+                    receptionNum: 5, // 接待人数
+                    capacity: '否', //具备讲师能力
+                    weChat: '18005308889', //微信号
+                    postbox: '', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+                }, {
+                    id: 32,
+                    lon: 114.9347600000,
+                    lat: 25.8310900000,
+                    studioName: '赣州市工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '吴元', //负责人名字
+                    mobile: '13607972333', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '待提交...', //工作室地址
+                    area: 0, //面积
+                    receptionNum: 5, // 接待人数
+                    capacity: '否', //具备讲师能力
+                    weChat: '13607972333', //微信号
+                    postbox: 'w13607972333@163.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+                }, {
+                    id: 31,
+                    lon: 112.5285100000,
+                    lat: 32.9907300000,
+                    studioName: '南阳市工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '周聪', //负责人名字
+                    mobile: '17839566557', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '待提交...', //工作室地址
+                    area: 0, //面积
+                    receptionNum: 5, // 接待人数
+                    capacity: '否', //具备讲师能力
+                    weChat: '17839566557', //微信号
+                    postbox: '', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+                }, {
+                    id: 30,
+                    lon: 125.3235700000,
+                    lat: 43.8160200000,
+                    studioName: '长春市工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '周化山', //负责人名字
+                    mobile: '13326283896', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '待提交...', //工作室地址
+                    area: 0, //面积
+                    receptionNum: 5, // 接待人数
+                    capacity: '否', //具备讲师能力
+                    weChat: '13326283896', //微信号
+                    postbox: '', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+                }, {
+                    id: 27,
+                    lon: 116.3592700000,
+                    lat: 37.4355000000,
+                    studioName: '德州市工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '许孟雷', //负责人名字
+                    mobile: '18865726026', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '待提交...', //工作室地址
+                    area: 0, //面积
+                    receptionNum: 5, // 接待人数
+                    capacity: '否', //具备讲师能力
+                    weChat: '', //微信号
+                    postbox: '504934631@qq.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+                }, {
+                    id: 23,
+                    lon: 117.2857700000,
+                    lat: 34.2044000000,
+                    studioName: '徐州市工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '杨睿智', //负责人名字
+                    mobile: '16736137777', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '待提交...', //工作室地址
+                    area: 0, //面积
+                    receptionNum: 5, // 接待人数
+                    capacity: '否', //具备讲师能力
+                    weChat: '', //微信号
+                    postbox: '15102217988@163.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+                }, {
+                    id: 21,
+                    lon: 117.1993700000,
+                    lat: 39.0851000000,
+                    studioName: '天津市亿员社区工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '刘杨', //负责人名字
+                    mobile: '17622655666', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '待提交...', //工作室地址
+                    area: 0, //面积
+                    receptionNum: 5, // 接待人数
+                    capacity: '否', //具备讲师能力
+                    weChat: '17622655666', //微信号
+                    postbox: '342956253@qq.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+                }, {
+                    id: 20,
+                    lon: 115.4811500000,
+                    lat: 35.2336300000,
+                    studioName: '菏泽市工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '赵福建', //负责人名字
+                    mobile: '18953039413', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '待提交...', //工作室地址
+                    area: 0, //面积
+                    receptionNum: 5, // 接待人数
+                    capacity: '否', //具备讲师能力
+                    weChat: '18953039413', //微信号
+                    postbox: '', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+                }, {
+                    id: 15,
+                    lon: 126.5358000000,
+                    lat: 45.8021600000,
+                    studioName: '哈尔滨市蓝鲸社区工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '姜涛', //负责人名字
+                    mobile: '15754646484', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '待提交...', //工作室地址
+                    area: 0, //面积
+                    receptionNum: 5, // 接待人数
+                    capacity: '否', //具备讲师能力
+                    weChat: '15754646484', //微信号
+                    postbox: '1172642117@qq.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+                }, {
+                    id: 13,
+                    lon: 120.8937100000,
+                    lat: 31.9795800000,
+                    studioName: '南通市工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '胡畏', //负责人名字
+                    mobile: '15306287620', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '待提交...', //工作室地址
+                    area: 0, //面积
+                    receptionNum: 5, // 接待人数
+                    capacity: '否', //具备讲师能力
+                    weChat: '', //微信号
+                    postbox: '120070208@qq.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+                },
+
+                {
+                    id: 12,
+                    lon: 114.5044300000,
+                    lat: 37.0705500000,
+                    studioName: '邢台市工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '王连粉', //负责人名字
+                    mobile: '15233750519', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '待提交...', //工作室地址
+                    area: 0, //面积
+                    receptionNum: 5, // 接待人数
+                    capacity: '否', //具备讲师能力
+                    weChat: '15931997675', //微信号
+                    postbox: '332829667@qq.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+                }, {
+                    id: 6,
+                    lon: 104.8979710000,
+                    lat: 25.0881200000,
+                    studioName: '黔西南苗族自治州5G社区工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '韦健发', //负责人名字
+                    mobile: '18744979749', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '待提交...', //工作室地址
+                    area: 0, //面积
+                    receptionNum: 5, // 接待人数
+                    capacity: '否', //具备讲师能力
+                    weChat: '18744979749', //微信号
+                    postbox: '1400373479@qq.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+                }, {
+                    id: 2,
+                    lon: 121.4737000000,
+                    lat: 31.2303700000,
+                    studioName: '上海市工作室', //工作室名字
+                    subTitle: '暂无内容', //泡泡内容
+                    userName: '周法辉', //负责人名字
+                    mobile: '18143086678', // 手机号码,
+                    distance: 0, // 距离公里
+                    site: '待提交...', //工作室地址
+                    area: 0, //面积
+                    receptionNum: 5, // 接待人数
+                    capacity: '否', //具备讲师能力
+                    weChat: '18143086678', //微信号
+                    postbox: 'z13606785354@163.com', //邮箱
+                    imgdata: [
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                        'http://yjvideo.stockhome.com.cn/kong.png',
+                    ]
+                },
+            ],
+            uid: 1, //弹出泡泡id
+            studioName: '', //弹出泡泡标题名字
+            subTitle: '', //弹出泡泡内容
+            lat: '', //终点维度
+            lon: '', //终点维度
+            myLat: '', //当前位置的经纬度
+            myLon: '', //当前位置的经纬度
+            distancedata: [], // 距离公里
+        },
+        created: function() {
+            var that = this;
+            apiready = function() {
+                fixStatusbar('header,.header,.headers', '.content');
+                // 打开地图
+                that.openMap();
+                //  //数字类型；两点之间的距离，
+                // that.getdistance()
+
+
+            }
+        },
+
+        methods: {
+            openMap: function() {
+                var that = this;
+                var height = $api.fixStatusBar(document.querySelector('header'));
+                Bmap.$data.langContent = GlobleLanguageContent.Bmap;
+                Bmap.$data.getCodetip = GlobleLanguageContent.getCode;
+                // 引入模块
+                var map = api.require('bMap');
+                // 打开地图 ===========================
+                map.open({
+                    rect: {
+                        x: 0,
+                        y: height,
+                        h: 250
+                    },
+                    center: { // lon: 116.4021310000,// lat: 39.9994480000  设置中心位置// lon: 116.297,// lat: 40.109
+                    },
+                    zoomLevel: 8,
+                    showUserLocation: true,
+                    fixedOn: api.frameName,
+                    fixed: true
+                }, function(ret) {
+                    if (ret.status) {
+                        // 定位当前位置
+                        map.showUserLocation({
+                            isShow: true,
+                            trackingMode: 'none' // none（标准模式）注：Android平台为指向箭头，iOS平台为圆点// follow（跟踪模式）// compass（罗盘模式）
+                        });
+
+                        //在地图上添加标注信息
+                        map.addAnnotations({
+                            annotations: that.mapdatalist, // 添加所有的点   的位置！！！！
+                            draggable: true
+                        }, function(ret) {
+                            if (ret) {
+                                // alert(JSON.stringify(ret));
+                                that.mapdatalist.forEach(function(element) {
+                                    if (element.id == ret.id) {
+                                        that.studioName = element.studioName
+                                        that.subTitle = element.subTitle
+                                        that.uid = element.id
+                                        map.popupBubble({
+                                            id: element.id
+                                        });
+                                        // 获取指定标注的经纬度   获取当前 id 的经纬度
+                                        map.getAnnotationCoords({
+                                            id: that.uid // 和上面的ID2 关联
+                                        }, function(ret) {
+                                            if (ret) {
+                                                that.lat = ret.lat;
+                                                that.lon = ret.lon
+                                            }
+                                        });
+                                        that.getcontent()
+
+                                        map.popupBubble({
+                                            id: element.id
+                                        });
+                                    }
+                                });
+                            }
+                        });
+
+
+                    }
+                });
+                // // 获取当前经纬度 ====================
+                that.getlocation()
+
+
+            },
+
+            getlocation: function() {
+                var that = this;
+                // 获取当前经纬度配置
+                var bmLocation = api.require('bmLocation');
+                if (api.systemType == "ios" || api.systemType == "IOS") {
+                    bmLocation.getPermissionState(function(ret) {
+                        var sta = ret.code;
+                    });
+                }
+
+                // 获取当前经纬度配置
+                bmLocation.configManager({
+                    accuracy: 'device_sensors',
+                    filter: 1,
+                    activityType: 'automotiveNavigation',
+                    coordinateType: 'GCJ02',
+                    locationTimeout: 10,
+                    reGeocodeTimeout: 10
+                });
+                // 获取当前经纬度 ====================
+                bmLocation.singleLocation({
+                    reGeocode: false,
+                    netWorkState: false
+                }, function(ret) {
+                    var sta = ret.status;
+                    if (sta) {
+                        // that.myLat = ret.location.latitude;
+                        // that.myLon = ret.location.longitude;
+                        $api.setStorage('bmaplongitude', ret.location.longitude);
+                        $api.setStorage('bmaplatitude', ret.location.latitude);
+                        that.getdistance()
+                    } else {
+                        api.alert({
+                            msg: that.getCodetip.position
+                        });
+                    }
+                });
+            },
+            // 获取距离
+            getdistance: function() {
+                var that = this;
+                // 引入模块
+                var ArrDis = []
+                var map = api.require('bMap');
+                // 两地距离地址
+                for (var i = 0; i < that.mapdatalist.length; i++) {
+                    map.getDistance({
+                        start: {
+                            // lon: that.myLon, //数字类型；起点的经度
+                            // lat: that.myLat //数字类型；起点的纬度
+                            lon: $api.getStorage('bmaplongitude'),
+                            lat: $api.getStorage('bmaplatitude')
+                        },
+                        end: {
+                            lon: that.mapdatalist[i].lon, //数字类型；终点的经度
+                            lat: that.mapdatalist[i].lat //数字类型；终点的经度
+                        }
+                    }, function(ret) {
+                        if (ret.status) {
+                            //数字类型；两点之间的距离，单位：米
+                            // Bmap.$data.mapdatalist[iindex].site = Number(ret.distance / 1000);
+                            if (ret.distance / 1000 && ret.distance / 1000 != 0 && Number(ret.distance / 1000) != 0) {
+                                // return Number(ret.distance).toFixed(2);
+                                return ArrDis.push(Number(ret.distance / 1000).toFixed(3))
+                            } else {
+                                return 0.000;
+                            }
+                            // ArrDis.push(Number(ret.distance / 1000))
+                        }
+                    });
+                }
+                setTimeout(function() {
+                    Bmap.$data.mapdatalist.forEach(function(element, index) {
+                        element.distance = ArrDis[index]
+                    });
+                    Bmap.$data.mapdatalist = JSON.parse(JSON.stringify(Bmap.$data.mapdatalist))
+                        // console.error(JSON.stringify(that.mapdatalist[1]))
+                }, 500);
+
+            },
+            getcontent: function() {
+                // 设置点击标注时弹出的气泡信息
+                var that = this;
+                var map = api.require('bMap');
+
+                if (api.systemType == "ios" || api.systemType == "IOS") {
+                    map.setBubble({
+                        id: that.uid,
+                        // bgImg: 'widget://res/bubble_bg.png',
+                        rect: {
+                            x: 10, //（可选项）数字类型；气泡左上角的 x （相对）坐标 ；默认：10
+                            y: 5, //（可选项）数字类型；气泡左上角的 y （相对）坐标 ；默认：5
+                            w: 35, //（可选项）数字类型；气泡的宽度；默认：35
+                            h: 50 //（可选项）数字类型；气泡的高度；默认：50
+                        },
+                        // 泡泡里面的内容
+                        content: {
+                            title: that.studioName, //字符串类型；弹出气泡的标题
+                            // subTitle: that.subTitle, //（可选项）字符串类型；弹出气泡的概述内容，若不传则 title 在上下位置居中显示
+                            // illus: '' //（可选项）字符串类型；弹出气泡的配图（30*40规格），支持http://、https://、widget://、fs://等协议
+                        },
+                        styles: {
+                            titleColor: '#000', //（可选项）字符串类型；气泡标题的文字颜色，支持rgb、rgba、#；默认：'#000'
+                            titleSize: 16, //（可选项）数字类型；气泡标题的文字大小；默认：16
+                            subTitleColor: '#000', //（可选项）字符串类型；气泡概述内容的文字颜色，支持rgb、rgba、#；默认：'#000'
+                            subTitleSize: 14, //（可选项）数字类型；气泡概述内容的文字大小；默认：14
+                            // illusAlign: 'left', //（可选项）字符串类型；气泡配图的显示位置；默认：'left' 取值范围：left（图片居左）right（图片居右）
+                            w: 120, //（可选项）数字类型；气泡的宽；默认：title的长度，并且不会超过地图视图的宽度-64，不会小于160（注：android不会计算title的长度，传多少是多少;另：由于android上百度地图并没有提供接口来控制气泡的宽高，而是模块本身通过给定的宽高来计算缩放比来缩放背景图片(也就是bgImg参数)，以此来达到改变整个气泡大小的目的，会有一定的偏差，所以在android上的处理方式是如果不传此参数，按照原图来展示；h参数同理）
+                            h: 70, //（可选项）数字类型；气泡的高；默认：90
+                        }
+                    }, function(ret) {
+                        if (ret) {
+                            // console.log(studioName);
+                            // console.log(subTitle);
+                            // console.log(uid);
+                            // id: 10, 数字类型；用户点击气泡返回的id
+                            // eventType: 'clickContent', 字符串类型；交互事件类型
+                            //取值范围：
+                            //clickContent（点击气泡文本内容）
+                            //clickIllus（点击配图）
+                            // alert(JSON.stringify(ret));
+                            // alert(JSON.stringify(ret));
+                            // alert(JSON.stringify(that.mapdatalist[ret - 1].id));
+
+                        }
+                    });
+                } else {
+                    map.setBubble({
+                        id: that.uid,
+                        // bgImg: 'widget://res/bubble_bg.png',
+                        rect: {
+                            x: 10, //（可选项）数字类型；气泡左上角的 x （相对）坐标 ；默认：10
+                            y: 5, //（可选项）数字类型；气泡左上角的 y （相对）坐标 ；默认：5
+                            w: 35, //（可选项）数字类型；气泡的宽度；默认：35
+                            h: 50 //（可选项）数字类型；气泡的高度；默认：50
+
+                        },
+                        // 泡泡里面的内容
+                        content: {
+                            title: that.studioName, //字符串类型；弹出气泡的标题
+                            // subTitle: that.subTitle, //（可选项）字符串类型；弹出气泡的概述内容，若不传则 title 在上下位置居中显示
+                            // illus: '' //（可选项）字符串类型；弹出气泡的配图（30*40规格），支持http://、https://、widget://、fs://等协议
+                        },
+                        styles: {
+                            titleColor: '#000', //（可选项）字符串类型；气泡标题的文字颜色，支持rgb、rgba、#；默认：'#000'
+                            titleSize: 16, //（可选项）数字类型；气泡标题的文字大小；默认：16
+                            subTitleColor: '#000', //（可选项）字符串类型；气泡概述内容的文字颜色，支持rgb、rgba、#；默认：'#000'
+                            subTitleSize: 14, //（可选项）数字类型；气泡概述内容的文字大小；默认：14
+                            // illusAlign: 'left', //（可选项）字符串类型；气泡配图的显示位置；默认：'left' 取值范围：left（图片居左）right（图片居右）
+                            w: 300, //（可选项）数字类型；气泡的宽；默认：title的长度，并且不会超过地图视图的宽度-64，不会小于160（注：android不会计算title的长度，传多少是多少;另：由于android上百度地图并没有提供接口来控制气泡的宽高，而是模块本身通过给定的宽高来计算缩放比来缩放背景图片(也就是bgImg参数)，以此来达到改变整个气泡大小的目的，会有一定的偏差，所以在android上的处理方式是如果不传此参数，按照原图来展示；h参数同理）
+                            // h: 90, //（可选项）数字类型；气泡的高；默认：90
+                        }
+                    }, function(ret) {
+                        if (ret) {
+                            // console.log(studioName);
+                            // console.log(subTitle);
+                            // console.log(uid);
+                            // id: 10, 数字类型；用户点击气泡返回的id
+                            // eventType: 'clickContent', 字符串类型；交互事件类型
+                            //取值范围：
+                            //clickContent（点击气泡文本内容）
+                            //clickIllus（点击配图）
+                            // alert(JSON.stringify(ret));
+                            // alert(JSON.stringify(ret));
+                            // alert(JSON.stringify(that.mapdatalist[ret - 1].id));
+
+                        }
+                    });
+                }
+
+            },
+            details: function(map_data) {
+                api.openWin({
+                    name: 'Bmap_comment',
+                    url: 'Bmap_comment.html',
+                    bounces: false,
+                    pageParam: {
+                        mapdata: map_data
+                    }
+                });
+            },
+            // 唤醒地图APP
+            onpenNavigation: function(map_data) {
+                var that = this;
+                api.actionSheet({
+                    title: that.langContent.select,
+                    cancelTitle: that.langContent.cancel,
+                    buttons: that.langContent.maps
+                }, function(ret, err) {
+                    // 高德地图1
+                    if (ret.buttonIndex == 1) {
+                        if (api.systemType == "ios" || api.systemType == "IOS") {
+                            // // 打开ios
+                            api.openApp({
+                                iosUrl: 'iosamap://navi?sourceApplication=applicationName&backScheme=applicationScheme&poiname=fangheng&poiid=BGVIS&lat=' + map_data.lat + '&lon=' + map_data.lon + '&dev=1&style=2'
+                            }, function(ret, err) {
+                                if (ret) {
+                                    // alert(JSON.stringify(ret))
+                                } else {
+                                    api.toast({
+                                        msg: that.langContent.nogd
+                                    });
+                                }
+                            });
+                        } else {
+                            // 打开安卓
+                            api.openApp({
+                                androidPkg: 'android.intent.action.VIEW',
+                                appParam: {
+                                    lat: map_data.lon,
+                                    lon: map_data.lat,
+                                    dev: '1',
+                                    style: '2',
+                                    sourceApplication: api.appName
+                                },
+                                uri: 'androidamap://navi?sourceApplication=applicationName&backScheme=applicationScheme&poiname=fangheng&poiid=BGVIS&lat=' + map_data.lat + '&lon=' + map_data.lon + '&dev=1&style=2',
+                                iosUrl: 'iosamap://navi?sourceApplication=applicationName&backScheme=applicationScheme&poiname=fangheng&poiid=BGVIS&lat=' + map_data.lat + '&lon=' + map_data.lon + '&dev=1&style=2'
+                            }, function(ret, err) {
+                                if (ret) {
+                                    // alert(JSON.stringify(ret))
+                                } else {
+                                    api.toast({
+                                        msg: that.langContent.nogd
+                                    });
+                                }
+                            })
+                        }
+
+                    }
+
+                    //百度地图2
+                    if (ret.buttonIndex == 2) {
+                        if (api.systemType == "ios" || api.systemType == "IOS") {
+                            // 打开ios
+                            api.openApp({
+                                iosUrl: 'baidumap://map/direction?destination=' + map_data.lat +  ',' + map_data.lon + '&mode=driving&src=osm#Intent;scheme=bdapp;package=com.baidu.BaiduMap;end' 
+                            }, function(ret, err) {
+                                if (ret) {
+                                    // alert(JSON.stringify(ret))
+                                } else {
+                                    api.toast({
+                                        msg: that.langContent.nobd
+                                    });
+                                }
+                            });
+                        } else {
+                            api.openApp({
+                                androidPkg: 'android.intent.action.VIEW',
+                                appParam:  { 
+                                    destination: map_data.lat +  ','  + map_data.lon,
+                                    mode: 'driving',
+                                    src: api.appName
+                                },
+                                mimeType: 'text/html',
+                                uri: 'intent://map/direction?destination=' + map_data.lat  +  ',' + map_data.lon + '&mode=driving&src=osm#Intent;scheme=bdapp;package=com.baidu.BaiduMap;end',
+                                iosUrl: 'baidumap://map/direction?destination='  + map_data.lat + ','  + map_data.lon + '&mode=driving&src=osm#Intent;scheme=bdapp;package=com.baidu.BaiduMap;end' 
+                            },  function(ret,  err)  {
+                                if  (ret)  {
+                                    // alert(JSON.stringify(ret))
+                                } 
+                                else  { 
+                                    api.toast({
+                                        msg: that.langContent.nobd
+                                    });
+                                }
+                            });
+                        }
+
+                    }
+                });
+            }
+
+        },
+
+    });
+</script>

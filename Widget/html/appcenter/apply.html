@@ -1,0 +1,598 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>合伙人申请</title>
+    <link rel="stylesheet" type="text/css" href="../../lib/vant/vant.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../lib/iconfont2/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <style>
+        input {
+            height: 2rem;
+            line-height: 2rem;
+            font-size: 1.3rem;
+            color: #333 !important;
+            width: 100%;
+        }
+
+        input::placeholder {
+            font-size: 1.167rem;
+            color: #999999 !important;
+            height: 2rem;
+            line-height: 2rem;
+            width: 100%;
+        }
+
+        input[disabled] {
+            /* background:#141623 */
+            color: #333;
+            -webkit-text-fill-color: #333;
+            width: 100%;
+        }
+
+        .bg-white {
+            height: 2rem;
+            line-height: 2rem;
+        }
+
+        .margin_top3px {
+            margin-top: 1px;
+        }
+
+        #material_tips {
+            /* background: #282c34; */
+            min-height: 95%;
+            margin: 0 auto;
+        }
+        /* 提示框 */
+
+        .box {
+            /* padding: 19vw 19vw 10vw 19vw;
+            font-weight: 800; */
+            background-color: #fff;
+            border-radius: 5px;
+            color: #000;
+            padding: 3.5rem 1rem 1rem 1rem;
+        }
+
+        p {
+            line-height: 1.5rem;
+            padding-bottom: .5rem;
+        }
+
+        strong {
+            font-size: 1.3rem;
+        }
+
+        .common_radio {
+            width: 1.4rem;
+            height: 1.4rem;
+            min-width: 1.4rem;
+            min-height: 1.4rem;
+            border-radius: 50%;
+            border: 1px solid #000;
+            position: relative;
+            display: inline-block;
+            background: #dcdcdc;
+        }
+        /* 叹号图片 */
+
+        .tips_img {
+            width: 4rem;
+            height: 4rem;
+            position: absolute;
+            top: -2rem;
+            left: 50%;
+            transform: translate(-50%);
+        }
+        /* 文本提示 */
+
+        .tips_text {
+            /* text-indent: 2em; */
+            font-size: 1.2rem;
+            line-height: 2rem;
+            padding-left: 1rem;
+        }
+        /* 勾选按钮 */
+
+        .tips_yes {
+            margin-left: 2rem;
+        }
+
+        .common_radio.on {
+            background: #08f104 !important;
+            border: 1px solid #08f104 !important;
+        }
+
+        .common_radio.on::before {
+            position: absolute;
+            content: "";
+            width: 5px;
+            height: 10px;
+            top: 0.1rem;
+            left: 0.45rem;
+            border: 2px solid #fff;
+            border-top: none;
+            border-left: none;
+            -webkit-transform: rotate(45deg);
+            transform: rotate(45deg);
+        }
+        /* 订单 资料按钮 */
+
+        .lo_btn {
+            padding: 5px;
+            width: 45%;
+            text-align: center;
+            border-radius: 5px;
+            background-color: #cfa867;
+            color: #fff;
+        }
+
+        .lo_btn_return {
+            padding: 5px;
+            width: 45%;
+            text-align: center;
+            border-radius: 5px;
+            background-color: #fdecb8;
+            color: #000;
+        }
+
+        .float_center {
+            position: fixed;
+            top: 50%;
+            left: 0;
+            transform: translate(0, -50%);
+            bottom: 0;
+            right: 0;
+            background-color: rgba(26, 29, 41, .5);
+            z-index: 10001;
+        }
+
+        .popups {
+            position: fixed;
+            width: 100%;
+            bottom: 0rem;
+            z-index: 99999;
+        }
+
+        .textname_left {
+            width: 30%;
+        }
+
+        .textname_right {
+            width: 70%;
+        }
+    </style>
+</head>
+
+<body class="color_default">
+    <div id="apply" class="content  marginT5" v-cloak>
+        <header class="header color_default1">
+            <i class="iconfont icon-xiangzuo" onclick="goBack()"></i>
+            <div class="fontSize16">{{langContent.title?langContent.title:''}}</div>
+            <!-- <div class="fontSize14 color_default" style="position: absolute; right: 1.5rem;" @click="submit">
+                提交
+            </div> -->
+            <div class="fontSize14  color_black6" style="position: absolute; right: 1.5rem;" @click="isshow_tips">
+                {{langContent.sunmit?langContent.sunmit:''}}
+            </div>
+        </header>
+
+        <div class="color_99">
+            <div class=" fontSize14 ">
+                <!-- 请输入您的姓名 -->
+                <div class="bg-white padding12 color_black3 flex_row_left">
+                    <div class="  textname_left">
+                        {{langContent.name?langContent.name:''}}
+                    </div>
+                    <div class="textname_right">
+                        <input type="text" :placeholder="langContent.name_input" v-model="name">
+                    </div>
+                </div>
+
+                <!-- 性别 -->
+                <div class=" bg-white padding12 margin_top3px flex_row_left color_black3" @click="selectSex()">
+                    <div class=" textname_left">
+                        {{langContent.sex?langContent.sex:''}}
+                    </div>
+                    <div class="flex_row_between textname_right">
+                        <input type="text" :placeholder="sexstr?sexstr:langContent.sex_input" disabled>
+                        <!-- <div>{{sexstr?sexstr:langContent.sex_input}}</div> -->
+                        <i class="iconfont icon-direction_right color_default1" style="position: absolute;right: 1rem;"></i>
+                    </div>
+                </div>
+                <!-- 年龄 -->
+                <div class="bg-white padding12 margin_top3px color_black3 flex_row_left">
+                    <div class=" textname_left ">
+                        {{langContent.age?langContent.age:''}}
+                    </div>
+                    <div class="textname_right">
+                        <input type="tel" :placeholder="langContent.age_input" v-model="age">
+                    </div>
+
+                </div>
+
+                <div class="bg-white padding12 margin_top3px flex_row_left color_black3" @click="checkAdd()" style="display:none;">
+                    <!-- 申请城市名 -->
+                    <div class="textname_left " style="display:none;">{{langContent.city?langContent.city:''}}</div>
+                    <!-- 请选择所在城市 -->
+                    <div class="flex_row_between textname_right" style="display:none;">
+                        <!-- <div>{{area}}</div>  -->
+                        <input type="text" :placeholder="area?area:langContent.citytip" disabled>
+                        <i class="iconfont icon-direction_right color_default1" style="position: absolute;right: 1rem;"></i>
+                    </div>
+                </div>
+                <!-- 选择城市后可查看城市等级 -->
+                <!-- <div class="color_default1 padding12" style="text-align: center;">{{tip}}</div> -->
+                <!-- 手机号码 -->
+                <div class="bg-white padding12 margin_top3px color_black3 flex_row_left">
+                    <div class="textname_left">{{langContent.phone?langContent.phone:''}} </div>
+                    <div class="textname_right"><input type="tel" :placeholder="langContent.phone_input" v-model="mobile"></div>
+                </div>
+                <!-- 邮箱地址 -->
+                <div class="bg-white padding12 margin_top3px color_black3 flex_row_left">
+                    <div class="textname_left">{{langContent.email?langContent.email:''}}</div>
+                    <div class="textname_right"><input type="text" :placeholder="langContent.email_input" v-model="email"></div>
+                </div>
+                <!-- 微信账号 -->
+                <div class="bg-white padding12 margin_top3px color_black3 flex_row_left">
+                    <div class="textname_left">{{langContent.wechat?langContent.wechat:''}}</div>
+                    <div class="textname_right"><input type="text" :placeholder="langContent.wechat_input" v-model="wechat"></div>
+                </div>
+                <!-- 详情地址 -->
+                <div class="bg-white padding12 margin_top3px color_black3 flex_row_left">
+                    <div class="textname_left">{{langContent.address?langContent.address:''}}</div>
+                    <div class="textname_right"> <input type="text" :placeholder="langContent.address_input" v-model="address"></div>
+                </div>
+
+            </div>
+        </div>
+
+
+
+        <!-- 提交提示，提示支付金额 -->
+        <div class="padding1 float_center" v-show="isshow">
+            <div class=" box posi_relative">
+                <img src="../../image/warning.svg" alt="" class="tips_img">
+                <!-- 申请城市名 -->
+                <p class="" style="display:none;">{{langContent.aplcity?langContent.aplcity:''}} <strong>{{area}}</strong> </p>
+                <!-- 城市等级 -->
+                <!-- <strong class="">{{langContent.citydeg?langContent.citydeg:''}} <strong>{{tip_title}}</strong></p> -->
+                <!-- 提示支付金额 -->
+                <!-- <p class="tips_text">
+                    {{langContent.pay1?langContent.pay1:''}} <strong>{{tips_money}}</strong> {{langContent.pay2?langContent.pay2:''}}
+                </p> -->
+                <!-- 提示信息 -->
+                <p class="tips_text">
+                    {{langContent.pay1?langContent.pay1:''}}
+                </p>
+                <div class="fontSize12 marginT1 tips_yes">
+                    <div class="common_radio marginR10 " :class="{'on':partner == true}" style="vertical-align:middle;" @click="partner =! partner"></div>
+                    <span>{{langContent.sure?langContent.sure:''}}</span>
+                </div>
+                <div class="flex_row_between width100">
+                    <!-- 提交 -->
+                    <div class="lo_btn fontSize16 marginT1 " @click="submit()">{{langContent.sbtn?langContent.sbtn:''}}</div>
+                    <div class="lo_btn_return fontSize16 marginT1" @click="cancel_tips()">{{langContent.back?langContent.back:''}}</div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="popups">
+            <!-- 选择国家   后获取省份数据 -->
+            <van-tree-select v-show="isShowGlobal" :items="countrylist" :main-active-index="mainActiveIndex" @click-nav="onClickNav">
+                <!-- 选择省份  后获取市区数据 -->
+                <van-tree-select :items="areaList" :main-active-index="mainActiveIndexByCity" :active-id="activeId" @click-nav="onClickNavList" slot="content" @click-item="onClickItem" max="1" />
+                <van-tree-select/>
+        </div>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script src="../../lib/vant/vant.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../res/area.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+    var apply = new Vue({
+        el: '#apply',
+        data: {
+
+            name: '',
+            sex: 0,
+            sexstr: '',
+            age: '',
+            area: '',
+            // area: '请选择所在城市',
+            city: '',
+            mobile: '',
+            address: '',
+            wechat: '',
+            email: '',
+            flag: true,
+            // 提示框
+            partner: false,
+            tip_title: '',
+            tips_money: 0,
+            isshow: false,
+
+            langContent: {},
+            getCodetip: {},
+            tip: '选择城市后可查看城市等级',
+
+            // 选择全球城市
+            isShowGlobal: false,
+            areaList: [], // 省份城市列表,
+            activeId: [], //最后选择的城市
+            mainActiveIndex: 0, //全球选中 国家的number
+            mainActiveIndexByCity: 0, //国家选中城市的number
+            max: 1,
+            globally: {
+                // 导航名称
+                text: '所有城市',
+                // 禁用选项
+                disabled: false,
+                // 该导航下所有的可选项
+                children: []
+            }, //全球地址
+            isShowselect: false,
+            countrylist: [],
+            spread_city: '', //最后选择的城市id
+            isSmrz: 1
+
+
+        },
+        created: function() {
+            var that = this;
+            apiready = function() {
+                fixStatusbar('header,.header,.headers', '.content');
+                // that.areaList = areaList;
+                apply.$data.langContent = GlobleLanguageContent.apply;
+                apply.$data.getCodetip = GlobleLanguageContent.getCode;
+                that.area = apply.$data.langContent.citytip;
+                that.tip = apply.$data.langContent.tip;
+                that.getInfo()
+            }
+
+        },
+        methods: {
+
+            // 左侧导航点击时，触发的事件 event.detail.index：被点击的导航的索引  这是选择国家
+            onClickNav: function(event) {
+                var that = this;
+                that.mainActiveIndex = event;
+                that.getCitylist(that.countrylist[event].id)
+                that.isShowGlobal = true;
+            },
+            // 左侧导航点击时，触发的事件 event.detail.index：被点击的导航的索引  这是选择省份
+            onClickNavList: function(event) {
+                var that = this;
+                that.mainActiveIndexByCity = event;
+                that.getCitylistUrl(that.areaList[event].id, event)
+                that.isShowGlobal = true;
+
+            },
+            // 右侧选择项被点击时，会触发的事件 	event.detail: 该点击项的数据
+            onClickItem: function(event) {
+                var that = this
+                that.spread_city = event.id
+                that.globalcity = event.text
+                that.area = event.text
+                that.isShowGlobal = false
+            },
+
+            //获取   省份城市列表
+            getCitylist: function(id) {
+                var that = this;
+                http(GloballyUrl, 'post', {
+                    pid: id
+                }, function(ret) {
+                    // console.error(JSON.stringify(ret) + '//获取城市列表');
+                    if (ret.code == 200) {
+                        that.areaList = [];
+                        var arryiinfolist = ret.data.info;
+                        arryiinfolist.forEach(function(element) {
+                            that.areaList.push({
+                                text: element.name + '(' + element.name_en + ')',
+                                id: element.id
+                            })
+                        });
+                        that.areaList = JSON.parse(JSON.stringify(that.areaList))
+                            // that.areaList = ret.data;
+                            // console.log(JSON.stringify(that.areaList) + '//获取城市列表');
+                    }
+
+                })
+            },
+            //获取   城市列表    市市市市市市
+            getCitylistUrl: function(id, index) {
+                var that = this;
+                http(GloballyUrl, 'post', {
+                    pid: id
+                }, function(ret) {
+                    // console.error(JSON.stringify(ret) + '// 市市市市市市列表');
+                    if (ret.code == 200) {
+                        // that.activeId = [];
+                        var children = [];
+                        var arryiinfolistUrl = ret.data.info;
+                        arryiinfolistUrl.forEach(function(element) {
+                            children.push({
+                                text: element.name + '(' + element.name_en + ')',
+                                id: element.id,
+                                disabled: false
+                            })
+                        });
+                        that.areaList[index].children = children;
+                        that.areaList = JSON.parse(JSON.stringify(that.areaList))
+                        if (children.length == 0) {
+                            // console.log('没有市区');
+                            that.spread_city = that.areaList[index].id
+                            that.isShowGlobal = false
+                            that.globalcity = that.areaList[index].text
+                            that.area = that.areaList[index].text
+                                // console.log(that.spread_city);
+                        } else {
+                            that.spread_city = 0
+                                // console.log(that.spread_city + '默认全国');
+                        }
+                        // console.log(JSON.stringify(that.areaList) + '//获取城市列表');
+                    }
+
+                })
+            },
+
+            // 点击提交  显示提示框
+            isshow_tips: function() {
+                var that = this;
+                //if (that.name == '' || that.sex == 0 || that.age == '' || that.spread_city == '' || that.mobile == '' || that.address == '' || that.wechat == '' || that.email == '') {
+                if (that.name == '' || that.sex == 0 || that.age == '' || that.mobile == '' || that.address == '' || that.wechat == '' || that.email == '') {
+                    api.toast({
+                        msg: that.langContent.tipinfo,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return
+                }
+                that.isshow = true
+            },
+            // 取消确认
+            cancel_tips: function() {
+                var that = this
+                that.isshow = false
+            },
+            // 点击显示
+            checkAdd: function() {
+                var that = this;
+                that.isShowGlobal = !that.isShowGlobal;
+            },
+            getInfo: function() {
+                var that = this;
+                http(getQuhao, 'post', {}, function(ret) {
+                        // console.error(JSON.stringify(ret) + '//获取全球城市列表');
+                        if (ret.code == 200) {
+                            // that.globally.children = ret.data.info;
+                            var arryiinfo = ret.data.info;
+                            arryiinfo.forEach(function(element) {
+                                that.countrylist.push({
+                                    text: element.name + '(' + element.name_en + ')',
+                                    id: element.id
+                                })
+                            });
+                            setTimeout(function() {
+                                // that.isShowGlobal = true;
+                                that.getCitylist(that.countrylist[0].id)
+                            }, 1000);
+                        }
+                        // console.log(JSON.stringify(arryiinfo) + '//获取全球城市列表');
+                    })
+                    // 检查是否实名认证
+                http(getuserinfoUrl, 'post', {}, function(ret) {
+                    if (ret.code == 200) {
+                        that.isSmrz = ret.data.auth_primary;
+                    } else if (ret.code == 401) {
+                        api.sendEvent({
+                            name: 'pause',
+                            extra: {}
+                        });
+                        console.log("TO login.html");
+                        toPage('login', '../auth/login.html', {
+                            from: 'center'
+                        });
+                    }
+                })
+            },
+            selectSex: function() {
+                var that = this;
+                var list = that.langContent.sexlist
+                api.actionSheet({
+                    cancelTitle: that.langContent.cacle,
+                    buttons: list
+                }, function(ret, err) {
+                    var index = ret.buttonIndex;
+                    if (index == 1) {
+                        that.sex = 1;
+                        that.sexstr = list[0]
+                    } else {
+                        that.sex = 2;
+                        that.sexstr = list[1]
+                    }
+                })
+            },
+            submit: function() {
+                var that = this;
+                if (that.partner) {
+                    if (that.isSmrz == 0) {
+                        api.toast({
+                            msg: that.langContent.smrzMsg,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                        setTimeout(function() {
+                            api.openWin({
+                                name: 'personal_data',
+                                url: '../my/personal_data.html',
+                                reload: true,
+                                pageParam: {}
+                            });
+                        }, 1500);
+                    } else {
+                        var param = {
+                            sex: that.sex,
+                            age: that.age,
+                            username: that.name,
+                            city: that.spread_city,
+                            mobile: that.mobile,
+                            email: that.email,
+                            address: that.address,
+                            wechat: that.wechat
+                        }
+                        http(partnerApply, 'post', param,
+                            function(res) {
+                                that.flag = true;
+                                if (res.code == 200) {
+                                    api.toast({
+                                        msg: res.msg,
+                                        duration: 2000,
+                                        location: 'bottom'
+                                    });
+                                    setTimeout(function() {
+                                        goBack()
+                                    }, 2000);
+                                } else {
+                                    api.toast({
+                                        msg: res.msg,
+                                        duration: 2000,
+                                        location: 'bottom'
+                                    });
+                                    setTimeout(function() {
+                                        goBack()
+                                    }, 2000);
+                                }
+                            });
+                    }
+
+                } else {
+                    api.toast({
+                        msg: that.langContent.plesesure,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+
+                }
+
+            }
+        }
+    });
+</script>

@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>应用中心</title>
+    <link rel="stylesheet" type="text/css" href="../lib/iconfont2/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+    <link rel="stylesheet" type="text/css" href="../lib/swiper/swiper.min.css" />
+    <!-- <script src="../lib/zepto.min.js"></script> -->
+    <style>
+        section {
+            width: 100%;
+        }
+        
+        #investproSwiper .swiper-slide {
+            width: 320px;
+            height: 150px;
+            padding: 0 5px;
+        }
+        
+        #investproSwiper .swiper-wrapper {
+            margin-bottom: 2.5rem;
+        }
+        
+        #investproSwiper .swiper-slide .investpro {
+            width: 320px;
+            height: 150px;
+            margin: 0px;
+            margin-top: -2px;
+            transition: all 0.5s linear;
+            opacity: 1;
+        }
+        
+        #investproSwiper .swiper-slide-active .investpro {
+            width: 320px;
+            height: 150px;
+            margin: 0px;
+            /* margin-left: 8px; */
+            /* margin-top: -17px; */
+            opacity: 1;
+        }
+        /* 分页器 */
+        
+        .swiper-pagination-bullet-active {
+            background-color: #cb974d;
+            width: 5px;
+            height: 5px;
+        }
+        
+        .swiper-pagination-bullet {
+            width: 5px;
+            height: 5px;
+        }
+        
+        .bg_appcentercolor {
+            background-color: #fff;
+        }
+        
+        .my_store {
+            display: flex;
+            padding: 1.5rem 0;
+            background: #fff;
+        }
+        
+        .my_store img {
+            width: 4rem;
+            height: 4rem;
+            vertical-align: middle;
+        }
+        
+        .btn_cj {
+            flex: 1;
+            font-size: 1rem;
+            text-align: center;
+            color: #666666;
+        }
+        
+        .btn_cj img {
+            vertical-align: middle;
+            margin: 0 auto;
+        }
+        
+        p {
+            margin: 0rem;
+        }
+        
+        .border_yuanjiao {
+            border-radius: 5px !important;
+        }
+        /* 开发中样式  本页面没有引入公共样式 */
+        
+        #development {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 180px;
+            color: #fff;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 8px;
+            z-index: 10;
+            overflow: hidden;
+        }
+        
+        .flex_col_center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        
+        .fontSize100 {
+            font-size: 100px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        }
+        
+        .fontSize14 {
+            font-size: 1.167rem !important;
+        }
+        
+        header {
+            left: 0;
+            top: 0;
+            position: fixed;
+            z-index: 100000;
+            display: block;
+            width: 100%;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.3rem;
+        }
+    </style>
+</head>
+
+<body>
+    <!--********************************九宫格分隔线**********************************88 -->
+
+    <div id="frame2" v-cloak>
+        <header>
+
+        </header>
+        <div class="bg_appcentercolor ">
+            <!-- <img src="../image/appcenter/carousel_bgimg.png" alt="" style="width: 100% ;position: fixed;top: 0;left: 0;"> -->
+            <!-- 轮播图 -->
+            <section>
+                <div class="swiper-container" id="investproSwiper">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide " v-for="(itme,index) in linkdata">
+                            <div>
+                                <a href="##">
+                                    <img :src="itme.ad_image" alt="" class="investpro border_yuanjiao" @click.stop="toInfo(itme.ad_link)">
+                                </a>
+                            </div>
+                        </div>
+
+                    </div>
+                    <!--分页器。如果放置在swiper-container外面，需要自定义样式。-->
+                    <div class="swiper-pagination"></div>
+                    <!-- 如果需要分页器 -->
+                    <!-- <div class="swiper-pagination" style="color:#B3A795"></div> -->
+                </div>
+            </section>
+        </div>
+        <div style="height: 10px; background: #eeeeee"></div>
+        <!-- 九宫格 -->
+        <!-- 开发中样式显示隐藏 -->
+        <div class=" flex_col_center " id="development">
+            <i class="iconfont icon-development fontSize100 "></i>
+            <div class=" fontSize14">{{getCodetip.develop?getCodetip.develop:''}}</div>
+        </div>
+
+        <div class="my_store my_store_top ">
+            <div class="btn_cj" onclick="toPage('college','./college/college.html')">
+                <img src="../image/appcenter/ic_app_college.png" alt="">
+                <p>{{langContent.sxy?langContent.sxy:''}}</p>
+            </div>
+            <div class="btn_cj" onclick="toPage('partner','./appcenter/partner.html')">
+                <img src="../image/appcenter/ic_app_partenr.png" alt="">
+                <p>{{langContent.cshhr?langContent.cshhr:''}} </p>
+            </div>
+            <div class="btn_cj" @click="languageToPage('lifeserve','./appcenter/lifeserve.html')">
+                <img src="../image/appcenter/ic_app_server.png" alt="">
+                <p>{{langContent.shfw?langContent.shfw:''}}</p>
+            </div>
+
+        </div>
+        <div class="my_store ">
+
+            <div class="btn_cj" onclick="toPage('cjdemo','./cjdemo/cjdemo.html',{})">
+                <div class="btn_jz">
+                    <img src="../image/appcenter/ic_app_active.png" alt="">
+                    <p>{{langContent.hdzx?langContent.hdzx:''}}</p>
+                </div>
+            </div>
+            <div class="btn_cj" @click="toGame()">
+                <img src="../image/appcenter/ic_app_game.png" alt="">
+                <p>{{langContent.yxyl?langContent.yxyl:''}}</p>
+            </div>
+            <!-- <div class="btn_cj" @click="developing"> -->
+            <div class="btn_cj" @click="languageToXSPage('mission','./appcenter/mission/mission.html',{})">
+                <img src="../image/appcenter/ic_app_reward.png" alt="">
+                <p>{{langContent.rwxs?langContent.rwxs:''}}</p>
+            </div>
+
+        </div>
+        <div class="my_store my_store_bottom ">
+            <div class="btn_cj" @click="kaifazhong()">
+                <img src="../image/appcenter/ic_app_adv.png" alt="">
+                <p>{{langContent.qylmgg?langContent.qylmgg:''}}</p>
+            </div>
+
+            <div class="btn_cj" @click="kaifazhong()">
+                <img src="../image/appcenter/ic_app_shop.png" alt="">
+                <p>{{langContent.sc?langContent.sc:''}}</p>
+            </div>
+            <div class="btn_cj" @click="kaifazhong()">
+                <img src="../image/appcenter/ic_app_live.png" alt="">
+                <p>{{langContent.zb?langContent.zb:''}}</p>
+            </div>
+        </div>
+        <div style="padding: 2rem;"></div>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../script/rsa.js"></script>
+<script type="text/javascript" src="../script/aes.js"></script>
+<script type="text/javascript" src="../script/const.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../lib/swiper/swiper.min.js"></script>
+<!-- <script type="text/javascript" src="../lib/swiper/swiper.zhong.js"></script> -->
+<script type="text/javascript" src="../lib/md5.js"></script>
+<script type="text/javascript">
+    var frame2 = new Vue({
+        el: "#frame2",
+        data: {
+            info: {},
+            linkdata: [{
+                ad_image: '../image/4.jpg'
+            }],
+            cate_id: 1,
+            langContent: {},
+            getCodetip: {},
+
+        },
+        created: function() {
+            var that = this
+
+            apiready = function() {
+                var height = $api.fixStatusBar(document.querySelector('header'));
+                var paddingheight = height + 15;
+                $api.css($api.dom('.bg_appcentercolor'), 'padding-top:' + paddingheight + 'px');
+
+                frame2.$data.langContent = GlobleLanguageContent.frame2;
+                frame2.$data.getCodetip = GlobleLanguageContent.getCode;
+                that.cate_id = that.langContent.cate_id
+                var params = {
+                    position_id: that.cate_id
+                }
+                http(getadlistUrl, 'post', params, function(ret) {
+                    if (ret.code == 200) {
+                        that.linkdata = ret.data
+                        setTimeout(function() {
+                            new Swiper(".swiper-container", {
+                                pagination: {
+                                    el: '.swiper-pagination',
+                                    // dynamicBullets: true,
+                                },
+                                // pagination: ".swiper-pagination",
+                                notNextTick: true,
+                                // swiper configs 所有的配置同swiper官方api配置
+                                autoplay: true,
+                                speed: 300,
+                                // speed: 500,
+                                // autoplay: 2000,
+                                setWrapperSize: true,
+                                autoHeight: true,
+                                paginationClickable: true,
+                                mousewheelControl: true,
+
+                                slidesPerView: 'auto', //设置slider容器能够同时显示的slides数量
+                                centeredSlides: true, //设定为true时，活动块会居中，而不是默认状态下的居左。
+                                loop: true,
+                                noSwiping: false, //设置为true时禁止切换
+                                watchSlidesProgress: true, //开启这个参数来计算每个slide的progress(进度、进程)
+                                onProgress: function(a) {
+                                    var b, c, d;
+                                    for (b = 0; b < a.slides.length; b++) c = a.slides[b], d = c.progress, scale = 1 - Math.min(
+                                            Math.abs(.2 * d), 1), es = c.style, es.opacity = 1 - Math.min(Math.abs(d / 2), 1),
+                                        es.webkitTransform = es.MsTransform = es.msTransform = es.MozTransform = es.OTransform =
+                                        es.transform = "translate3d(0px,0," + -Math.abs(150 * d) + "px)"
+                                },
+                                onSetTransition: function(a, b) {
+                                    for (var c = 0; c < a.slides.length; c++) es = a.slides[c].style, es
+                                        .webkitTransitionDuration = es.MsTransitionDuration = es.msTransitionDuration = es
+                                        .MozTransitionDuration = es.OTransitionDuration = es.transitionDuration = b + "ms"
+                                }
+                            });
+                        }, 500);
+                    }
+                })
+                that.getInfo()
+            }
+        },
+        methods: {
+            toPage: function(name, url, params) {
+                api.openWin({
+                    name: name,
+                    url: url,
+                    reload: true,
+                    pageParam: params || {}
+                });
+            },
+            languageToXSPage: function(name, url, params) {
+                var that = this
+                if (that.langContent.cate_id == 2) {
+                    that.kaifazhong()
+                } else {
+                    api.openWin({
+                        name: name,
+                        url: url,
+                        reload: true,
+                        pageParam: params || {}
+                    });
+
+                }
+            },
+            languageToPage: function(name, url, params) {
+                var that = this
+                if (that.info.area_code != 86) {
+                    that.kaifazhong()
+                } else {
+                    api.openWin({
+                        name: name,
+                        url: url,
+                        reload: true,
+                        pageParam: params || {}
+                    });
+
+                }
+            },
+            reloadlang: function() {
+                var that = this;
+                frame2.$data.langContent = GlobleLanguageContent.frame2;
+                frame2.$data.getCodetip = GlobleLanguageContent.getCode;
+            },
+            // 开发中样式显示隐藏
+            kaifazhong: function() {
+                var that = this;
+                $api.css($api.dom('#development'), 'display:flex;');
+                setTimeout(function() {
+                    $api.css($api.dom('#development'), 'display:none;');
+                }, 2000);
+                return;
+
+            },
+            toGame: function() {
+                var that = this;
+                http(getuserinfoUrl, 'post', {}, function(ret) {
+                    if (ret.code == 200) {
+                        // that.info = ret.data;
+                        // 用户信息参数
+                        var parmas = {
+                            channel: 12695,
+                            openid: ret.data.id,
+                            nick: ret.data.user_sn,
+                            avatar: ret.data.avatar || '../image/logo.png',
+                            sex: ret.data.sex,
+                            phone: ret.data.mobile,
+                            time: parseInt(new Date().getTime() / 1000),
+                        }
+                        var key = '1fa00bcc9fe548d0997ee61894cda2b0'; //闪电玩平台分配的秘钥
+                        var string = 'channel=' + parmas.channel + '&openid=' + parmas.openid + '&time=' + parmas.time +
+                            '&nick=' + parmas.nick + '&avatar=' + parmas.avatar + '&sex=' + parmas.sex + '&phone=' + parmas.phone + key;
+                        var sign = hex_md5(string).toLowerCase();
+                        parmas.sign = sign;
+                        //添加启动参数
+                        parmas.sdw_simple = 9; //打开闪电玩游戏中心简易版
+                        //添加UI屏蔽参数
+                        parmas.sdw_ld = 1; //隐藏游戏页的闪电玩loading页面
+                        // urlEncode  {a:1,b:2,c:3}   =>   a=1&b=2&c=3 
+                        var authPage = 'http://www.shandw.com/auth/?' + 'channel=' + parmas.channel + '&openid=' + parmas.openid + '&time=' + parmas.time +
+                            '&nick=' + encodeURIComponent(parmas.nick) + '&avatar=' + encodeURIComponent(parmas.avatar) + '&sex=' + parmas.sex + '&phone=' + parmas.phone +
+                            '&sign=' + parmas.sign + '&sdw_simple=' + parmas.sdw_simple + '&sdw_ld=' + parmas.sdw_ld;
+                        // window.location.href = authPage
+                        var browser = api.require('webBrowser');
+                        browser.open({
+                            url: authPage,
+                            titleBar: {
+                                bg: '#ffffff', //标题栏背景颜色，支持 rgb，rgba，#fff等，默认值#393A3F
+                                textColor: '#333333' //标题栏文字颜色，支持 rgb，rgba，#fff等，默认值#FFF
+                            }
+                        });
+                    }
+                })
+            },
+            toInfo: function(goodurl) {
+                var that = this;
+                var browser = api.require('webBrowser');
+                if (goodurl == '888') {
+                    that.toGame()
+                    return
+                }
+                browser.open({
+                    url: goodurl
+                });
+                api.sendEvent({
+                    name: 'pause',
+                    extra: {}
+                });
+            },
+            getInfo: function() {
+                var that = this;
+                setTimeout(function() {
+                    api.setStatusBarStyle({
+                        style: 'dark',
+                        color: 'rgba(0,0,0,0)'
+                    });
+                }, 100);
+                http(getuserinfoUrl, 'post', {}, function(ret) {
+                    if (ret.code == 200) {
+                        that.info = ret.data;
+                    } else if (ret.code == 401) {
+                        api.sendEvent({
+                            name: 'pause',
+                            extra: {}
+                        });
+                        toPage('login', 'auth/login.html', {
+                            from: 'ysjzc'
+                        });
+                    }
+                })
+            },
+        }
+    })
+</script>

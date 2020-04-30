@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>悬赏大厅</title>
+    <link rel="stylesheet" type="text/css" href="../css/new/reset.css">
+    <link rel="stylesheet" type="text/css" href="../lib/vant/vant.css" />
+    <link rel="stylesheet" type="text/css" href="../lib/iconfont2/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../css/new/rewark.css">
+    <script src="../script/lib-flexible.js"></script>
+</head>
+
+<body class="rewark">
+    <div id="mission" class="contarin">
+        <div class="header">
+            <div class="back"><img src="./image/back.png" alt=""></div>
+            <div class="search">
+                <input type="text" placeholder="搜索悬赏任务" v-model="words" v-on:input="toSearch(words)" onpaste="return true" @keyup.enter="toSearch">
+            </div>
+        </div>
+        <div class="nav fontSize26 colffffff">
+            <div class="navLi"><img src="./image/b2.png" alt=""><span>悬赏标准</span></div>
+            <div class="navLi"><img src="./image/b3.png" alt=""><span>推广排行</span></div>
+            <div class="navLi"><img src="./image/b4.png" alt=""><span>发布任务</span></div>
+            <div class="navLi"><img src="./image/b5.png" alt=""><span>悬赏中心</span></div>
+        </div>
+        <div class="rek">
+            <div class="h3"><img src="./image/b7.png" alt="">今日头条</div>
+            <div class="rekUl bj bjTu fontSize26">
+                <div class="rekLeft">
+                    <div class="rekLi">
+                        <div class="img"><img src="./image/b8.png" alt=""></div>
+                        <div class="content">
+                            <div class="title">1秒任务必过秒申</div>
+                            <div class="p">
+                                <span class="fontSize22 col3744b7">微信注册</span>
+                                <span class="fontSize28 colff8900">+6.5HDC</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="rekLi">
+                        <div class="img"><img src="./image/b8.png" alt=""></div>
+                        <div class="content">
+                            <div class="title">1秒任务必过秒申</div>
+                            <div class="p">
+                                <span class="fontSize22 col3744b7">微信注册</span>
+                                <span class="fontSize28 colff8900">+6.5HDC</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="rekRight">
+                    <div class="rekLi">
+                        <div class="img"><img src="./image/b8.png" alt=""></div>
+                        <div class="content">
+                            <div class="title">1秒任务必过秒申</div>
+                            <div class="p">
+                                <span class="fontSize22 col3744b7">微信注册</span>
+                                <span class="fontSize28 colff8900">+6.5HDC</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="rekLi">
+                        <div class="img"><img src="./image/b8.png" alt=""></div>
+                        <div class="content">
+                            <div class="title">1秒任务必过秒申</div>
+                            <div class="p">
+                                <span class="fontSize22 col3744b7">微信注册</span>
+                                <span class="fontSize28 colff8900">+6.5HDC</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="rek">
+            <div class="h3"><img src="./image/b12.png" alt="">为你推荐</div>
+            <div class="rekUl bj bjTu fontSize26">
+                <div class="ul">
+                    <div class="img">
+                        <img src="./image/b8.png" alt="">
+                    </div>
+                    <div class="li">
+                        <div class="top head">
+                            <div class="fontSize26">微信注册辅助</div>
+                            <div class="fontSize22"><span class="fontSize28 colff8900">0.60</span>HDC</div>
+                        </div>
+                        <div class="top foot">
+                            <div class="left fontSize22 col3744b7">
+                                <img src="./image/b13.png" alt="">
+                                26人已赚到赏金
+                            </div>
+                            <div class="right">剩余 <span class="col00fbfd">3</span> 人</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ul">
+                    <div class="img">
+                        <img src="./image/b8.png" alt="">
+                    </div>
+                    <div class="li">
+                        <div class="top head">
+                            <div class="fontSize26">微信注册辅助</div>
+                            <div class="fontSize22"><span class="fontSize28 colff8900">0.60</span>HDC</div>
+                        </div>
+                        <div class="top foot">
+                            <div class="left fontSize22 col3744b7">
+                                <img src="./image/b13.png" alt="">
+                                26人已赚到赏金
+                            </div>
+                            <div class="right">剩余 <span class="col00fbfd">3</span> 人</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ul">
+                    <div class="img">
+                        <img src="./image/b8.png" alt="">
+                    </div>
+                    <div class="li">
+                        <div class="top head">
+                            <div class="fontSize26">微信注册辅助</div>
+                            <div class="fontSize22"><span class="fontSize28 colff8900">0.60</span>HDC</div>
+                        </div>
+                        <div class="top foot">
+                            <div class="left fontSize22 col3744b7">
+                                <img src="./image/b13.png" alt="">
+                                26人已赚到赏金
+                            </div>
+                            <div class="right">剩余 <span class="col00fbfd">3</span> 人</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ul">
+                    <div class="img">
+                        <img src="./image/b8.png" alt="">
+                    </div>
+                    <div class="li">
+                        <div class="top head">
+                            <div class="fontSize26">微信注册辅助</div>
+                            <div class="fontSize22"><span class="fontSize28 colff8900">0.60</span>HDC</div>
+                        </div>
+                        <div class="top foot">
+                            <div class="left fontSize22 col3744b7">
+                                <img src="./image/b13.png" alt="">
+                                26人已赚到赏金
+                            </div>
+                            <div class="right">剩余 <span class="col00fbfd">3</span> 人</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ul">
+                    <div class="img">
+                        <img src="./image/b8.png" alt="">
+                    </div>
+                    <div class="li">
+                        <div class="top head">
+                            <div class="fontSize26">微信注册辅助</div>
+                            <div class="fontSize22"><span class="fontSize28 colff8900">0.60</span>HDC</div>
+                        </div>
+                        <div class="top foot">
+                            <div class="left fontSize22 col3744b7">
+                                <img src="./image/b13.png" alt="">
+                                26人已赚到赏金
+                            </div>
+                            <div class="right">剩余 <span class="col00fbfd">3</span> 人</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../lib/vant/vant.min.js"></script>
+<script type="text/javascript" src="../script/rsa.js"></script>
+<script type="text/javascript" src="../script/aes.js"></script>
+<script type="text/javascript" src="../script/const.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript">
+    var mission = new Vue({
+        el: "#mission",
+        data: {
+            type: 0,
+            words: '',
+            value: '',
+            showPicker: false,
+            columns: ['全部', '注册', '关注', '投票', '砍价', '转发', '其他'],
+            missionType: '类型',
+            rewardType: '赏金',
+            propertyType: '资产',
+            page: 1,
+            downLoading: false,
+            upLoading: false,
+            finished: false,
+            list: [],
+            typeindex: 0,
+            currency_typeindex: 1,
+            rewardindex: 0,
+            is_new: 0,
+            peoplenum: 0
+        },
+        created: function() {
+            var that = this
+            apiready = function() {
+                var height = $api.fixStatusBar($api.dom('.header'))
+                if (height > 0) {
+                    $api.css($api.dom('.cont'), 'margin-top:' + (height - 45) + 'px;');
+                }
+                that.getList()
+            }
+        },
+        methods: {
+            getList: function() {
+                var that = this;
+                if (that.upLoading) { //上拉加载
+                    that.page++;
+                    var param = {
+                        page: that.page,
+                        // uid: $api.getStorage('userInfo').uid,
+                        type: that.typeindex,
+                        currency_type: that.currency_typeindex,
+                        bounty: that.rewardindex,
+                        is_new: that.is_new,
+                        keyword: that.words
+                    }
+                } else {
+                    that.page = 1; //刷新
+                    that.finished = true;
+                    var param = {
+                        page: 1,
+                        // uid: $api.getStorage('userInfo').uid,
+                        type: that.typeindex,
+                        currency_type: that.currency_typeindex,
+                        bounty: that.rewardindex,
+                        is_new: that.is_new,
+                        keyword: that.words
+                    }
+                }
+                // 获取任务列表
+                http(getRewardUrl, 'post', param, function(ret) {
+                    if (ret.code == 200) {
+                        that.peoplenum = ret.data.bounty_finish_count;
+
+                        if (that.upLoading) {
+                            that.list = that.list.concat(ret.data.bounty_list.data);
+                            that.upLoading = false;
+                        } else {
+                            that.list = ret.data.bounty_list.data;
+                            that.downLoading = false;
+                            that.finished = false;
+                        }
+                        if (ret.data.bounty_list.data && ret.data.bounty_list.data && ret.data.bounty_list.data.length < 15) {
+                            that.finished = true;
+                        }
+                    }
+                })
+            },
+            switchover: function(type) {
+                var that = this;
+                if (type == 1) {
+                    that.columns = ['全部', '注册', '关注', '投票', '砍价', '转发', '其他'];
+                    that.showPicker = true
+                } else if (type == 2) {
+                    that.columns = ['默认', '赏金由高到低', '赏金由低到高']
+                    that.showPicker = true
+                } else if (type == 3) {
+                    that.columns = ['全部', 'HDC'] //, 'USDT'
+                    that.showPicker = true
+                }
+                that.type = type
+            },
+            // 清除input文字
+            clear: function() {
+                var that = this;
+                that.isShowlist = false;
+                that.words = '';
+                that.getList()
+            },
+
+            onConfirm: function(value, index) {
+                var that = this;
+                if (that.type == 1) {
+                    that.typeindex = index
+                    that.missionType = value
+                } else if (that.type == 2) {
+                    that.rewardType = value
+                    that.rewardindex = index
+                } else if (that.type == 3) {
+                    that.propertyType = value
+                    that.currency_typeindex = index
+                }
+                that.showPicker = false;
+                that.type = 0;
+                that.getList()
+            },
+            toSearch: function(words) {
+                var that = this;
+                that.getList()
+            },
+
+            toPage: function(name, url, params) {
+                api.openWin({
+                    name: name,
+                    url: url,
+                    reload: true,
+                    pageParam: params || {}
+                });
+            },
+        },
+    })
+</script>

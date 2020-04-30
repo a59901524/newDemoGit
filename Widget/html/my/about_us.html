@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>Document</title>
+    <link rel="stylesheet" href="../../lib/iconfont2/iconfont.css">
+    <link rel="stylesheet" href="../../css/common.css">
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background: #ffffff;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        }
+    </style>
+</head>
+
+<body class="has_header bg-white color_black3">
+    <div id="about_us" v-cloak>
+        <header class="header bg_default1 bbd">
+            <i class="iconfont icon-xiangzuo" onclick="goBack()"></i>
+            <div>{{langContent.title?langContent.title:title}}</div>
+        </header>
+        <div class="padding12 fontSize14 cont bg-white" v-html="info">
+            <!-- 腾远科技演示专用 -->
+        </div>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    var about_us = new Vue({
+        el: "#about_us",
+        data: {
+            title: '',
+            info: '',
+            url: '',
+            langContent: {},
+            getCodetip: {},
+        },
+        created: function() {
+            var that = this
+            apiready = function() {
+                var height = $api.fixStatusBar($api.dom('.header'))
+                if (height > 0) {
+                    $api.css($api.dom('.cont'), 'margin-top:' + (height - 45) + 'px;');
+                }
+                about_us.$data.getCodetip = GlobleLanguageContent.getCode;
+                that.title = api.pageParam.title;
+                if (api.pageParam.title == '信息') {
+                    that.info = api.pageParam.info;
+                } else if (api.pageParam.title == '交易规则') {
+                    about_us.$data.langContent = GlobleLanguageContent.rules;
+                    that.info = api.pageParam.info;
+                } else if (api.pageParam.title == '公告详情' || api.pageParam.title == 'Announcement details' || api.pageParam.title == '帮助详情' || api.pageParam.title == 'Help details' || api.pageParam.title == '新手指南') {
+                    that.getdetail()
+                }
+
+            }
+        },
+        methods: {
+            getdetail: function() {
+                var that = this;
+                if (api.pageParam.title == '新手指南') {
+                    that.url = getcollegeUrl
+                } else {
+                    that.url = advicesdetailUrl
+                }
+                http(that.url, 'post', {
+                    id: api.pageParam.id
+                }, function(ret) {
+                    if (ret.code == 200) {
+                        if (api.pageParam.title == '新手指南') {
+                            if (that.getCodetip.language_id == 1) {
+                                that.info = that.decodeUnicode(ret.data.content)
+                            } else {
+                                that.info = that.decodeUnicode(ret.data.content_en)
+                            }
+                        } else {
+                            if (that.getCodetip.language_id == 1) {
+                                that.info = ret.data.content;
+                            } else {
+                                that.info = ret.data.content_en;
+                            }
+                        }
+                        // that.info = ret.data.info;
+                        that.info = that.info.replace(/<img/g, '<img style="max-width:100%;height:auto" ') //防止富文本图片过大
+                        that.info = that.info.replace(/<video/g, '<video style="max-width:100%;height:auto" ') //防止富文本图片过大
+                    }
+                })
+            },
+            // 解码  
+            decodeUnicode: function(str) {
+                str = str.replace(/\\/g, "%");
+                //转换中文
+                str = unescape(str);
+                //将其他受影响的转换回原来
+                str = str.replace(/%/g, "\\");
+                //对网址的链接进行处理
+                str = str.replace(/\\/g, "");
+                return str;
+            },
+            toPage: function(name, url, params) {
+                api.openWin({
+                    name: name,
+                    url: url,
+                    reload: true,
+                    pageParam: params || {}
+                });
+            },
+
+        }
+    })
+</script>

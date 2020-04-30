@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>反馈列表</title>
+    <link rel="stylesheet" type="text/css" href="../../css/new/reset.css">
+    <link rel="stylesheet" type="text/css" href="../../lib/vant/vant.css" />
+    <link rel="stylesheet" type="text/css" href="../../lib/iconfont2/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/new/feedback.css">
+    <script src="../../script/lib-flexible.js"></script>
+</head>
+
+<body class="feedback">
+    <div id="feedlist" class="contarin">
+        <header>
+            <div class="left" onclick="goBack()"><img src="../../image/new/back.png" alt=""></div>
+            <div class="center fontSize35">反馈列表</div>
+            <div class="right fontSize24 col3744b7" onclick="toPage('feedback','feedback.html',{from:'center',type_id:2})">去反馈</div>
+        </header>
+        <div class="h88"></div>
+        <div class="content">
+            <div class="nav fontSize26 col3744b7">
+                <span :class="{'active':type_id==1}" @click="choice(1)">投诉</span>
+                <span :class="{'active':type_id==2}" @click="choice(2)">建议</span>
+            </div>
+        </div>
+        <div class="cont bj bjTu" v-if="list.length>0">
+          <van-pull-refresh id="getInfo" v-model="downLoading" @refresh="getInfo" :pulling-text="getCodetip.vant_pulling" :loosing-text="getCodetip.vant_loosing" :loading-text="getCodetip.vant_loading">
+              <van-list class="list" v-model="upLoading" :finished="finished" :finished-text="getCodetip.vantlistfinished" @load="getInfo" :immediate-check="false">
+                <div class="ul">
+                    <div class='li' v-for="item in list" @click="tofeeddetailPage('feeddetail','feeddetail.html',{item:item})" >
+                        <div class="title">{{item.title?item.title:""}}</div>
+                        <p>{{item.create_time?changeDate(item.create_time):""}}</p>
+                    </div>
+                </div>
+              </van-list>
+          </van-pull-refresh>
+        </div>
+    </div>
+
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../lib/vant/vant.min.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    var feedlist = new Vue({
+        el: "#feedlist",
+        data: {
+            list: [],
+            downLoading: false,
+            upLoading: false,
+            finished: false,
+            page: 1,
+            langContent: {},
+            getCodetip: {},
+            type_id: 1
+        },
+        created: function() {
+            var that = this;
+            apiready = function() {
+                fixStatusbar('header,.header,.headers', '.content');
+                var height = $api.fixStatusBar(document.querySelector('header'));
+                var minheight = api.winHeight - height;
+                $api.css($api.dom('#feedlist'), 'min-height:' + minheight + 'px');
+                that.getInfo()
+                feedlist.$data.langContent = GlobleLanguageContent.feedlist;
+                feedlist.$data.getCodetip = GlobleLanguageContent.getCode;
+            }
+
+        },
+        methods: {
+            changeDate: function(datetimes) {
+                var needdate = new Date(datetimes * 1000);
+                Y = needdate.getFullYear() + '-';
+                M = (needdate.getMonth() + 1 < 10 ? '0' + (needdate.getMonth() + 1) : needdate.getMonth() + 1) + '-';
+                D = needdate.getDate() + ' ';
+                h = (needdate.getHours() < 10 ? '0' + needdate.getHours() : needdate.getHours()) + ':';
+                m = (needdate.getMinutes() < 10 ? '0' + needdate.getMinutes() : needdate.getMinutes());
+                return Y + M + D + h + m;
+            },
+            tofeeddetailPage: function(name, url, params) {
+                api.openWin({
+                    name: name,
+                    url: url,
+                    reload: true,
+                    pageParam: params || {}
+                });
+            },
+            choice: function(num) {
+                var that = this;
+                that.type_id = num;
+                that.getInfo()
+            },
+            getInfo: function() {
+                var that = this;
+                if (that.upLoading) { //上拉加载
+                    that.page++;
+                } else {
+                    that.page = 1; //刷新
+                    that.finished = true;
+                }
+                http(getfeedbacklistUrl, 'post', {
+                    page: that.page,
+                    type_id: that.type_id
+                }, function(res) {
+                    if (res.code == 200) {
+                        if (that.upLoading) {
+                            that.list = that.list.concat(res.data.data);
+                            that.upLoading = false;
+                        } else {
+                            that.list = res.data.data;
+                            that.downLoading = false;
+                            that.finished = false;
+                        }
+                        if (res.data && res.data.data && res.data.data.length < 10) {
+                            that.finished = true;
+                        }
+                    }
+                })
+            }
+        }
+    })
+</script>

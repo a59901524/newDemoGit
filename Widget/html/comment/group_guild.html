@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>我的公会</title>
+    <link rel="stylesheet" href="../../lib/iconfont2/iconfont.css">
+    <link rel="stylesheet" href="../../css/common.css">
+    <link rel="stylesheet" type="text/css" href="../../css/new/reset.css">
+    <link rel="stylesheet" type="text/css" href="../../css/new/mySociety.css">
+    <script type="text/javascript" src="../../script/lib-flexible.js"></script>
+</head>
+
+<body class="has_header">
+    <div id="group_guild" class="mySociety" v-cloak>
+        <header class="header">
+            <i class="iconfont icon-xiangzuo" onclick="goBack()"></i>
+            <div>我的公会</div>
+            <!-- <div v-if="jurisdiction" class="tomyfeed" onclick="toPage('connectsxy','connectsxy.html')">{{langContent.subtitle?langContent.subtitle:''}}</div> -->
+        </header>
+        <div class="h88"></div>
+        <div class="flex_box_center cont">
+        </div>
+        <div class="top">
+            <div class="topLeft">
+                <div class="img fl"><img :src="info.avatar?info.avatar:'../../image/myCenter/ghicon.png'" alt=""></div>
+                <div class="title fl">
+                    <div class="contTitle">公会昵称: 诗音公会 </div>
+                    <div class="level">LV.3</div>
+                </div>
+            </div>
+            <div class="nav">
+                <div class="navLi">会长昵称：诗音</div>
+                <div class="navLi">会长微信：550000000</div>
+                <div class="navLi">会长电话：15000000000</div>
+                <div class="navLi">会长Q群：1002000000</div>
+            </div>
+        </div>
+        <div class="content2 bj bjTu">
+          <h3 class="colabbdff">公司宣言</h3>
+          <p>恒达链有你更美好！2020年我们携手同行共同见证恒达链的发展历程。与其焦虑，不如在家好好推广？恒达链短视频创业风口，抓住趋势，起飞？全球公测已上线，恒达链从来说到做到，即将爆发，你准备好了吗？加会长微信，拉你进高级群，解答任何疑问，让你在恒达链收益最大化，相信有梦就会有奇迹！</p>
+          <h3 class="colabbdff">温馨提示</h3>
+          <p>尊敬的恒达链用户你好！为了更快速的解决您所遇到的问题，您有任何疑问、不明白、不懂操作、不懂模式、请联系自己推荐人，推荐人不明白请联系上面公会会长咨询，由公会会长的节点用户协助您解决问题，公会会长直接对接商学院，商学院在对接平台，所有节点用户的会长必须建立自己的节点社交群，以便帮助节点成员解决问题，如果节点用户联系不上或者不作为，在APP上个人中心反馈中心举报会长不作为，平台会经过商学院进行审核原因，核实情节进行处罚，请注意最高处罚可取消节点分红，节点用户请做好自己公会的服务，让所有恒达链的用户轻松参与恒达链核实情节进行处罚，请注意最高处罚可取消节点分红，节点用户请做好自己公会的服务，让所有恒达链的用户轻松参与恒达链请注意</p>
+        </div>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    var group_guild = new Vue({
+        el: "#group_guild",
+        data: {
+            info: {},
+            jurisdiction: false,
+            langContent: {},
+            getCodetip: {}
+        },
+        created: function() {
+            var that = this
+            apiready = function() {
+                var height = $api.fixStatusBar($api.dom('.header'))
+                if (height > 0) {
+                    $api.css($api.dom('.cont'), 'margin-top:' + (height - 45) + 'px;');
+                }
+                group_guild.$data.langContent = GlobleLanguageContent.group_guild;
+                group_guild.$data.getCodetip = GlobleLanguageContent.getCode;
+                that.getInfo();
+                api.setStatusBarStyle({
+                    style: 'dark',
+                    color: 'rgba(0,0,0,0)'
+                });
+            }
+        },
+        methods: {
+
+            toPage: function(name, url, params) {
+                api.openWin({
+                    name: name,
+                    url: url,
+                    reload: true,
+                    pageParam: params || {}
+                });
+            },
+            editUnionsUrl: function() {
+                var that = this;
+                if (that.info.name == '' || that.info.nickname == '' || that.info.mobile == '' || that.info.qq == '' || that.info.wechat == '' || that.info.remark == '') {
+                    api.toast({
+                        msg: that.langContent.noinfo,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return
+                }
+                var parem = {
+                    id: that.info.id,
+                    name: that.info.name,
+                    nickname: that.info.nickname,
+                    mobile: that.info.mobile,
+                    qq: that.info.qq,
+                    wechat: that.info.wechat,
+                    remark: that.info.remark,
+                }
+                http(editUnionsUrl, 'post', parem, function(ret) {
+                    // console.log(JSON.stringify(ret))
+                    if (ret.code == 200) {
+                        api.toast({
+                            msg: that.getCodetip.saveSuc,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                        setTimeout(function() {
+                            goBack()
+                        }, 2000);
+                    } else {
+                        api.toast({
+                            msg: that.langContent.fail,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                    }
+                })
+            },
+            copy: function(text) {
+                var that = this;
+                if (text == '') {
+                    return
+                }
+                var clipBoard = api.require('clipBoard');
+                clipBoard.set({
+                    value: text
+                }, function(ret, err) {
+                    if (ret) {
+                        api.toast({
+                            msg: that.getCodetip.copyStatu,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                        // alert(JSON.stringify(ret));
+                    } else {
+                        // alert(JSON.stringify(err));
+                    }
+                });
+            },
+            getInfo: function() {
+                var that = this;
+                http(getUnionsUrl, 'post', {
+                    // uid: $api.getStorage('uid')
+                }, function(ret) {
+                    if (ret.code == 200) {
+                        that.info = ret.data;
+                        if (ret.data.uid == $api.getStorage('uid')) {
+                            that.jurisdiction = true
+                        } else {
+                            that.jurisdiction = false
+                        }
+                    }
+                })
+            },
+
+        }
+    })
+</script>

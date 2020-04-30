@@ -1,0 +1,97 @@
+.personalData{
+	color: #ffffff;
+}
+.personalData .top{
+	margin: 0.16rem 0.13rem;
+	padding: 0.18rem 0.32rem;
+	background-color: rgba(37, 0, 115, 0.5);
+	border-radius: 0.12rem;
+}
+.personalData .top .topLeft {
+	font-size: 0.26rem;
+	display: flex;
+	align-items: center;
+}
+.personalData .top .topLeft .img{
+	width: 1rem;
+	height: 1rem;
+	border: 0.04rem solid #08aef1;
+	border-radius: 50%;
+}
+.personalData .top .topLeft .title{
+	margin-left: 0.16rem;
+	font-size: 0.34rem;
+}
+.personalData .title .cont2{
+	font-size: 0.26rem;
+	height: 0.38rem;
+	line-height: 0.38rem;
+}
+.personalData .nav{
+	display: flex;
+	justify-content: space-between;
+	margin-top: 0.20rem;
+}
+.personalData .nav .navLi{
+	flex: 1;
+	text-align: center;
+	position: relative;
+}
+.personalData .nav .navLi .name{
+	margin-top: 0.24rem;
+}
+.personalData .content2{
+	margin: 0.1rem 0.12rem;
+}
+.personalData .conUl{
+	padding: 0 0.2rem 0;
+	font-size: 0.24rem;
+}
+.personalData .conUl .conLi{
+	position: relative;
+	padding: 0.3rem 0.67rem 0.3rem 0;
+	border-bottom: 0.02rem solid #370e9f;
+	display: flex;
+	justify-content: space-between;
+	height: 0.22rem;
+    line-height: 0.22rem;
+}
+.personalData .conUl .conLi label{
+	flex: 0 0 2.1rem;
+}
+.personalData .conUl .conLi label span{
+		padding-left: 0.3rem;
+    color: #fff;
+}
+.personalData .conUl .conLi input{
+	flex: 1;
+	background: none;
+	color: #fff;
+	text-align: left;
+}
+.personalData .conUl .conLi:last-child{
+	border: none
+}
+.gr:after{
+    content: '';
+    position: absolute;
+    width: 0.26rem;
+    height: 0.26rem;
+    background: url('../../image/new/gr.png') no-repeat;
+    background-size: 100% 100%;
+    right: 0.2rem;
+    top: 0.3rem;
+}
+
+input::-webkit-input-placeholder,textarea::-webkit-input-placeholder{
+    color:#abbdff;
+}
+input:-moz-placeholder,textarea:-moz-placeholder{
+    color:#abbdff;
+}
+input::-moz-placeholder,textarea::-moz-placeholder{
+    color:#abbdff;
+}
+input:-ms-input-placeholder,textarea:-ms-input-placeholder{
+    color:#abbdff;
+}

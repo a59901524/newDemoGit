@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>发布须知</title>
+    <link rel="stylesheet" href="../../../lib/iconfont2/iconfont.css">
+    <link rel="stylesheet" href="../../../css/common.css">
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+            background-color: #fff;
+            color: rgba(5, 5, 5, 0.918);
+        }
+        
+        span {
+            padding: 0 .5rem;
+        }
+        
+        ul {
+            padding: 1rem;
+        }
+        
+        li {
+            list-style: disc;
+            padding-bottom: 1rem;
+        }
+    </style>
+</head>
+
+<body class="has_header">
+    <div id="mission_notice">
+        <header class="header bbd">
+            <i class="iconfont icon-xiangzuo " onclick="goBack()"></i>
+            <div>发布须知</div>
+        </header>
+        <div class="cont fontSize12 padding1 color_999 bg-white ">
+            <div style="height: 1.5rem"></div>
+            <div class="text_center"><span>-</span><strong>任务发布须知</strong><span>-</span></div>
+            <ul>
+                <li>见习帮与发单者是互利共赢关系。发单者若发布违规任务,会导致个人信誉及利益受损;违规者增多,则会破坏整个平台的生态健康,必定直接损害发单者利益。平台生态环境需发单者共同维护,以使互惠互利最大化；</li>
+                <li>任务悬赏为发单者提供技术支持及任务推广方式,任务属于市场行为(任务描述是否清晰、赏金是否合理、市场是否饱和、市场竞争是否激烈等综合因素) ,需要发单者自行维护、运营,因此平台不保证任务曝光及完成量;</li>
+                <li>发单者所收集的用户信息(截图、手机号)仅可用于辅助审核用途,严禁用于其他途径,违者追究法律责任。</li>
+                <li>任务悬赏发单者账号都必须实名,未实名用户不能发布任务,接任务；</li>
+                <li>任务悬赏中发布任务请遵守国家法律法规,严禁发布违法的任务，尤其是涉及黄、赌、毒、诈骗、彩票、导致接单者损失的任务,直接关闭发布权限并联系当地公安机关协助处理;</li>
+                <li>发布任务是给接单者做的，要对接单者负责,若造成接单者损失,发单者需负全责。</li>
+                <li>发布任务要求尽量明确具体,任务悬赏重视每位用户体验，发单者必须本着诚实守信、安全可靠、合情合理的原则发布任务,严禁发布任何存在隐藏,欺骗,不可能完成的任务,否则将会影响账号的正常使用;</li>
+                <li>任务悬赏不欢迎违规发单者,发单者违规记录永久备案。若在使用任务悬赏过程中存在多次违反平台规则、违规情节严重,平台会综合判断违规次数、违规程度、对用户影响程度等条件,综合考量。可能会导致关闭某些权限,不再提供任何服务。</li>
+                <li>涉及用户隐私的任务禁止发布，禁止以任何形式,收集用户手持身份证、身份证照片、身份证号、银行卡号等涉及用户隐私的任务(如果是任务中APP需要身份证可以。如果是添加客服提交身份证照片、任务中提交身份证照片、以表单形式提交身份证照片等相关私人收集性质一律禁止)、禁止发布帮他人账号、手机号实名,或自己实名后提交相关账号密码(如私人登录密码、交易密码等)的任务;</li>
+                <li>普遍举报较多、可能导致接单者损失的任务禁止发布:推广平台中包含诱导兼职、棋牌、支付扫码后授权、个人公众号、加群加好友、借款网贷类等任务一律禁止发布。发单者要对自己发布的任务负责。一旦出问题发单者为第一责任人</li>
+            </ul>
+        </div>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../../script/const.js"></script>
+<script type="text/javascript" src="../../../script/common.js"></script>
+<script type="text/javascript">
+    var reward = new Vue({
+        el: "#mission_notice",
+        data: {
+
+        },
+        created: function() {
+            var that = this
+            apiready = function() {
+                var height = $api.fixStatusBar($api.dom('.header'))
+                if (height > 0) {
+                    $api.css($api.dom('.cont'), 'margin-top:' + (height - 45) + 'px;');
+                }
+            }
+        },
+        methods: {
+
+        }
+    })
+</script>

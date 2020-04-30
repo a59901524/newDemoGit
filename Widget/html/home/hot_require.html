@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>发布须知</title>
+    <link rel="stylesheet" href="../../lib/iconfont2/iconfont.css">
+    <link rel="stylesheet" href="../../css/common.css">
+    <style>
+        html,
+        body {
+            /* height: 100%; */
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+            /* background-color: #fff; */
+            color: rgba(5, 5, 5, 0.918);
+        }
+        
+        ul {
+            padding: 0rem 1rem;
+        }
+        
+        li {
+            list-style: disc;
+            padding-bottom: 1rem;
+        }
+        
+        span {
+            margin-left: 1rem;
+            font-size: 16px;
+            /* color: #B3A795; */
+            color: #ccc;
+        }
+        
+        strong {
+            margin-left: .8rem;
+        }
+    </style>
+</head>
+
+<body class="has_header bg_white">
+    <div id="hot_require" v-cloak>
+        <header class="header bbd">
+            <i class="iconfont icon-xiangzuo color_default1" onclick="goBack()"></i>
+            <div>{{langContent.title?langContent.title:''}}</div>
+        </header>
+        <div class="cont fontSize14 padding1 bg_white" style=" color: #666666;">
+            <div style="height: 1rem"></div>
+            <div v-for="item in langContent.content">
+                <span><strong>{{item.tle?item.tle:''}}</strong></span>
+                <ul>
+                    <li v-for="con in item.list" v-html="con"></li>
+                </ul>
+            </div>
+            <!-- <span><strong>社区内容规范</strong> </span>
+            <ul>
+                <li>不能涉及国家领导人、公检法军、国徽国旗等形象或词语</li>
+                <li>不能借社会负面事件、热点事件、敏感事件、红歌军歌、革命烈士等进行商业营销宣传</li>
+                <li>不能涉及邪教宗教、封建迷信、反动组织等相关元素</li>
+                <li>不能涉及违法违规、低俗色情、血腥恐怖相关元素不能出现违反公序良俗、社会价值观相关元素,如出轨、家暴、炫富、歧视、引战、抽烟、脏话、整盅、恶搞、虐待等</li>
+                <li>不能出现危险行为和危险动作，易引发人身安全风险</li>
+                <li>不能泄露和曝光个人隐私或个人信息</li>
+                <li>不能出现密集恐惧、血腥暴力、引人不适等相关元素</li>
+            </ul>
+            <span>(二) <strong>版权要求</strong> </span>
+            <ul>
+                <li>不能使用未授权的第三方的名字、logo、形象、图片、音频、视频等</li>
+                <li>不能使用抖音平台不能出现的艺人、红人相关素材</li>
+                <li>不可使用未授权的影视剧、综艺片段等素材</li>
+                <li>不可搬运站内外视频</li>
+            </ul>
+            <span>(三) <strong>未成年相关</strong> </span>
+            <ul>
+                <li>未成年人不能作为代言人拍摄加热内容</li>
+                <li>未成年人可参与视频的拍摄，但不能单独出镜</li>
+                <li>高风险行业(食品、美妆、游戏、酒水、医疗、 OTC药品、医疗器械、皮草等)严禁出现任何未成年人相关元素</li>
+            </ul>
+            <span>(四) <strong>内容营销规范</strong> </span>
+            <ul>
+                <li>不可出现联系方式、微信号、二维码、链接、地址、日期等元素,或引导主页、评论等查看联系方式的相关话术</li>
+                <li>不可出现促销活动、商品价格、打折信息、优惠券红包、引导购买、站外平台导流等商业招揽或类似信息</li>
+                <li>不可对商品、产品或服务等进行细节性的产品描述(材料、外观等)或吹捧性的效果介绍</li>
+                <li>不可在视频开头或结尾出现定帧,包括但不限于品牌露出、活动介绍、产品宣传等</li>
+                <li>不可长时间主体展示商品、产品、品牌、logo等</li>
+                <li>不可以抽奖、送红包等形式引导用户点赞关注等·不可在标题直接露出品牌</li>
+                <li>不能有吹捧性质的效果引导</li>
+            </ul> -->
+        </div>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+
+<script type="text/javascript">
+    var hot_require = new Vue({
+        el: "#hot_require",
+        data: {
+            langContent: {}
+        },
+        created: function() {
+            var that = this
+            apiready = function() {
+                var height = $api.fixStatusBar($api.dom('.header'))
+                if (height > 0) {
+                    $api.css($api.dom('.cont'), 'margin-top:' + (height - 45) + 'px;');
+                }
+                hot_require.$data.langContent = GlobleLanguageContent.hot_require;
+            }
+        },
+        methods: {
+
+        }
+    })
+</script>

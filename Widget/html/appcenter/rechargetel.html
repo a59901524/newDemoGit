@@ -1,0 +1,240 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>话费充值</title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../lib/iconfont2/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <style>
+        .item {
+            width: calc(100% / 3 - 2px - 8px);
+            height: 60px;
+            overflow: hidden;
+            border: 1px solid #dddddd;
+            border-radius: 5px;
+            margin: 4px;
+        }
+
+        .HDCposition {
+            margin: .5rem;
+        }
+
+        .mobile {
+            width: 95%;
+            margin: -1rem auto;
+        }
+
+        .input {
+            flex: 1;
+            font-size: 1.2rem;
+            text-indent: 1rem;
+        }
+
+        .icon-tongxunlu_hh {
+            font-size: 2rem;
+            margin-right: 1rem;
+            color: #cfa767;
+        }
+
+        img {
+            width: 1.2rem;
+            height: 1.2rem;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        /* 确认交易密码样式 */
+
+        .black_overlay1 {
+            position: fixed;
+            top: 0%;
+            left: 0%;
+            bottom: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, .5);
+            z-index: 10001;
+        }
+    </style>
+</head>
+
+<body class="bg-white">
+    <div id="rechargetel" class="content color_999" v-cloak>
+        <header class="header bg_default bbd">
+            <i class="iconfont icon-xiangzuo " onclick="goBack()"></i>
+            <div>{{langContent.title?langContent.title:''}}</div>
+            <div class="tomyfeed color_black6" @click="toPage('rechargetelrecord','rechargetelrecord.html',{typelist:typelist})">{{langContent.record?langContent.record:''}}</div>
+        </header>
+
+        <div class=" padding1 ">{{langContent.value?langContent.value:''}}：<span class=" color_default1">{{HDC?HDC:'0'}}</span></div>
+        <div class="flex_row_between">
+            <input class="flex_grow1 mobile color_black3 fontSize16 input" type="tel" :placeholder="langContent.tel" v-model="mobile ">
+            <i class="iconfont icon-tongxunlu_hh  "></i>
+        </div>
+        <div class="fontSize12 marginT1" style="margin-left: 1rem;">{{langContent.money?langContent.money:''}}</div>
+
+        <div class=" flex_wrap flex_row_left ">
+            <div v-for="obj in typelist " class="item text_center " @click="charge(obj.id) ">
+                <div class=" fontSize16 color_black6  HDCposition">
+                    <img src="../../image/appcenter/ic_topUp_coins.png" alt=""> {{obj.face_value}}{{langContent.yuan?langContent.yuan:''}}
+                </div>
+                <div>{{langContent.price?langContent.price:''}}{{obj.yjl}}HDC</div>
+            </div>
+        </div>
+        <!-- 新写的 密码弹框-->
+        <div class="black_overlay1 flex_row_center publicpsw" v-show="isShow" @touchmove.prevent>
+            <div class="publicpswitem posi_relative padding1 bg-white text_center">
+                <img class="paswdimg" src="../../image//tree/password.svg" alt="">
+                <div class="flex_row_left">
+                    <input type="password" :placeholder="langContent.psw_input" v-model="password">
+                </div>
+                <div class="flex_row_between marginT1">
+                    <div @click.stop="submit" class="btn">{{langContent.sure?langContent.sure:''}}</div>
+                    <div @click.stop="password='';isShow=false;" class="btn btn1">{{langContent.cancel?langContent.cancel:''}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript " src="../../script/api.js "></script>
+<script type="text/javascript " src="../../lib/vue/vue.js "></script>
+<script type="text/javascript " src="../../script/rsa.js "></script>
+<script type="text/javascript " src="../../script/aes.js "></script>
+<script type="text/javascript " src="../../script/const.js "></script>
+<script type="text/javascript " src="../../script/common.js "></script>
+<script type="text/javascript ">
+    var rechargetel = new Vue({
+        el: '#rechargetel',
+        data: {
+            mobile: '',
+            type: '',
+            password: '',
+            isShow: false,
+            yjl: 0,
+            typelist: [],
+            langContent: {},
+            getCodetip: {},
+            flag: true
+        },
+        created: function() {
+            var that = this;
+            apiready = function() {
+                fixStatusbar('header,.header,.headers', '.content');
+                rechargetel.$data.langContent = GlobleLanguageContent.rechargetel;
+                rechargetel.$data.getCodetip = GlobleLanguageContent.getCode;
+                that.getInfo();
+                that.gettypelist();
+            }
+        },
+        methods: {
+            toPage: function(name, url, params) {
+                api.openWin({
+                    name: name,
+                    url: url,
+                    reload: true,
+                    pageParam: params || {}
+                });
+            },
+            select: function() {
+                var that = this;
+                api.openContacts(function(ret, err) {
+                    if (ret && ret.status) {
+                        that.mobile = ret.phone.replace(/\s+/g, " ");
+                    } else {
+
+                    }
+                });
+            },
+            charge: function(num) {
+                var that = this;
+                that.type = num;
+                that.isShow = true;
+            },
+            submit: function() {
+                var that = this;
+                if (that.mobile == '' || !that.mobile) {
+                    api.toast({
+                        msg: that.langContent.notel,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return;
+                }
+                if (that.password == '') {
+                    api.toast({
+                        msg: that.langContent.nopsw,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return;
+                }
+                var params = {
+                    type: that.type,
+                    mobile: that.mobile,
+                    password: that.password
+                }
+                if (that.flag) {
+                    that.flag = false
+                        // console.error(JSON.stringify(params))
+                    http(TelrechargeUrl, 'post', params, function(res) {
+                        that.flag = true
+                            // console.error(JSON.stringify(res))
+                        if (res.code == 200) {
+                            api.toast({
+                                msg: res.msg,
+                                duration: 2000,
+                                location: 'bottom'
+                            });
+                            that.password = '';
+                            that.isShow = !that.isShow;
+                        }
+                    }, function(err) {})
+                } else {
+                    api.toast({
+                        msg: that.getCodetip.submit_tips,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+
+
+
+            },
+            getInfo: function() {
+                var that = this;
+                //个人资料的接口  取电话号码和HDC
+                http(getuserinfoUrl, 'get', {}, function(ret) {
+                    if (ret.code == 200) {
+                        that.mobile = ret.data.mobile;
+                        that.yjl = ret.data.user_money;
+                    } else if (ret.code == 401) {
+                        api.sendEvent({
+                            name: 'pause',
+                            extra: {}
+                        });
+                        console.log("TO login.html");
+                        toPage('login', '../auth/login.html', {
+                            from: 'center'
+                        });
+                    }
+                })
+            },
+            gettypelist: function() {
+                var that = this;
+                http(TeltypeUrl, 'post', {}, function(ret) {
+                    if (ret.code == 200) {
+                        that.typelist = ret.data;
+                    }
+                })
+            },
+        }
+    });
+</script>

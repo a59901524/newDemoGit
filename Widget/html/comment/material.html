@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>交易资料</title>
+    <link rel="stylesheet" href="../../lib/iconfont2/iconfont.css">
+    <link rel="stylesheet" href="../../css/common.css">
+    <style>
+        html,
+        body {
+            /* background: rgba(0, 0, 0, 0.2); */
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        }
+
+        .sharebtn {
+            width: 40%;
+            height: 40px;
+            line-height: 40px;
+            color: #ffffff;
+            text-align: center;
+            background-image: url('../../image/sharebtn.png');
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+            border-radius: 40px;
+            /* overflow: hidden; */
+            font-size: 14px;
+        }
+
+         ::-webkit-input-placeholder {
+            font-size: 14px;
+            color: #cfa767;
+        }
+        /* 使用webkit内核的浏览器 */
+
+         :-moz-placeholder {
+            font-size: 14px;
+            color: #cfa767;
+        }
+        /* Firefox版本4-18 */
+
+         ::-moz-placeholder {
+            font-size: 14px;
+            color: #cfa767;
+        }
+        /* Firefox版本19+ */
+
+         :-ms-input-placeholder {
+            font-size: 14px;
+            color: #cfa767;
+        }
+    </style>
+</head>
+
+<body class="has_header">
+    <div id="material" class="color_black3 bg-white" v-cloak>
+        <header class="header bbd ">
+            <i class="iconfont icon-xiangzuo " @click="goBack()"></i>
+            <!-- <div>{{langContent.title?langContent.title:''}}</div> -->
+            <div v-if="type==1">
+                {{langContent.sellinfo?langContent.sellinfo:''}}
+            </div>
+            <div v-if="type==3">
+                {{langContent.buyinfo?langContent.buyinfo:''}}
+            </div>
+            <div v-if="type==2&&(!isShow)" class="flex_row_center fontSize16">
+                {{langContent.sure?langContent.sure:''}}
+            </div>
+        </header>
+
+
+        <div class="cont">
+            <!-- 买卖家资料 -->
+            <div class="padding12  Brd1 " v-if="type==1||type==3" @click.stop="cancel">
+                <!-- <div class="flex_row_center fontSize16 " v-if="type==1">
+                    {{langContent.sellinfo?langContent.sellinfo:''}}
+                </div>
+                <div class="flex_row_center fontSize16 " v-if="type==3">
+                    {{langContent.buyinfo?langContent.buyinfo:''}}
+                </div> -->
+                <div class="fontSize14 marginT1">
+                    {{langContent.name?langContent.name:''}}：{{info.mobile}}
+                </div>
+                <div class="fontSize14 marginT1">
+                    {{langContent.user?langContent.user:''}}：{{info.realname}}
+                </div>
+                <div v-show="isShow_type == 1" class="fontSize14 marginT1" @click="copyNum">
+                    {{langContent.card?langContent.card:''}}：{{info.bank_card}} ({{langContent.copy?langContent.copy:''}})
+                </div>
+                <div v-show="isShow_type == 1" class="fontSize14 marginT1">
+                    {{langContent.hang?langContent.hang:''}}：{{info.bank_name}}
+                </div>
+                <!-- 以太坊地址 -->
+                <div v-show="isShow_type == 2" class="fontSize14 marginT1 " @click="copy">
+                    {{langContent.eth?langContent.eth:''}}：{{info.eth_address}}
+                </div>
+                <div v-show="isShow_type == 2" class="flex_row_center marginT1">
+                    <div class="sharebtn" @click.stop="copy">{{langContent.copy?langContent.copy:''}}</div>
+                </div>
+
+                <div v-show="isShow_type == 1" class="fontSize14 marginT1">
+                    {{langContent.wx?langContent.wx:''}}：
+                    <div class="marginT1"></div>
+                    <img style="width: 100%;height:auto; margin:0 auto;" :src="info.wechat?info.wechat:''" alt="">
+                </div>
+                <div v-show="isShow_type == 1" class="flex_row_center marginT1">
+                    <div class="sharebtn" @click.stop="Save_album_wx(info.wechat)">{{langContent.save?langContent.save:''}}</div>
+                </div>
+                <div v-show="isShow_type == 1" class="fontSize14 marginT1">
+                    {{langContent.zfb?langContent.zfb:''}}：
+                    <div class="marginT1"></div>
+                    <!-- {{info.alipay}} -->
+                    <img style="width: 100%;height:auto; margin:0 auto;" :src="info.alipay?info.alipay:''" alt="">
+                </div>
+                <div v-show="isShow_type == 1" class="flex_row_center marginT1">
+                    <div class="sharebtn" @click.stop="Save_album_zfb(info.alipay)">{{langContent.save?langContent.save:''}}</div>
+                </div>
+            </div>
+
+
+            <!-- ----------------------------------确认交易 -------------------------------------->
+            <div class="padding12  Brd1 " v-if="type==2&&(!isShow)" @click.stop="cancel">
+                <!-- <div v-if="type==2&&(!isShow)" class="flex_row_center fontSize16">
+                    {{langContent.sure?langContent.sure:''}}
+                </div> -->
+                <div class="fontSize14 marginT1">
+                    {{langContent.name?langContent.name:''}}：{{info.mobile}}
+                </div>
+                <div class="fontSize14 marginT1">
+                    {{langContent.user?langContent.user:''}}：{{info.realname}}
+                </div>
+                <div v-show="isShow_type == 1" class="fontSize14 marginT1" @click="copyNum">
+                    {{langContent.card?langContent.card:''}}：{{info.bank_card}} ({{langContent.copy?langContent.copy:''}})
+                </div>
+                <div v-show="isShow_type == 1" class="fontSize14 marginT1">
+                    {{langContent.hang?langContent.hang:''}}：{{info.bank_name}}
+                </div>
+
+                <!-- 以太坊地址 -->
+                <div v-show="isShow_type == 2" class="fontSize14 marginT1 " @click="copy">
+                    {{langContent.eth?langContent.eth:''}}：{{info.eth_address}}
+                </div>
+                <div v-show="isShow_type == 2" class="flex_row_center marginT1">
+                    <div class="sharebtn" @click.stop="copy">{{langContent.copy?langContent.copy:''}}</div>
+                </div>
+
+                <div v-show="isShow_type == 1" class="fontSize14 marginT1">
+                    {{langContent.wx?langContent.wx:''}}：
+                    <div class="marginT1"></div>
+                    <img style="width: 100%;height:auto; margin:0 auto;" :src="info.wechat?info.wechat:''" alt="">
+                </div>
+                <div v-show="isShow_type == 1" class="flex_row_center marginT1">
+                    <div class="sharebtn" @click.stop="Save_album_wx(info.wechat)">{{langContent.save?langContent.save:''}}</div>
+                </div>
+                <div v-show="isShow_type == 1" class="fontSize14 marginT1">
+                    {{langContent.zfb?langContent.zfb:''}}：
+                    <div class="marginT1"></div>
+                    <img style="width: 100%;height:auto; margin:0 auto;" :src="info.alipay?info.alipay:''" alt="">
+                </div>
+
+                <div v-show="isShow_type == 1" class="flex_row_center marginT1">
+                    <div class="sharebtn" @click.stop="Save_album_zfb(info.alipay)">{{langContent.save?langContent.save:''}}</div>
+                </div>
+
+                <div class="fontSize14 marginT1" v-if="trade_status==2">
+                    {{langContent.up?langContent.up:''}}：
+                </div>
+                <div class="fontSize14 marginT1" v-if="trade_status==3">
+                    {{langContent.look?langContent.look:''}}：
+                </div>
+                <div class="flex_row_center marginT1 " style="border-radius: .5rem;border: 1px solid" @click.stop="getImg" v-if="trade_status==2">
+                    <img :src="pingzheng||'../../image/uppz.png'" alt="" style="width: 150px;height: 150px;">
+                </div>
+                <div class="flex_row_center marginT1 padding12 " style="border-radius: .5rem;border: 1px solid" v-if="trade_status==3" @click.stop="isShow=true">
+                    <img :src="pingzheng||'../../image/jh.png'" alt="" style="width: 150px;height: 150px;">
+                </div>
+                <!-- <div class="flex_row_center marginT1"> -->
+                <!-- <div class=' ' style='padding: 5px 2rem;border-radius: .5rem' @click.stop='buy'>
+                        确认交易
+                    </div> -->
+                <!-- <div style="padding: 5px 2rem;border-radius: .5rem;   background-color: #ccaa7a;" @click.stop="Buy_isShow">
+                        {{langContent.sure?langContent.sure:''}}
+                    </div> -->
+                <!-- </div> -->
+                <div class="height6"></div>
+                <div @click.stop="Buy_isShow" class="bottom_btn_fixed ">
+                    <div class="bottom_bgimg_fixed">
+                        {{langContent.sure?langContent.sure:''}}
+                    </div>
+                </div>
+
+            </div>
+
+            <img :src="pingzheng" alt="" v-if="type==2&&isShow" @click="isShow=false">
+
+            <div v-show="isShowpas" class="black_overlay1 flex_row_center publicpsw" @touchmove.prevent>
+                <div class="publicpswitem posi_relative padding1 bg-white text_center">
+                    <img class="paswdimg" src="../../image/tree/password.svg" alt="">
+                    <div class="flex_row_left">
+                        <input type="password" :placeholder="langContent.psw_input" v-model="password">
+                    </div>
+                    <div class="flex_row_between marginT1">
+                        <div @click.stop="buy" class="btn">{{langContent.conf?langContent.conf:''}}</div>
+                        <div @click.stop="password='';isShowpas=false;" class="btn btn1">{{langContent.cancel?langContent.cancel:''}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    var material = new Vue({
+        el: "#material",
+        data: {
+            type: Number,
+            user_ID: '',
+            info: '',
+            pingzheng: '',
+            id: '',
+            trade_status: '',
+            isShow: false,
+            flag: true,
+            // 新写的交易弹框
+            isShowpas: false,
+            password: '',
+            langContent: {},
+            getCodetip: {}
+        },
+        created: function() {
+            var that = this;
+            apiready = function() {
+
+                var height = $api.fixStatusBar($api.dom('.header'))
+                if (height > 0) {
+                    $api.css($api.dom('.cont'), 'margin-top:' + (height - 45) + 'px;');
+                }
+                api.setStatusBarStyle({
+                    style: 'dark',
+                    color: 'rgba(0,0,0,0)'
+                });
+                material.$data.langContent = GlobleLanguageContent.material;
+                material.$data.getCodetip = GlobleLanguageContent.getCode;
+                that.isShow_type = api.pageParam.isShow_type; //国内交易状态1 以太坊2
+                that.type = api.pageParam.type;
+                that.user_ID = api.pageParam.user_ID;
+                that.id = api.pageParam.id;
+                that.trade_status = api.pageParam.trade_status;
+                that.getInfo();
+            }
+        },
+        methods: {
+            goBack: function(name, animation) {
+                api.closeWin({
+                    name: name || '',
+                    animation: animation || {
+                        type: "push", //动画类型（详见动画类型常量）
+                        subType: "from_left", //动画子类型（详见动画子类型常量）
+                        duration: 300 //动画过渡时间，默认300毫秒
+                    }
+                });
+                api.setStatusBarStyle({
+                    style: 'light',
+                    color: 'rgba(0,0,0,0)'
+                });
+
+            },
+            copy: function() {
+                var that = this
+                var clipBoard = api.require('clipBoard');
+                clipBoard.set({
+                    value: that.info.eth_address
+                }, function(ret, err) {
+                    if (ret) {
+                        api.toast({
+                            msg: that.getCodetip.copyStatu,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                    } else {}
+                });
+            },
+            copyNum: function() {
+                var that = this
+                var clipBoard = api.require('clipBoard');
+                clipBoard.set({
+                    value: that.info.bank_card
+                }, function(ret, err) {
+                    if (ret) {
+                        api.toast({
+                            msg: that.getCodetip.copyStatu,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                    } else {}
+                });
+            },
+            // 点击确认交易
+            Buy_isShow: function() {
+                var that = this;
+                that.isShowpas = true;
+            },
+            // 保存微信图片
+            Save_album_wx: function(imgs) {
+                var that = this;
+                var saveimgs = imgs.split("?")[0]
+                api.showProgress({
+                    title: '',
+                    text: that.langContent.saving,
+                    modal: true
+                });
+                var name = 'fs://' + saveimgs.substring(saveimgs.lastIndexOf('/') + 1);
+                api.download({
+                    url: saveimgs,
+                    savePath: name,
+                    report: true,
+                    cache: true,
+                    allowResume: true
+                }, function(ret, err) {
+                    if (ret.state == 1) {
+                        api.saveMediaToAlbum({
+                            path: name,
+                            groupName: 'MeetJXA'
+                        }, function(ret, err) {
+                            if (ret && ret.status) {
+                                api.hideProgress();
+                                api.toast({
+                                    msg: that.langContent.saveSuc,
+                                    duration: 2000,
+                                    location: 'bottom'
+                                });
+                            } else {
+                                api.hideProgress();
+                                api.toast({
+                                    msg: that.langContent.saveFail,
+                                    duration: 2000,
+                                    location: 'bottom'
+                                });
+                            }
+                        });
+                    }
+                });
+            },
+            // 保存支付宝图片
+            Save_album_zfb: function(imgs) {
+                var that = this;
+                var saveimgs = imgs.split("?")[0]
+                api.showProgress({
+                    title: '',
+                    text: that.langContent.saving,
+                    modal: true
+                });
+                var name = 'fs://' + saveimgs.substring(saveimgs.lastIndexOf('/') + 1);
+                api.download({
+                    url: saveimgs,
+                    savePath: name,
+                    report: true,
+                    cache: true,
+                    allowResume: true
+                }, function(ret, err) {
+                    if (ret.state == 1) {
+                        api.saveMediaToAlbum({
+                            path: name,
+                            groupName: 'MeetJXA'
+                        }, function(ret, err) {
+                            if (ret && ret.status) {
+                                api.hideProgress();
+                                api.toast({
+                                    msg: that.langContent.saveSuc,
+                                    duration: 2000,
+                                    location: 'bottom'
+                                });
+                            } else {
+                                api.hideProgress();
+                                api.toast({
+                                    msg: that.langContent.saveFail,
+                                    duration: 2000,
+                                    location: 'bottom'
+                                });
+                            }
+                        });
+                    }
+                });
+            },
+            cancel: function() {
+                api.closeFrame();
+            },
+            toPage: function(name, url, params) {
+                api.openWin({
+                    name: name,
+                    url: url,
+                    reload: true,
+                    pageParam: params || {}
+                });
+            },
+            getImg: function() {
+                var that = this
+                api.getPicture({
+                    sourceType: 'album',
+                    encodingType: 'jpg',
+                    mediaValue: 'pic',
+                    destinationType: 'base64',
+                    allowEdit: false,
+                    quality: 50,
+                    targetWidth: 750,
+                    targetHeight: 750,
+                    saveToPhotoAlbum: false
+                }, function(ret, err) {
+                    if (ret) {
+                        that.pingzheng = ret.base64Data;
+                    }
+                });
+            },
+            getInfo: function(id) {
+                var that = this;
+                //对方资料
+                console.log("tradeUser := " + tradeUser);
+                http(tradeUser, 'post', {
+                    uid: that.user_ID
+                }, function(ret) {
+                    if (ret.code == 200) {
+                        that.info = ret.data;
+                    }
+                })
+                if (that.trade_status == 3) {
+                    http(getPingzhengUrl, 'post', {
+                        order_id: that.id
+                    }, function(ret) {
+                        if (ret.code == 200) {
+                            that.pingzheng = ret.data.voucher;
+                        }
+                    })
+                }
+            },
+            buy: function(id) {
+                    var that = this;
+                    var url
+                    var param
+                    if (that.flag) {
+                        that.flag = false;
+                        if (!that.password) {
+                            api.toast({
+                                msg: that.langContent.nopsw,
+                                duration: 2000,
+                                location: 'bottom'
+                            });
+                            return;
+                        }
+
+                        if (that.trade_status == 3) {
+                            url = sellerConfirmUrl
+                            param = {
+                                id: that.id,
+                                password: that.password
+                            }
+                        } else {
+                            url = buyerConfirmUrl
+                            param = {
+                                id: that.id,
+                                password: that.password,
+                                voucher: that.pingzheng
+                            }
+                            if (that.pingzheng == '') {
+                                api.toast({
+                                    msg: that.langContent.tips_pingzheng,
+                                    duration: '2000',
+                                    location: 'buttom'
+                                });
+                                return;
+                            }
+                        }
+                        // console.log(url);
+                        // console.log(JSON.stringify(param));
+
+                        http(url, 'post', param, function(res) {
+                            // console.log(JSON.stringify(res));
+                            that.flag = true;
+                            api.toast({
+                                msg: res.msg,
+                                duration: 2000,
+                                location: 'bottom'
+                            });
+                            if (res.code == 200) {
+
+                                api.execScript({
+                                    name: 'root',
+                                    frameName: 'frame3',
+                                    script: 'frame3.getHeader()'
+                                });
+                                api.execScript({
+                                    name: 'root',
+                                    frameName: 'frame3',
+                                    script: 'frame3.getinfo()'
+                                });
+                                api.execScript({
+                                    frameName: 'frame3',
+                                    script: 'frame3.changeListtype(3)'
+                                });
+
+                                var dialogBox = api.require('dialogBox');
+                                dialogBox.close({
+                                    dialogName: 'input'
+                                });
+                                setTimeout(function() {
+                                    api.closeWin({});
+                                }, 2000);
+                                // setTimeout(function() {
+                                //     api.execScript({
+                                //         name: 'root',
+                                //         frameName: 'frame3_comment',
+                                //         script: 'frame3_comment.getGoods()'
+                                //     });
+                                //     api.closeWin({});
+                                // }, 2000);
+                            } else {
+                                var dialogBox = api.require('dialogBox');
+                                dialogBox.close({
+                                    dialogName: 'input'
+                                });
+                            }
+                        })
+
+                    } else {
+                        api.toast({
+                            msg: that.langContent.wait,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                    }
+
+                }
+                // buy: function(id) {
+                //     var that = this;
+                //     var url
+                //     var param
+                //     var dialogBox = api.require('dialogBox');
+                //     if (that.flag) {
+                //         that.flag = false;
+                //         dialogBox.input({
+                //             keyboardType: 'secure',
+                //             texts: {
+                //                 title: '交易密码',
+                //                 placeholder: '请输入密码',
+                //                 leftBtnTitle: '取消',
+                //                 rightBtnTitle: '确定'
+                //             },
+                //             styles: {
+                //                 bg: '#fff',
+                //                 corner: 2,
+                //                 w: 300,
+                //                 h: 140,
+                //                 title: {
+                //                     h: 25,
+                //                     alignment: 'center',
+                //                     size: 14,
+                //                     color: '#000',
+                //                     marginT: 25,
+                //                 },
+                //                 input: {
+                //                     h: 30,
+                //                     y: 30,
+                //                     marginT: 15,
+                //                     marginLeft: 10,
+                //                     marginRight: 10,
+                //                     textSize: 14,
+                //                     textColor: '#000'
+                //                 },
+                //                 dividingLine: {
+                //                     width: 0.5,
+                //                     color: '#696969'
+                //                 },
+                //                 left: {
+                //                     bg: 'rgba(0,0,0,0)',
+                //                     color: '#007FFF',
+                //                     size: 14
+                //                 },
+                //                 right: {
+                //                     bg: 'rgba(0,0,0,0)',
+                //                     color: '#007FFF',
+                //                     size: 14
+                //                 }
+                //             }
+                //         }, function(ret) {
+
+            //             if (ret.eventType == 'left') {
+            //                 var dialogBox = api.require('dialogBox');
+            //                 dialogBox.close({
+            //                     dialogName: 'input'
+            //                 });
+            //             } else {
+            //                 if (!ret.text) {
+            //                     api.toast({
+            //                         msg: '交易密码不能为空',
+            //                         duration: 2000,
+            //                         location: 'bottom'
+            //                     });
+            //                     return;
+            //                 }
+            //                 if (that.trade_status == 2) {
+            //                     url = sellerConfirmUrl
+            //                     param = {
+            //                         id: that.id,
+            //                         password: ret.text
+            //                     }
+            //                 } else {
+            //                     url = buyerConfirmUrl
+            //                     param = {
+            //                         id: that.id,
+            //                         password: ret.text,
+            //                         voucher: that.pingzheng
+            //                     }
+            //                 }
+
+            //                 http(url, 'post', param, function(res) {
+            //                     that.flag = true;
+            //                     api.toast({
+            //                         msg: res.msg,
+            //                         duration: 2000,
+            //                         location: 'bottom'
+            //                     });
+            //                     if (res.code == 200) {
+            //                         api.execScript({
+            //                             name: 'root',
+            //                             frameName: 'frame3',
+            //                             script: 'frame3.getHeader()'
+            //                         });
+            //                         api.execScript({
+            //                             frameName: 'frame3_comment',
+            //                             script: 'frame3_comment.getGoods()'
+            //                         });
+            //                         var dialogBox = api.require('dialogBox');
+            //                         dialogBox.close({
+            //                             dialogName: 'input'
+            //                         });
+            //                         // api.closeFrame();
+            //                         setTimeout(function() {
+            //                             api.execScript({
+            //                                 name: 'root',
+            //                                 frameName: 'frame3_comment',
+            //                                 script: 'frame3_comment.getGoods()'
+            //                             });
+            //                             api.closeWin({});
+            //                         }, 2000);
+            //                     } else {
+            //                         var dialogBox = api.require('dialogBox');
+            //                         dialogBox.close({
+            //                             dialogName: 'input'
+            //                         });
+            //                     }
+            //                 })
+            //             }
+            //         });
+            //     } else {
+            //         api.toast({
+            //             msg: "正在交易，请稍等",
+            //             duration: 2000,
+            //             location: 'top'
+            //         });
+            //     }
+
+            // }
+        }
+    })
+</script>

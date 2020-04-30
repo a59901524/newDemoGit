@@ -1,0 +1,159 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>加油卡充值记录</title>
+    <link rel="stylesheet" href="../../lib/vant/vant.css">
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../lib/iconfont2/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <style>
+        .color_green {
+            color: green;
+        }
+
+        .pd20 {
+            padding: .6rem 0rem;
+        }
+
+        .bule {
+            color: #0065e9;
+        }
+    </style>
+</head>
+
+<body class=" bg-white">
+    <div id="refuel_record" class="content color_999  bg-white" v-cloak>
+        <header class="header  ">
+            <i class="iconfont icon-xiangzuo" onclick="goBack()"></i>
+            <div>{{langContent.title?langContent.title:''}}</div>
+        </header>
+        <van-pull-refresh id="getrecord" v-model="downLoading" @refresh="getrecord" :pulling-text="getCodetip.vant_pulling" :loosing-text="getCodetip.vant_loosing" :loading-text="getCodetip.vant_loading">
+            <van-list class="" v-model="upLoading" :finished="finished" :finished-text="getCodetip.vantlistfinished" @load="getrecord" :immediate-check="false">
+                <div v-for="obj in list" class="title padding12 bbd">
+                    <div>{{langContent.order?langContent.order:''}}：{{obj.order_sn}}</div>
+                    <div class="flex_row_between pd20 fontSize14">
+                        <div class="color_black3 font_bold">{{obj.mobile}}</div>
+                        <div>
+                            {{langContent.money?langContent.money:''}}：
+                            <span class="color_default1">
+                            <span  v-if="obj.charge_type == 2">{{obj.cardnum}}.00</span>
+                            <span v-if="obj.proid == 10001">100.00</span>
+                            <span v-if="obj.proid == 10003">500.00</span>
+                            <span v-if="obj.proid == 10004">1000.00</span>
+                            </span>
+                        </div>
+                        <div>HDC：<span class="color_default1">{{obj.num}}</span></div>
+                    </div>
+
+                    <div class="flex_row_between">
+                        <div>
+                            {{langContent.type?langContent.type:''}}：
+                            <span class="color_gold" v-if="obj.charge_type == 1">{{langContent.type1?langContent.type1:''}}</span>
+                            <span class="color_violet" v-if="obj.charge_type == 2">{{langContent.type2?langContent.type2:''}}</span>
+                        </div>
+                        <div>
+                            {{langContent.card?langContent.card:''}}：<span class="color_default1">{{obj.game_userid}}</span>
+                        </div>
+                    </div>
+                    <div class="flex_row_between">
+                        <div>{{obj.create_time}}</div>
+                        <!-- "sta1": '充值失败 == -1' "sta2": '待充值' == 1  "sta3": '充值成功' == 2   这是以前的-->
+                        <!-- "sta1": '充值失败 == 2' "sta2": '待充值' == 0  "sta3": '充值成功' == 1   这是现在的的-->
+                        <div class="color_default" v-if="obj.status==2">{{langContent.sta1?langContent.sta1:''}}</div>
+                        <div class="blue" v-if="obj.status==0">{{langContent.sta2?langContent.sta2:''}}</div>
+                        <div class="color_green" v-if="obj.status==1">{{langContent.sta3?langContent.sta3:''}}</div>
+                    </div>
+
+                </div>
+            </van-list>
+        </van-pull-refresh>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../lib/vant/vant.min.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    var refuel_record = new Vue({
+        el: '#refuel_record',
+        data: {
+            list: [],
+            typelist: [],
+            page: 1,
+            downLoading: false,
+            upLoading: false,
+            finished: false,
+            langContent: {},
+            getCodetip: {},
+        },
+        created: function() {
+            var that = this;
+            apiready = function() {
+                fixStatusbar('header,.header,.headers', '.content');
+                that.typelist = api.pageParam.typelist;
+                refuel_record.$data.langContent = GlobleLanguageContent.refuel_record;
+                refuel_record.$data.getCodetip = GlobleLanguageContent.getCode;
+                that.getrecord();
+            }
+        },
+        methods: {
+            getmoney: function(type) {
+                var that = this;
+                var money;
+                if (type && type != '') {
+                    that.typelist.forEach(function(element) {
+                        if (type == element.id) {
+                            money = element.face_value
+                        }
+                    });
+                    return money;
+                } else {
+                    return 0;
+                }
+            },
+            getrecord: function() {
+                var that = this;
+                if (that.upLoading) { //上拉加载
+                    that.page++;
+                    var param = {
+                        page: that.page,
+                    }
+                } else {
+                    that.page = 1; //刷新
+                    that.finished = true;
+                    var param = {
+                        page: 1,
+                    }
+                }
+                // console.log(JSON.stringify(param));
+                http(yqueryUrl, 'post', param, function(ret) {
+                    // console.log(JSON.stringify(ret));
+                    if (ret.code == 200) {
+                        if (that.upLoading) {
+                            that.list = that.list.concat(ret.data.data);
+                            that.upLoading = false;
+                        } else {
+                            that.list = ret.data.data;
+                            that.downLoading = false;
+                            that.finished = false;
+                        }
+                        if (ret.data && ret.data.data && ret.data.data.length < 10) {
+                            that.finished = true;
+                        }
+                    }
+                })
+            },
+        }
+    });
+</script>

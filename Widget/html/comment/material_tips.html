@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>订单温馨提示</title>
+    <link rel="stylesheet" href="../../lib/iconfont/iconfont.css">
+    <link rel="stylesheet" href="../../css/common.css">
+    <style>
+        html,
+        body {
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        #material_tips {
+            min-height: 95%;
+            margin: 0 auto;
+        }
+
+        .box {
+            /* padding: 19vw 19vw 10vw 19vw;
+            font-weight: 800; */
+            background-color: #fff;
+            border-radius: 5px;
+            color: #000;
+            padding: 3.5rem 1rem 1rem 1rem;
+        }
+
+        p {
+            line-height: 1.5rem;
+            padding-bottom: .5rem;
+        }
+
+        strong {
+            color: #ff6263;
+            font-size: 1.3rem;
+        }
+
+        .tipbg {
+            width: 100%;
+            height: auto;
+            max-height: 100%;
+        }
+
+        .common_radio {
+            width: 1.4rem;
+            height: 1.4rem;
+            min-width: 1.4rem;
+            min-height: 1.4rem;
+            border-radius: 50%;
+            border: 1px solid #000;
+            position: relative;
+            display: inline-block;
+            background: #dcdcdc;
+        }
+        /* 叹号图片 */
+
+        .tips_img {
+            width: 4rem;
+            height: 4rem;
+            position: absolute;
+            top: -2rem;
+            left: 50%;
+            transform: translate(-50%);
+        }
+        /* 文本提示 */
+
+        .tips_text {
+            text-indent: 2em;
+            font-size: 1.2rem;
+            line-height: 2rem;
+        }
+
+        .quexiao_tips {
+            font-size: 1.2rem;
+            line-height: 2rem;
+            color: #ff6263;
+        }
+        /* 勾选按钮 */
+
+        .tips_yes {
+            text-align: center;
+        }
+
+        .common_radio.on {
+            background: #23ab3d !important;
+            border: 1px solid #23ab3d !important;
+        }
+
+        .common_radio.on::before {
+            position: absolute;
+            content: "";
+            width: 5px;
+            height: 10px;
+            top: 0.1rem;
+            left: 0.45rem;
+            border: 2px solid #fff;
+            border-top: none;
+            border-left: none;
+            -webkit-transform: rotate(45deg);
+            transform: rotate(45deg);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="material_tips" class="flex_row_center padding12 fontSize16 " v-cloak>
+        <!-- 买入HDC，提示支付金额-->
+        <!-- status == 2 买家状态 -->
+        <div class=" box posi_relative" v-if="status == 1 && trade_status!=1">
+            <img src="../../image/warning.svg" alt="" class="tips_img">
+            <p>{{langContent.buy?langContent.buy:''}}： <strong>{{num}} HDC</strong> </p>
+            <!-- 提示的人民币 -->
+            <p v-if="(eth_price == '0')">{{langContent.pay?langContent.pay:''}}： <strong>{{fixTwo(money)}}{{langContent.yuan?langContent.yuan:''}}</strong></p>
+            <!-- 提示的ETH -->
+            <p v-if="(eth_price != '0')">{{langContent.pay?langContent.pay:''}}： <strong>{{eth_price}} ETH</strong></p>
+
+            <!-- <p class="tips_text">请严格按照每个订单数量金额核对进行交易，上传凭证 <span style="color: rgb(143, 60, 60);">（账单详情页为标准，其它都视为假图）</span> 确认后再进行下一个订单交易（请认真核对此订单的凭证，保障自身利益。）,以免造成多单订单金额交叉错误。 如果是您自己订单交易错误所造成的损失由您自己承担，平台概不负责，请悉知。</p> -->
+            <p class="tips_text" v-html="langContent.buytip"></p>
+            <div class="fontSize12 marginT1 tips_yes">
+                <div class="common_radio marginR10 " :class="{'on':partner == true}" style="vertical-align:middle;" @click="partner =! partner"></div>
+                <span>{{langContent.read?langContent.read:''}}</span>
+            </div>
+            <div class="flex_row_between width100">
+
+                <div class="submit_style fontSize16 marginT1  " @click="submit_data" v-if="type == 1">{{langContent.sellinfo?langContent.sellinfo:''}}</div>
+                <div class="submit_style fontSize16 marginT1  " @click="submit_data" v-if="type == 2">{{langContent.sure?langContent.sure:''}}</div>
+                <div class="cancel_style fontSize16 marginT1  " @click="cancel">{{langContent.back?langContent.back:''}}</div>
+            </div>
+        </div>
+
+        <!-- 出售HDC，提示收款金额-->
+        <div class=" box posi_relative" v-if="status == 2 && trade_status!=1">
+            <img src="../../image/warning.svg" alt="" class="tips_img">
+            <p>{{langContent.sell?langContent.sell:''}}： <strong>{{num}} HDC</strong> </p>
+            <!-- 提示的人民币 -->
+            <p v-if="(eth_price == '0')">{{langContent.get?langContent.get:''}}： <strong>{{fixTwo(money)}}{{langContent.yuan?langContent.yuan:''}}</strong></p>
+            <!-- 提示的ETH -->
+            <p v-if="(eth_price != 0)">{{langContent.get?langContent.get:''}}： <strong>{{eth_price}}ETH</strong></p>
+            <p class="tips_text">{{langContent.selltip?langContent.selltip:''}}</p>
+            <div class="fontSize12 marginT1 tips_yes">
+                <div class="common_radio marginR10 " :class="{'on':partner == true}" style="vertical-align:middle;" @click="partner =! partner"></div>
+                <span>{{langContent.read?langContent.read:''}}</span>
+            </div>
+            <div class="flex_row_between width100">
+
+                <div class="submit_style fontSize16 marginT1 " @click="submit_data" v-if="type == 3">{{langContent.buyinfo?langContent.buyinfo:''}}</div>
+                <div class="submit_style fontSize16 marginT1 " @click="submit_data" v-if="type == 2">{{langContent.sure?langContent.sure:''}}</div>
+                <div class="cancel_style fontSize16 marginT1  " @click="cancel">{{langContent.back?langContent.back:''}}</div>
+            </div>
+        </div>
+        <!-- 取消挂单 -->
+        <div class=" box posi_relative" v-if="(status!=3)&&trade_status==1">
+            <img src="../../image/warning.svg" alt="" class="tips_img">
+            <p>{{langContent.num?langContent.num:''}}： <strong>{{num}} HDC</strong> </p>
+            <p>{{langContent.fee?langContent.fee:''}}： <strong>{{num10}} HDC</strong></p>
+            <p class="quexiao_tips">{{langContent.tip?langContent.tip:''}}：</p>
+            <p>{{langContent.tip1?langContent.tip1:''}}</p>
+            <p>{{langContent.tip2?langContent.tip2:''}}</p>
+            <div class="fontSize12 marginT1 tips_yes">
+                <div class="common_radio marginR10 " :class="{'on':partner == true}" style="vertical-align:middle;" @click="partner =! partner"></div>
+                <span>{{langContent.read?langContent.read:''}}</span>
+            </div>
+
+            <div class="flex_row_between width100">
+                <div class="submit_style fontSize16 marginT1 " @click="abolish()">{{langContent.surecan?langContent.surecan:''}}</div>
+                <div class="cancel_style fontSize16 marginT1  " @click="cancel">{{langContent.backorder?langContent.backorder:''}}</div>
+            </div>
+        </div>
+
+
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    var material_tips = new Vue({
+        el: "#material_tips",
+        data: {
+            partner: false, // 勾选
+            type: Number, // 卖家资料1  买家资料3  确认交易2  取消交易0
+            user_ID: '',
+            id: '',
+            trade_status: '',
+            num: Number,
+            unit_price: Number,
+            money: Number,
+            status: Number,
+            num10: '',
+            langContent: {},
+            getCodetip: {},
+            flag: true
+        },
+        created: function() {
+            var that = this;
+            apiready = function() {
+                that.type = api.pageParam.type;
+                that.isShow_type = api.pageParam.isShow_type
+                that.user_ID = api.pageParam.user_ID;
+                that.id = api.pageParam.id;
+                that.trade_status = api.pageParam.trade_status;
+                that.unit_price = api.pageParam.unit_price; // 币的美元单价（还没*7）
+                that.eth_price = api.pageParam.eth_price; // eth 的价格
+                that.num = api.pageParam.num; // 币的数量
+                that.money = that.num * that.unit_price * 7; // 提示的人民币     币美元单价 *  7 *  币的数量  money最终的提示
+                that.ETHmoney = that.num * that.unit_price * 7; // 提示的ETH   币ETH单价 *  7 * 币的数量
+                that.status = api.pageParam.status; // 买家 卖家状态
+                that.num10 = api.pageParam.num / 10;
+                material_tips.$data.langContent = GlobleLanguageContent.material_tips;
+                material_tips.$data.getCodetip = GlobleLanguageContent.getCode;
+
+            }
+        },
+        methods: {
+            // 取消挂单
+            abolish: function() {
+                var that = this
+                if (that.partner) {
+                    if (that.flag) {
+                        that.flag = false
+                        http(delOrderUrl, 'post', {
+                            id: that.id
+                        }, function(res) {
+                            that.flag = true
+                            if (res.code == 200) {
+                                api.toast({
+                                    msg: res.msg,
+                                    duration: 2000,
+                                    location: 'bottom'
+                                });
+                                api.execScript({
+                                    name: 'root',
+                                    frameName: 'frame3',
+                                    script: 'frame3.getHeader()'
+                                });
+                                api.execScript({
+                                    frameName: 'frame3_comment',
+                                    script: 'frame3_comment.getGoods()'
+                                });
+                                setTimeout(function() {
+                                    api.closeFrame();
+                                }, 2000);
+                            }
+                        })
+                    } else {
+                        api.toast({
+                            msg: that.getCodetip.submit_tips,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                    }
+
+                } else {
+                    api.toast({
+                        msg: that.langContent.please,
+                        duration: 2000,
+                        location: 'buttom'
+                    });
+                }
+
+            },
+            // 小数点
+            fixTwo: function(num) {
+                if (num && num != 0 && Number(num) != 0) {
+                    return Number(num).toFixed(2);
+                } else {
+                    return 0.00;
+                }
+            },
+            cancel: function() {
+                api.closeFrame();
+            },
+            submit_data: function() {
+                var that = this
+                if (that.partner) {
+                    api.openWin({
+                        name: 'material',
+                        url: 'material.html',
+                        reload: true,
+                        rect: {
+                            x: 0,
+                            y: 0,
+                            w: 'auto',
+                            h: 'auto'
+                        },
+                        pageParam: {
+                            type: that.type,
+                            user_ID: that.user_ID,
+                            id: that.id,
+                            trade_status: that.trade_status,
+                            isShow_type: that.isShow_type
+                        }
+
+                    });
+                    api.closeFrame();
+                } else {
+
+                    api.toast({
+                        msg: that.langContent.please,
+                        duration: 2000,
+                        location: 'buttom'
+                    });
+                }
+
+            },
+        }
+    })
+</script>

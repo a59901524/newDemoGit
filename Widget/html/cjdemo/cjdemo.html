@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Title</title>
+    <link rel="stylesheet" href="./index.css">
+    <link rel="stylesheet" href="./index_1.css">
+    <link rel="stylesheet" href="./base.css">
+    <link rel="stylesheet" href="../../lib/iconfont2/iconfont.css">
+    <script src="./adaptive.js"></script>
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vant@2.1/lib/index.css"> -->
+    <!-- 引入组件 -->
+    <script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+    <script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vant@2.1/lib/vant.min.js"></script>
+    <script type="text/javascript" src="../../script/rsa.js"></script>
+    <script type="text/javascript" src="../../script/aes.js"></script>
+    <script type="text/javascript" src="../../script/api.js"></script>
+    <script type="text/javascript" src="../../lib/vue/vue.js"></script>
+    <script type="text/javascript" src="../../script/const.js"></script>
+    <script type="text/javascript" src="../../script/common.js"></script>
+    <script type="text/javascript" src="../../lib/jquery-3.0.0.min.js"></script>
+    <style>
+        header.header {
+            left: 0;
+            top: 0;
+            position: fixed;
+            z-index: 100000;
+            display: block;
+            width: 100%;
+            height: 45px;
+            /* background: #26252B; */
+            color: #cfa767;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.3rem;
+        }
+        
+        header.header i.iconjiantou_liebiaoxiangzuo,
+        header.header i.icon-xiangzuo {
+            position: absolute;
+            bottom: 10px;
+            color: 14px;
+            font-size: 22px;
+            left: 10px;
+        }
+        
+        header.header i.header_right_text {
+            position: absolute;
+            right: 10px;
+            font-size: 1.2rem;
+            font-style: normal;
+            top: 12px;
+        }
+        
+        .color_red {
+            color: red;
+            font-size: 25px;
+        }
+        
+        .color_white {
+            font-size: 20px;
+            color: #ccc;
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body id="wrap-box width100" style="overflow: hidden;">
+
+    <div id="wrap" style="overflow: hidden;">
+        <header class="header ">
+            <i class="iconfont icon-xiangzuo" onclick="goBack()"></i>
+            <div style="position: absolute;right: 13px;font-size: 14px;" onclick="toPage('activity_rules','./activity_rules.html',{})">{{langContent.rule?langContent.rule:''}}</div>
+        </header>
+
+        <div class="tit-img">
+            <img :src="langContent.titleUrl" alt />
+        </div>
+        <div class="cont width100">
+            <div class="cont-box" ref="bgImg">
+                <img class="bg-img" src="./img/bg.png" alt />
+                <span v-for="(item,index) in prizeList" :key="index" class="data-span">{{item.name}}</span>
+            </div>
+            <img class="rotate" src="./img/btn.png" alt />
+            <img class="btn-img" :src="langContent.startUrl" alt @click="handleClick" />
+        </div>
+        <div class="color_white">{{langContent.last?langContent.last:''}}:&nbsp; <span class="color_red">{{turntable_count}}</span>&nbsp;{{langContent.last2?langContent.last2:''}}</div>
+
+        <!-- <div class="box_cj" id="box_cj">
+            <h2>幸运大转盘奖励说明</h2>
+            <p>直推累积达到<span>⑤</span>位</p>
+            <p>并且实名认证即可参与幸运大转盘抽奖活动<span>1</span>次。</p>
+            <p>达到<span>⑩</span>位并实名认证可参与<span>2</span>次</p>
+            <p>以此类推可累积，活动期间内不限天数累积，奖励如下：</p>
+            <p>加油奖：奖励糖果<i>{{turntable_content6}}</i>个。</p>
+            <p>人气奖：奖励糖果<i>{{turntable_content5}}</i>个。</p>
+            <p>动力奖：奖励糖果<i>{{turntable_content4}}</i>个。</p>
+            <p>幸运奖：奖励糖果<i>{{turntable_content3}}</i>个。</p>
+            <p>达人奖：奖励糖果<i>{{turntable_content2}}</i>个。</p>
+            <p>特等奖：奖励糖果<i>{{turntable_content1}}</i>个。</p>
+            <p>所有解释权归平台所有。</p>
+        </div> -->
+    </div>
+</body>
+
+</html>
+
+<script>
+    var Vue = window.Vue;
+    var vant = window.vant;
+    var vm = new Vue({
+        el: '#wrap',
+        data: {
+            prizeList: [{
+                id: 1,
+                name: "幸运奖"
+            }, {
+                id: 2,
+                name: "人气奖"
+            }, {
+                id: 3,
+                // name: "谢谢参与"    //暂时改加油奖 其实几率也是0 ！！！！
+                name: "加油奖"
+            }, {
+                id: 4,
+                name: "动力奖"
+            }, {
+                id: 5,
+                name: "特等奖"
+            }, {
+                id: 6,
+                name: "达人奖"
+            }, {
+                id: 7,
+                // name: "谢谢参与"    //暂时改加油奖 其实几率也是0 ！！！！
+                name: "谢谢参与"
+            }, {
+                id: 8,
+                name: "加油奖"
+            }],
+            deg: 0,
+            current: 0,
+            cy_num: 5,
+            randomNum: null,
+            flag: true,
+            text: "",
+            cjcs: "",
+            turntable_count: 0, //抽奖次数
+            turntable: null, //接收返回的抽奖几率
+            langContent: {},
+            // turntable_content6: 0,
+            // turntable_content5: 0,
+            // turntable_content4: 0,
+            // turntable_content3: 0,
+            // turntable_content2: 0,
+            // turntable_content1: 0,
+            // turntable_txt: null
+        },
+        methods: {
+            //点击事件
+            handleClick: function() {
+                var that = this;
+                // 抽奖次数
+                if (that.turntable_count >= 1) {
+                    // console.log(res.data.turntable_count);
+                    if (that.flag) {
+                        that.flag = false;
+                        //特等奖 1%  达人奖 2%
+                        // that.randomNum = Math.ceil(Math.random() * 1000);
+                        // that.randomNum = Math.round(Math.random() * 100+1);
+                        that.randomNum = Math.ceil(Math.random() * 1000 + 1);
+                        var moreIndex = Math.ceil(Math.random() * 2);
+                        var bgImg = that.$refs.bgImg;
+                        var dis = that.current % 360;
+                        // console.log(that.randomNum)
+                        // 中奖几率 数字控制
+                        var turntable = that.turntable;
+                        // console.log(turntable.turntable_ratio6)
+                        var num6 = 1000 - parseInt(turntable.turntable_ratio6);
+                        //1000-697 = 303
+                        var num5 = num6 - parseInt(turntable.turntable_ratio5);
+                        // 303-200=103
+                        var num4 = num5 - parseInt(turntable.turntable_ratio4);
+                        // 103-50=53
+                        var num3 = num4 - parseInt(turntable.turntable_ratio3);
+                        //53-30=23
+                        var num2 = num3 - parseInt(turntable.turntable_ratio2);
+                        //23-20=3
+                        var num1 = num2 - parseInt(turntable.turntable_ratio1);
+                        // console.log(that.turntable_ratio1);
+                        // console.log(parseInt(turntable.turntable_ratio2));
+                        var rewardid = 0;
+                        // that.randomNum 等于0 其实就是特等奖  变成了加油奖   that.randomNum 等于0 其实就是后台返回来的特等奖
+                        if (that.randomNum > num6 || that.randomNum == 0) {
+                            // console.log('加油奖');
+                            //1000-后台返回第一个num6
+                            that.deg = 360 * that.cy_num + 45 * 1 - 22.5 - dis;
+                            // that.text = "恭喜你，抽中了加油奖，奖励300云世界！";
+                            rewardid = turntable.turntable_id6;
+                        } else if (that.randomNum > num5 && that.randomNum <= num6) {
+                            // console.log('人气奖');
+                            //1000-后台返回第一个num6-num5
+                            that.deg = 360 * that.cy_num - 45 * 2 + 22.5 - dis;
+                            // that.text = "恭喜你，抽中了人气奖，奖励500云世界！";
+                            rewardid = turntable.turntable_id5;
+                        } else if (that.randomNum > num4 && that.randomNum <= num5) {
+                            //1000-后台返回第一个num6-num5-num4
+                            // console.log('动力奖');
+                            that.deg = 360 * that.cy_num + 45 * 4 + 22.5 - dis;
+                            // that.text = "恭喜你，抽中了动力奖，奖励糖果100颗！";
+                            rewardid = turntable.turntable_id4;
+                        } else if (that.randomNum > num3 && that.randomNum <= num4) {
+                            //1000-后台返回第一个num6-num5-num4-num3
+                            // console.log('幸运奖');
+                            that.deg = 360 * that.cy_num - 22.5 - dis;
+                            // that.text = "恭喜你，抽中了幸运奖，奖励森林2号！";
+                            rewardid = turntable.turntable_id3;
+                        } else if (that.randomNum > num2 && that.randomNum <= num3) {
+                            // console.log('达人奖');
+                            //1000-后台返回第一个num6-num5-num4-num3-num2
+                            that.deg = 360 * that.cy_num + 45 * 2 + 22.5 - dis;
+                            // that.text = "恭喜你，运气爆棚，抽中了达人奖，森林3号！";
+                            rewardid = turntable.turntable_id2;
+                        }
+                        // 空2个  不要放出来
+                        // else if (that.randomNum > 100) {
+                        //     //谢谢参与
+                        //     if (moreIndex == 1) {
+                        //         that.deg = 360 * that.cy_num - 45 * 3 + 22.5 - dis;
+                        //     } else {
+                        //         that.deg = 360 * that.cy_num + 45 * 2 - 22.5 - dis;
+                        //     }
+                        //     that.text = "谢谢参与，再接再励！";
+                        //}
+                        // else if (that.randomNum > 0 && that.randomNum <= num2) {
+                        // 下面逻辑瞎写 就是为了保证0几率抽中特等奖
+                        else if (that.randomNum > num1 && that.randomNum < -10000000 && that.randomNum === '这个逻辑谁写的？明摆着-100%的几率抽不中啊') {
+                            // console.log('特等奖');
+                            //1000-后台返回第一个num6-num5-num4-num3-num2-num1
+                            that.deg = 360 * that.cy_num + 45 * 3 + 22.5 - dis;
+                            // that.text = "恭喜你，运气爆棚，抽中了特等奖，奖励糖果100颗！";
+                            rewardid = turntable.turntable_id1;
+                        } else {
+                            //谢谢参与
+                            if (moreIndex == 1) {
+                                that.deg = 360 * that.cy_num - 45 * 3 + 22.5 - dis;
+                            } else {
+                                that.deg = 360 * that.cy_num + 45 * 2 - 22.5 - dis;
+                            }
+                            that.text = that.langContent.tip;
+                        }
+
+                        if (rewardid > 0) {
+                            http(getcjtg, 'get', {
+                                reward_id: rewardid
+                            }, function(ret) {
+                                // console.log(JSON.stringify(ret));
+                                //
+                                if (ret.code == 200) {
+                                    that.turntable_count = ret.data;
+                                    that.text = ret.msg;
+                                }
+                            });
+                        }
+                        // else {
+                        //     vant.Notify({
+                        //         type: "warning",
+                        //         message: "奖品ID有误"
+                        //     });
+                        // }
+                        that.current += that.deg;
+                        // bgImg.style.transform = `rotate(${that.current}deg)`; //正常版本
+
+                        bgImg.style.transform = 'rotate(' + that.current + 'deg)';
+                        // console.log(bgImg.style.transform);
+                        setTimeout(function() {
+                            that.flag = true;
+                            vant.Dialog
+                                .alert({
+                                    message: that.text
+                                })
+                                .then(function() {});
+                        }, 3500);
+                    } else {
+                        // alert('正在抽奖中，请稍等');
+                        // vant.Notify({
+                        //     type: "warning",
+                        //     message: "正在抽奖中，请稍等"
+                        // });
+                        api.toast({
+                            msg: that.langContent.wait,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                    }
+                } else {
+                    // vant.Notify({
+                    //     type: "warning",
+                    //     message: "你的次数不足",
+                    //
+                    // });
+                    api.toast({
+                        msg: that.langContent.notime,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+
+            }
+        },
+        mounted: function() {
+            // 页面初始化调用
+            var that = this;
+            apiready = function() {
+                var height = $api.fixStatusBar($api.dom('.header'))
+                if (height > 0) {
+                    $api.css($api.dom('.cont'), 'margin-top:' + (height - 45) + 'px;');
+                }
+                that.langContent = GlobleLanguageContent.cjdemo;
+                that.prizeList = that.langContent.prizeList
+                    // 后台返回的奖励数量
+                    // console.log(123);
+                http(getzpcj, 'get', {}, function(res) {
+                    // 控制几率
+                    that.turntable = JSON.parse(res.data.turntable);
+                    // console.log(JSON.stringify(res.data.turntable));
+                    // 剩余抽奖次数
+                    that.turntable_count = res.data.turntable_count;
+                    // console.log(JSON.stringify(that.turntable));
+                    // that.turntable_content6 = that.turntable.turntable_content6;
+                    // that.turntable_content5 = that.turntable.turntable_content5;
+                    // that.turntable_content4 = that.turntable.turntable_content4;
+                    // that.turntable_content3 = that.turntable.turntable_content3;
+                    // that.turntable_content2 = that.turntable.turntable_content2;
+                    // that.turntable_content1 = that.turntable.turntable_content1;
+
+                    // 后台返回的文本  
+                    // that.turntable_txt = res.data.turntable_txt
+                    // 如果数据是数组就包装为对象
+                    // var html = that.turntable_txt
+                    //     // console.log(JSON.stringify(html));
+                    //     // 添加动态结构到页面
+                    // $('.box_cj').html(html)
+                })
+            }
+
+        }
+    })
+</script>

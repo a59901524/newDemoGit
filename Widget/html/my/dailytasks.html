@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>每日任务</title>
+    <link rel="stylesheet" href="../../lib/iconfont2/iconfont.css">
+    <link rel="stylesheet" href="../../css/common.css">
+    <link rel="stylesheet" type="text/css" href="../../css/new/reset.css">
+    <link rel="stylesheet" type="text/css" href="../../css/new/dailyTask.css">
+    <script type="text/javascript" src="../../script/lib-flexible.js"></script>
+</head>
+
+<body class="has_header dailyTask">
+    <div id="dailytasks" v-cloak>
+        <header class="header">
+            <i class="iconfont icon-xiangzuo" onclick="goBack()"></i>
+            <div>每日任务</div>
+        </header>
+        <div class="h88"></div>
+        <div class="cont content2">
+           <div class="ul" @click="playVideo()">
+               <div class="li">
+                   <div class="liLeft">
+                       <img src="../../image/new/t1.png" alt="">
+                   </div>
+                   <div class="liRight">
+                       <div class="title fontSize28">{{langContent.look?langContent.look:''}}({{info.finish_dz}}/{{info.fabulous_count}})</div>
+                       <p>完整观看15个视频，赠送1个金币</p>
+                       <p>{{langContent.looktime?langContent.looktime:''}}</p>
+                   </div>
+               </div>
+               <div class="btn">去完成</div>
+           </div>
+           <div class="ul" onclick="toPage('tasks','tasks.html')">
+               <div class="li">
+                   <div class="liLeft">
+                       <img src="../../image/new/t2.png" alt="">
+                   </div>
+                   <div class="liRight">
+                       <div class="title fontSize28">{{langContent.pyq?langContent.pyq:''}}</div>
+                       <p>{{langContent.pyq1?langContent.pyq1:''}}{{info.fb_hour}}{{langContent.pyq2?langContent.pyq2:''}}，{{langContent.pyq3?langContent.pyq3:''}} {{info.fb_zs?info.fb_zs:''}} {{langContent.pyq4?langContent.pyq4:''}}</p>
+                       <p>{{langContent.looktime?langContent.looktime:''}}</p>
+                   </div>
+               </div>
+               <div class="btn">去完成</div>
+           </div>
+       </div>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript" src="../../lib//iconfont2/iconfont.js"></script>
+
+<script type="text/javascript">
+    var zyPangolinAd = null;
+    apiready = function() {
+  		zyPangolinAd = api.require('zyPangolinAd');
+
+  	}
+    var dailytasks = new Vue({
+        el: "#dailytasks",
+        data: {
+            list: [],
+            info: {},
+            isSmrz: Boolean,
+            create_time: 0,
+            due: 0,
+            timestamp: 0,
+            overtime: Boolean,
+            control: false, // 转盘显示
+            langContent: {},
+            getCodetip: {},
+            // isShow_cn: '' // 朋友圈任务 英文版隐藏
+            userinfo: {}
+        },
+        created: function() {
+            var that = this
+            apiready = function() {
+                var height = $api.fixStatusBar($api.dom('.header'))
+                if (height > 0) {
+                    $api.css($api.dom('.cont'), 'padding-top:' + (height - 45) + 'px;');
+                }
+                // that.isShow_cn = $api.getStorage('multiLang');
+                dailytasks.$data.langContent = GlobleLanguageContent.dailytasks;
+                dailytasks.$data.getCodetip = GlobleLanguageContent.getCode;
+                // 获取本人注册时间 对应每日任务显示
+
+                http(getuserinfoUrl, 'post', {}, function(ret) {
+                    // 大转盘控制显示
+                    that.control = ret.data.turntable_switch
+                        // 本人注册时间
+                        // console.log(ret.data.create_time);
+                    that.create_time = ret.data.create_time
+                        //本人注册时间 + 30天的时间
+                    that.due = that.create_time + 30 * 24 * 60 * 60
+                        // console.log(that.due);
+                        // 当前时间戳
+                    that.timestamp = parseInt(new Date().getTime() / 1000);
+                    // console.log(that.timestamp);
+                    // 状态 true false
+                    // v-if="timestamp<due"
+                    if (that.due > that.timestamp) {
+                        that.overtime = true
+                    } else {
+                        that.overtime = false
+                    }
+                });
+                that.getInfo()
+            }
+        },
+        methods: {
+            OpenShot: function() {
+                var that = this;
+                api.sendEvent({
+                    name: 'pause',
+                    extra: {}
+                });
+                if (that.isSmrz == 0) {
+                    api.toast({
+                        msg: that.getCodetip.needsmrz,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    setTimeout(function() {
+                        api.openWin({
+                            name: 'personal_data',
+                            url: 'personal_data.html',
+                            reload: true,
+                            pageParam: {}
+                        });
+                    }, 1500);
+                } else {
+                    // http(checkTodayVideo, 'post', {}, function(ret) {
+                    //     if (ret.code == 200) {
+                    api.openFrame({
+                        name: 'shotframe',
+                        url: '../shotframe.html',
+                        bounces: false,
+                        reload: true,
+                        rect: {
+                            x: 0,
+                            y: 0,
+                            w: api.winWidth,
+                            h: api.winHeight
+                        }
+                    });
+                    //     }
+                    // })
+                }
+
+            },
+            playVideo: function() {
+                if (!zyPangolinAd) {
+                  api.toast({
+                      msg: "任务加载异常",
+                      duration: 2000,
+                      location: 'bottom'
+                  });
+                } else {
+                     zyPangolinAd.requestPermissionIfNecessary();
+              			 var appid = null;
+              			 var appname = null;
+              			 var codeid = null;
+              			 if (api.systemType == "ios" || api.systemType == "IOS") {
+                				appid = "5059701";
+                				appname = "爱呗_ios";
+                				codeid = "887317122";
+              			 } else {
+                				appid = "5059719";
+                				appname = "爱呗_android";
+                				codeid = "887317116";
+              			 }
+                     //初始化
+                    var param = {
+                        appId: appid,
+                        appName: appname,
+                    };
+                    zyPangolinAd.init(param, function(ret){
+                        console.log("zyPangolinAd："+JSON.stringify(ret));
+                    });
+                    zyPangolinAd.showRewardVideoAd(function(ret){
+                        console.log("zyPangolinAd："+JSON.stringify(ret));
+                    });
+                }
+            },
+            /*
+            playVideo: function() {
+                api.closeWin({});
+                api.sendEvent({
+                    name: 'dailyPlayVideo',
+                    extra: {}
+                });
+            },*/
+            toPage: function(name, url, params) {
+                api.openWin({
+                    name: name,
+                    url: url,
+                    reload: true,
+                    pageParam: params || {}
+                });
+            },
+            getInfo: function() {
+                api.setStatusBarStyle({
+                    style: 'dark',
+                    color: 'rgba(0,0,0,0)'
+                });
+                var that = this;
+                http(taskIndexUrl, 'post', {}, function(ret) {
+                    if (ret.code == 200) {
+                        that.info = ret.data;
+                    }
+                })
+                http(getuserinfoUrl, 'post', {}, function(ret) {
+                    if (ret.code == 200) {
+                        that.userinfo = ret.data;
+                        that.isSmrz = ret.data.auth_primary;
+                    }
+                })
+            }
+        },
+        // mounted() {
+        //     // 页面初始化调用
+
+        //     var that = this;
+        //     apiready = function() {
+        //         var height = $api.fixStatusBar($api.dom('.header'))
+        //         if (height > 0) {
+        //             $api.css($api.dom('.cont'), 'padding-top:' + (height - 45) + 'px;');
+        //         }
+
+        //         that.getInfo()
+        //     }
+        // }
+    })
+</script>

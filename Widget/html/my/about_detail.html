@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>关于短视频</title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../lib/iconfont2/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/edit.css" />
+    <style>
+        body,
+        html {
+            min-height: 100%;
+            background: #ffffff;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="about_detail" class="content" v-cloak>
+        <header class="header bbd">
+            <i class="iconfont icon-xiangzuo" onclick="goBack()"></i>
+            <div>{{title?title:'关于我们'}}</div>
+        </header>
+        <div v-show="!problem" class="padding1 color_black3 bg_white">
+            <div class="" v-html="content"></div>
+        </div>
+        <div v-show="problem">
+            <div v-for="obj in list" class="BB5gray padding1 itembg flex_row_between" @click="toDetail('about_detail1','about_detail.html',obj.title,obj.content)">
+                <div class="colorgray" style="margin: 0 10px;">{{obj.title}}</div>
+                <img class="right" src="../../image/right.png" alt="" />
+            </div>
+            <!-- <div class="BB5gray padding1 itembg flex_row_between" onclick="toPage('about_detail2','about_detail.html',{title:'常见问题2',problem:false})">
+                <div class="colorgray" style="margin: 0 10px;">常见问题2</div>
+                <img class="right" src="../../image/right.png" alt="" />
+            </div> -->
+        </div>
+
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    var about_detail = new Vue({
+        el: '#about_detail',
+        data: {
+            title: '',
+            problem: false,
+            content: "",
+            list: [],
+            oText: ''
+        },
+        created: function() {
+            var that = this;
+            apiready = function() {
+                fixStatusbar('header,.header,.headers', '.content');
+                var height = $api.fixStatusBar(document.querySelector('header'));
+                var minheight = api.winHeight - height;
+                $api.css($api.dom('#about_detail'), 'min-height:' + minheight + 'px');
+                if (api.pageParam.title) {
+                    that.title = api.pageParam.title
+
+                }
+                if (api.pageParam.problem) {
+                    that.problem = api.pageParam.problem
+                }
+                that.content = api.pageParam.content
+                that.oText = api.pageParam.oText
+                    // that.getList()
+            }
+        },
+        methods: {
+            toDetail: function(name, url, title, content) {
+                api.openWin({
+                    name: name,
+                    url: url,
+                    reload: true,
+                    pageParam: {
+                        problem: false,
+                        title: title,
+                        content: content
+                    }
+                });
+            },
+            // getList: function() {
+            //     var that = this;
+            //     http(questionlistUrl, 'post', {}, function(res) {
+            //         if (res.code == 200) {
+            //             that.list = res.data.list;
+            //         }
+            //     }, function(err) {})
+            // },
+        }
+    });
+</script>

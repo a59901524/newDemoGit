@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>交易信箱</title>
+    <link rel="stylesheet" href="../../lib/iconfont/iconfont.css">
+    <link rel="stylesheet" href="../../css/common.css">
+    <style>
+        html,
+        body {
+            background: rgba(0, 0, 0, 0.2);
+        }
+        
+        #type_comment {
+            /* background: rgba(191, 191, 191, .5); */
+            width: 100%;
+            min-height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="type_comment" class="flex_row_center" @click.stop="cancel()" v-cloak>
+        <div class="padding12 bg_white Brd1" style="width: 75%;font-size: 18px">
+            <div class="flex_row_left" @click.stop="cancel('买入')">
+                <i class="iconfont icondanxuanxuanzhong color_default" v-if="title=='买入'"></i>
+                <i class="iconfont icondanxuanweixuanzhong color_default" v-else></i>
+                <div class="marginL1">买入</div>
+            </div>
+            <div class="flex_row_left marginT1" @click.stop="cancel('卖出')">
+                <i class="iconfont icondanxuanxuanzhong color_default" v-if="title=='卖出'"></i>
+                <i class="iconfont icondanxuanweixuanzhong color_default" v-else></i>
+                <div class="marginL1">卖出</div>
+            </div>
+            <div class="flex_row_left marginT1" @click.stop="cancel('交易信箱')">
+                <i class="iconfont icondanxuanxuanzhong color_default" v-if="title=='交易信箱'"></i>
+                <i class="iconfont icondanxuanweixuanzhong color_default" v-else></i>
+                <div class="marginL1">交易信箱</div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript">
+    new Vue({
+        el: "#type_comment",
+        data: {
+            title: ""
+        },
+        created: function() {
+            var that = this
+            apiready = function() {
+                that.title = api.pageParam.title;
+            }
+        },
+        methods: {
+            cancel: function(title) {
+                if (title) {
+                    api.sendEvent({
+                        name: "deal_type",
+                        extra: title
+                    });
+                }
+
+                api.closeFrame();
+            },
+            toPage: function(name, url, params) {
+                api.openWin({
+                    name: name,
+                    url: url,
+                    reload: true,
+                    pageParam: params || {}
+                });
+            }
+        }
+    })
+</script>

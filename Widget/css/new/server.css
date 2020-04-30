@@ -1,0 +1,26 @@
+.server{
+	background-color: #250084;
+	background-image: url('../image/h1.jpg');
+	background-repeat: no-repeat;
+	background-size: 100%;
+	color: #ffffff;
+}
+.server .content{
+	margin: 0.3rem 0.12rem 0;
+	padding: 0.55rem 0 0;
+	font-size: 0.28rem;
+	display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+}
+.server .li{
+	flex: 0 0 33.33%;
+	text-align: center;
+	margin-bottom: 0.6rem;
+}
+.server .li .img{
+	width: 0.9rem;
+	height: 0.9rem;
+	margin: 0 auto;
+	margin-bottom: 0.33rem;
+}

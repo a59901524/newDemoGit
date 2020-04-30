@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>朋友圈推广任务</title>
+    <link rel="stylesheet" href="../../lib/iconfont2/iconfont.css">
+    <link rel="stylesheet" href="../../css/common.css">
+    <link rel="stylesheet" type="text/css" href="../../css/new/reset.css">
+    <style>
+        .video {
+            width: calc(100% / 2 - 1rem);
+            height: auto;
+            margin: 1rem auto 7rem;
+        }
+
+        .fixedbtn {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            width: 80%;
+            transform: translate(-50%, 0%);
+        }
+
+        .fixedbtn1 {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            width: 80%;
+            transform: translate(-50%, 0%);
+            background-color: rgb(44, 42, 35);
+            color: #fff;
+            font-weight: 800;
+        }
+
+        .marginBot1{
+          margin-bottom: 0.1rem
+        }
+
+        .lineH35{
+          line-height: 0.35rem;
+        }
+        .fzwa {
+          width: 1.8rem;
+          border-radius: 2rem;
+          padding: 0.15rem .2rem;
+          text-align: center;
+          margin-left: 0.3rem;
+          background-color: #ff6262;
+          color: #fff;
+        }
+    </style>
+    <script type="text/javascript" src="../../script/lib-flexible.js"></script>
+</head>
+
+<body style="background: #ddd;">
+    <div id="tasks_receiving" v-cloak>
+        <header class="header bg-white">
+            <i class="iconfont icon-xiangzuo" style="color: #cb974d" onclick="goBack()"></i>
+            <div style="color: #cb974d">{{langContent.title?langContent.title:''}}</div>
+        </header>
+        <div class="h88"></div>
+        <div class=" padding1 cont">
+            <div class=" padding1 bg-white" style="color:#cfa767">
+                <p class="marginBot1">{{langContent.desc1?langContent.desc1:''}}</p>
+                <p>{{langContent.desc2?langContent.desc2:''}}</p>
+            </div>
+        </div>
+
+        <div class="a_i_cnt fontSize12 lineH35 padding1  text_left bg-white" v-html="info.task_memo" id="task_memo" @click="longPress('#task_memo')">
+            <!-- 风起云涌,王者争霸!
+            没有参加见习人气王活动，或许因此感到有些懊悔。不过丝毫不用担心，精彩活动再次开启!
+            现诚邀广大用户参与：见习用户推广争霸赛事，豪送丰厚大奖已然备好，不信您就来试一试!
+            我的见习账号:88888888 -->
+        </div>
+
+        <div class="flex_row_left bg-white">
+            <!-- 复制文本 -->
+            <div class="fzwa" @click="copy('#task_memo')">
+                {{langContent.copy?langContent.copy:''}}
+            </div>
+            <!-- 下载图片 -->
+            <div class="fzwa " @click="save">
+                {{langContent.save?langContent.save:''}}
+            </div>
+        </div>
+
+        <!-- 朋友圈任务图2张 -->
+        <div class="flex_row_around bg-white">
+            <img class="video" :src="info.task_img_one?info.task_img_one:''" alt="" />
+            <img class="video" :src="info.task_img_two?info.task_img_two:''" alt="" />
+        </div>
+        <!-- <div class="padding1   text_center fixedbtn1" style="border-radius: 20px;" @click="getTask">
+            点击领取</div>
+        <div v-show="status==1" class="padding1  text_center fixedbtn" style="border-radius: 20px;background: #999;">
+            已领取</div> -->
+
+        <div class="bottom_btn_fixed">
+            <!-- 点击领取 -->
+            <div class="bottom_bgimg_fixed" v-show="status!=1" @click="getTask">
+                {{langContent.recive?langContent.recive:''}}
+            </div>
+            <!-- 已领取 -->
+            <div class="bottom_bgimg_fixed" v-show="status==1">
+                {{langContent.recived?langContent.recived:''}}
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../lib/clipboard/clipboard.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    var tasks_receiving = new Vue({
+        el: "#tasks_receiving",
+        data: {
+            status: 0,
+            info: {},
+            langContent: {},
+            getCodetip: {}
+        },
+        created: function() {
+            var that = this
+            apiready = function() {
+                var height = $api.fixStatusBar($api.dom('.header'))
+                if (height > 0) {
+                    $api.css($api.dom('.cont'), 'padding-top:' + (height - 33) + 'px;');
+                }
+                tasks_receiving.$data.langContent = GlobleLanguageContent.tasks_receiving;
+                tasks_receiving.$data.getCodetip = GlobleLanguageContent.getCode;
+                that.status = api.pageParam.status
+                that.getInfo()
+            }
+        },
+        methods: {
+            copy: function(id) {
+                var that = this;
+                var clipboard = new ClipboardJS('.fzwa', {
+                    // 通过target指定要复印的节点
+                    target: function() {
+                        return $api.dom(id);
+                    }
+                });
+                clipboard.on('success', function(e) {
+                    e.clearSelection();
+                    api.toast({
+                        msg: that.getCodetip.copyStatu,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                });
+                clipboard.on('error', function(e) {});
+            },
+            //真正长按后应该执行的内容
+            longPress: function longPress(id) {
+                var clipboard = new ClipboardJS('.a_i_cnt', {
+                    // 通过target指定要复印的节点
+                    target: function() {
+                        return $api.dom(id);
+                    }
+                });
+                clipboard.on('success', function(e) {
+                    e.clearSelection();
+                    api.toast({
+                        msg: that.getCodetip.copyStatu,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                });
+                clipboard.on('error', function(e) {});
+            },
+            save: function() {
+                var that = this;
+                api.showProgress({
+                    title: '',
+                    text: that.getCodetip.saving,
+                    modal: true
+                });
+                if (that.info.task_img_one && that.info.task_img_one != '') {
+                    var name = 'fs://' + that.info.task_img_one.substring(that.info.task_img_one.lastIndexOf('/') + 1);
+                    api.download({
+                        url: that.info.task_img_one,
+                        savePath: name,
+                        report: true,
+                        cache: true,
+                        allowResume: true
+                    }, function(ret, err) {
+                        if (ret.state == 1) {
+                            api.saveMediaToAlbum({
+                                path: name,
+                                groupName: 'MeetJXA'
+                            }, function(ret, err) {
+                                if (ret && ret.status) {
+                                    api.toast({
+                                        msg: that.langContent.img1,
+                                        duration: 2000,
+                                        location: 'bottom'
+                                    });
+                                } else {
+                                    api.hideProgress();
+                                    api.toast({
+                                        msg: that.getCodetip.saveFail,
+                                        duration: 2000,
+                                        location: 'bottom'
+                                    });
+                                }
+                            });
+                        }
+                    });
+                } else {
+                    api.hideProgress();
+                }
+                if (that.info.task_img_two && that.info.task_img_two != '') {
+                    var name2 = 'fs://' + that.info.task_img_two.substring(that.info.task_img_two.lastIndexOf('/') + 1);
+                    api.download({
+                        url: that.info.task_img_two,
+                        savePath: name2,
+                        report: true,
+                        cache: true,
+                        allowResume: true
+                    }, function(ret, err) {
+                        if (ret.state == 1) {
+                            api.saveMediaToAlbum({
+                                path: name2,
+                                groupName: 'MeetJXA'
+                            }, function(ret, err) {
+                                if (ret && ret.status) {
+                                    api.hideProgress();
+                                    api.toast({
+                                        msg: that.langContent.img2,
+                                        duration: 2000,
+                                        location: 'bottom'
+                                    });
+                                } else {
+                                    api.hideProgress();
+                                    api.toast({
+                                        msg: that.getCodetip.saveFail,
+                                        duration: 2000,
+                                        location: 'bottom'
+                                    });
+                                }
+                            });
+                        }
+                    });
+                } else {
+                    api.hideProgress();
+                }
+            },
+            getTask: function() {
+                var that = this;
+                http(gettaskUrl, 'post', {}, function(ret) {
+                    if (ret.code == 200) {
+                        that.status = ret.data.status;
+                        api.execScript({
+                            name: 'tasks',
+                            script: 'tasks.getInfo()'
+                        });
+                        api.toast({
+                            msg: that.langContent.sucess,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                    } else if (ret.code == 405) {
+                        api.openWin({
+                            name: 'personal_data',
+                            url: 'personal_data.html',
+                            reload: true,
+                            pageParam: {}
+                        });
+                    }
+                })
+            },
+            toPage: function(name, url, params) {
+                api.openWin({
+                    name: name,
+                    url: url,
+                    reload: true,
+                    pageParam: params || {}
+                });
+            },
+            getInfo: function() {
+                var that = this;
+                http(taskIndexUrl, 'post', {}, function(ret) {
+                    if (ret.code == 200) {
+                        that.info = ret.data;
+                    }
+                })
+            }
+        }
+    })
+</script>

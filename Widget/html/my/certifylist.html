@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>等级认证</title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../lib/iconfont2/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/edit.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/new/reset.css">
+    <link rel="stylesheet" type="text/css" href="../../css/new/approve.css">
+    <script type="text/javascript" src="../../script/lib-flexible.js"></script>
+
+</head>
+
+<body class="has_header">
+    <div id="certifylist" class="content approve" v-cloak>
+        <header class="header color_default1">
+            <i class="iconfont icon-xiangzuo color_default1" onclick="goBack()"></i>
+            <div>{{langContent.title?langContent.title:''}}</div>
+        </header>
+        <div class="content2">
+            <div class="li">
+                <div class="title fontSize28">{{langContent.cjrz?langContent.cjrz:''}}</div>
+                <div class="ct col00d3fc fontSize22">
+                    <p class="colabbdff">{{langContent.qy?langContent.qy:''}}:</p>
+                    <div class="nn">
+                        <span>{{langContent.cj1?langContent.cj1:''}}</span><span>{{langContent.cj2?langContent.cj2:''}}35%</span>
+                    </div>
+                </div>
+                <div class="btn" v-if="info.auth_primary==0" @click="isRz('attestation','attestation.html',info.auth_primary)">立即认证</div>
+                <div class="btn rz" v-if="info.auth_primary==1">已认证</div>
+            </div>
+            <div class="li">
+                <div class="title fontSize28">{{langContent.zjrz?langContent.zjrz:''}}</div>
+                <div class="ct col00d3fc fontSize22">
+                    <p class="colabbdff">{{langContent.qy?langContent.qy:''}}:</p>
+                    <div class="nn">
+                        <span>{{langContent.zj1?langContent.zj1:''}}</span><span>{{langContent.cj2?langContent.cj2:''}}30%</span>
+                    </div>
+                </div>
+                <div class="btn" v-if="info.auth_middle==0" @click="middlerz(2)">立即认证</div>
+                <div class="btn rz" v-if="info.auth_middle==1">已认证</div>
+            </div>
+            <div class="li">
+                <div class="title fontSize28">{{langContent.gjrz?langContent.gjrz:''}}</div>
+                <div class="ct col00d3fc fontSize22">
+                    <p class="colabbdff">{{langContent.qy?langContent.qy:''}}:</p>
+                    <div class="nn">
+                        <span>{{langContent.zj1?langContent.zj1:''}}</span><span>{{langContent.cj2?langContent.cj2:''}}25%</span>
+                    </div>
+                </div>
+                <div class="btn" v-if="info.auth_senior==0" @click="middlerz(3)">立即认证</div>
+                <div class="btn rz" v-if="info.auth_senior==1">已认证</div>
+            </div>
+            <div class="li">
+                <div class="title fontSize28">{{langContent.sjrz?langContent.sjrz:''}}</div>
+                <div class="ct col00d3fc fontSize22">
+                    <p class="colabbdff">{{langContent.qy?langContent.qy:''}}:</p>
+                    <div class="nn">
+                        <span>{{langContent.sj1?langContent.sj1:''}}</span><span>{{langContent.sj2?langContent.sj2:''}}</span>
+                        <span>{{langContent.sj3?langContent.sj3:''}}</span>
+                    </div>
+                </div>
+                <div class="btn" @click="remind()">立即认证</div>
+            </div>
+            <div class="li">
+                <div class="title fontSize28">{{langContent.fwsrz?langContent.fwsrz:''}}</div>
+                <div class="ct col00d3fc fontSize22">
+                    <p class="colabbdff">{{langContent.qy?langContent.qy:''}}:</p>
+                    <div class="nn">
+                        <span>{{langContent.fws1?langContent.fws1:''}}</span><span>{{langContent.fws2?langContent.fws2:''}}</span>
+                        <span>{{langContent.fws3?langContent.fws3:''}}</span>
+                    </div>
+                </div>
+                <div class="btn" @click="remind()">立即认证</div>
+            </div>
+        </div>
+        <!-- <div class="primary flex_row_between color_white">
+            <div class="desc">
+                <div class="title text-overflow_1">{{langContent.cjrz?langContent.cjrz:''}}</div>
+                <div class="detail fontSize12">
+                    {{langContent.qy?langContent.qy:''}}：<br> {{langContent.cj1?langContent.cj1:''}} <br>{{langContent.cj2?langContent.cj2:''}}35%
+                </div>
+            </div>
+            <div class="operation">
+                <div v-if="info.auth_primary==0" class="btn" @click="isRz('attestation','attestation.html',info.auth_primary)">{{langContent.btn?langContent.btn:''}}</div>
+                <img v-if="info.auth_primary==1" @click="isRz('attestation','attestation.html',info.auth_primary)" class="yrz" :src="langContent.imgUrl" alt="" />
+            </div>
+        </div> -->
+
+        <!-- <div class="primary flex_row_between color_white middlerz">
+            <div class="desc">
+                <div class="title text-overflow_1">{{langContent.zjrz?langContent.zjrz:''}}</div>
+                <div class="detail fontSize12">
+                    {{langContent.qy?langContent.qy:''}}：<br> {{langContent.zj1?langContent.zj1:''}}<br>{{langContent.cj2?langContent.cj2:''}}30%
+                </div>
+            </div>
+            <div class="operation">
+                <div v-if="info.auth_middle==0" @click="middlerz(2)" class="btn">{{langContent.btn?langContent.btn:''}}</div>
+                <img v-if="info.auth_middle==1" class="yrz" :src="langContent.imgUrl" alt="" />
+            </div>
+        </div> -->
+        <!-- <div class="primary flex_row_between color_white heigherrz">
+            <div class="desc">
+                <div class="title text-overflow_1">{{langContent.gjrz?langContent.gjrz:''}}</div>
+                <div class="detail fontSize12">
+                    {{langContent.qy?langContent.qy:''}}：<br> {{langContent.zj1?langContent.zj1:''}}<br> {{langContent.cj2?langContent.cj2:''}}25%
+                </div>
+            </div>
+            <div class="operation">
+                <div v-if="info.auth_senior==0" @click="middlerz(3)" class="btn">{{langContent.btn?langContent.btn:''}}</div>
+                <img class="yrz" v-if="info.auth_senior==1" :src="langContent.imgUrl" alt="" />
+            </div>
+        </div> -->
+        <!-- <div class="primary flex_row_between color_white shoprz">
+            <div class="desc">
+                <div class="title text-overflow_1">{{langContent.sjrz?langContent.sjrz:''}}</div>
+                <div class="detail fontSize12">
+                    {{langContent.qy?langContent.qy:''}}：<br> {{langContent.sj1?langContent.sj1:''}}<br> {{langContent.sj2?langContent.sj2:''}}<br>{{langContent.sj3?langContent.sj3:''}}
+                </div>
+            </div>
+            <div class="operation" @click="remind()">
+                <div v-if="" class="btn">{{langContent.btn?langContent.btn:''}}</div>
+            </div>
+        </div> -->
+        <!-- <div class="primary flex_row_between color_white serverz">
+            <div class="desc">
+                <div class="title text-overflow_1">{{langContent.fwsrz?langContent.fwsrz:''}}</div>
+                <div class="detail fontSize12">
+                    {{langContent.qy?langContent.qy:''}}：<br> {{langContent.fws1?langContent.fws1:''}}<br> {{langContent.fws2?langContent.fws2:''}}<br>{{langContent.fws3?langContent.fws3:''}}
+                </div>
+            </div>
+            <div class="operation" @click="remind()">
+                <div v-if="" class="btn">{{langContent.btn?langContent.btn:''}}</div>
+            </div>
+        </div> -->
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    var certifylist = new Vue({
+        el: '#certifylist',
+        data: {
+            info: {},
+            langContent: {},
+            getCodetip: {}
+        },
+        created: function() {
+            var that = this;
+            apiready = function() {
+                fixStatusbar('header,.header,.headers', '.content');
+                var height = $api.fixStatusBar(document.querySelector('header'));
+                var minheight = api.winHeight - height;
+                $api.css($api.dom('#certifylist'), 'min-height:' + minheight + 'px');
+                certifylist.$data.langContent = GlobleLanguageContent.certifylist;
+                certifylist.$data.getCodetip = GlobleLanguageContent.getCode;
+                that.getInfo()
+            }
+        },
+        methods: {
+            remind: function() {
+                var that = this;
+                api.confirm({
+                    title: that.langContent.note,
+                    msg: that.langContent.nocon,
+                    buttons: that.langContent.nobtn,
+                }, function(ret, err) {
+                    if (ret.buttonIndex == 1) {
+                        // api.alert({msg: '点击了确定'});
+                    }
+                });
+            },
+            middlerz: function(num) {
+                var that = this;
+                http(getupsmrzlevel, 'post', {
+                    // uid: $api.getStorage('userInfo').uid,
+                    level: num
+                }, function(ret) {
+                    if (ret.code == 200) {
+                        that.getInfo();
+                        api.toast({
+                            msg: that.langContent.scucess,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                        api.execScript({
+                            name: 'root',
+                            frameName: 'frame4',
+                            script: 'frame4.getInfo()'
+                        });
+                        if (num == 2) {
+                            that.info.auth_middle = 1
+                        }
+                        if (num == 3) {
+                            that.info.auth_senior = 1
+                        }
+                    } else {
+                        if (num == 2) {
+                            api.confirm({
+                                title: '',
+                                msg: that.langContent.zjcondition,
+                                buttons: that.langContent.condtionbtn,
+                            }, function(ret, err) {
+                                if (ret.buttonIndex == 1) {
+                                    toPage('forestmarket', '../comment/forestmarket.html', {
+                                        from: 'certifylist',
+                                    })
+                                } else if (ret.buttonIndex == 2) {
+                                    api.closeWin({
+                                        name: 'personal_data'
+                                    });
+                                    api.closeWin({});
+                                    setTimeout(function() {
+                                        api.execScript({
+                                            name: 'root',
+                                            frameName: 'frame4',
+                                            script: 'frame4.getShare()'
+                                        });
+                                    }, 100);
+                                }
+                            });
+                        }
+                        if (num == 3) {
+                            api.confirm({
+                                title: '',
+                                msg: that.langContent.gjcondition,
+                                buttons: that.langContent.condtionbtn,
+                            }, function(ret, err) {
+                                if (ret.buttonIndex == 1) {
+                                    toPage('forestmarket', '../comment/forestmarket.html', {
+                                        from: 'certifylist',
+                                    })
+                                } else if (ret.buttonIndex == 2) {
+                                    api.closeWin({
+                                        name: 'personal_data'
+                                    });
+                                    api.closeWin({});
+                                    setTimeout(function() {
+                                        api.execScript({
+                                            name: 'root',
+                                            frameName: 'frame4',
+                                            script: 'frame4.getShare()'
+                                        });
+                                    }, 100);
+                                }
+                            });
+                        }
+                    }
+                })
+
+            },
+            toDetail: function(name, url, title, content) {
+                api.openWin({
+                    name: name,
+                    url: url,
+                    reload: true,
+                    pageParam: {
+                        title: title,
+                        content: content
+                    }
+                });
+            },
+            getInfo: function(num) {
+                var that = this;
+                that.info = {}
+                http(getuserinfoUrl, 'post', {}, function(ret) {
+                    if (ret.code == 200) {
+                        that.info = ret.data;
+                    }
+                })
+            },
+            isRz: function(name, url, status) {
+                var that = this;
+                if (that.info.auth_primary == 0) { //未认证
+                    // if (that.info && that.info.smrz_flag == 0) { //今日未认证
+                    if (that.info && that.info.pay_certify_status == 2 && that.info.area_code == 86) { //待支付状态
+                        api.confirm({
+                            title: that.langContent.paytit,
+                            msg: that.langContent.paycon,
+                            buttons: that.langContent.paybtn,
+                        }, function(ret, err) {
+                            var index = ret.buttonIndex;
+                            if (index == 1) { //去支付
+                                that.surePay(that.info.order_sn)
+                            }
+                        });
+                    } else {
+                        api.openWin({
+                            name: name,
+                            url: url,
+                            reload: true,
+                            pageParam: {
+                                status: status,
+                            }
+                        });
+                    }
+                    // } else {
+                    //     api.toast({
+                    //         msg: that.langContent.todaynum,
+                    //         duration: 2000,
+                    //         location: 'bottom'
+                    //     });
+                    //     return;
+                    // }
+                } else if (that.info.auth_primary == 1) { //已认证
+                    api.openWin({
+                        name: name,
+                        url: url,
+                        reload: true,
+                        pageParam: {
+                            status: 1
+                        }
+                    });
+                }
+            },
+            surePay: function(orderid) { //去付款
+                var that = this;
+                // var paramss = {
+                //     paySite: 'recharge',
+                //     payType: 'alipay',
+                //     payId: orderid,
+                // }
+                http(getPaySignStr, 'post', {}, function(res) {
+                        if (res.code == 200) { //支付宝支付
+                            that.aliPay(res.data.info);
+                        }
+                    },
+                    function(err) {});
+            },
+            aliPay: function(params) { // 支付宝
+                var that = this
+                var aliPayPlus = api.require('aliPayPlus');
+                aliPayPlus.payOrder({
+                    orderInfo: params
+                }, function(ret, err) {
+                    if (ret.code == 9000) {
+                        api.execScript({
+                            name: 'personal_data',
+                            script: 'personal_data.getInfo()'
+                        });
+                        api.toast({
+                            msg: that.getCodetip.paysucess,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                    } else if (ret.code == 4000) {
+                        api.toast({
+                            msg: that.getCodetip.payfail,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                    } else if (ret.code == 6001) {
+                        api.toast({
+                            msg: that.getCodetip.cancelpay,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+
+                    } else if (ret.code == 6002) {
+                        api.toast({
+                            msg: that.getCodetip.interneterr,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                    }
+
+                });
+            },
+
+        }
+    });
+</script>

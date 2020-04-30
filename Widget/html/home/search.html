@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>搜索</title>
+    <link rel="stylesheet" type="text/css" href="../../lib/iconfont2/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <style>
+        #search {
+            width: 100vw;
+        }
+        
+        .inputarea {
+            background: #ffffff;
+            border-radius: 35px;
+            flex: 1;
+            border: 1px solid #dddddd;
+        }
+        
+        .inputarea img {
+            width: 22px;
+            height: 22px;
+            margin: 0 10px;
+        }
+        
+        input {
+            color: #999999;
+            flex: 1;
+            height: 35px;
+            line-height: 35px;
+            text-indent: 10px;
+        }
+        
+        input::placeholder {
+            font-size: 14px;
+            color: #999999;
+        }
+        
+         ::-webkit-input-placeholder {
+            font-size: 14px;
+            color: #999999;
+        }
+        /* 使用webkit内核的浏览器 */
+        
+         :-moz-placeholder {
+            font-size: 14px;
+            color: #999999;
+        }
+        /* Firefox版本4-18 */
+        
+         ::-moz-placeholder {
+            font-size: 14px;
+            color: #999999;
+        }
+        /* Firefox版本19+ */
+        
+         :-ms-input-placeholder {
+            font-size: 14px;
+            color: #999999;
+        }
+        
+        .histroy {
+            background: #ffffff;
+            color: #333333;
+        }
+        
+        .colorgray {
+            color: #999999;
+            margin: 0 10px;
+        }
+        
+        .friend {
+            margin: auto 15px;
+        }
+        
+        .on {
+            color: #cfa767;
+            font-weight: bold;
+            /* border-bottom: 2px solid #cfa767; */
+        }
+        
+        .userimg {
+            width: 50px;
+            height: 50px;
+            margin: 0 10px 0 0;
+        }
+        
+        .info {
+            flex: 1;
+            line-height: 25px;
+        }
+        
+        .flow {
+            color: #e03d81;
+            border: 1px solid #e03d81;
+            height: 20px;
+            width: 55px;
+            text-align: center;
+            line-height: 20px;
+            border-radius: 20px;
+        }
+        
+        .delet {
+            width: 15px;
+            height: 15px;
+        }
+        
+        .fontSize20 {
+            font-size: 22px;
+            margin: 0 10px;
+        }
+        
+        .searcharea {
+            background: #ffffff;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="search" class="content" v-cloak>
+        <header class="header" style="background: #ffffff;height: 0px;">
+        </header>
+        <div>
+            <div class="searcharea padding1 flex_row_between">
+                <div class="inputarea flex_row_between">
+                    <i class="iconfont icon-sousuo fontSize20 color_default1"></i>
+                    <input id="homeSearch" type="text" :placeholder="langContent.search_input" v-model="words" onpaste="return true" @keyup.enter="toSearch(words)">
+                    <i @click="clear();" class="iconfont icon-guanbi2 fontSize18 colorgray"></i>
+                </div>
+
+                <div class="color_time padding1 fontSize14" @click="goBack()">{{langContent.cancel?langContent.cancel:''}}</div>
+            </div>
+            <div v-show="!isShowlist">
+                <div class="histroy padding12  flex_row_left">
+                    <!-- <div class="color_default1">{{langContent.history?langContent.history:''}}</div> -->
+                    <div class="fontSize14 color_default1 text_up" @click="delet('all')">{{langContent.clear?langContent.clear:''}}</div>
+                </div>
+                <div class="histroy padding12 flex_row_between" v-for="word in hotWordsList">
+                    <div class="fontSize14">#{{word.keyword}}</div>
+                    <i @click="delet('one',word.id)" class="iconfont icon-guanbi fontSize16 color_gray delet"></i>
+                </div>
+            </div>
+        </div>
+        <div v-show="isShowlist">
+            <div class="slecttype flex_row_left fontSize14  posi_relative">
+                <div class="padding1 color_gray friend" :class="{'on':type==1}" @click="type=1;changeType()">{{langContent.type1?langContent.type1:''}}</div>
+                <div class="padding1 color_gray friend" :class="{'on':type==2}" @click="type=2;changeType()">{{langContent.type2?langContent.type2:''}}</div>
+            </div>
+            <!-- <div v-show="type==1">
+                <div class="histroy padding1 flex_row_between">
+                    <img class="userimg" src="../../image/logo.png" alt="" />
+                    <div class="info">
+                        <div class="color_white fontSize14">yadan</div>
+                        <div class="colorgray fontSize12">ID:188888 粉丝:0</div>
+                        <div class="colorgray fontSize12">这个家伙很懒，什么都没留下</div>
+                    </div>
+                    <div class="flow">关注</div>
+                </div>
+            </div>
+            <div v-show="type==2">
+                <div class="histroy flex_row_between flex_wrap">
+                    <div class="" style="height: 300px;width: 50%;overflow: hidden;" v-for="(item, index) in v_list"
+                        :key="index">
+                        <video :class="'v'+index" width="100%" height="100%"
+                            style="object-fit: cover;object-position: 50% 50%;" :src="item"
+                            poster="../image/loading.gif" preload="auto" autoplay="autoplay"></video>
+                    </div>
+                </div>
+            </div> -->
+        </div>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    var search = new Vue({
+        el: "#search",
+        data: {
+            words: '',
+            isShowlist: false,
+            type: 1,
+            v_list: [],
+            hotWordsList: [],
+            langContent: {},
+        },
+        created: function() {
+            var that = this;
+            apiready = function() {
+                fixStatusbar('header,.header,.headers', '.content');
+                if (api.pageParam.from && api.pageParam.from == 'frame0') {
+                    $api.setStorage('curframename', 'frame4');
+                }
+                api.setStatusBarStyle({
+                    style: 'dark',
+                    color: 'rgba(0,0,0,0)'
+                });
+                var height = $api.fixStatusBar(document.querySelector('header'));
+                var minheight = api.winHeight - height;
+                $api.css($api.dom('#search'), 'min-height:' + minheight + 'px');
+                search.$data.langContent = GlobleLanguageContent.search;
+                that.getHotWords();
+                api.addEventListener({
+                    name: 'viewdisappear'
+                }, function(ret, err) {
+                    if (api.pageParam.from && api.pageParam.from == 'frame0') {
+                        api.setStatusBarStyle({
+                            style: 'light',
+                            color: 'rgba(0,0,0,0)'
+                        });
+                        $api.setStorage('curframename', 'frame0');
+                        api.execScript({
+                            name: 'root',
+                            frameName: 'frame0',
+                            script: 'frame0.getCheAplay()'
+                        });
+                    }
+                });
+                api.addEventListener({
+                    name: 'keyback'
+                }, function(ret, err) {
+                    that.goBack()
+                });
+            }
+        },
+        watch: {
+            words: function(curVal, oldVal) {
+                var that = this
+                clearTimeout(this.timeout);
+                this.timeout = setTimeout(function() {
+                    that.toSearch(curVal);
+                }, 500);
+            }
+        },
+        methods: {
+            goBack: function(name, animation) {
+                if (api.pageParam.from && api.pageParam.from == 'frame0') {
+                    api.setStatusBarStyle({
+                        style: 'light',
+                        color: 'rgba(0,0,0,0)'
+                    });
+                    $api.setStorage('curframename', 'frame0');
+                    api.execScript({
+                        name: 'root',
+                        frameName: 'frame0',
+                        script: 'frame0.getCheAplay()'
+                    });
+                }
+                api.closeWin({
+                    name: name || '',
+                    animation: animation || {
+                        type: "push", //动画类型（详见动画类型常量）
+                        subType: "from_left", //动画子类型（详见动画子类型常量）
+                        duration: 300 //动画过渡时间，默认300毫秒
+                    }
+                });
+            },
+            clear: function() {
+                var that = this;
+                that.isShowlist = false;
+                that.words = '';
+                that.getHotWords();
+                api.closeFrame({
+                    name: 'search_frame'
+                });
+            },
+            delet: function(type, id) {
+                var that = this;
+                http(delsearchUrl, 'post', {
+                        type: type,
+                        id: id
+                    },
+                    function(ret) {
+                        if (ret.code == 200) {
+                            api.toast({
+                                msg: ret.msg,
+                                duration: 2000,
+                                location: 'bottom'
+                            });
+                            that.getHotWords();
+                        } else {
+                            api.toast({
+                                msg: ret.msg,
+                                duration: 2000,
+                                location: 'bottom'
+                            });
+                        }
+                    },
+                    function(err) {
+                        // alert(JSON.stringify(err));
+                    });
+            },
+            changeType: function() {
+                var that = this;
+                that.toSearch()
+            },
+            toSearch: function(words) {
+                var that = this;
+                if (that.words && that.words != '') {
+                    that.isShowlist = true;
+                    setTimeout(function() {
+                        api.openFrame({
+                            name: 'search_frame',
+                            url: 'search_frame.html',
+                            reload: true,
+                            rect: {
+                                x: 0,
+                                y: $api.dom('.header').offsetHeight + $api.dom('.searcharea').offsetHeight + $api.dom('.slecttype').offsetHeight,
+                                w: 'auto',
+                                h: 'auto'
+                            },
+                            pageParam: {
+                                type: that.type,
+                                words: that.words
+                            },
+                        });
+                        if (words) {
+                            setTimeout(function() {
+                                api.setFocus({
+                                    focus: true,
+                                    inputId: 'homeSearch' // 你的dom中input元素id
+                                });
+                            }, 100);
+                        }
+                    }, 1);
+
+                } else {
+                    that.isShowlist = false
+                    api.closeFrame({
+                        name: 'search_frame'
+                    });
+                }
+            },
+            getHotWords: function() {
+                var that = this;
+                http(historyUrl, 'post', {},
+                    function(ret) {
+                        if (ret.code == 200) {
+                            that.hotWordsList = ret.data.info;
+                        } else {
+
+                        }
+                    },
+                    function(err) {
+                        // alert(JSON.stringify(err));
+                    });
+            },
+        }
+    })
+</script>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="../../lib/iconfont/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <style>
+        header.header {
+            justify-content: space-between;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="discuss">
+        <header class="header" style="background: #110e24;">
+            <div class='color_gray marginL1'>{{comment_count}}{{langContent.title?langContent.title:''}}</div>
+            <div class='color_gray marginR10' onclick="goBack('',{
+                type: 'movein', //动画类型（详见动画类型常量）
+                subType: 'from_bottom', //动画子类型（详见动画子类型常量）
+                duration: 300 //动画过渡时间，默认300毫秒
+            })">x</div>
+        </header>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    var discuss = new Vue({
+        el: "#discuss",
+        data: {
+            comment_count: '',
+            langContent: {},
+        },
+        created: function() {
+            var that = this
+            apiready = function() {
+                discuss.$data.langContent = GlobleLanguageContent.comment;
+                api.addEventListener({
+                    name: 'dis'
+                }, function(ret, err) {
+                    if (ret.value.comment_count) {
+                        that.comment_count = ret.value.comment_count;
+                    }
+
+                });
+                fixStatusbar('header,.header,.headers', '.content');
+                that.openFrame(api.pageParam.video_id)
+
+            }
+        },
+        methods: {
+            openFrame: function(video_id) {
+                api.openFrame({
+                    name: 'discuss_frame',
+                    url: 'discuss_frame.html',
+                    rect: {
+                        x: 0,
+                        y: $api.dom(".header").offsetHeight,
+                        w: 'auto',
+                        h: 'auto'
+                    },
+                    reload: true,
+                    pageParam: {
+                        video_id: video_id
+                    }
+                })
+            },
+            toPage: function(name, url, params) {
+                api.openWin({
+                    name: name,
+                    url: url,
+                    reload: true,
+                    pageParam: params || {}
+                });
+            }
+        }
+    })
+</script>

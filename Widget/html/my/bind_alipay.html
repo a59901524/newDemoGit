@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>绑定支付宝</title>
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <link rel="stylesheet" type="text/css" href="../../lib/iconfont2/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/new/reset.css">
+    <link rel="stylesheet" type="text/css" href="../../css/new/addWxCode.css">
+    <script type="text/javascript" src="../../script/lib-flexible.js"></script>
+</head>
+
+<body class="has_header">
+    <div id="bind_alipay" class="content addWxCode" v-cloak>
+        <header class="header ">
+            <i class="iconfont icon-xiangzuo" onclick="goBack()"></i>
+            <div>{{isEditS?langContent.ctitle:langContent.atitle}}</div>
+        </header>
+        <div class="content2" :class="{'addImg': !pingzheng}" @click.stop="getImg">
+            <img :src="pingzheng" alt="" >
+        </div>
+        <div class="btn" @click="submit()">提交</div>
+    </div>
+
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    var bind_alipay = new Vue({
+        el: '#bind_alipay',
+        data: {
+            pingzheng: '',
+            isEditS: false,
+            isChange: false,
+            langContent: {},
+            getCodetip: {}
+        },
+        created: function() {
+            var that = this
+            apiready = function() {
+                fixStatusbar('header,.header,.headers', '.content');
+                bind_alipay.$data.langContent = GlobleLanguageContent.bind_alipay;
+                bind_alipay.$data.getCodetip = GlobleLanguageContent.getCode;
+                http(getuserinfoUrl, 'post', {},
+                    function(res) {
+                        if (res.code == 200) {
+                            that.pingzheng = res.data.alipay;
+                            if (res.data.alipay != '') {
+                                that.isEditS = true
+                            }
+                        }
+                    }
+                )
+
+            }
+        },
+        methods: {
+            getImg: function() {
+                var that = this
+                api.getPicture({
+                    sourceType: 'album',
+                    encodingType: 'jpg',
+                    mediaValue: 'pic',
+                    destinationType: 'base64',
+                    allowEdit: false,
+                    quality: 50,
+                    targetWidth: 750,
+                    targetHeight: 750,
+                    saveToPhotoAlbum: false
+                }, function(ret, err) {
+                    if (ret && ret.base64Data && ret.base64Data != '') {
+                        that.pingzheng = ret.base64Data;
+                        that.isChange = true
+                    }
+                });
+            },
+
+
+            // 提交
+            submit: function() {
+                var that = this;
+                var param = {
+                    alipay: that.pingzheng,
+                }
+                if (that.isChange) {
+                    http(bindAlipay, 'post', param, function(res) {
+                        if (res.code == 200) {
+                            api.toast({
+                                msg: res.msg,
+                                duration: 2000,
+                                location: 'bottom'
+                            });
+                            api.execScript({
+                                name: 'personal_data',
+                                script: 'personal_data.getInfo();'
+                            });
+                            setTimeout(function() {
+                                api.closeWin();
+                            }, 1500);
+                        } else {
+                            api.toast({
+                                msg: res.msg,
+                                duration: 2000,
+                                location: 'bottom'
+                            });
+                        }
+                    })
+                } else {
+                    api.toast({
+                        msg: that.langContent.nochange,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return;
+                }
+            }
+
+        }
+    });
+</script>

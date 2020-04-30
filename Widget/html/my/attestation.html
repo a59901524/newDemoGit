@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>实名认证</title>
+    <link rel="stylesheet" href="../../lib/iconfont2/iconfont.css">
+    <link rel="stylesheet" href="../../css/common.css">
+    <link rel="stylesheet" href="../../css/real_name.css">
+    <link rel="stylesheet" type="text/css" href="../../css/bank_bind.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/new/reset.css">
+    <link rel="stylesheet" type="text/css" href="../../css/new/approve.css">
+    <script type="text/javascript" src="../../script/lib-flexible.js"></script>
+    <style>
+        /* input {
+            border: 1px solid #CCCCCC;
+            padding: 1rem;
+            border-radius: 2rem;
+            width: calc(100% - 2rem);
+            font-size: 14px;
+        } */
+
+        input::placeholder {
+            font-size: 14px;
+            color: #999;
+        }
+
+        img {
+            /* width: 100px;
+            height: 100px; */
+            height: 100%;
+            width: auto;
+            max-width: 100%;
+        }
+
+        .BB1 {
+            border-bottom: 1px solid #000000;
+        }
+
+        .input_ss {
+            width: 100%;
+            color: #ccc;
+        }
+
+        .black_overlay {
+            opacity: 1;
+            position: fixed;
+            top: 0%;
+            left: 0%;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1001;
+        }
+
+        .submit_style {
+            width: 48%;
+            text-align: center;
+            padding: .8rem 0rem;
+            background-color: #cfa867;
+            border-radius: 5px;
+            margin: 2rem auto 1rem;
+        }
+
+        .nextstep {
+            width: 90%;
+            margin: 25px auto;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body class="has_header">
+    <div id="attestation" v-cloak class="cont">
+        <header class="header">
+            <i class="iconfont icon-xiangzuo" onclick="goBack()"></i>
+            <div>{{langContent.title?langContent.title:''}}</div>
+        </header>
+        <div class="h88"></div>
+        <div class="marginT5" v-if="!isRen">
+            <!-- <div class='fontSize14 color_default'>请输入真实信息</div>
+            <div class='fontSize16 font_bold marginT1'>真实姓名：</div>
+            <input type="text" placeholder="真实姓名" class='marginT1' v-model='realname'>
+            <div class='fontSize16 font_bold marginT1'>身份证号：</div>
+            <input type="text" placeholder="身份证号" class='marginT1' v-model='idcard'>
+            <div class='fontSize16 font_bold marginT1'>身份证正面：</div>
+            <div class='marginT1'>
+                <div class='flex_row_center' style='height: 230px;border: 1px solid grey'>
+                    <img :src="id_front||'../../image/jh.png'" alt="">
+                </div>
+                <div class='flex_row_center marginT5'>
+                    <div class='color_white bg_default flex_row_center fontSize14' style='width: 120px;height: 40px;border-radius: .5rem' @click="gopic('id_front')">上传图片</div>
+                </div>
+            </div>
+            <div class='fontSize16 font_bold marginT1'>身份证反面：</div>
+            <div class='marginT1'>
+                <div class='flex_row_center' style='height: 230px;border: 1px solid grey'>
+                    <img :src="id_behind||'../../image/jh.png'" alt="">
+                </div>
+
+                <div class='flex_row_center marginT5'>
+                    <div class='color_white bg_default flex_row_center fontSize14' style='width: 120px;height: 40px;border-radius: .5rem' @click="gopic('id_behind')">上传图片</div>
+                </div>
+            </div>
+            <div class='fontSize16 font_bold marginT1'>手持身份证：</div>
+            <div class='marginT1'>
+                <div class='flex_row_center' style='height: 230px;border: 1px solid grey'>
+                    <img :src="id_hand||'../../image/jh.png'" alt="">
+                </div>
+
+                <div class='flex_row_center marginT5'>
+                    <div class='color_white bg_default flex_row_center fontSize14' style='width: 120px;height: 40px;border-radius: .5rem' @click="gopic('id_hand')">上传图片</div>
+                </div>
+            </div> -->
+            <div v-show="auth_type==1">
+                <div class="color_default1 fontSize14 text_center marginT5 padding1">{{langContent.tip?langContent.tip:''}}1</div>
+                <div class="ab_item padding_custom bbd fontSize14 bg_white marginT5">
+                    <span class="marginR10">{{langContent.name?langContent.name:''}}</span>
+                    <input type="text" :placeholder="langContent.name_input" v-model="realname" class="input_ss">
+                </div>
+                <div class="ab_item padding_custom bbd fontSize14 bg_white">
+                    <span class="marginR10">{{langContent.card?langContent.card:''}}</span>
+                    <input type="text" :placeholder="langContent.card_input" v-model="idcard" class="input_ss">
+                </div>
+            </div>
+            <div v-show="auth_type==2">
+                <div v-show="step==1">
+                    <div class="ab_item padding_custom bbd fontSize14 bg_white marginT5">
+                        <span class="marginR10">{{langContent.name?langContent.name:''}}2</span>
+                        <input type="text" :placeholder="langContent.name_input" v-model="realname" class="input_ss">
+                    </div>
+                    <div class="ab_item padding_custom bbd fontSize14 bg_white">
+                        <span class="marginR10">{{langContent.card?langContent.card:''}}</span>
+                        <input type="text" :placeholder="langContent.card_input" v-model="idcard" class="input_ss">
+                    </div>
+                    <div class="nextstep bg_default color_white padding1 text_center fontSize14 marginT5" @click="step=2">
+                        {{langContent.next?langContent.next:''}}
+                    </div>
+                </div>
+
+                <div v-show="step==2">
+                    <div class="fontSize14 color_black6 padding1">{{langContent.cardtip1?langContent.cardtip1:''}}</div>
+                    <div class="flex_row_center bg_white" style="border-radius: .5rem;border: 1px solid #dddddd;width: 90%;height: auto;margin: 5%;overflow: hidden;" @click.stop="getcardImg">
+                        <img v-if="idcardimg!=''" :src="idcardimg||'../../image/uppz.png'" alt="" style="width: 100%;height: auto;">
+                        <img v-if="idcardimg==''" :src="'../../image/uppz.png'" alt="" style="width: 150px;height: 150px;">
+                    </div>
+                    <span @click="showImg=img1;isShowEX=true;" class="fontSize14 color_default1 text_up" style="margin-left: 0.8rem;">{{langContent.seeEx?langContent.seeEx:''}}</span>
+                    <div class="fontSize14 color_black6 marginT1 padding1">{{langContent.cardtip2?langContent.cardtip2:''}}</div>
+                    <div class="flex_row_center bg_white" style="border-radius: .5rem;border: 1px solid #dddddd;width: 90%;height: auto;margin: 5%;overflow: hidden;" @click.stop="gethandImg">
+                        <img v-if="handimg!=''" :src="handimg||'../../image/uppz.png'" alt="" style="width: 100%;height: auto;">
+                        <img v-if="handimg==''" :src="'../../image/uppz.png'" alt="" style="width: 150px;height: 150px;">
+                    </div>
+                    <span @click="showImg=img2;isShowEX=true;" class="fontSize14 color_default1 text_up" style="margin-left: 0.8rem;">{{langContent.seeEx?langContent.seeEx:''}}</span>
+                    <div class="flex_row_between padding1">
+                        <div class="submit_style color_white fontSize14" @click="step=1">
+                            {{langContent.last?langContent.last:''}}
+                        </div>
+                        <div class="submit_style color_default1 fontSize14" style="background: #333333;" @click="subinfo" v-if="!isRen&&auth_type==2&&step==2">
+                            {{langContent.sub?langContent.sub:''}}
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- <div v-show="auth_type==2">
+                <div class="ab_item padding_custom BB1 fontSize14" @click="showA=true">
+                    <span class="marginR10">开户银行</span>
+                    <input type="text" disabled placeholder="--请选择开户银行--" v-model="bankname">
+                </div>
+                <div class="ab_item padding_custom BB1 fontSize14">
+                    <span class="marginR10">银行卡号</span>
+                    <input type="text" placeholder="请输入银行卡号" v-model="bankcard">
+                </div>
+                <div class="ab_item padding_custom BB1 fontSize14 ">
+                    <span class="marginR10">手机号码</span>
+                    <input type="text" placeholder="请输入银行卡预留手机号" v-model="mobile">
+                </div>
+                <div class="ab_item padding_custom BB1 flex_row_left">
+                    <span class="marginR10">数字验证</span>
+                    <input type="text" style="padding-left: .3rem" placeholder="请输入右侧图片中的字符" v-model="thumb">
+                    <img :src="Imgs" alt="" style="width: 5rem;height: 2rem;margin-left: 1rem" @click="updateImg">
+                </div>
+                <div class="ab_item padding_custom flex_row_left BB1 fontSize14">
+                    <span class="marginR10">验证码</span>
+                    <input type="text" style="padding-left: .3rem" placeholder="请输入验证码" v-model="code">
+                    <div class=" fontSize10 color_default1 code" @click="getCode">{{verifyCodeTips}}</div>
+                </div>
+            </div> -->
+            <div v-if="isShowEX" @click="isShowEX=false" class="black_overlay flex_row_center">
+                <img class="width100" style="height: auto;" :src="showImg" alt="">
+            </div>
+        </div>
+        <!-- <div class="box_wrapper" v-if="showA">
+            <div class="box_wrapper" v-if="showA">
+                <div class="box bg_default color_default1">
+                    <div class="box_title flex_row_center BB1 fontSize16" @click="chexkBank('')">--请选择开户银行--</div>
+                    <div class="box_title flex_row_center BB1 fontSize16" v-for="item in bankList" @click="chexkBank(item)">{{item}}</div>
+                </div>
+            </div>
+        </div> -->
+        <div class="bg_default color_white flex_row_center fontSize14 margin1" style="margin-top: 2rem;height: 40px;" @click="toCertify" v-if="!isRen&&auth_type==1">
+            {{langContent.sub?langContent.sub:''}}
+        </div>
+        <!-- <div class="bg_default color_white flex_row_center fontSize14 margin1" style="margin-top: 1rem;height: 40px;" @click="subinfo" v-if="!isRen&&auth_type==2&&step==2">
+            {{langContent.sub?langContent.sub:''}}
+        </div> -->
+        <div v-if="isRen" class="padding12 flex_col_center margin1 Brd1 posi_relative cont bg_white" style="border: 1px solid #B3A795">
+            <img :src="langContent.imgUrl" alt="" style="width:5rem;height:5rem;position: absolute;top: 0;left: 0;">
+            <div class="Bc marginT1" style="border: 1px solid #B3A795;width: 78px;height: 78px;">
+                <img :src="info.avatar||'../../image/logo.png'" alt="" class="Bc" style="width: 78px;height: 78px;">
+            </div>
+            <div class="fontSize14 marginT1 color_black3">
+                {{info.realname}}
+            </div>
+            <div class="fontSize16 font_bold marginT1 color_black3">
+                {{info.identity_number}}
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    var attestation = new Vue({
+        el: "#attestation",
+        data: {
+            info: {},
+            isRen: false,
+            id_front: '',
+            id_behind: '',
+            id_hand: '',
+            isShow: false,
+            showA: false,
+            realname: '',
+            idcard: '',
+            bankname: '',
+            bankcard: '',
+            mobile: '',
+            code: '',
+            thumb: '',
+            Imgs: '',
+            verifyCodeTips: '获取验证码',
+            number: 59,
+            codeEnable: true,
+            bankList: [],
+
+            certifyId: '',
+            certifyUrl: '',
+
+            auth_type: 1, //认证类型，1:支付宝实名认证，2:四要素实名认证
+            isZfbSm: false,
+            isAndroid: Boolean,
+            langContent: {},
+            getCodetip: {},
+            idcardimg: '',
+            handimg: '',
+            isShowEX: false,
+            showImg: '../../image/myCenter/example1.png',
+            img1: '../../image/myCenter/example1.png',
+            img2: '../../image/myCenter/example2.png',
+            step: 1
+        },
+        created: function() {
+            var that = this
+            apiready = function() {
+                $api.rmStorage('smrz_certify_id');
+                if (api.systemType == "ios" || api.systemType == "IOS") {
+                    that.isAndroid = false
+                } else {
+                    that.isAndroid = true
+                }
+                var height = $api.fixStatusBar($api.dom('.header'))
+                if (height > 0) {
+                    $api.css($api.dom('.cont'), 'margin-top:' + (height - 33) + 'px;');
+                }
+                if (api.pageParam.status == 1) {
+                    that.isRen = true
+                }
+                // that.auth_type = api.pageParam.auth_type;
+                attestation.$data.langContent = GlobleLanguageContent.attestation;
+                attestation.$data.getCodetip = GlobleLanguageContent.getCode;
+                // that.auth_type = that.langContent.auth_type;
+                that.updateImg();
+                that.getInfo();
+                // that.getBankList();
+                api.addEventListener({
+                    name: 'resume'
+                }, function(ret, err) {
+                    if (api.appParam) {
+                        var fromZfb = JSON.parse(api.appParam);
+                        // console.error(JSON.stringify(fromZfb)) //iOS：{"is_certify":"1"}
+                        if ((that.isAndroid && fromZfb && fromZfb.appParam && fromZfb.appParam.is_certify)) {
+                            that.checkCertify()
+                        }
+                    }
+                });
+            }
+        },
+        methods: {
+            getcardImg: function() {
+                var that = this
+                api.getPicture({
+                    sourceType: 'album',
+                    encodingType: 'jpg',
+                    mediaValue: 'pic',
+                    destinationType: 'base64',
+                    allowEdit: false,
+                    quality: 50,
+                    targetWidth: 750,
+                    targetHeight: 750,
+                    saveToPhotoAlbum: false
+                }, function(ret, err) {
+                    if (ret && ret.base64Data && ret.base64Data != '') {
+                        that.idcardimg = ret.base64Data;
+                    }
+                });
+            },
+            gethandImg: function() {
+                var that = this
+                api.getPicture({
+                    sourceType: 'album',
+                    encodingType: 'jpg',
+                    mediaValue: 'pic',
+                    destinationType: 'base64',
+                    allowEdit: false,
+                    quality: 50,
+                    targetWidth: 750,
+                    targetHeight: 750,
+                    saveToPhotoAlbum: false
+                }, function(ret, err) {
+                    if (ret && ret.base64Data && ret.base64Data != '') {
+                        that.handimg = ret.base64Data;
+                    }
+                });
+            },
+            checkCertify: function() {
+                var that = this;
+                // && $api.getStorage('smrz_certify_id') && $api.getStorage('smrz_certify_id') != ''
+                if (that.auth_type == 1 && that.isZfbSm && !that.isRen) {
+                    api.showProgress({
+                        title: '',
+                        text: that.langContent.check,
+                        modal: true
+                    });
+                    http(checkCertifyUrl, 'post', {}, function(res) {
+                        if (res) {
+                            api.hideProgress();
+                            api.toast({
+                                msg: res.msg,
+                                duration: 2000,
+                                location: 'bottom'
+                            });
+                            setTimeout(function() {
+                                api.execScript({
+                                    name: 'personal_data',
+                                    script: 'personal_data.getInfo()'
+                                });
+                            }, 1000);
+                            if (res.code == 200) {
+                                api.confirm({
+                                    title: that.langContent.paytit,
+                                    msg: that.langContent.paycon,
+                                    buttons: that.langContent.paybtn,
+                                }, function(ret, err) {
+                                    var index = ret.buttonIndex;
+                                    if (index == 1) { //去支付
+                                        that.surePay(res.data.order_sn)
+                                    } else {
+                                        api.closeWin({});
+                                    }
+                                });
+                            }
+                        }
+                    })
+                } else {
+                    return;
+                }
+            },
+            toCertify: function() {
+                var that = this
+                if (!that.realname) {
+                    api.toast({
+                        msg: that.langContent.noname,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return;
+                }
+                if (!that.idcard) {
+                    api.toast({
+                        msg: that.langContent.nocard,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return;
+                }
+                if (api.systemType == 'ios') {
+                    api.appInstalled({
+                        appBundle: "alipay://"
+                    }, function(ret, err) {
+                        if (ret.installed) {
+                            //应用已安装
+                        } else {
+                            //应用未安装
+                            api.confirm({
+                                title: '',
+                                msg: that.langContent.nozfb,
+                                buttons: that.langContent.zfbbtn,
+                            }, function(ret, err) {
+                                if (ret.buttonIndex == 1) {
+
+                                }
+                            });
+                            return;
+                        }
+                    });
+                } else {
+                    //异步返回结果：
+                    api.appInstalled({
+                        appBundle: 'com.eg.android.AlipayGphone'
+                    }, function(ret, err) {
+                        if (ret.installed) {
+                            //应用已安装
+                        } else {
+                            //应用未安装
+                            api.confirm({
+                                title: '',
+                                msg: that.langContent.nozfb,
+                                buttons: that.langContent.zfbbtn,
+                            }, function(ret, err) {
+                                if (ret.buttonIndex == 1) {
+
+                                }
+                            });
+                            return;
+                        }
+                    });
+                }
+                http(faceCertifyUrl, 'post', {
+                    realname: that.realname,
+                    identity_number: that.idcard
+                }, function(res) {
+                    if (res.code == 200) {
+                        that.isZfbSm = true;
+                        // $api.setStorage('smrz_certify_id', res.data.certify_id);
+                        const certifyUrl = 'alipays://platformapi/startapp?appId=20000067&url=' + encodeURIComponent(res.data.url);
+                        setTimeout(function() {
+                            window.location.href = certifyUrl;
+                        }, 100);
+                    }
+                })
+            },
+            getBankList: function() {
+                var that = this;
+                http(bankList, 'get', {}, function(res) {
+                    if (res.code == 200) {
+                        that.bankList = res.data;
+                    }
+                })
+            },
+            chexkBank: function(item) {
+                var that = this;
+                this.showA = !this.showA
+                that.bankname = item
+            },
+            getCode: function() {
+                var that = this;
+                if (that.codeEnable) {
+                    if (/^1[3-9]\d{9}$/.test(that.mobile)) {
+                        that.Verify();
+                    } else {
+                        api.toast({
+                            msg: '请输入合法手机号',
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                    }
+                } else {
+                    api.toast({
+                        msg: '未到时间',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+            },
+            //获取验证码
+            Verify: function() {
+                var that = this;
+                var params = {
+                    mobile: that.mobile,
+                    thumb: that.thumb
+                };
+                http(sendMsgUrl, 'post', params, function(res) {
+                        api.toast({
+                            msg: res.msg,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                        if (res.code == 200) {
+                            that.codeEnable = false;
+                            that.countDown()
+                        }
+                    })
+                    // }
+            },
+            //发送验证码倒计时
+            countDown: function() {
+                var that = this;
+                that.number = 59;
+                var timer = setInterval(function() {
+                    if (that.number <= 1) {
+                        window.clearInterval(timer)
+                        that.verifyCodeTips = "获取验证码";
+                        that.number = 59;
+                        that.codeEnable = false;
+                    } else {
+                        that.verifyCodeTips = "重新获取(" + that.number + ")";
+                        that.number--;
+                    }
+                }, 1000)
+            },
+            surePay: function(orderid) { //去付款
+                var that = this;
+                // var paramss = {
+                //     paySite: 'recharge',
+                //     payType: 'alipay',
+                //     payId: orderid,
+                // }
+                http(getPaySignStr, 'post', {}, function(res) {
+                        if (res.code == 200) { //支付宝支付
+                            that.aliPay(res.data.info);
+                        }
+                    },
+                    function(err) {});
+            },
+            aliPay: function(params) { // 支付宝
+                var that = this
+                var aliPayPlus = api.require('aliPayPlus');
+                aliPayPlus.payOrder({
+                    orderInfo: params
+                }, function(ret, err) {
+                    if (ret.code == 9000) {
+                        setTimeout(function() {
+                            api.execScript({
+                                name: 'root',
+                                frameName: 'frame4',
+                                script: 'frame4.getInfo()'
+                            });
+                            api.execScript({
+                                name: 'personal_data',
+                                script: 'personal_data.getInfo()'
+                            });
+                            api.execScript({
+                                name: 'certifylist',
+                                script: 'certifylist.getInfo()'
+                            });
+                        }, 1000);
+                        api.toast({
+                            msg: that.getCodetip.paysucess,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                    } else if (ret.code == 4000) {
+                        api.toast({
+                            msg: that.getCodetip.payfail,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                    } else if (ret.code == 6001) {
+                        api.toast({
+                            msg: that.getCodetip.cancelpay,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+
+                    } else if (ret.code == 6002) {
+                        api.toast({
+                            msg: that.getCodetip.interneterr,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                    }
+                    setTimeout(function() {
+                        api.closeWin();
+                    }, 2000)
+                });
+            },
+            toPage: function(name, url, params) {
+                api.openWin({
+                    name: name,
+                    url: url,
+                    reload: true,
+                    pageParam: params || {}
+                });
+            },
+            updateImg: function() {
+                this.Imgs = baseUrl + 'base/captcha?time=' + new Date().getTime()
+            },
+            gopic: function(nub) {
+                var that = this;
+                api.getPicture({
+                    sourceType: 'album',
+                    encodingType: 'jpg',
+                    mediaValue: 'pic',
+                    destinationType: 'base64',
+                    allowEdit: false,
+                    quality: 100,
+                    targetWidth: 720,
+                    targetHeight: 600,
+                    saveToPhotoAlbum: false
+                }, function(ret, err) {
+                    if (ret) {
+                        if (nub == 'id_front') {
+                            that.id_front = ret.base64Data
+                        } else if (nub == 'id_behind') {
+                            that.id_behind = ret.base64Data
+                        } else {
+                            that.id_hand = ret.base64Data
+                        }
+                        // that.list['img' + nub] = JSON.parse(JSON.stringify(that.list['img' + nub]))
+                    } else {
+                        // alert(err);
+                    }
+                });
+            },
+            getInfo: function() {
+                var that = this
+                http(getuserinfoUrl, 'post', {}, function(ret) {
+                    if (ret.code == 200) {
+                        that.info = ret.data;
+                        if (that.info.area_code == 86) {
+                            that.auth_type = 1;
+                        } else {
+                            that.auth_type = 2;
+                        }
+                    }
+                })
+            },
+            subinfo: function() {
+                var that = this
+                if (!that.realname) {
+                    api.toast({
+                        msg: that.langContent.noname,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return;
+                }
+                if (!that.idcard) {
+                    api.toast({
+                        msg: that.langContent.nocard,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return;
+                }
+                // if (!that.bankname) {
+                //     api.toast({
+                //         msg: '开户银行不能为空',
+                //         duration: 2000,
+                //         location: 'bottom'
+                //     });
+                //     return;
+                // }
+                // if (!that.bankcard) {
+                //     api.toast({
+                //         msg: '银行卡号不能为空',
+                //         duration: 2000,
+                //         location: 'bottom'
+                //     });
+                //     return;
+                // }
+                // if (!that.mobile) {
+                //     api.toast({
+                //         msg: '手机号不能为空',
+                //         duration: 2000,
+                //         location: 'bottom'
+                //     });
+                //     return;
+                // }
+                if (!that.idcardimg || that.idcardimg == '') {
+                    api.toast({
+                        msg: that.langContent.noimg1,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return;
+                }
+                if (!that.handimg || that.handimg == '') {
+                    api.toast({
+                        msg: that.langContent.noimg2,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return;
+                }
+                var param = {
+                    name: that.realname,
+                    identity_number: that.idcard,
+                    identity_photo: that.idcardimg,
+                    hold_identity_photo: that.handimg,
+                }
+                http(wildcertifyUrl, 'post', param, function(ret) {
+                    if (ret.code == 200) {
+                        api.execScript({
+                            name: 'root',
+                            frameName: 'frame4',
+                            script: 'frame4.getInfo()'
+                        });
+                        api.execScript({
+                            name: 'personal_data',
+                            script: 'personal_data.getInfo()'
+                        });
+                        api.execScript({
+                            name: 'certifylist',
+                            script: 'certifylist.getInfo()'
+                        });
+                        api.toast({
+                            msg: ret.msg,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                        setTimeout(function() {
+                            goBack()
+                        }, 2000);
+                    }
+
+                })
+            }
+        }
+    })
+</script>

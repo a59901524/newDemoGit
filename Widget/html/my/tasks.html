@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>官方任务</title>
+    <link rel="stylesheet" href="../../lib/iconfont2/iconfont.css">
+    <link rel="stylesheet" href="../../css/common.css">
+    <link rel="stylesheet" type="text/css" href="../../css/new/reset.css">
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        }
+
+        .item {
+            height: 45px;
+            line-height: 45px;
+            text-align: center;
+        }
+
+        .on {
+            border-bottom: 2px solid;
+            color: #cb974d;
+        }
+
+        .video {
+            width: 55px;
+            height: 55px;
+            margin-right: 15px;
+        }
+
+        .rule {
+            width: 90%;
+            height: auto;
+            margin: 20px auto;
+        }
+
+        .textlist {
+            margin-bottom: 2px;
+            text-indent: 0rem;
+            padding-left: .6rem;
+            display: block;
+        }
+
+        .get_mission {
+            /* 去提交 已领取 */
+            padding: .2rem 1rem;
+            border-radius: 1rem;
+            border: 1px solid #cb974d;
+            font-size: 1rem;
+            color: #cb974d;
+        }
+
+        .get_missionOk {
+            /* 已领取 */
+            padding: .2rem 1rem;
+            border-radius: 1rem;
+            border: 1px solid #ddd;
+            font-size: 1rem;
+            color: #999999;
+        }
+
+        .get_missionRefuse {
+            /* 审核中/已拒绝 */
+            padding: .3rem;
+            border-radius: 1rem;
+            border: 1px solid #ff6262;
+            font-size: 1rem;
+            color: #ff6262;
+        }
+
+        .get_missionPass {
+            /* 已通过 */
+            padding: .2rem 0.5rem;
+            border-radius: 1rem;
+            border: 1px solid #2cc597;
+            font-size: 0.25rem;
+            color: #2cc597;
+        }
+        /* .icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            vertical-align: -0.15em;
+            fill: currentColor;
+            overflow: hidden;
+        } */
+
+        .rwImg {
+            height: 1rem;
+            width: 1rem;
+        }
+
+        .icon-biaoqing {
+            font-size: 14rem;
+            color: #999999;
+        }
+
+        .div1 {
+            height: 100%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .div2 {
+            width: 50%;
+            height: 50%;
+            margin-top: 8rem;
+        }
+    </style>
+    <script type="text/javascript" src="../../script/lib-flexible.js"></script>
+</head>
+
+<body class=" bg-white">
+    <div id="tasks" v-cloak class="color_black3">
+        <header class="header bg-white">
+            <i class="iconfont icon-xiangzuo" style="color: #cb974d" onclick="goBack()"></i>
+            <div style="color: #cb974d">{{langContent.title?langContent.title:''}}</div>
+        </header>
+        <div class="h88"></div>
+        <div class="cont  fontSize14 bg-white">
+            <div class="flex_row_around color_999">
+                <div class="item" :class="{'on':type==1}" @click="type=1,getInfo()">{{langContent.recive?langContent.recive:''}}</div>
+                <div class="item" :class="{'on':type==2}" @click="type=2,getInfo()">{{langContent.sub?langContent.sub:''}}</div>
+            </div>
+        </div>
+        <!-- 领取任务 -->
+        <div v-show="type==1" style="background: #ddd">
+            <div class="padding1">
+                <div class="fontSize14 flex_row_between padding1   bg-white " @click="toPage('tasks_receiving','tasks_receiving.html',{status:info.get_task_status})">
+                    <!-- <svg class="icon marginR10" aria-hidden="true">
+                            <use xlink:href="#icon-pengyouquan"></use>
+                    </svg> -->
+                    <img class="rwImg marginR10" src="../../image/myCenter/pyq.png" alt="">
+                    <div class="flex_col_between color_black3" style="flex: 1;align-items: flex-start!important; ">
+                        <div>{{langContent.desc1?langContent.desc1:''}}{{info.fb_zs ?info.fb_zs:''}}{{langContent.desc2?langContent.desc2:''}}</div>
+                    </div>
+                    <!-- 去领取 -->
+                    <div class=" get_mission" v-show="info.get_task_status == 0">{{langContent.torecive?langContent.torecive:''}}</div>
+                    <!-- 已领取 -->
+                    <div class=" get_missionOk" v-show="info.get_task_status == 1">{{langContent.alrecive?langContent.alrecive:''}}</div>
+                </div>
+            </div>
+            <div class="padding1 bg-white">
+                <ul class=" color_black3">
+                    <li class="textlist fontSize14">{{langContent.rule1?langContent.rule1:''}}</li>
+                    <li class="textlist fontSize14" v-html="langContent.rule1desc"></li>
+                    <li class="textlist fontSize14 ">{{langContent.rule2?langContent.rule2:''}}{{info.fb_hour}}{{langContent.rule3?langContent.rule3:''}}</li>
+                    <li class="textlist fontSize14" v-for="obj in langContent.rulelist">{{obj?obj:''}}</li>
+                </ul>
+            </div>
+            <img class="rule" v-if="userinfo.area_code == 86" src="../../image/rule.jpg" alt="" />
+            <img class="rule" v-if="userinfo.area_code != 86" src="../../image/Erule.jpg" alt="" />
+        </div>
+        <!-- 提交任务 -->
+        <div v-show="type==2"  style="background: #ddd">
+            <div class="padding1" v-show="info.get_task_status == 1">
+                <div class="fontSize14 flex_row_between padding1 bg-white  " @click="tosubPage('tasks_sub','tasks_sub.html',senheinfo.status)">
+                    <!-- <svg class="icon marginR10" aria-hidden="true">
+                        <use xlink:href="#icon-pengyouquan"></use>
+                    </svg> -->
+                    <img class="rwImg" src="../../image//myCenter/pyq.png" alt="">
+                    <!-- 朋友圈推广任务（奖励{{overtime && info.fb_zs ?info.fb_zs:'1'}}个糖果） -->
+                    <div class="flex_col_between color_black3" style="flex: 1;align-items: flex-start!important; ">
+                        <div v-if="userinfo.area_code == 86">{{langContent.desc1?langContent.desc1:''}}{{info.fb_zs ?info.fb_zs:''}}{{langContent.desc2?langContent.desc2:''}}</div>
+                        <div v-if="userinfo.area_code != 86">{{langContent.Edesc1?langContent.Edesc1:''}}{{info.fb_zs ?info.fb_zs:''}}{{langContent.desc2?langContent.desc2:''}}</div>
+                    </div>
+                    <!-- 已领取 -->
+                    <div class=" get_missionOk" v-show="senheinfo.status == 0||senheinfo.status == null">{{langContent.status1?langContent.status1:''}}</div>
+                    <!-- 去提交 -->
+                    <div class=" get_mission" v-show="senheinfo.status == 1">{{langContent.status2?langContent.status2:''}}</div>
+                    <!-- 审核中 -->
+                    <div class="get_missionRefuse " v-show="senheinfo.status == 2">{{langContent.status3?langContent.status3:''}}</div>
+                    <!-- 已通过 -->
+                    <div class="get_missionPass" v-show="senheinfo.status == 3">{{langContent.status4?langContent.status4:''}}</div>
+                    <!-- 已拒绝 -->
+                    <div class="get_missionRefuse flex_row_left" v-show="senheinfo.status == 4">
+                        {{langContent.status5?langContent.status5:''}}
+                        <img @click.stop="tx=true" style="width: 18px;height:18px;" src="../../image/reply.png" alt="" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div v-show="type==2 && info.get_task_status == 0" class="div1"  style="background: #ddd">
+            <div class=" div2 text_center">
+                <i class="iconfont icon-biaoqing"></i>
+                <div>{{langContent.tip5?langContent.tip5:''}}</div>
+            </div>
+        </div>
+
+        <div class="box_wrapper " v-if="tx"  style="background: #ddd">
+            <div class="box  posi_relative bg-white">
+                <i @click="tx=false" class="iconfont icon-guanbi fontSize16 text_shadow  close" style="width: 20px;height:20px;position: absolute;right: 10px;top: 10px;"></i>
+                <div class="box_title flex_row_center bbd BBa1 color_black3 fontSize14">{{langContent.resean?langContent.resean:''}}</div>
+                <div class="fontSize12 padding1 color_999">{{senheinfo.reply}}</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript" src="../../lib/iconfont2//iconfont.js"></script>
+
+<script type="text/javascript">
+    var tasks = new Vue({
+        el: "#tasks",
+        data: {
+            list: [],
+            type: 1,
+            info: {},
+            senheinfo: {},
+            tx: false,
+            create_time: 0,
+            due: 0,
+            timestamp: 0,
+            overtime: Boolean,
+            langContent: {},
+            userinfo: {}
+        },
+        created: function() {
+            var that = this
+            apiready = function() {
+                var height = $api.fixStatusBar($api.dom('.header'))
+                if (height > 0) {
+                    $api.css($api.dom('.cont'), 'padding-top:' + (height - 45) + 'px;');
+                }
+                tasks.$data.langContent = GlobleLanguageContent.tasks;
+                that.getInfo()
+                http(getuserinfoUrl, 'post', {}, function(ret) {
+                    // if (ret.code == 200) {
+                    //     that.isSmrz = ret.data.is_smrz;
+                    // }
+                    // 本人注册时间
+                    // console.log(ret.data.create_time);
+                    that.create_time = ret.data.create_time
+                        //本人注册时间 + 30天的时间
+                    that.due = that.create_time + 30 * 24 * 60 * 60
+                        // console.log(that.due);
+                        // 当前时间戳
+                    that.timestamp = parseInt(new Date().getTime() / 1000);
+                    // console.log(that.timestamp);
+                    // 状态 true false
+                    // v-if="timestamp<due"
+                    if (that.due > that.timestamp) {
+                        that.overtime = true
+                    } else {
+                        that.overtime = false
+                    }
+                });
+            }
+        },
+        methods: {
+
+            toPage: function(name, url, params) {
+                api.openWin({
+                    name: name,
+                    url: url,
+                    allowEdit: true,
+                    reload: true,
+                    pageParam: params || {}
+                });
+            },
+            tosubPage: function(name, url, status) {
+                var that = this;
+                if (status == 0 || status == null) {
+                    api.toast({
+                        msg: that.langContent.tip1,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return;
+                }
+                if (status == 2) {
+                    api.toast({
+                        msg: that.langContent.tip2,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return;
+                }
+                if (status == 3) {
+                    api.toast({
+                        msg: that.langContent.tip3,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return;
+                }
+                if (status == 4) {
+                    api.toast({
+                        msg: that.langContent.tip4,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return;
+                }
+                api.openWin({
+                    name: name,
+                    url: url,
+                    reload: true,
+                    pageParam: {}
+                });
+            },
+            getInfo: function() {
+                var that = this;
+                http(gettaskUrl, 'get', {}, function(ret) {
+                    // console.error(JSON.stringify(ret))
+                    if (ret.code == 200) {
+                        that.info = ret.data;
+                    }
+                })
+                http(posttaskUrl, 'get', {}, function(ret) {
+                    // console.error(JSON.stringify(ret))
+                    if (ret.code == 200) {
+                        that.senheinfo = ret.data;
+                    }
+                })
+                http(getuserinfoUrl, 'post', {}, function(ret) {
+                    if (ret.code == 200) {
+                        that.userinfo = ret.data;
+                    }
+                })
+
+            }
+        }
+    })
+</script>

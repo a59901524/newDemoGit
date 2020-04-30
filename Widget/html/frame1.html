@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>我的金矿</title>
+    <link rel="stylesheet" type="text/css" href="../css/new/reset.css">
+    <link rel="stylesheet" type="text/css" href="../lib/vant/vant.css" />
+    <link rel="stylesheet" type="text/css" href="../lib/iconfont2/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../css/new/myQuarts.css">
+    <script src="../script/lib-flexible.js"></script>
+    <style>
+
+    </style>
+</head>
+
+<body class='myQuarts'>
+    <div id="frame1" class="contarin">
+        <header>
+            <div class="center fontSize35">我的金矿</div>
+        </header>
+        <div class="h88"></div>
+        <div class="content">
+            <div class="nav">
+                <div class="navLi" :class="{'col00d3fc': qe == 1}" @click="qe = 1">微型金矿</div>
+                <div class="navLi" :class="{'col00d3fc': qe == 2}" @click="qe = 2">小型金矿</div>
+                <div class="navLi" :class="{'col00d3fc': qe == 3}" @click="qe = 3">中型金矿</div>
+                <div class="navLi" :class="{'col00d3fc': qe == 4}" @click="qe = 4">大型金矿</div>
+                <div class="navLi" :class="{'col00d3fc': qe == 5}" @click="qe = 5">豪华型金矿</div>
+            </div>
+            <div class="quarts">
+                <img :src="'../image/new/d' + qe + '.png'" alt="">
+            </div>
+        </div>
+        <div class="footbtn">
+            <div class="fbtn" @click="toPage('forestmarket','./comment/forestmarket.html',{from:'frame1'})">
+                <div class="img"><img src="../image/new/q1.png" alt=""></div>
+                <p>矿石市场</p>
+            </div>
+            <div class="fbtn" @click="openMyforest(1)">
+                <div class="img"><img src="../image/new/q2.png" alt=""></div>
+                <p>我的金矿</p>
+            </div>
+            <div class="fbtn" @click="openMyforest(0)">
+                <div class="img"><img src="../image/new/q3.png" alt=""></div>
+                <p>已过期</p>
+            </div>
+            <div class="fbtn"  @click="getGather">
+                <div class="img"><img src="../image/new/q4.png" alt=""></div>
+                <p>一键领取</p>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
+<script type="text/javascript" src="../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../script/rsa.js"></script>
+<script type="text/javascript" src="../script/aes.js"></script>
+<script type="text/javascript" src="../script/const.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript">
+    var frame1 = new Vue({
+        el: "#frame1",
+        data: {
+            list: [],
+            qe: 1,
+            senlist: [{
+                id: 1,
+                name: '森林一号'
+            }, {
+                id: 2,
+                name: '森林二号'
+            }, {
+                id: 3,
+                name: '森林三号'
+            }, {
+                id: 4,
+                name: '森林四号'
+            }, {
+                id: 5,
+                name: '森林五号'
+            }, ],
+            type: 1,
+            uid: '',
+            flag: true,
+            langContent: {},
+            getCodetip: {}
+        },
+        created: function() {
+            var that = this;
+            apiready = function() {
+                fixStatusbar('header,.header,.headers');
+                if (api.deviceModel == 'iPhone10,3' || api.deviceModel == 'iPhone10,6' || api.deviceModel == 'iPhone11,8' || api.deviceModel == 'iPhone11,2' || api.deviceModel == 'iPhone11,6' || api.deviceModel == 'iPhone11,4') {
+                    mybottomheight = api.safeArea.bottom + 65;
+                    $api.css($api.dom('.mysenlinpart'), 'bottom: ' + mybottomheight + 'px');
+                }
+                var height = $api.fixStatusBar(document.querySelector('header'));
+                var minheight = api.frameHeight - height - 45;
+                $api.css($api.dom('#frame1'), 'height:' + minheight + 'px');
+                $api.css($api.dom('.senlinpart'), 'top: ' + (height - 45) + 'px');
+                var marginHeight = height + 45
+                $api.css($api.dom('.f_h_cont'), 'margin-top:' + marginHeight + 'px');
+                $api.css($api.dom('.start'), 'top:' + (height - 45) + 'px');
+                setTimeout(function() {
+                    api.bringFrameToFront({
+                        from: 'tabBar'
+                    });
+                }, 1);
+                frame1.$data.langContent = GlobleLanguageContent.frame1;
+                frame1.$data.getCodetip = GlobleLanguageContent.getCode;
+                frame1.$data.senlist = that.langContent.senlist;
+                that.getInfo()
+            }
+        },
+
+        methods: {
+            reloadlang: function() {
+                var that = this;
+                frame1.$data.langContent = GlobleLanguageContent.frame1;
+                frame1.$data.senlist = that.langContent.senlist;
+            },
+            toPage: function(name, url, params) {
+                api.openWin({
+                    name: name,
+                    url: url,
+                    reload: true,
+                    pageParam: params || {}
+                });
+            },
+            fixTwo: function(num) {
+                if (num && num != 0 && Number(num) != 0) {
+                    return Number(num).toFixed(4);
+                } else {
+                    return 0.00;
+                }
+            },
+            getGold: function(id) {
+                var that = this;
+                http(getmyProUrl, 'post', {
+                    profit_id: id
+                }, function(res) {
+                    if (res.code == 200) {
+                        that.getInfo();
+                        api.stopPlay();
+                        api.startPlay({
+                            path: 'widget://res/water.mp3'
+                        }, function(ret, err) {
+                            if (ret) {
+                                api.stopPlay();
+                            } else {}
+                        });
+                    }
+                    api.toast({
+                        msg: res.msg,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                });
+            },
+            getInfo: function() {
+                var that = this;
+                http(myTypeProListUrl, 'post', {
+                    forest_id: that.type
+                }, function(ret) {
+                    if (ret.code == 200) {
+                        that.list = ret.data.info;
+                        setTimeout(function() {
+                            for (var i in that.list) {
+                                $api.css($api.dom(".tea-leaf" + i), "left:" + Math.floor(Math.random() * 90) + "%;top:" + Math.floor(Math.random() * 20) + "rem");
+                                $api.addCls($api.dom(".tea-leaf" + i), "d");
+                            }
+                        }, 100);
+                    }
+                })
+            },
+            openMyforest: function(type) {
+                var that = this;
+                api.openWin({
+                    name: 'myforest',
+                    url: './comment/myforest.html',
+                    bounces: false,
+                    pageParam: {
+                        type: type
+                    }
+                });
+            },
+            changeType: function(id) {
+                var that = this;
+                that.type = id;
+                $api.css($api.dom("#frame1"), "background-image: url(../image/tree/tree" + id + ".jpg);");
+                that.getInfo()
+            },
+            // 一键领取逻辑
+            getGather: function() {
+                var that = this;
+                var param = {
+                    forest_id: that.type
+                }
+                if (that.flag) {
+                    that.flag = false;
+                    http(getmywhole, 'post', param,
+                        function(res) {
+                            that.flag = true;
+                            if (res.code == 200) {
+                                api.toast({
+                                    msg: res.msg,
+                                    duration: 2000,
+                                    location: 'bottom'
+                                });
+                                api.startPlay({
+                                    path: 'widget://res/water.mp3'
+                                }, function(ret, err) {
+                                    if (ret) {} else {}
+                                });
+                                that.getInfo();
+                            } else {
+                                api.toast({
+                                    msg: res.msg,
+                                    duration: 2000,
+                                    location: 'bottom'
+                                });
+                            }
+                        });
+                    // api.toast({
+                    //     msg: "正在领取中，请稍等",
+                    //     duration: 2000,
+                    //     location: 'top'
+                    // });
+                } else {
+                    api.toast({
+                        msg: that.getCodetip.submit_tips,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+
+                //  else {
+                //      api.toast({
+                //          msg: '暂无可领取HDC',
+                //          duration: 2000,
+                //          location: 'bottom'
+                //      });
+                //      that.getInfo();
+                //      return;
+                //  }
+            }
+        },
+    })
+</script>

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>视频消息</title>
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <link rel="stylesheet" type="text/css" href="../../lib/iconfont2/iconfont.css" />
+    <style>
+        #message {
+            /* padding-top: 25px; */
+            width: 100%;
+            min-height: calc(100% - 57px);
+            /* background: #161922; */
+        }
+        
+        img {
+            width: 40px;
+            height: 40px;
+            border-radius: 5px;
+        }
+        
+        .unread {
+            background-color: #bd2121;
+            height: 18px;
+            width: 18px;
+            white-space: nowrap;
+            text-align: center;
+            line-height: 18px;
+            position: absolute;
+            top: 38px;
+            left: 36px;
+        }
+        
+        .tips {
+            width: 8px;
+            height: 8px;
+            position: static!important;
+        }
+        
+        .BBC {
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="message" v-cloak class="color_999">
+        <header class="header">
+            <i class="iconfont icon-xiangzuo" onclick="goBack()"></i>
+            <div>{{langContent.title?langContent.title:''}}</div>
+            <!-- <div class="padding12 color_default1 font_bold" style="position: absolute; right: 1rem;" @click="toPage('contacts','../message/contacts.html',{type:1})">
+                <img src="../../image/contacts.png" alt="" style="width:25px;height:25px">
+            </div> -->
+            <div class="padding12 fontSize14 color_black6" style="position: absolute; right: 1rem;" @click="toPage('contacts','../message/contacts.html',{type:1})">
+                {{langContent.sub?langContent.sub:''}}
+            </div>
+        </header>
+        <div class="flex_row_around fontSize14 cont"></div>
+        <!-- <div class="flex_row_around  padding1 bbe fontSize14 cont">
+            <div class="flex_col_center marginB1" onclick="toPage('fans','../message/fans.html')">
+                <img src="../../image/myCenter/ic_videoMsg_funs.png" alt="" class="BBC">
+                <div class="marginT5">{{langContent.fs?langContent.fs:''}}</div>
+            </div>
+            <div class="flex_col_center marginB1" onclick="toPage('praise','../message/praise.html')">
+                <img src="../../image/myCenter/ic_videoMsg_zan.png" alt="" class="BBC">
+                <div class="marginT5">{{langContent.zan?langContent.zan:''}}</div>
+            </div>
+            <div class="flex_col_center marginB1" onclick="toPage('review','../message/review.html')">
+                <img src="../../image/myCenter/ic_videoMsg_@.png" alt="" class="BBC">
+                <div class="marginT5">{{langContent.my?langContent.my:''}}</div>
+            </div>
+            <div class="flex_col_center marginB1" onclick="toPage('interaction','../message/interaction.html')">
+                <img src="../../image/myCenter/ic_videoMsg_comments.png" alt="" class="BBC">
+                <div class="marginT5">{{langContent.pl?langContent.pl:''}}</div>
+            </div>
+        </div> -->
+        <div class="flex_row_left padding1 bbd bg_white" style="padding-bottom: 1rem" @click="toXZSPage()">
+            <img style="margin-right: 5px;" src="../../image/applogo.png" alt="">
+            <div class="marginL1" style="flex: 1;">
+                <div class="flex_row_between">
+                    <div class="color_default1 fontSize16">{{langContent.yjxzs?langContent.yjxzs:''}}</div>
+                    <div v-if="is_real_notice==0" class="Bc unread color_default1 tips"></div>
+                    <!-- <div class="color_gray fontSize10">{{system.demo_create_time}}</div> -->
+                </div>
+                <!-- <div class="color_gray marginT5 fontSize12">{{system.title}}</div> -->
+            </div>
+        </div>
+        <div class="flex_row_left padding1 bbd bg_white" style="padding-bottom: 1rem" @click="toGFKFPage();">
+            <img style="margin-right: 5px;" src="../../image/applogo.png" alt="">
+            <div class="marginL1" style="flex: 1;">
+                <div class="flex_row_between">
+                    <div class="color_default1 fontSize16">{{langContent.gfkf?langContent.gfkf:''}}</div>
+                    <div v-if="notice_unread_num>0" class="Bc unread color_default1 tips"></div>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="flex_row_left bbd bg_white" style="padding-bottom: 1rem" @click="toPage('news_assistant','../message/news_assistant.html',{title:'见习公告'})">
+            <img style="margin-right: 5px;" src="../../image/information.png" alt="">
+            <div class="marginL1" style="flex: 1;">
+                <div class="flex_row_between">
+                    <div class="color_default1 fontSize16">见习公告</div>
+                    <div class="color_gray fontSize10">{{system.demo_create_time}}</div>
+                </div>
+                <div class="color_gray marginT5 fontSize12">{{system.title}}</div>
+            </div>
+        </div>
+        <div class="flex_row_left bbd bg_white" style="padding-bottom: 1rem" @click="toPage('news_assistant','../message/news_assistant.html',{title:'系统消息'})">
+            <img style="margin-right: 5px;" src="../../image/information.png" alt="">
+            <div class="marginL1" style="flex: 1;">
+                <div class="flex_row_between">
+                    <div class="color_default1 fontSize16">系统消息</div>
+                    <div class="color_gray fontSize10">{{my.demo_create_time}}</div>
+                </div>
+                <div class="color_gray marginT5 fontSize12">{{my.title}}</div>
+            </div>
+        </div> -->
+        <!-- 聊天列表 -->
+        <div v-for="item in chatlist" class="flex_row_left padding1 bbd bg_white posi_relative" style="padding-bottom: 1rem" @click="pitch_on(item.nickname,item.id,item)">
+            <img class="Bc" style="margin-right: 5px;" :src="item.avatar?item.avatar:'../../image/applogo.png'" alt="">
+            <div v-if="item.unread_num&&item.unread_num>0" class="Bc unread color_white">{{showunread(item.unread_num)}}</div>
+            <div class="marginL1 text-overflow_1" style="flex: 1;">
+                <div class="flex_row_between">
+                    <div class="color_black3 fontSize16">{{item.nickname}}</div>
+                    <div class="color_999 fontSize10">{{item.last_chat&&item.last_chat.create_time?changeDate(item.last_chat.create_time):''}}</div>
+                </div>
+                <div v-if="item.last_chat&&item.last_chat.content_type==1" class="color_999 marginT5 fontSize12 text-overflow_1">{{item.last_chat.content}}</div>
+                <div v-if="item.last_chat&&item.last_chat.content_type==2" class="color_999 marginT5 fontSize12">{{langContent.img?langContent.img:''}}</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    var message = new Vue({
+        el: "#message",
+        data: {
+            system: {},
+            my: {},
+            chatlist: [],
+            is_real_notice: 0,
+            notice_unread_num: 0,
+            langContent: {},
+        },
+        created: function() {
+            var that = this
+            apiready = function() {
+                var height = $api.fixStatusBar($api.dom('.header'))
+                if (height > 0) {
+                    $api.css($api.dom('.cont'), 'padding-top:calc(' + height + 'px + 1rem);');
+                    $api.css($api.dom('#message'), 'min-height:calc(100% - ' + height + 'px - 1rem);');
+                }
+                message.$data.langContent = GlobleLanguageContent.message;
+                that.is_real_notice = api.pageParam.is_real_notice
+                that.getInfo()
+                that.getchatList()
+            }
+        },
+        methods: {
+            showunread: function(num) {
+                if (num < 10) {
+                    return num
+                } else {
+                    return '...'
+                }
+            },
+            changeDate: function(datetimes) {
+                var needdate = new Date(datetimes * 1000);
+                Y = needdate.getFullYear() + '/';
+                M = (needdate.getMonth() + 1 < 10 ? '0' + (needdate.getMonth() + 1) : needdate.getMonth() + 1) + '/';
+                D = needdate.getDate() + ' ';
+                h = (needdate.getHours() < 10 ? '0' + needdate.getHours() : needdate.getHours()) + ':';
+                m = (needdate.getMinutes() < 10 ? '0' + needdate.getMinutes() : needdate.getMinutes()) + ':';
+                s = (needdate.getSeconds() < 10 ? '0' + needdate.getSeconds() : needdate.getSeconds());
+                //      年 月 日 时 分 秒
+                return Y + M + D + h + m + s;
+            },
+            toXZSPage: function() {
+                var that = this;
+                that.is_real_notice = 1
+                that.toPage('news_assistant', '../message/news_assistant.html', {
+                    title: that.langContent.yjxzs
+                });
+            },
+            toGFKFPage: function() {
+                var that = this;
+                that.notice_unread_num = 0
+                that.toPage('news_assistant', '../message/news_assistant.html', {
+                    title: that.langContent.gfkf
+                });
+            },
+            getchatList: function() {
+                var that = this;
+                http(getchatListUrl, 'get', {},
+                    function(ret) {
+                        if (ret.code == 200) {
+                            that.notice_unread_num = ret.data.notice_unread_num
+                            that.chatlist = ret.data.users
+                        }
+                    });
+            },
+            pitch_on: function(nickname, id, obj) {
+                obj.unread_num = 0;
+                api.openWin({
+                    name: 'chat_win',
+                    url: '../chat/chat_win.html',
+                    bounces: false,
+                    pageParam: {
+                        nickname: nickname,
+                        id: id
+                    }
+                });
+            },
+            getInfo: function() {
+                var that = this;
+                http(system_notice_listUrl, 'get', {
+                        page: 1
+                    },
+                    function(ret) {
+                        // console.log(JSON.stringify(ret))
+                        if (ret.code == 200 && ret.data.list.length > 0) {
+                            that.system = ret.data.list[0]
+                        }
+                    });
+                http(my_notice_listUrl, 'get', {
+                        page: 1
+                    },
+                    function(ret) {
+                        // console.log(JSON.stringify(ret))
+                        if (ret.code == 200 && ret.data.list.length > 0) {
+                            that.my = ret.data.list[0]
+                        }
+                    });
+            },
+            toPage: function(name, url, params) {
+                api.openWin({
+                    name: name,
+                    url: url,
+                    reload: true,
+                    pageParam: params || {}
+                });
+            }
+        }
+    })
+</script>

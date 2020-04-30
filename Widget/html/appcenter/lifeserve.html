@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>生活服务</title>
+    <link rel="stylesheet" href="../../lib/iconfont2/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <style>
+        .my_store {
+            display: flex;
+        }
+
+        .btn_cj {
+            width: calc(100% / 4);
+            /* border-radius: 15px; */
+            font-size: 14px;
+            text-align: center;
+            vertical-align: middle;
+            padding-top: 2rem;
+        }
+
+        .my_store img {
+            width: 2.3rem;
+            height: 2.3rem;
+            max-width: 2.3rem;
+            vertical-align: middle;
+            margin: 0 auto;
+        }
+
+        p {
+            height: 2.5rem;
+            line-height: 2.5rem;
+        }
+        /* 开发中样式  本页面没有引入公共样式 */
+
+        #development {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 180px;
+            color: #fff;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 8px;
+            z-index: 10;
+            overflow: hidden;
+        }
+
+        .flex_col_center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .fontSize100 {
+            font-size: 100px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        }
+
+        .fontSize14 {
+            font-size: 1.167rem !important;
+        }
+    </style>
+</head>
+
+<body class="has_header color_black6 bg-white">
+    <!--********************************九宫格分隔线**********************************88 -->
+    <div id="lifeserve" class="content " v-cloak>
+        <header class="header bbd">
+            <i class="iconfont icon-xiangzuo" onclick="goBack()"></i>
+            <div>{{langContent.title?langContent.title:''}}</div>
+        </header>
+
+        <div class="my_store">
+            <!-- 加油卡充值 -->
+            <div class="btn_cj" tapmode @click="voucher('rechargetel','./rechargetel.html',{})">
+                <img src="../../image/appcenter/ic_server_phone.png" alt="">
+                <p>{{langContent.sjcz?langContent.sjcz:''}}</p>
+            </div>
+            <!-- 手机充值 -->
+            <div class="btn_cj" tapmode @click="voucher('refuel','./refuel.html',{})">
+                <img src="../../image/appcenter/ic_server_oil.png" alt="">
+                <p>{{langContent.jykcz?langContent.jykcz:''}}</p>
+            </div>
+            <div class="btn_cj" @click="kaifazhong">
+                <img src="../../image/appcenter/ic_server_tourism.png" alt="">
+                <p>{{langContent.jdly?langContent.jdly:''}} </p>
+            </div>
+            <div class="btn_cj" @click="kaifazhong">
+                <div class="btn_jz">
+                    <img src="../../image/appcenter/ic_server_merchants.png" alt="">
+                    <p>{{langContent.fjsj?langContent.fjsj:''}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="my_store">
+            <div class="btn_cj" @click="kaifazhong">
+                <img src="../../image/appcenter/ic_server_ticket.png" alt="">
+                <p>{{langContent.hcp?langContent.hcp:''}}</p>
+            </div>
+            <div class="btn_cj" @click="kaifazhong">
+                <img src="../../image/appcenter/ic_server_taxi.png" alt="">
+                <p>{{langContent.dc?langContent.dc:''}}</p>
+            </div>
+            <div class="btn_cj" @click="kaifazhong">
+                <img src="../../image/appcenter/ic_server_fun.png" alt="">
+                <p>{{langContent.xxyl?langContent.xxyl:''}}</p>
+            </div>
+        </div>
+        <!-- 开发中样式显示隐藏 -->
+        <div class=" flex_col_center " id="development">
+            <i class="iconfont icon-development fontSize100 "></i>
+            <div class=" fontSize14">{{getCodetip.develop?getCodetip.develop:''}}</div>
+        </div>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    var lifeserve = new Vue({
+        el: "#lifeserve",
+        data: {
+            info: {},
+            linkdata: [],
+            cate_id: 1,
+            langContent: {},
+            getCodetip: {},
+            isSmrz: 0
+        },
+        created: function() {
+            var that = this
+            apiready = function() {
+                fixStatusbar('header,.header,.headers', '.content');
+                var height = $api.fixStatusBar($api.dom('.header'))
+                lifeserve.$data.langContent = GlobleLanguageContent.lifeserve;
+                lifeserve.$data.getCodetip = GlobleLanguageContent.getCode;
+                // 检查是否实名认证
+                http(getuserinfoUrl, 'post', {}, function(ret) {
+                    if (ret.code == 200) {
+                        that.info = ret.data;
+                        that.isSmrz = ret.data.auth_primary;
+                    } else if (ret.code == 401) {
+                        api.sendEvent({
+                            name: 'pause',
+                            extra: {}
+                        });
+                        console.log("TO login.html");
+                        toPage('login', '../auth/login.html', {
+                            from: 'center'
+                        });
+                    }
+                })
+
+            }
+        },
+        methods: {
+            // 开发中样式显示隐藏
+            kaifazhong: function() {
+                var that = this;
+                $api.css($api.dom('#development'), 'display:flex;');
+                setTimeout(function() {
+                    $api.css($api.dom('#development'), 'display:none;');
+                }, 2000);
+                return;
+            },
+            // 跳转到手机充值  // 跳转到加油卡充值
+            voucher: function(name, url, params) {
+                // 判断是否实名认证
+                var that = this
+                if (that.isSmrz == 0) {
+                    api.toast({
+                        msg: that.langContent.smrzMsg,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    setTimeout(function() {
+                        api.openWin({
+                            name: 'personal_data',
+                            url: '../my/personal_data.html',
+                            reload: true,
+                            pageParam: {}
+                        });
+                    }, 1500);
+                } else {
+                    if (that.info.area_code != 86) {
+                        this.kaifazhong()
+                    } else {
+                        api.openWin({
+                            name: name,
+                            url: url,
+                            reload: true,
+                            pageParam: params || {}
+                        });
+                    }
+                }
+
+
+            },
+
+        }
+    })
+</script>

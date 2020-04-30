@@ -1,0 +1,144 @@
+.select-part {
+    width: 60%;
+    padding: 2px 2rem;
+    display: none;
+    right: 2rem;
+    z-index: 99999;
+    position: absolute;
+    top: 20%;
+    background-color: rgba(255, 255, 255, 0.4);
+    border-radius: 10px;
+    animation: myfirst 2s;
+    -webkit-animation: myfirst 2s;
+    animation-fill-mode: forwards;
+    font-size: 12px;
+}
+
+@-webkit-keyframes myfirst
+
+/* Safari and Chrome */
+    {
+    0% {
+        top: 30%;
+    }
+
+    /* 25% {
+        top: 80%;
+    }
+    50% {
+        top: 70%;
+    }
+    75% {
+        top: 50%;
+    } */
+    100% {
+        top: 20%;
+    }
+}
+
+.info {
+    height: auto;
+    /* width: calc(100% - 1.66rem); */
+    border-bottom: .4rem solid #F2F2F2;
+}
+
+.price div{
+    width: calc(100% / 3);
+}
+
+.zhuan {
+    color: #CC0244;
+    /* border: 1px solid #CC0244; */
+    padding: 0px 3px;
+    border-radius: 5px;
+    line-height: 15px;
+    font-size: 10px;
+    height: 15px;
+    background: #f3f3f3;
+    padding: 1px 3px;
+}
+
+.bk_title {
+    display: flex;
+    justify-content: space-between;
+    height: 3rem;
+    /* width: calc(100% - 2rem); */
+    padding: 0 1rem;
+    line-height: 3rem;
+    font-size: 1rem;
+    align-items: center;
+    overflow: hidden;
+    /* border-top: .2rem solid #F2F2F2; */
+    border-bottom: .1rem solid #F2F2F2;
+}
+
+.conment {
+    width: 100%;
+    padding: 0.8rem;
+    height: auto;
+}
+
+.userImg {
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    margin: 0 0.5rem;
+}
+
+.commit {
+    font-size: 14px;
+    color: #666666;
+}
+
+.xian {
+    height: 1px;
+    width: 70px;
+    border-top: 1px solid #D12B5A;
+}
+
+.bottom_btn {
+    height: 3rem;
+    line-height: 3rem;
+    color: #ffffff;
+    font-size: 16px;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
+
+.bottom_btn div {
+    width: 100%;
+    height: 100%;
+}
+
+.header {
+    background-color: #fff;
+}
+
+.name {
+    font-size: 14px;
+}
+
+.c_btnStyle1 {
+    font-size: 12px;
+    padding: 2px 8px;
+    display: inline-block;
+    border-radius: 5px;
+    line-height: initial;
+    margin-right: 10px;
+    background-color: #EBEBEB;
+    color: #000000;
+}
+
+.c_btnStyle1.on {
+    /* border: 1px solid #FF0129 !important; */
+    /* color: #FF0129 !important; */
+    color: #ffffff!important;
+    background-color: #FF0129!important;
+}
+
+.c_btnStyle1.disable {
+    background: rgba(0, 0, 0, 0.25);
+}

@@ -1,0 +1,44 @@
+.editDealPass{
+	color: #ffffff;
+}
+.editDealPass .content2{
+	margin: 0.16rem 0.12rem 0;
+	background-color: rgba(37, 0, 115, 0.5);
+	border-radius: 0.12rem;
+	padding: 0.12rem 0.2rem;
+	font-size: 0.25rem;
+	position: relative;
+}
+.editDealPass .li{
+	display: flex;
+	justify-content: space-around;
+	padding: 0.37rem 0.2rem;
+	border-bottom: 0.01rem solid #370e9f;
+	position: relative;
+}
+.editDealPass .li:nth-child(3){
+	border-bottom: none;
+}
+.editDealPass .li label{
+	width: 1.8rem;
+    line-height: 0.35rem;
+    height: 0.35rem;
+}
+.editDealPass .li input{
+	background: none;
+	text-align: right;
+	color: #3f5fd9;
+}
+.editDealPass .wj{
+	padding: 0.37rem 0.2rem;
+}
+.editDealPass .btn{
+	height: 0.68rem;
+	line-height: 0.68rem;
+	text-align: center;
+	color: #0f56e3;
+	border-radius: 0.12rem;
+	font-size: 0.28rem;
+	background-image: linear-gradient(#1fe2ff, #007ff7);
+	margin: 0.68rem 0.8rem;
+}

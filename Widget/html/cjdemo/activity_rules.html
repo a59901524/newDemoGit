@@ -1,0 +1,68 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>转盘规则</title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../lib/iconfont2/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <style>
+        .colorred {
+            color: red;
+        }
+        
+        .padding1 {
+            padding: 1.6rem;
+        }
+    </style>
+</head>
+
+<body class="">
+    <div id="activity_rules" class="content color_CC" v-cloak>
+        <header class="header bg_default1 color_default1">
+            <i class="iconfont icon-xiangzuo" onclick="goBack()"></i>
+            <div class="fontSize16">{{langContent.title?langContent.title:''}}</div>
+        </header>
+        <div class="padding1">
+            <div class="box ">
+                <ul>
+                    <li v-for="data in langContent.list1">{{data?data:''}}</li>
+                    <li class="color_default1">{{langContent.lis1?langContent.lis1:''}}</li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    var activity_rules = new Vue({
+        el: '#activity_rules',
+        data: {
+            isParter: Number,
+            langContent: {}
+        },
+        created: function() {
+            var that = this;
+            apiready = function() {
+                fixStatusbar('header,.header,.headers', '.content');
+                that.langContent = GlobleLanguageContent.activity_rules;
+            }
+        },
+        methods: {
+
+        }
+    });
+</script>

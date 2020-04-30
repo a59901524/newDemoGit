@@ -1,0 +1,1733 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>首页</title>
+    <link rel="stylesheet" type="text/css" href="../lib/vant/vant.css" />
+    <link rel="stylesheet" type="text/css" href="../lib/iconfont2/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+    <link rel="stylesheet" type="text/css" href="../lib/swiper/swiper.min.css" />
+    <link rel="stylesheet" type="text/css" href="../css/frame0.css" />
+    <style>
+        .sender {
+            clear: both;
+        }
+        
+        .sender div:nth-of-type(1) {
+            float: left;
+        }
+        
+        .sender div:nth-of-type(2) {
+            background-color: aquamarine;
+            float: left;
+            margin: 0 20px 10px 15px;
+            padding: 10px 10px 10px 0px;
+            border-radius: 7px;
+        }
+        
+        .sender div:first-child img {
+            /* padding-top: 1rem; */
+            width: 3rem;
+        }
+        
+        .left_triangle {
+            height: 0px;
+            width: 0px;
+            border-width: 8px;
+            border-style: solid;
+            border-color: transparent aquamarine transparent transparent;
+            position: relative;
+            left: -16px;
+            top: 3px;
+        }
+        
+        canvas {
+            display: none;
+            position: fixed;
+            bottom: calc(50% - 80px);
+            right: 50px;
+            z-index: 1;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+            pointer-events: unset;
+        }
+        
+        .shoticon {
+            background-image: -webkit-linear-gradient(bottom, #e15dd5, #fecf4f);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .development {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 180px;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 8px;
+            z-index: 10;
+            overflow: hidden;
+            display: none;
+        }
+        
+        .topoverlay {
+            background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 0.5), transparent);
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 90px;
+            width: 100%;
+            z-index: 9;
+        }
+        
+        .bottomoverlay {
+            background-image: -webkit-linear-gradient(bottom, rgba(0, 0, 0, 0.5), transparent);
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 33vh;
+            width: 100%;
+            z-index: 9;
+        }
+        
+        .listoverlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        .timepart {
+            padding: 2px;
+            margin-right: 1.3rem
+        }
+        
+        .van-circle {
+            text-align: center;
+        }
+        
+        .look_count {
+            background: #e15dd5;
+            color: #ffffff;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            position: absolute;
+            top: 0px;
+            right: 10px;
+            line-height: 18px;
+            text-align: center;
+            font-size: 10px;
+            z-index: 1;
+        }
+        
+        header.header {
+            height: 0;
+            background: rgba(0, 0, 0, 0);
+        }
+        
+        .fontSize25 {
+            font-size: 25px;
+        }
+        
+        .gift {
+            border-radius: 50%;
+            background: rgba(0, 0, 0, .3);
+            margin-right: 1.5rem;
+            padding: 2px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="frame0" v-cloak>
+        <header class="header"></header>
+        <div class="topoverlay"></div>
+        <div class="f1_header flex_row_between fontSize16 color_white">
+            <div class="flex_row_around flex_grow1 text_center" style="flex: 1;overflow: hidden;">
+                <div tapmode="" class="op8 marginT5 text_shadow" :class="{'on':type==1}" @click="changType(1)">{{langContent.subt1?langContent.subt1:''}}</div>
+                <div tapmode="" class="op8 marginT5 text_shadow" :class="{'on':type==2}" @click="changType(2)">{{langContent.subt2?langContent.subt2:''}}</div>
+                <div v-show="city&&city!=''" tapmode="" class="op8 marginT5 text_shadow" :class="{'on':type==3}" @click="changType(3)">{{city?city:'附近'}}</div>
+                <div v-show="!city||city==''" tapmode="" class="op8 marginT5 text_shadow" :class="{'on':type==3}" @click="changType(3)">{{langContent.subt3?langContent.subt3:''}}</div>
+                <div tapmode="" class="op8 marginT5 text_shadow" :class="{'on':type==4}" @click="changType(4)">{{langContent.subt4?langContent.subt4:''}}</div>
+            </div>
+            <div class="flex_row_between marginT5">
+                <img @click="OpenShot()" class="marginR10" style="width: 25px;height: 25px;margin-right: 1.5rem;margin-left: 1rem;" src="../image/home/shoticon.svg" alt="">
+                <!-- <img @click="OpenShot()" class="marginR10" src="../image/camera.png" alt="" style="width: 25px;height: 25px;"> -->
+                <!-- <img @click="openSearch()" class="marginR10" src="../image/search.png" alt="" style="width: 25px;height: 25px;margin-left: 1rem"> -->
+                <i @click="openSearch()" class="iconfont icon-sousuo fontSize25 marginR10 text_shadow"></i>
+            </div>
+        </div>
+        <div class="flex_col_center development">
+            <i class="iconfont icon-development fontSize100 text_shadow color_white"></i>
+            <div class="color_white fontSize14">{{getCodetip.develop?getCodetip.develop:''}}</div>
+        </div>
+        <div class="black_overlay1 flex_row_center" v-if="isShow">
+            <div class="item padding12 Brd1 posi_relative">
+                <div class="color_default1 flex_row_center" style="font-size: 20px;padding-bottom: 1rem;padding-top: 1rem;">
+                    {{getCodetip.language_id==1?noticeInfo.title:noticeInfo.title_en}}
+                </div>
+                <i class="iconfont icon-guanbi color_99" style="position: absolute;right: 0.5rem;top:5px;font-size: 20px;z-index: 1002;" @click.stop="closenotice"></i>
+                <div v-show="getCodetip.language_id==1" class="padding12" v-html="noticeInfo.content">
+                </div>
+                <div v-show="getCodetip.language_id==2" class="padding12" v-html="noticeInfo.content_en"></div>
+            </div>
+        </div>
+        <div class="black_overlay2 flex_row_center padding1" v-if="isShowTags">
+            <div class="item padding12 Brd1 posi_relative bg_default1">
+                <div class="color_333 flex_row_center marginB1" style="font-size: 20px;padding-bottom: 1rem;padding-top: 1rem;">
+                    {{langContent.lable?langContent.lable:''}}
+                </div>
+                <i class="iconfont icon-guanbi color_99" style="position: absolute;right: 15px;top:15px;font-size: 20px;z-index: 1002;" @click.stop="isShowTags=false"></i>
+                <div class="flex_row_left flex_wrap fontSize12">
+                    <div class="labels text_center fontSize14" v-for="obj in taglist" @click="selecttag(obj)" :class="{'labels_checked':obj.checked}">
+                        <div class="">{{obj.name}}</div>
+                    </div>
+                </div>
+                <div class="lo_btn fontSize16 marginT1 text_center color_white" @click.stop="updatetags()">{{langContent.sure?langContent.sure:''}}</div>
+            </div>
+        </div>
+        <div v-show="type == 1" class="swiper-container" style="touch-action: none;">
+            <div class="swiper-wrapper posi_relative" style="width: 100%;height: 100vh;">
+                <div v-for="(item, index) in v_list" :key="index" class="swiper-slide" :class="{'swiper-no-swiping':(isOpenFram == true||isShow),'unhiden':index == currentkey||index == currentkey-1||index == currentkey+1}" style="height: 100%;width: 100%;overflow: hidden;"
+                    @click="controVideo(index)" v-on:dblclick="dbclick(item)">
+                    <div class="bottomoverlay"></div>
+                    <video :class="'v'+index" width="100%" height="auto" style="object-fit: cover;object-position: 50% 50%;max-height: 100%;height: auto;margin-top: 50vh;transform: translate(0,-50%);" :src="item.video_url" :poster="item.video_img?item.video_img:'../image/loading.gif'"
+                        webkit-playsinline playsinline x5-video-player-type="h5" x5-playsinline="" x-webkit-airplay="allow" preload="auto" loop="loop"></video>
+                    <i v-show="!isPlay" class="iconfont icon-bofang fontSize50 color_white text_shadow playvideo"></i>
+                    <img :class="'ig'+index" src="../image/bar.gif" alt="" style="position: absolute;bottom: 57px;left: 0;width: 100%;height: 2px;">
+                    <div v-show="isOpenFram" class="overblack" @click.stop="closeFrames()" @touchmove.prevent></div>
+                    <div class="f1_cont posi_relative">
+                        <div v-show="!isOverTask" class="flex_row_right">
+                            <div>
+                                <van-count-down style="color: transparent;" ref="countDown" millisecond :time="10000" :auto-start="false" format="ss" @finish="finishedVideo" />
+                            </div>
+                            <div class="timepart">
+                                <div class="look_count">{{look_count?look_count:'0'}}</div>
+                                <img style="width: 30px;height: 30px;position: absolute;top: 8px;right: calc(1.3rem + 7px);" src="../image/home/suger.svg" alt="">
+                                <van-circle v-model="currentRate" :key="index" layer-color="#939297" color="#f3d577" :rate="rate" :speed="60" size="40px" :stroke-width="80" />
+                            </div>
+                        </div>
+                        <!-- 用户头像 -->
+                        <div class="flex_row_right marginT1">
+                            <div @click.stop="toPerson(item.uid,index)" class="bg_white Bc posi_relative" style="padding: 2px;margin-right: 1rem">
+                                <img class="Bc" :src="item.avatar?item.avatar:'../image/logo.png'" alt="" style="width: 45px;height: 45px;">
+                                <img class="attention" v-show="item.is_focus == 0&&item.is_me==0" src="../image/red_add.png" alt="" @click.stop="attention(item)">
+                                <i class="iconfont  icon-dui fontSize18 attention ygz" :class="'show'+item.uid"></i>
+                            </div>
+                        </div>
+
+                        <!-- 点赞 -->
+                        <div class="flex_row_right" style="margin-top: 2rem;">
+                            <div class="color_white flex_col_center" style="margin-right: 1rem;width: 50px;">
+                                <i @click.stop="addLike(item)" class="iconfont  icon-xin fontSize30 color_white journal-reward text_shadow" :class="{'activeColor':item.is_like == 1}"></i>
+                                <div class="text_shadow">{{item.like_count?item.like_count:'0'}}</div>
+                            </div>
+                        </div>
+                        <!-- 评论 -->
+                        <div class="flex_row_right" style="margin-top: 2rem">
+                            <div class="color_white flex_col_center" style="margin-right: 1rem;width: 50px;" @click.stop="openCom(item.uid,item.video_id)">
+                                <i class="iconfont  icon-pinglun fontSize30 color_white text_shadow"></i>
+                                <div class="text_shadow">{{item.comment_count?item.comment_count:'0'}}</div>
+                            </div>
+                        </div>
+                        <!-- 分享 举报  上热门  -->
+                        <div class="flex_row_right" style="margin-top: 2rem">
+                            <div class="color_white flex_col_center" style="margin-right: 1rem;width: 50px;" @click.stop="openShare(item,index)">
+                                <i class="iconfont  icon-forward fontSize30 color_white text_shadow"></i>
+                                <div class="text_shadow">{{item.share_count?item.share_count:'0'}}</div>
+                            </div>
+                        </div>
+                        <!-- 打赏 -->
+                        <!-- <div class="flex_row_right" style="margin-top: 2rem">
+                            <div class="color_white flex_col_center" style="margin-right: 1rem;width: 50px;" @click.stop="playTour(item,index)">
+                                <img style="width: 40px;height: 40px;" src="../image/btn_index_exceptional.gif" alt="" />
+                            </div>
+                        </div> -->
+
+
+                        <div class="flex_row_left">
+                            <div v-show="item.video_type==2&&item.goods_url!=''" @click.stop="toInfo(item.goods_url)" class="fontSize12 text-overflow_1 color_white" style="padding: 5px 0.83rem; width:auto; max-width: 45%;display: inline-block;background: rgba(0, 0, 0, 0.4);line-height: 20px;border-radius: 5px;margin-left: 0.8rem;">
+                                <i class="iconfont  icon-gouwuche fontSize20 color_golds"></i> {{item.goods_name?item.goods_name:langContent.goodsname}}
+                            </div>
+                            <div class="sender" v-show="item.video_type==2&&item.goods_url!=''">
+                                <div>
+                                    <img src="../image/shouzhi.gif">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div v-if="item.video_type==2&&item.goods_url!=''" @click="toInfo(item.goods_url)" class="fontSize12 bg_white gooddetailpart" :class="'goodIndex'+index">
+                            <img class="goodimg" :src="item.goods_images?item.goods_images:'../image/applogo.png'" alt="">
+                            <div class="goodinfo">
+                                <div class="flex_row_between">
+                                    <span class="text-overflow_1 fontSize14">{{item.goods_name?item.goods_name:langContent.goodsname}}</span>
+                                    <i @click.stop="closeAd(index)" class="iconfont icon-guanbi fontSize14"></i>
+                                </div>
+                                <div class="color_gray fontSize12 text-overflow_3">{{item.goods_introduce?item.goods_introduce:langContent.desc}}</div>
+                            </div>
+                        </div>
+                        <div class="fontSize16 padding1 text-overflow_1 color_white text_shadow" style="padding-bottom: 0; width: 85%">
+                            @ {{item.nickname}}
+                        </div>
+                        <div class="flex_row_between color_white padding1" style="padding-top: 0;">
+                            <div style="flex: 1;height: auto;">
+                                <div class="fontSize14 text-overflow_2 color_white text_shadow" style="padding-bottom: 0;padding-top: 0;line-height: 25px;max-height: 50px;overflow: hidden;">
+                                    {{item.title}}
+                                </div>
+                                <div class="flex_row_left color_white" style="padding-bottom: 0;padding-top: 3px;">
+                                    <i class="iconfont  icon-yinle fontSize20 color_golds text_shadow"></i>
+                                    <marquee v-if="type==1" class="fontSize12 text_shadow" style="line-height: 20px;height: 20px;margin:0;width:60%;" direction="left" behavior="scroll" scrollamount="3" scrolldelay="0" loop="-1" height="20" hspace="2" vspace="2">
+                                        {{item.music_name?item.music_name:'未知'}}
+                                    </marquee>
+                                </div>
+                            </div>
+                            <!-- 打赏 -->
+                            <div class="gift" @click.stop="playTour(item,index)">
+                                <img style="width: 40px;height: 40px;" src="../image/btn_index_exceptional.gif" alt="" />
+                            </div>
+                            <div class="Rotation flex_row_center" style="width: 40px;height: 40px;border-radius: 50%;background-color: #323036;">
+                                <img style="width: 30px;height: 30px;border-radius: 50%;" :src="item.music_img?item.music_img:'../image/homemus.png'" alt="" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div v-if="type == 2" class="videilist fontSize10">
+            <van-pull-refresh id="getList" v-model="downLoading" @refresh="getList" :pulling-text="getCodetip.vant_pulling" :loosing-text="getCodetip.vant_loosing" :loading-text="getCodetip.vant_loading">
+                <van-list class="list" v-model="upLoading" :finished="finished" :finished-text="getCodetip.vantlistfinished" @load="getList('loadMore')" :immediate-check="false">
+                    <div class="flex_row_between flex_wrap">
+                        <div class="posi_relative hotstyle flex_col_center" v-for="(item, index) in hotList" :key="index" @click="todetailPage(index,2)">
+                            <!-- <video width="100%" height="100%" style="object-fit: cover;object-position: 50% 50%;" :src="item.video_url" :poster="item.video_img?item.video_img:'../image/loading.gif'"></video> -->
+                            <img style="object-fit: cover;object-position: 50% 50%;width: 100%;height: auto;max-height: 100%;margin: auto 0;vertical-align: middle;" :src="item.video_img?item.video_img:'../image/loading.gif'" alt="" />
+                            <div class="listoverlay"></div>
+                            <div class="userinfo width100">
+                                <div class="color_white padding1 text-overflow_1 text_shadow" style="padding-bottom: 0;">
+                                    {{item.title}}</div>
+                                <div class="flex_row_left padding1">
+                                    <img class="userimg Bc" :src="item.headImg?item.headImg:'../image/logo.png'" alt="" />
+                                    <div class="text-overflow_1 color_white text_shadow" style="flex: 1;">{{item.nickname}}</div>
+                                    <i class="iconfont  icon-xin fontSize14 color_white text_shadow"></i>
+                                    <!-- <div class="color_white">{{item.vv_count?item.vv_count:'0'}}</div> -->
+                                    <div class="color_white text_shadow">{{item.like_count?item.like_count:'0'}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </van-list>
+            </van-pull-refresh>
+            <!-- <p v-show="isAll&&hotList.length>0" class="color_gray text_center padding1">{{getCodetip.nomore?getCodetip.nomore:''}}</p>
+            <p v-show="hotList.length<=0" class="color_gray text_center" style="padding-top:50%;">{{getCodetip.nocontent?getCodetip.nocontent:''}}</p> -->
+        </div>
+        <div v-if="type == 4" class="videilist fontSize10">
+            <van-pull-refresh id="getList4" v-model="downLoading" @refresh="getList" :pulling-text="getCodetip.vant_pulling" :loosing-text="getCodetip.vant_loosing" :loading-text="getCodetip.vant_loading">
+                <van-list class="list" v-model="upLoading" :finished="finished" :finished-text="getCodetip.vantlistfinished" @load="getList('loadMore')" :immediate-check="false">
+                    <div class="flex_row_between flex_wrap">
+                        <div class="posi_relative hotstyle flex_col_center" v-for="(item, index) in globalList" :key="index" @click="todetailPage(index,4)">
+                            <!-- <video width="100%" height="100%" style="object-fit: cover;object-position: 50% 50%;" :src="item.video_url" :poster="item.video_img?item.video_img:'../image/loading.gif'"></video> -->
+                            <img style="object-fit: cover;object-position: 50% 50%;width: 100%;height: auto;max-height: 100%;margin: auto 0;vertical-align: middle;" :src="item.video_img?item.video_img:'../image/loading.gif'" alt="" />
+                            <div class="listoverlay"></div>
+                            <div class="userinfo width100">
+                                <div class="color_white padding1 text-overflow_1 text_shadow" style="padding-bottom: 0;">
+                                    {{item.title}}</div>
+                                <div class="flex_row_left padding1">
+                                    <img class="userimg Bc" :src="item.headImg?item.headImg:'../image/logo.png'" alt="" />
+                                    <div class="text-overflow_1 color_white text_shadow" style="flex: 1;">{{item.nickname}}</div>
+                                    <i class="iconfont  icon-xin fontSize14 color_white text_shadow"></i>
+                                    <!-- <div class="color_white">{{item.vv_count?item.vv_count:'0'}}</div> -->
+                                    <div class="color_white text_shadow">{{item.like_count?item.like_count:'0'}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </van-list>
+            </van-pull-refresh>
+            <!-- <p v-show="isAll&&globalList.length>0" class="color_gray text_center padding1">{{getCodetip.nomore?getCodetip.nomore:''}}</p>
+            <p v-show="globalList.length<=0" class="color_gray text_center" style="padding-top:50%;">{{getCodetip.nocontent?getCodetip.nocontent:''}}</p> -->
+        </div>
+        <div v-if="type == 3" class="videilist fontSize10">
+            <van-pull-refresh id="getList3" v-model="downLoading" @refresh="getList" :pulling-text="getCodetip.vant_pulling" :loosing-text="getCodetip.vant_loosing" :loading-text="getCodetip.vant_loading">
+                <van-list class="list" v-model="upLoading" :finished="finished" :finished-text="getCodetip.vantlistfinished" @load="getList('loadMore')" :immediate-check="false">
+                    <div class="flex_row_center flex-wrap">
+                        <div class="flex_col_center flex_wrap nearflex">
+                            <div v-if="index%2!=1" class="posi_relative nearstyle" v-for="(item, index) in nearList" :key="index" @click="todetailPage(index,3)">
+                                <img style="width: 100%;height: auto;max-height: 66.6vw;margin: auto 0;vertical-align: middle;" :src="item.video_img?item.video_img:'../image/loading.gif'" alt="" />
+                                <div class="listoverlay"></div>
+                                <div class="userinfo width100">
+                                    <div class="flex_row_left color_white padding1 text-overflow_1 text_shadow" style="padding-bottom: 0;">
+                                        <i class="iconfont  icon-dingweiweizhi fontSize20 color_golds text_shadow"></i> {{item.distance_text}}
+                                    </div>
+                                    <div class="flex_row_left padding1">
+                                        <img class="userimg Bc" :src="item.headImg?item.headImg:'../image/logo.png'" alt="" />
+                                        <div class="text-overflow_1 color_white text_shadow" style="flex: 1;">{{item.nickname}}</div>
+                                        <i class="iconfont  icon-xin fontSize14 color_white text_shadow"></i>
+                                        <div class="color_white text_shadow">{{item.like_count?item.like_count:'0'}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex_col_center flex_wrap nearflex">
+                            <div v-if="index%2==1" class="posi_relative nearstyle" v-for="(item, index) in nearList" :key="index" @click="todetailPage(index,3)">
+                                <img style="width: 100%;height: auto;max-height: 66.6vw;margin: auto 0;vertical-align: middle;" :src="item.video_img?item.video_img:'../image/loading.gif'" alt="" />
+                                <div class="listoverlay"></div>
+                                <div class="userinfo width100">
+                                    <div class="flex_row_left color_white padding1 text-overflow_1 text_shadow" style="padding-bottom: 0;">
+                                        <i class="iconfont  icon-dingweiweizhi fontSize20 color_golds text_shadow"></i> {{item.distance_text}}
+                                    </div>
+                                    <div class="flex_row_left padding1">
+                                        <img class="userimg Bc" :src="item.headImg?item.headImg:'../image/logo.png'" alt="" />
+                                        <div class="text-overflow_1 color_white text_shadow" style="flex: 1;">{{item.nickname}}</div>
+                                        <i class="iconfont  icon-xin fontSize14 color_white text_shadow"></i>
+                                        <div class="color_white text_shadow">{{item.like_count?item.like_count:'0'}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </van-list>
+            </van-pull-refresh>
+            <!-- <p v-show="isAll&&nearList.length>0" class="color_gray text_center padding1">{{getCodetip.nomore?getCodetip.nomore:''}}</p>
+            <p v-show="nearList.length<=0" class="color_gray text_center" style="padding-top:50%;">{{getCodetip.nocontent?getCodetip.nocontent:''}}</p> -->
+        </div>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../lib/swiper/swiper.min.js"></script>
+<script type="text/javascript" src="../script/rsa.js"></script>
+<script type="text/javascript" src="../script/aes.js"></script>
+<script type="text/javascript" src="../script/const.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script src="../lib/jquery-3.0.0.min.js"></script>
+<script src="../script/flutter-hearts-zmt.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="../lib/vant/vant.min.js"></script>
+<script type="text/javascript">
+    var frame0 = new Vue({
+        el: "#frame0",
+        data: {
+            v_list: [
+                // 'http://prourjp61.bkt.clouddn.com/b86b6f5b9891ae0e91f71700797b5c32.mp4',
+                // 'http://prourjp61.bkt.clouddn.com/ab4b74abf481650685b3009bb0b56bca.mp4',
+                // 'http://prourjp61.bkt.clouddn.com/975b28ef0e3e0e08f8afb65bad411587.mp4',
+                // 'http://prourjp61.bkt.clouddn.com/86f9de85be89eac00fb5c1bc47c52ec8.mp4',
+                // 'http://prourjp61.bkt.clouddn.com/105f44411a5de9716c96f30e47ff1972.mp4'
+            ],
+            hotList: [],
+            nearList: [],
+            globalList: [],
+            type: 1,
+            page: 1,
+            params: {},
+            isPlay: false,
+            page: 1,
+            params: {},
+            list: [],
+            isAll: false,
+            currentkey: 0,
+            isOpenFram: false,
+            swiper: '',
+            showVlist: [],
+            isShow: true,
+            noticeInfo: '',
+            isSmrz: Boolean,
+            isHandle: true,
+            city: '',
+            isShowTags: false,
+            taglist: [],
+            label_xinshuzu: [],
+            url: '',
+            activeColor: 'red',
+            ratetime: '',
+            rate: 0,
+            currentRate: 0,
+            isOverTask: false,
+            look_count: 0,
+            clickTimer: '',
+            langContent: {},
+            getCodetip: {},
+            downLoading: false,
+            upLoading: false,
+            finished: false,
+        },
+        mounted: function() {
+            var that = this;
+            apiready = function() {
+                $api.setStorage('curframename', 'frame0');
+                api.closeFrame({
+                    name: 'frame3_comment'
+                });
+                setTimeout(function() {
+                    api.bringFrameToFront({
+                        from: 'tabBar'
+                    });
+                }, 1);
+                frame0.$data.langContent = GlobleLanguageContent.frame0;
+                frame0.$data.getCodetip = GlobleLanguageContent.getCode;
+                var height = $api.fixStatusBar(document.querySelector('header'));
+                $api.css($api.dom('.f1_header'), 'top:' + height + 'px');
+                if (api.deviceModel == 'iPhone10,3' || api.deviceModel == 'iPhone10,6' || api.deviceModel == 'iPhone11,8' || api.deviceModel == 'iPhone11,2' || api.deviceModel == 'iPhone11,6' || api.deviceModel == 'iPhone11,4') {
+                    bottomheight = api.safeArea.bottom + 56;
+                    $api.css($api.dom('.videilist'), 'padding-bottom: ' + bottomheight + 'px');
+                    $api.css($api.dom('.f1_cont'), 'bottom: ' + bottomheight + 'px');
+                }
+                that.getCity();
+                that.getlable();
+                /***********   更新关注状态  **************/
+                api.addEventListener({
+                    name: 'followChange'
+                }, function(ret, err) {
+                    that.v_list.forEach(function(element) {
+                        if (element.uid == ret.value.uid) {
+                            element.is_focus = Number(ret.value.is_focus)
+                        }
+                    });
+                    that.v_list = JSON.parse(JSON.stringify(that.v_list))
+                });
+                /***********   更新点赞数量  **************/
+                api.addEventListener({
+                    name: 'changeLike'
+                }, function(ret, err) {
+                    if (ret) {
+                        if (ret.value.type == 2) {
+                            that.hotList.forEach(function(element) {
+                                if (element.video_id == ret.value.id) {
+                                    element.like_count = ret.value.like_count
+                                    element.is_like = ret.value.is_like
+
+                                }
+                            });
+                        } else if (ret.value.type == 3) {
+                            that.nearList.forEach(function(element) {
+                                if (element.video_id == ret.value.id) {
+                                    element.like_count = ret.value.like_count
+                                    element.is_like = ret.value.is_like
+                                }
+                            });
+                        }
+                    }
+                });
+                /***********   接收信号判断是否可以滑动   **************/
+                api.addEventListener({
+                    name: 'CanSwiper'
+                }, function(ret, err) {
+                    that.isOpenFram = false
+                });
+                /***********   删除数组里的视频   **************/
+                api.addEventListener({
+                    name: 'delectemyVideo'
+                }, function(ret, err) {
+                    if (ret) {
+                        that.v_list.splice(ret.value.index, 1);
+                    }
+                });
+                /***********   更新分享数量  **************/
+                api.addEventListener({
+                    name: 'changeVideoCount'
+                }, function(ret, err) {
+                    if (ret) {
+                        that.v_list.forEach(function(element) {
+                            if (element.video_id == ret.value.id) {
+                                element.share_count = ret.value.share_count
+                            }
+                        });
+                    }
+                });
+                /***********   更新评论数量  **************/
+                api.addEventListener({
+                    name: 'updatecommentcount'
+                }, function(ret, err) {
+                    if (ret) {
+                        that.v_list.forEach(function(element) {
+                            if (element.video_id == ret.value.id) {
+                                element.comment_count = ret.value.num
+                            }
+                        });
+                    }
+                });
+                // api.addEventListener({
+                //     name: 'scrolltobottom',
+                //     extra: {
+                //         threshold: 5 //设置距离底部多少距离时触发，默认值为0，数字类型
+                //     }
+                // }, function(ret, err) {
+                //     if (that.type == 2 || that.type == 3 || that.type == 4) {
+                //         that.getList('loadMore');
+                //     }
+                // });
+
+                that.swiper = new Swiper(".swiper-container", {
+                    // watchSlidesProgress: true,
+                    // slidesPerView : 'auto',
+                    speed: 200,
+                    loop: false,
+                    direction: 'vertical',
+                    freeMode: false,
+                    freeModeSticky: true,
+                    touchRatio: 0.5,
+                    longSwipesRatio: 0.1,
+                    threshold: 10,
+                    followFinger: true,
+                    observer: true, //修改swiper自己或子元素时，自动初始化swiper
+                    observeParents: true, //修改swiper的父元素时，自动初始化swiper
+                    on: {
+                        touchStart: function(event) {
+                            that.isHandle = true;
+                        },
+                        slidePrevTransitionStart: function() { //上滑开始
+                            that.reset()
+                            if (that.page > 2 && (that.swiper.realIndex == 0) && that.isHandle) {
+                                that.getList('loadPre')
+                                    // that.swiper.activeIndex = 9;
+                            }
+                        },
+                        slideNextTransitionStart: function() { //下滑开始
+                            that.reset()
+                            if (that.page < 20) {
+                                if ((that.swiper.realIndex == that.v_list.length - 1) && that.isHandle) {
+                                    that.getList('loadMore')
+                                        // that.swiper.realIndex = 1;
+                                }
+                            } else if (that.page >= 20) {
+                                if ((that.swiper.realIndex == 9) && that.isHandle) {
+                                    that.page = 0;
+                                    that.getList('loadMore')
+                                }
+                            }
+                        },
+                        slideChangeTransitionEnd: function() {
+                            that.swiper.update(); //swiper更新
+                            that.reset()
+                        },
+                    },
+                });
+                that.swiper.on('transitionEnd', function() {
+                    that.swiper.update(); //swiper更新
+                    $api.css($api.dom(".ig" + that.swiper.realIndex), 'display:block');
+                    var newArr = []
+                    newArr.push(that.swiper.realIndex)
+                    if (that.currentkey < that.swiper.realIndex) { //上拉
+                        if (that.swiper.realIndex >= 1) {
+                            setTimeout(function() {
+                                newArr.forEach(function(element) {
+                                    var timerDe = setInterval(function() {
+                                        if ($api.dom(".v" + (element - 1))) {
+                                            if ($api.dom(".v" + (element - 1)).currentTime > 0.14) {
+                                                $api.dom(".v" + (element - 1)).currentTime = 0;
+                                                $api.dom(".v" + (element - 1)).pause()
+                                                clearInterval(timerDe);
+                                            }
+                                        } else {
+                                            clearInterval(timerDe);
+                                        }
+                                    }, 10)
+                                    setTimeout(function() {
+                                        $api.dom(".v" + (element - 1)).currentTime = 0;
+                                        $api.dom(".v" + (element - 1)).pause()
+                                        clearInterval(timerDe);
+                                    }, 500);
+                                });
+                            }, 50);
+                            if ($api.dom(".goodIndex" + (that.swiper.realIndex - 1))) {
+                                setTimeout(function() {
+                                    $api.css($api.dom(".goodIndex" + (that.swiper.realIndex - 1)), 'display: none;');
+                                }, 200);
+                            }
+                        }
+                    } else {
+                        if ((that.swiper.realIndex + 1) < that.v_list.length) {
+                            setTimeout(function() {
+                                newArr.forEach(function(element) {
+                                    var timerAD = setInterval(function() {
+                                        if ($api.dom(".v" + (element + 1))) {
+                                            if ($api.dom(".v" + (element + 1)).currentTime > 0.14) {
+                                                $api.dom(".v" + (element + 1)).currentTime = 0;
+                                                $api.dom(".v" + (element + 1)).pause()
+                                                clearInterval(timerAD);
+                                            }
+                                        } else {
+                                            clearInterval(timerAD);
+                                        }
+                                    }, 10)
+                                    setTimeout(function() {
+                                        $api.dom(".v" + (element + 1)).currentTime = 0;
+                                        $api.dom(".v" + (element + 1)).pause()
+                                        clearInterval(timerAD);
+                                    }, 500);
+                                });
+                            }, 50);
+                            if ($api.dom(".goodIndex" + (that.swiper.realIndex + 1))) {
+                                setTimeout(function() {
+                                    $api.css($api.dom(".goodIndex" + (that.swiper.realIndex + 1)), 'display: none;');
+                                }, 200);
+                            }
+                        }
+                    }
+                    // that.isPlay = true;
+                    that.currentkey = that.swiper.activeIndex
+                    if ($api.getStorage('curframename') == 'frame0') {
+                        setTimeout(function() {
+                            that.play(that.currentkey, 0)
+                            var timer = setInterval(function() {
+                                if ($api.dom(".v" + that.currentkey).currentTime > 0) {
+                                    $api.css($api.dom(".ig" + that.currentkey), 'display:none');
+                                    clearInterval(timer);
+                                }
+                            }, 10)
+                        }, 0)
+                    }
+
+
+                })
+                that.getCheAplay()
+                that.getNotice()
+                    /***********   暂停视频   **************/
+                api.addEventListener({
+                    name: 'pause'
+                }, function(ret, err) {
+                    Vue.nextTick(function() {
+                        if (that.isPlay) {
+                            if (!that.isOverTask) {
+                                that.pause();
+                            }
+                            setTimeout(function() {
+                                var h_data = {
+                                    currentkey: that.currentkey,
+                                    page: that.page,
+                                    v_list: that.v_list
+                                }
+                                $api.setStorage('home_data', h_data)
+                                that.isPlay = false;
+                                // $api.dom(".v" + that.currentkey).pause()
+                                var timerPause = setInterval(function() {
+                                    if ($api.dom(".v" + that.currentkey)) {
+                                        if ($api.dom(".v" + that.currentkey).currentTime > 0.14) {
+                                            $api.dom(".v" + that.currentkey).pause()
+                                            clearInterval(timerPause);
+                                        }
+                                    } else {
+                                        clearInterval(timerPause);
+                                    }
+                                }, 10)
+                            }, 0);
+                        }
+                    })
+                });
+            }
+        },
+        methods: {
+            reloadlang: function() {
+                var that = this;
+                frame0.$data.langContent = GlobleLanguageContent.frame0;
+                frame0.$data.getCodetip = GlobleLanguageContent.getCode;
+            },
+            start: function() {
+                var that = this;
+                this.$refs.countDown[1].start();
+                that.ratetime = setInterval(function() {
+                    that.rate = Math.min(Math.max((that.rate + 10), 0), 100);
+                    if (that.rate == 100) {
+                        clearInterval(that.ratetime)
+                    }
+                }, 1000);
+            },
+            pause: function() {
+                var that = this;
+                this.$refs.countDown[1].pause();
+                clearInterval(that.ratetime)
+            },
+            reset: function() {
+                var that = this;
+                that.rate = 0
+                clearInterval(that.ratetime)
+                this.$refs.countDown[1].reset();
+            },
+            checkTask: function() {
+                var that = this;
+                http(checkvideolooklogUrl, 'post', {}, function(ret) {
+                    if (ret.code == 200) {
+                        if (ret.data && ret.data.continue == 1) {
+                            that.look_count = ret.data.look_count;
+                            that.isOverTask = false;
+                        } else if (ret.data && ret.data.continue == 0) {
+                            that.isOverTask = true;
+                        }
+                    }
+                });
+            },
+            finishedVideo: function() {
+                var that = this;
+                if (!that.isOverTask) {
+                    http(addvideolooklogUrl, 'post', {
+                        video_id: that.v_list[that.currentkey].video_id
+                    }, function(ret) {
+                        if (ret.code == 200) {
+                            that.look_count = ret.data.look_count
+                        } else {
+                            that.checkTask()
+                        }
+                    });
+                }
+            },
+            closeAd: function(i) {
+                var that = this;
+                $api.css($api.dom(".goodIndex" + i), 'display: none;');
+            },
+            updatetags: function() {
+                var that = this;
+                if (that.label_xinshuzu == [] || that.label_xinshuzu.length == 0) {
+                    api.toast({
+                        msg: that.langContent.selecttip,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return;
+                } else {
+                    var labels = ''
+                    if (that.label_xinshuzu.length > 0) {
+                        that.label_xinshuzu.forEach(function(element) {
+                            labels = labels + element + ','
+                        });
+                    }
+                }
+                http(updateuserlabelUrl, 'post', {
+                    tags: labels
+                }, function(ret) {
+                    if (ret.code == 200) {
+                        api.toast({
+                            msg: that.langContent.selstatu,
+                            duration: 1000,
+                            location: 'bottom'
+                        });
+                        that.isShowTags = false
+                    }
+                })
+            },
+            getlable: function() {
+                var that = this;
+                http(getuserinfoUrl, 'post', {}, function(ret) {
+                        if (ret.code == 200) {
+                            if (ret.data.tags == '') {
+                                that.isShowTags = true
+                            }
+                        }
+                    })
+                    //获取视频标签列表
+                http(videoLabel, 'get', {}, function(ret) {
+                    if (ret.code == 200) {
+                        that.taglist = ret.data.info
+                        for (var i = 0; i < ret.data.info.length; i++) {
+                            that.taglist[i].checked = false
+                        }
+                        that.taglist = JSON.parse(JSON.stringify(that.taglist))
+                    }
+                })
+            },
+            selecttag: function(obj) {
+                var that = this
+                if (!obj.checked) {
+                    obj.checked = !obj.checked
+                    that.label_xinshuzu.push(obj.id)
+                } else {
+                    if (that.label_xinshuzu.length == 1) {
+                        api.toast({
+                            msg: that.langContent.leatone,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                        return
+                    } else {
+                        obj.checked = !obj.checked
+                        for (var i = 0; i < that.label_xinshuzu.length; i++) {
+                            if (that.label_xinshuzu[i] == obj.id) {
+                                that.label_xinshuzu.splice(i, 1)
+                            }
+                        }
+                    }
+                }
+            },
+            //检查经度是否合法
+            checkLon: function(lon) {
+                var reg = /^-?((0|1?[0-8]?[0-9]?)(([.][0-9]{1,10})?)|180(([.][0]{1,10})?))$/;
+                return reg.test(lon);
+            },
+            //检查纬度是否合法
+            checkLat: function(lat) {
+                var reg = /^-?((0|[1-8]?[0-9]?)(([.][0-9]{1,10})?)|90(([.][0]{1,10})?))$/;
+                return reg.test(lat);
+            },
+            getCity: function() {
+                var that = this;
+                if ($api.getStorage('longitude') && $api.getStorage('latitude')) {
+                    if (api.systemType == "ios" || api.systemType == "IOS") { //ios
+                        http(getCityUrl, 'post', {
+                            lng: $api.getStorage('longitude'),
+                            lat: $api.getStorage('latitude'),
+                        }, function(res) {
+                            if (res.code == 200) {
+                                that.city = res.data.info;
+                                that.bandcity(res.data.info)
+                            }
+                        }, function(err) {});
+                    } else { //安卓
+                        if ($api.getStorage('longitude') && $api.getStorage('latitude') && that.checkLon($api.getStorage('longitude')) && that.checkLat($api.getStorage('latitude'))) {
+                            http(getCityUrl, 'post', {
+                                lng: $api.getStorage('longitude'),
+                                lat: $api.getStorage('latitude'),
+                            }, function(res) {
+                                if (res.code == 200) {
+                                    that.city = res.data.info;
+                                    that.bandcity(res.data.info)
+                                }
+                            }, function(err) {});
+                        } else {
+                            that.confirmPer(['location'])
+                        }
+                    }
+                } else {
+                    that.confirmPer(['location'])
+                }
+
+            },
+            bandcity: function(cityname) {
+                var that = this;
+                http(getuserinfoUrl, 'post', {}, function(ret) {
+                    if (ret.code == 200) {
+                        if (ret.data.belong_city == 0) {
+                            http(belongcityUrl, 'post', {
+                                city_name: cityname
+                            }, function(res) {})
+                        }
+                    }
+                })
+            },
+            // 检测是否开启权限
+            confirmPer: function(perm) {
+                var that = this;
+                var has = that.hasPermission(perm);
+                if (!has || !has[0] || !has[0].granted) {
+                    that.reqPermission(perm);
+                } else {
+                    that.getIndeLocation();
+                }
+            },
+
+            hasPermission: function(perms) {
+                var rets = api.hasPermission({
+                    list: perms
+                });
+                return rets;
+            },
+
+            reqPermission: function(perms, callback) {
+                var that = this;
+                api.requestPermission({
+                    list: perms,
+                    code: 100001
+                }, function(ret, err) {
+                    if (ret.list[0].granted) {
+                        that.getIndeLocation();
+                    } else {
+                        api.closeWidget({
+                            silent: true,
+                        });
+                    }
+                });
+            },
+
+            // 新写的
+            getIndeLocation: function() {
+                var that = this;
+                // 获取当前经纬度配置
+                var bmLocation = api.require('bmLocation');
+                if (api.systemType == "ios" || api.systemType == "IOS") {
+                    bmLocation.getPermissionState(function(ret) {
+                        var sta = ret.code;
+                    });
+                }
+
+                // 获取当前经纬度配置
+                bmLocation.configManager({
+                    accuracy: 'device_sensors',
+                    filter: 1,
+                    activityType: 'automotiveNavigation',
+                    coordinateType: 'GCJ02',
+                    locationTimeout: 10,
+                    reGeocodeTimeout: 10
+                });
+                // 获取当前经纬度 ====================
+                bmLocation.singleLocation({
+                    reGeocode: false,
+                    netWorkState: false
+                }, function(ret) {
+                    var sta = ret.status;
+                    // console.log(JSON.stringify(ret.status));
+                    // console.log(JSON.stringify(ret.location.longitude));
+                    // console.log(JSON.stringify(ret.location.latitude));
+                    if (sta) {
+                        // that.myLat = ret.location.latitude;
+                        // that.myLon = ret.location.longitude;
+                        $api.setStorage('longitude', ret.location.longitude);
+                        $api.setStorage('latitude', ret.location.latitude);
+                        that.getCity()
+                    } else {
+                        api.alert({
+                            msg: that.getCodetip.position
+                        });
+                    }
+                });
+            },
+
+            closenotice: function() {
+                var that = this
+                that.isShow = false;
+                $api.setStorage('isShow', {
+                    isShow: that.isShow
+                });
+            },
+            getNotice: function() {
+                var that = this
+                http(orchardNoticeUrl, 'post', {}, function(ret) {
+                    if (ret.code == 200) {
+                        that.noticeInfo = ret.data;
+                    }
+                })
+            },
+            getCheAplay: function() {
+                var that = this;
+                that.checkTask()
+                if (api.systemType != "ios" && api.systemType != "IOS") {
+                    that.swiper.update(); //swiper更新
+                }
+                // $api.setStorage('curframename', 'frame0');
+                if ($api.getStorage('isShow')) {
+                    that.isShow = $api.getStorage('isShow').isShow
+                }
+                http(getuserinfoUrl, 'post', {}, function(ret) {
+                    if (ret.code == 200) {
+                        that.isSmrz = ret.data.auth_primary;
+                    }
+                })
+                if ($api.getStorage('home_data') && that.type == 1) {
+                    that.currentkey = $api.getStorage('home_data').currentkey
+                    that.page = $api.getStorage('home_data').page
+                    that.v_list = $api.getStorage('home_data').v_list
+                    Vue.nextTick(function() {
+                        // that.swiper.slideTo($api.getStorage('home_data').currentkey)
+                        that.swiper.activeIndex = $api.getStorage('home_data').currentkey;
+                        that.swiper.realIndex = $api.getStorage('home_data').currentkey;
+                        that.play($api.getStorage('home_data').currentkey, 1)
+                        var timer = setInterval(function() {
+                            if ($api.dom(".v" + $api.getStorage('home_data').currentkey).currentTime > 0) {
+                                $api.css($api.dom(".ig" + $api.getStorage('home_data').currentkey), 'display:none');
+                                clearInterval(timer);
+                            }
+                        }, 10)
+                    })
+                } else {
+                    that.getList()
+                }
+            },
+            toInfo: function(goodurl) {
+                var that = this;
+                var browser = api.require('webBrowser');
+                browser.open({
+                    url: goodurl
+                });
+                api.sendEvent({
+                    name: 'pause',
+                    extra: {}
+                });
+            },
+            OpenShot: function() {
+                var that = this;
+                api.sendEvent({
+                    name: 'pause',
+                    extra: {}
+                });
+                if (that.isSmrz == 0) {
+                    api.toast({
+                        msg: that.getCodetip.isSmrz,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    setTimeout(function() {
+                        api.openWin({
+                            name: 'personal_data',
+                            url: './my/personal_data.html',
+                            reload: true,
+                            pageParam: {}
+                        });
+                    }, 1500);
+                } else {
+                    // http(checkTodayVideo, 'post', {}, function(ret) {
+                    //     if (ret.code == 200) {
+                    api.openFrame({
+                        name: 'shotframe',
+                        url: 'shotframe.html',
+                        bounces: false,
+                        reload: true,
+                        rect: {
+                            x: 0,
+                            y: 0,
+                            w: api.winWidth,
+                            h: api.winHeight
+                        }
+                    });
+                    //     }
+                    // })
+                }
+            },
+            todetailPage: function(index, type) {
+                var that = this;
+                var newArry = [];
+                if (that.type == 1) {
+                    newArry = that.v_list
+                } else if (that.type == 2) {
+                    newArry = that.hotList.concat()
+                        // newArry = [...that.hotList]
+                } else if (that.type == 3) {
+                    newArry = that.nearList.concat()
+                        // newArry = [...that.nearList]
+                } else if (that.type == 4) {
+                    newArry = that.globalList.concat()
+                }
+                setTimeout(function() {
+                    if (index > 9) {
+                        var zhengshu = parseInt((index + 1) / 5)
+                        var param_page = Math.ceil((index + 1) / 5) //page根据index向上取整
+                        var param_index = index - ((param_page - 1) * 5) //此时的index为取到的真实
+                        if ((index % 10) == 0) {
+                            newArry.splice(0, ((zhengshu - 1) * 5));
+                            param_index = index - ((param_page - 2) * 5) //此时的index为取到的真实
+                        } else if (((((index + 1) % 5) == 0))) {
+                            newArry.splice(0, ((zhengshu - 1) * 5));
+                        } else {
+                            newArry.splice(0, (zhengshu * 5));
+                        }
+                    } else {
+                        if (newArry.length > 10) {
+                            newArry.slice(0, 10);
+                        } else {}
+                        if (index > 4) {
+                            var param_page = 2
+                        } else {
+                            var param_page = 1
+                        }
+                        var param_index = index
+                    }
+                    api.openWin({
+                        name: 'homevideo_info',
+                        url: './home/homevideo_info.html',
+                        reload: true,
+                        pageParam: {
+                            from: 'home',
+                            list: newArry,
+                            index: param_index,
+                            page: param_page,
+                            type: type
+                        }
+                    });
+                }, 10);
+
+            },
+            toPerson: function(id, index) {
+                var that = this;
+                // if (that.isPlay) {
+                //     that.controVideo(index)
+                // }
+                api.sendEvent({
+                    name: 'pause',
+                    extra: {}
+                });
+                api.openWin({
+                    name: 'other',
+                    url: './my/other.html',
+                    bounces: true,
+                    pageParam: {
+                        uid: id,
+                        from: 'frame0'
+                    }
+                });
+            },
+            changType: function(num) {
+                var that = this;
+                // if (num == 4) {
+                //     $api.css($api.dom('.development'), 'display:flex;');
+                //     setTimeout(function() {
+                //         $api.css($api.dom('.development'), 'display:none;');
+                //     }, 2000);
+                //     return;
+                // }
+                if (that.type != num) {
+                    that.page = 1;
+                    that.downLoading = false;
+                    that.upLoading = false;
+                    that.finished = false;
+                }
+                that.type = num;
+                api.sendEvent({
+                    name: 'changeBg',
+                    extra: {
+                        type: num
+                    }
+                });
+                if (num == 3) {
+                    that.getCity()
+                }
+                if (num != 1) {
+                    api.setFrameAttr({
+                        name: 'frame0',
+                        bounces: false
+                    });
+                    api.sendEvent({
+                        name: 'pause',
+                        extra: {}
+                    });
+                    that.getList()
+                } else {
+                    api.setFrameAttr({
+                        name: 'frame0',
+                        bounces: false
+                    });
+                    if ($api.getStorage('home_data')) {
+                        that.page = $api.getStorage('home_data').page
+                    } else {
+                        that.page = 1
+                    }
+                    that.getCheAplay()
+                }
+
+            },
+            attention: function(item) {
+                var that = this;
+                http(focusUrl, 'post', {
+                    focus_id: item.uid
+                }, function(ret) {
+                    if (ret.code == 200) {
+                        if (ret.data.is_focus == 1) {
+                            $api.css($api.dom('.show' + item.uid), 'display:block;');
+                            setTimeout(function() {
+                                $api.css($api.dom('.show' + item.uid), 'display:none;');
+                            }, 2000);
+                        }
+                        api.toast({
+                            msg: ret.msg,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                        item.is_focus = ret.data.is_focus
+                    }
+                }, function(err) {});
+            },
+            dbclick: function(obj) {
+                var that = this;
+                if (that.clickTimer) {
+                    window.clearTimeout(that.clickTimer);
+                    that.clickTimer = null;
+                }
+                // 图片地址在此处更换  可换成你的图片
+                var assets = [
+                    '../image/love/1.png',
+                    '../image/love/2.png',
+                    '../image/love/3.png',
+                    '../image/love/4.png',
+                    '../image/love/5.png',
+                ];
+                assets.forEach(function(src, index) {
+                    assets[index] = new Promise(function(resolve) {
+                        var img = new Image;
+                        img.onload = resolve.bind(null, img);
+                        img.src = src;
+                    });
+                });
+                Promise.all(assets).then(function(images) {
+                    var random = {
+                        uniform: function(min, max) {
+                            return min + (max - min) * Math.random();
+                        },
+                        uniformDiscrete: function(i, j) {
+                            return i + Math.floor((j - i + 1) * random.uniform(0, 1));
+                        },
+                    };
+                    var stage = new BubbleHearts();
+                    var likecanvas = stage.canvas;
+                    likecanvas.style['display'] = 'block';
+                    setTimeout(function() {
+                        likecanvas.style['display'] = 'none';
+                    }, 4000);
+                    likecanvas.width = 170;
+                    likecanvas.height = 170;
+                    likecanvas.style['width'] = '170px';
+                    likecanvas.style['height'] = '170px';
+                    document.body.appendChild(likecanvas);
+                    stage.bubble(images[random.uniformDiscrete(0, images.length - 1)]);
+                    setTimeout(function() {
+                        stage.bubble(images[random.uniformDiscrete(0, images.length - 1)]);
+                    }, 200);
+                    setTimeout(function() {
+                        stage.bubble(images[random.uniformDiscrete(0, images.length - 1)]);
+                    }, 500);
+                });
+                if (obj.is_like == 0) {
+                    if (obj.is_me == 0) {
+                        obj.is_like = 1;
+                    }
+                    http(likevideoUrl, 'post', {
+                        video_uid: obj.uid,
+                        video_id: obj.video_id
+                    }, function(ret) {
+                        if (ret.code == 200) {
+                            obj.is_like = ret.data.is_like
+                            obj.like_count = ret.data.like_count
+                        } else if (ret.code == 401) {
+                            api.sendEvent({
+                                name: 'pause',
+                                extra: {}
+                            });
+                            toPage('login', './auth/login.html', {
+                                from: 'home'
+                            });
+                        } else if (ret.code == 405) {
+                            api.sendEvent({
+                                name: 'pause',
+                                extra: {}
+                            });
+                            api.openWin({
+                                name: 'personal_data',
+                                url: './my/personal_data.html',
+                                reload: true,
+                                pageParam: {}
+                            });
+                        }
+                    }, function(err) {
+                        alert(JSON.stringify(err));
+                    });
+                }
+            },
+            addLike: function(obj) {
+                var that = this;
+                if (obj.is_like == 0) {
+                    if (obj.is_me == 0) {
+                        obj.is_like = 1;
+                    }
+                    // 图片地址在此处更换  可换成你的图片
+                    var assets = [
+                        '../image/love/1.png',
+                        '../image/love/2.png',
+                        '../image/love/3.png',
+                        '../image/love/4.png',
+                        '../image/love/5.png',
+                    ];
+                    assets.forEach(function(src, index) {
+                        assets[index] = new Promise(function(resolve) {
+                            var img = new Image;
+                            img.onload = resolve.bind(null, img);
+                            img.src = src;
+                        });
+                    });
+                    Promise.all(assets).then(function(images) {
+                        var random = {
+                            uniform: function(min, max) {
+                                return min + (max - min) * Math.random();
+                            },
+                            uniformDiscrete: function(i, j) {
+                                return i + Math.floor((j - i + 1) * random.uniform(0, 1));
+                            },
+                        };
+
+                        var stage = new BubbleHearts();
+                        var likecanvas = stage.canvas;
+                        likecanvas.style['display'] = 'block';
+                        setTimeout(function() {
+                            likecanvas.style['display'] = 'none';
+                        }, 5000);
+                        likecanvas.width = 170;
+                        likecanvas.height = 170;
+                        likecanvas.style['width'] = '170px';
+                        likecanvas.style['height'] = '170px';
+                        document.body.appendChild(likecanvas);
+                        //journal-reward 为赏桃的按钮 
+                        // document.getElementsByClassName('journal-reward')[0].addEventListener('click', function() {
+                        //随机飘动
+                        stage.bubble(images[random.uniformDiscrete(0, images.length - 1)]);
+                        setTimeout(function() {
+                            stage.bubble(images[random.uniformDiscrete(0, images.length - 1)]);
+                        }, 200);
+                        setTimeout(function() {
+                            stage.bubble(images[random.uniformDiscrete(0, images.length - 1)]);
+                        }, 500);
+                        //垂直向上飘动效果
+                        //	let image = images[random.uniformDiscrete(0, images.length - 1)];
+                        //	stage.bubble(image, 3000, function(lifespan) {
+                        //		if(lifespan >= 0) {
+                        //			stage.context.drawImage(
+                        //				image,
+                        //				(canvas.width - image.width) / 2,
+                        //				(canvas.height - image.height) * lifespan,
+                        //				image.width,
+                        //				image.height
+                        //			);
+                        //		} else {
+                        //			return true;
+                        //		}
+                        //	});
+                        // }, false);
+                    });
+                }
+                http(likevideoUrl, 'post', {
+                    video_uid: obj.uid,
+                    video_id: obj.video_id
+                }, function(ret) {
+                    if (ret.code == 200) {
+                        obj.is_like = ret.data.is_like
+                        obj.like_count = ret.data.like_count
+                    } else if (ret.code == 401) {
+                        api.sendEvent({
+                            name: 'pause',
+                            extra: {}
+                        });
+                        toPage('login', './auth/login.html', {
+                            from: 'home'
+                        });
+                    } else if (ret.code == 405) {
+                        api.sendEvent({
+                            name: 'pause',
+                            extra: {}
+                        });
+                        api.openWin({
+                            name: 'personal_data',
+                            url: './my/personal_data.html',
+                            reload: true,
+                            pageParam: {}
+                        });
+                    }
+                }, function(err) {
+                    alert(JSON.stringify(err));
+                });
+            },
+            controVideo: function(index) {
+                var that = this;
+                if (that.clickTimer) {
+                    clearTimeout(that.clickTimer);
+                    that.clickTimer = null;
+                }
+                that.clickTimer = setTimeout(function() {
+                    that.isPlay = !that.isPlay;
+                    if (that.isPlay) {
+                        that.play(index, 1)
+                    } else {
+                        $api.dom(".v" + index).pause()
+                        that.pause()
+                    }
+                }, 300);
+            },
+            getList: function(act) {
+                var that = this;
+                api.showProgress({
+                    title: that.getCodetip.videopull,
+                    text: that.getCodetip.wait,
+                    modal: true
+                });
+                if (that.type == 1) {
+                    that.url = homevideoUrl
+                } else if (that.type == 2) {
+                    that.url = homehotvideoUrl
+                } else if (that.type == 3) {
+                    that.url = homenearvideoUrl
+                } else if (that.type == 4) {
+                    that.url = homeglobalvideoUrl
+                }
+                if (act == 'loadMore' || that.upLoading) {
+                    that.page++;
+                    if (that.type == 3) {
+                        that.params = {
+                            page: that.page,
+                            lon: $api.getStorage('longitude'),
+                            lat: $api.getStorage('latitude'),
+                            limit: 10
+                        }
+                    } else if (that.type == 2 || that.type == 4) {
+                        that.params = {
+                            page: that.page,
+                            limit: 10
+                        }
+                    } else {
+                        that.params = {
+                            page: that.page,
+                        }
+                    }
+                } else if (act == 'loadPre') {
+                    that.page = that.page - 1;
+                    that.params = {
+                        page: that.page - 1,
+                    }
+                } else {
+                    that.page = 1;
+                    if (that.type == 3) {
+                        that.params = {
+                            page: 1,
+                            lon: $api.getStorage('longitude'),
+                            lat: $api.getStorage('latitude'),
+                            limit: 10
+                        }
+                    } else if (that.type == 2 || that.type == 4) {
+                        that.params = {
+                            page: that.page,
+                            limit: 10
+                        }
+                    } else {
+                        that.params = {
+                            page: 1,
+                        }
+                    }
+                    that.finished = true;
+                }
+                http(that.url, 'post', that.params, function(res) {
+                    if (res.code == 200) {
+                        if (act == 'loadMore' || that.upLoading) {
+                            if (that.type == 1) {
+                                that.v_list = that.v_list.concat(res.data);
+                                // var arr = [];
+                                // for (var i = 0; i < that.v_list.length; i++) {
+                                //     if (arr.indexOf(that.v_list[i]) == -1) {
+                                //         arr.splice(i, 0, that.v_list[i]);
+                                //     }
+                                // }
+                                // that.v_list = arr
+                                if (that.page > 1 && that.v_list.length > 10 && that.swiper.realIndex > 4) {
+                                    that.v_list.splice(0, 5);
+                                    that.isHandle = false;
+                                    that.swiper.activeIndex = 4;
+                                    that.swiper.realIndex = 4;
+                                    that.swiper.update(); //swiper更新
+                                }
+                            } else if (that.type == 2) {
+                                that.hotList = that.hotList.concat(res.data);
+                            } else if (that.type == 3) {
+                                that.nearList = that.nearList.concat(res.data);
+                            } else if (that.type == 4) {
+                                that.globalList = that.globalList.concat(res.data);
+                            }
+                            that.upLoading = false;
+                        } else if (act == 'loadPre') {
+                            for (i = 0; i < res.data.length; i++) {
+                                that.v_list.splice(i, 0, res.data[i]);
+                            }
+                            if (that.v_list.length >= 10) {
+                                that.v_list.splice(10, 5);
+                                that.isHandle = false;
+                                that.swiper.activeIndex = 5;
+                                that.swiper.realIndex = 5;
+                                that.swiper.update(); //swiper更新
+                            }
+                        } else {
+                            if (that.type == 1) {
+                                that.v_list = res.data;
+                                that.swiper.update(); //swiper更新
+                                // if (res.data.length > 9) {
+                                //     that.v_list.splice(10, 0, that.v_list[9]);
+                                // }
+                                if (that.v_list && that.v_list.length > 0 && that.type == 1) {
+                                    Vue.nextTick(function() {
+                                        setTimeout(function() {
+                                            if ($api.dom(".v" + 0) && that.type == 1) {
+                                                // that.swiper.slideTo(0)
+                                                // if (that.imgShow) {
+                                                // $api.dom(".v0").addEventListener("canplay", function () {
+                                                $api.css($api.dom(".ig0"), 'display:none');
+                                                that.play(0, 0)
+                                                    // }
+                                                    // );
+                                                    // } else {
+                                                    // that.play(0)
+                                                    // }
+                                            }
+                                        }, 10);
+                                    })
+                                }
+                            } else if (that.type == 2) {
+                                that.hotList = res.data;
+                            } else if (that.type == 3) {
+                                that.nearList = res.data;
+                            } else if (that.type == 4) {
+                                that.globalList = res.data;
+                            }
+                            that.downLoading = false;
+                            that.finished = false;
+                        }
+                        setTimeout(function() {
+                            if (that.type != 1 && res.data && res.data.length < 10) {
+                                that.finished = true;
+                            }
+                        }, 100);
+                        api.hideProgress();
+                    } else {
+                        api.hideProgress();
+                    }
+                }, function(err) {
+                    api.hideProgress();
+                    // alert(JSON.stringify(err));
+                });
+            },
+            openSearch: function() {
+                var that = this;
+                // if (that.isPlay) {
+                //     that.controVideo(that.currentkey)
+                // }
+                api.sendEvent({
+                    name: 'pause',
+                    extra: {}
+                });
+                api.openWin({
+                    name: 'search',
+                    url: './home/search.html',
+                    bounces: false,
+                    pageParam: {
+                        from: 'frame0'
+                    }
+                });
+            },
+            // 分享页面
+            openShare: function(obj, index) {
+                var that = this;
+                that.isOpenFram = true;
+                // if (obj.is_me == 1) {
+                api.openFrame({
+                    name: 'share',
+                    url: './home/share.html',
+                    bounces: false,
+                    rect: {
+                        x: 0,
+                        y: api.winHeight - 260,
+                        w: 'auto',
+                        h: 260
+                    },
+                    pageParam: {
+                        item: obj,
+                        index: index
+                    }
+                });
+                // } else {
+                //     api.openFrame({
+                //         name: 'share',
+                //         url: './home/share.html',
+                //         bounces: false,
+                //         rect: {
+                //             x: 0,
+                //             y: api.winHeight - 160,
+                //             w: 'auto',
+                //             h: 160
+                //         },
+                //         pageParam: {
+                //             item: obj,
+                //             index: index
+                //         }
+                //     });
+                // }
+            },
+            // 打赏
+            playTour: function(obj, index) {
+                var that = this;
+                that.isOpenFram = true;
+                // if (obj.is_me == 1) {
+                api.openFrame({
+                    name: 'play_tour',
+                    url: './home/play_tour.html',
+                    bounces: false,
+                    rect: {
+                        x: 0,
+                        y: api.winHeight - 400,
+                        w: 'auto',
+                        h: 400
+                    },
+                    pageParam: {
+                        item: obj,
+                        index: index
+                    }
+                });
+            },
+            openCom: function(uid, id) {
+                var that = this;
+                that.isOpenFram = true;
+                api.openFrame({
+                    name: 'comment',
+                    url: './home/comment.html',
+                    bounces: false,
+                    rect: {
+                        x: 0,
+                        y: api.winHeight / 3,
+                        w: 'auto',
+                        h: 'auto'
+                    },
+                    // bgColor: 'rgba(0,0,0,0)',
+                    pageParam: {
+                        uid: uid,
+                        id: id
+                    }
+                });
+            },
+            closeFrames: function() {
+                var that = this;
+                api.closeFrame({
+                    name: 'comment'
+                });
+                api.closeFrame({
+                    name: 'comment_frame'
+                });
+                api.closeFrame({
+                    name: 'share'
+                });
+                that.isOpenFram = false;
+            },
+            play: function(index, num) {
+                var that = this;
+                that.isPlay = true;
+                if (that.type != 1) {
+                    return;
+                }
+                if ($api.dom(".v" + index) && that.type == 1 && that.v_list != [] && $api.getStorage('curframename') == 'frame0') {
+                    $api.dom(".v" + index).play()
+                    if (!that.isOverTask) {
+                        that.start()
+                    }
+                    if (num == 0) {
+                        that.addPlaynum(index);
+                        if ($api.dom(".goodIndex" + index)) {
+                            setTimeout(function() {
+                                $api.css($api.dom(".goodIndex" + index), 'display: flex;');
+                            }, 3000);
+                        }
+                    }
+                }
+            },
+            addPlaynum: function(index) {
+                var that = this;
+                // var videoid = 0;
+                // for (var i = 0; i < that.v_list.length; i++) {
+                //     if (i == index) {
+                //         videoid = that.v_list[i].video_id;
+                //     }
+                // }
+                http(playVideocountUrl, 'post', {
+                        video_uid: that.v_list[index].uid,
+                        video_id: that.v_list[index].video_id
+                    },
+                    function(ret) {});
+            },
+        }
+    })
+</script>

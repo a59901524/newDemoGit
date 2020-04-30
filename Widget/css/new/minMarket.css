@@ -1,0 +1,88 @@
+.minMarket{
+	/*background-color: #250084;
+	background-image: url('../image/h1.jpg');
+	background-repeat: no-repeat;
+	background-size: 100%;*/
+	color: #ffffff;
+}
+.minMarket .content2 .contLi{
+	margin: 0.13rem 0.2rem 0;
+	background-image: url('../../image/new/mk.png');
+	background-repeat: no-repeat;
+	background-size: 100% 100%;
+	padding: 0.04rem;
+	font-size: 0.2rem;
+	display: flex;
+	justify-content: flex-start;
+}
+.minMarket .content2 .contLi .left{
+	width: 2.54rem;content2
+	height: 2.54rem;
+}
+.minMarket .content2 .contLi .img1{
+	background: url('../../image/new/d1.png') no-repeat;
+	background-size: 100% 100%
+}
+.minMarket .content2 .contLi .img2{
+	background: url('../../image/new/d2.png') no-repeat;
+	background-size: 100% 100%
+}
+.minMarket .content2 .contLi .img3{
+	background: url('../../image/new/d3.png') no-repeat;
+	background-size: 100% 100%
+}
+.minMarket .content2 .contLi .img4{
+	background: url('../../image/new/d4.png') no-repeat;
+	background-size: 100% 100%
+}
+.minMarket .content2 .contLi .img5{
+	background: url('../../image/new/d5.png') no-repeat;
+	background-size: 100% 100%
+}
+.minMarket .content2 .contLi .right{
+	flex: 1;
+	padding-top: 0.28rem;
+	padding-right: 0.28rem;
+	padding-left: 0.18rem;
+	padding-bottom: 0.18rem;
+}
+.minMarket .right .title {
+	height: 0.39rem;
+	line-height: 0.39rem;
+}
+.minMarket .right .title span{
+	float: right;
+	width: 1rem;
+	height: 0.39rem;
+	line-height: 0.39rem;
+	text-align: center;
+	background: #fd5300;
+	color: #ffffff;
+	border-radius: 0.12rem;
+	display: inline-block;
+}
+.minMarket .right .p{
+	height: 0.4rem;
+	line-height: 0.4rem;
+}
+.minMarket .right .dis{
+	display: flex;
+	justify-content: space-between;
+}
+.minMarket .right .btn{
+	width: 3.75rem;
+	height: 0.5rem;
+	line-height: 0.5rem;
+	text-align: center;
+	background: url('../../image/new/btnBj.png') no-repeat;
+	background-size: 100% 100%;
+}
+.minMarket .right .btn img{
+	width: 0.28rem;
+	height: 0.25rem;
+	margin-right: 0.08rem;
+	display: inline-block;
+}
+.minMarket .right .btn span{
+	display: inline-flex;
+}

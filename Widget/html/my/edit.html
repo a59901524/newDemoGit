@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>编辑资料</title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../lib/iconfont2/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/edit.css" />
+    <style>
+        input {
+            color: #cccccc;
+        }
+        
+        input::placeholder {
+            font-size: 14px;
+            color: #cccccc;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="edit" class="content " v-cloak>
+        <header class="header bbd">
+            <i class="iconfont icon-xiangzuo " onclick="goBack()"></i>
+            <div class="">{{langContent.title?langContent.title:''}}</div>
+            <div class="tomyfeed" @click="edit">{{langContent.savebtn?langContent.savebtn:''}}</div>
+        </header>
+        <!-- <div class="s_header flex_col_center padding12 posi_relative">
+            <img onclick="toPage('printscreen','printscreen.html')" class="marginB10 Bc " :src="info.avatar||'../../image/logo.png'" alt="">
+            <img onclick="toPage('printscreen','printscreen.html')" class="pic Bc" style="width: 35px;height: 35px;z-index: 1;" src="../../image/pic.png" alt="" />
+            <div onclick="toPage('printscreen','printscreen.html')" class="overblack Bc" style="width: 7rem;height: 7rem;"></div>
+            <span class="fontSize12 color_CC">点击更换头像</span>
+        </div> -->
+        <div class="infopart bg_white">
+            <div class="bbd padding1 itembg flex_row_left">
+                <div class="color_black3" style="margin: 0 10px;">{{langContent.name?langContent.name:''}}</div>
+                <input class="" type="text" :placeholder="langContent.name" v-model="info.nickname" onpaste="return true">
+            </div>
+            <div class="bbd padding1 itembg flex_row_left">
+                <div class="color_black3" style="margin: 0 10px;">{{langContent.birth?langContent.birth:''}}</div>
+                <input class="" type="text" :placeholder="langContent.birth" v-model="info.birthday" @click="openTime()" readonly="readonly">
+            </div>
+            <div class="bbd padding1 itembg flex_row_left">
+                <div class="color_black3" style="margin: 0 10px;">{{langContent.sex?langContent.sex:''}}</div>
+                <input class="" type="text" :placeholder="langContent.sex" v-model="info.sex_text" @click="selectSex" readonly="readonly">
+            </div>
+            <!-- <div class="bbd padding1 itembg flex_row_left">
+                <div class="color_black3" style="margin: 0 10px;">{{langContent.city?langContent.city:''}}</div>
+                <input type="text" :placeholder="langContent.city" v-model="area" readonly="readonly" @click="cityList()">
+            </div> -->
+            <div class=" padding1 itembg flex_row_left" style="align-items: flex-start;height: auto;">
+                <div class="color_black3" style="margin: 0 10px;">{{langContent.sign?langContent.sign:''}}</div>
+                <textarea style="line-height: 30px;" :placeholder="langContent.sign_input" v-model="info.signature" maxlength="20">
+                </textarea>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    var edit = new Vue({
+        el: '#edit',
+        data: {
+            userData: {},
+            localVersion: '',
+            info: {
+                avatar: '',
+                nickname: '',
+                birthday: '',
+                sex: '',
+                sex_text: '',
+                province: '',
+                city: '',
+                county: '',
+                signature: '',
+            },
+            area: '',
+            langContent: {},
+        },
+        created: function() {
+            var that = this;
+            apiready = function() {
+                fixStatusbar('header,.header,.headers', '.content');
+                var height = $api.fixStatusBar(document.querySelector('header'));
+                var minheight = api.winHeight - height;
+                $api.css($api.dom('#edit'), 'min-height:' + minheight + 'px');
+                edit.$data.langContent = GlobleLanguageContent.edit;
+                that.mounted();
+                that.localVersion = api.appVersion;
+            }
+        },
+        methods: {
+            edit: function() {
+                var that = this;
+                var params = {
+                    nickname: that.info.nickname,
+                    birth: that.info.birthday,
+                    sex: that.info.sex,
+                    // province: that.info.province,
+                    // city: that.info.city,
+                    // county: that.info.county,
+                    sign_text: that.info.signature,
+                }
+                http(editInfoUrl, 'post', params, function(res) {
+                    if (res.code == 200) {
+                        api.toast({
+                            msg: that.langContent.sucess,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                        api.execScript({
+                            name: 'root',
+                            frameName: 'frame4',
+                            script: 'frame4.getInfo()'
+                        });
+                        api.execScript({
+                            name: 'myvideo',
+                            script: 'myvideo.getInfo()'
+                        });
+                        setTimeout(function() {
+                            goBack()
+                        }, 1500);
+                    }
+                })
+            },
+            mounted: function() {
+                var that = this;
+                http(videouserInfo, 'post', {
+                    page: 1,
+                    limit: 1
+                }, function(res) {
+                    if (res.code == 200) {
+                        that.info = res.data;
+                        // that.area = that.info.address;
+                    }
+                }, function(err) {
+                    // console.log(JSON.stringify(err));
+                })
+            },
+            cityList: function() {
+                var that = this;
+                var UIPopupsPicker = api.require('UIPopupsPicker');
+                UIPopupsPicker.open({
+                    rect: {
+                        x: 0,
+                        y: api.frameHeight - 245,
+                        w: api.frameWidth,
+                        h: 245
+                    },
+                    styles: {
+                        maskBg: 'rgba(0,0,0,0.5)',
+                        bg: '#FFFFFF', //整体的背景色
+                        button: { //标题的按钮
+                            size: 14,
+                            titleColor: '#1989fa' //按钮的颜色
+                        },
+                        color: '#ffffff', //标题的背景色
+                        resource: 'widget://res/district.json',
+                        fontColor: '#0000FF', //
+                        selectedColor: '#000000', //选中的字体颜色
+                    },
+                    fixedOn: api.frameName,
+                    fixed: true,
+                }, function(ret, err) {
+                    if (ret) {
+                        // console.log(JSON.stringify(ret));
+                        //{"province":"北京市","city":"北京市","county":"房山区"}
+                        that.info.province = ret.province;
+                        that.info.city = ret.city;
+                        that.info.county = ret.county;
+                        that.area = ret.province + ret.city + ret.county;
+                    } else {
+                        alert(JSON.stringify(err));
+                    }
+                });
+            },
+            selectSex: function() {
+                var that = this;
+                api.actionSheet({
+                    cancelTitle: that.langContent.cancel,
+                    buttons: that.langContent.sexlist,
+                }, function(ret, err) {
+                    var index = ret.buttonIndex;
+                    if (index == 1) {
+                        that.info.sex = 1
+                        that.info.sex_text = that.langContent.sexlist[0]
+                    } else {
+                        that.info.sex = 2
+                        that.info.sex_text = that.langContent.sexlist[1]
+                    }
+                })
+            },
+            openTime: function() {
+                var that = this;
+                var day = new Date()
+                var year = day.getFullYear()
+                var month = day.getMonth() + 1
+                var date = day.getDate()
+                if (month < 10) {
+                    month = '0' + day.getMonth()
+                }
+                if (day.getDate() < 10) {
+                    date = '0' + day.getDate()
+                }
+                var time = year + '-' + month + '-' + date;
+                api.openPicker({
+                    type: 'date',
+                    date: that.info.birth || '',
+                    maxDate: time,
+                    title: that.langContent.select
+                }, function(ret, err) {
+                    if (ret) {
+                        if (ret.year > year) {
+                            api.toast({
+                                msg: that.langContent.year,
+                                duration: 2000,
+                                location: 'bottom'
+                            });
+                            return;
+                        }
+                        if (ret.year == year && ret.month > (day.getMonth() + 1)) {
+                            api.toast({
+                                msg: that.langContent.month,
+                                duration: 2000,
+                                location: 'bottom'
+                            });
+                            return;
+                        }
+                        if (ret.year == year && ret.month == (day.getMonth() + 1) && ret.day > day.getDate()) {
+                            api.toast({
+                                msg: that.langContent.day,
+                                duration: 2000,
+                                location: 'bottom'
+                            });
+                            return;
+                        }
+                        that.info.birthday = ret.year + '-' + ret.month + '-' + ret.day
+                    } else {
+                        // alert(JSON.stringify(err));
+                    }
+                });
+            },
+            goimg: function() {
+                api.openFrame({
+                    name: 'printscreen',
+                    url: 'printscreen.html',
+                    rect: {
+                        x: 0,
+                        y: 0,
+                        w: 'auto',
+                        h: 'auto'
+                    }
+                });
+            },
+        }
+    });
+</script>

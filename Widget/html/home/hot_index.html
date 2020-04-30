@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>速推版</title>
+    <link rel="stylesheet" type="text/css" href="../../lib/vant/vant.css" />
+    <link rel="stylesheet" href="../../lib/iconfont2/iconfont.css">
+    <!-- <link rel="stylesheet" href="../../lib/iconfont/iconfont.css"> -->
+    <link rel="stylesheet" href="../../css/common.css">
+    <style>
+        /* 页面公用 */
+        
+        .BBB1 {
+            border-bottom: 1px solid #eeeeee;
+        }
+        
+        .b_header {
+            padding: 7px;
+            min-width: 60px;
+            text-align: center;
+            color: #666666;
+        }
+        
+        .Actvie {
+            font-weight: 600;
+            color: #cfa767;
+            border-bottom: 2px solid;
+        }
+        
+        .ioc_my {
+            width: 20px;
+            height: 20px;
+        }
+        /* ``````````````````````速推版样式```````````````````````` */
+        /* 视频头像 */
+        
+        .shipintouxiang {
+            width: 80px;
+            height: 80px;
+            /* display: inline-block; */
+            /* margin-left: 1rem; */
+            margin-bottom: 1rem;
+        }
+        
+        .shipin_title {
+            margin-left: 1rem;
+            font-size: 16px;
+        }
+        /* 用户头像 */
+        
+        .userPortrait {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 1rem;
+        }
+        /* 推荐人数 */
+        /* ```````样式````````````````` */
+        
+        .item {
+            width: calc(100% / 3 - 14px);
+            height: 40px;
+            line-height: 40px;
+            overflow: hidden;
+            margin: 6px;
+            border: 1px solid;
+            border-radius: 5px;
+            text-align: center;
+            border: 1px solid #eeeeee;
+            color: #666666;
+        }
+        /* 兴趣标签样式 */
+        
+        .labels {
+            width: calc(100% / 4 - 14px);
+            height: 30px;
+            line-height: 30px;
+            overflow: hidden;
+            margin: 6px;
+            border: 1px solid #eeeeee;
+            border-radius: 5px;
+            text-align: center;
+            color: #999999;
+        }
+        /* 兴趣标签样式 */
+        
+        .labels.labels_checked {
+            width: calc(100% / 4 - 14px);
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            overflow: hidden;
+            margin: 6px;
+            border: 1px solid #cfa767;
+            border-radius: 5px;
+            color: #cfa767;
+        }
+        /* 点击选择 推荐人数  改变背景颜色  */
+        
+        .item.checked_box {
+            width: calc(100% / 3 - 14px);
+            height: 40px;
+            line-height: 40px;
+            text-align: center;
+            overflow: hidden;
+            margin: 6px;
+            border: 1px solid #ccaa7a;
+            border-radius: 5px;
+            color: #ccaa7a;
+        }
+        /* 点赞评论量 */
+        
+        .dianzan_box {
+            flex: 6;
+            text-align: center;
+            border: 1px solid;
+            padding: 10px 0;
+            margin: 0 5px;
+        }
+        /* 点击选择  提升类型状态  改变背景颜色  */
+        
+        .dianzan_box.checked_box1 {
+            flex: 6;
+            text-align: center;
+            border: 1px solid;
+            padding: 10px 0;
+            margin: 0 5px;
+            background: #111111;
+            border: 1px solid #cfa767;
+            color: #cfa767;
+        }
+        /* ``````````````````````````````````````定向版样式`````````````````````````````````````````````````````````````````````````````````` */
+        /* 问号 */
+        
+        .ioc_wenhao {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            vertical-align: middle;
+            padding-bottom: 10px;
+        }
+        
+        .divs {
+            vertical-align: middle;
+            /* 居中对齐， */
+            font-size: 14px;
+        }
+        
+        .divs .imgs {
+            width: 20px;
+            height: 20px;
+            padding: 0px;
+            margin: 0px;
+            vertical-align: middle;
+            display: inline-block;
+        }
+        /* 点赞评论量样式 */
+        
+        .font_color {
+            font-size: 13px;
+            color: #fc3e5a;
+            padding: 0 1rem;
+        }
+        /* 定向版数量盒子 */
+        
+        .item_dx {
+            width: calc(100% / 3 - 14px);
+            height: 30px;
+            overflow: hidden;
+            margin: 6px;
+            border: 1px solid #B3A795;
+            border-radius: 5px;
+        }
+        
+        .item_dx div {
+            width: 100%;
+            line-height: 30px;
+            text-align: center;
+        }
+        /* 推荐商家小区域 */
+        
+        .hint {
+            color: #ccaa7a;
+            font-size: 10px;
+            /* background-color: #50300d; */
+            padding: .5rem;
+            border-radius: 20px;
+            margin-left: 1rem;
+        }
+        /* 预播放量数字样式 */
+        
+        .playNum {
+            width: 40px;
+            color: #fc3e5a;
+            font-size: 22px;
+            padding: 1rem;
+            margin: 0 auto;
+            text-align: center;
+            font-weight: 800;
+        }
+        /* 自定义小盒子 */
+        
+        .custom_title {
+            color: #333333;
+            /* margin-left: 2rem;
+            margin-top: 1.3rem; */
+        }
+        
+        .custom_box1 {
+            width: 4rem;
+            height: 2rem;
+            text-align: center;
+            line-height: 2rem;
+            margin-left: 2rem;
+            border-radius: 3px;
+            border: 1px solid #111111;
+            background: #111111;
+            margin-top: 1rem;
+            color: #fc3e5a;
+        }
+        
+        .custom_box2 {
+            width: 6rem;
+            height: 2rem;
+            text-align: center;
+            line-height: 2rem;
+            border: 1px solid #111111;
+            margin-left: .7rem;
+            border-radius: 3px;
+            margin-top: 1rem;
+        }
+        
+        .color_violet {
+            color: #666666;
+        }
+        
+        .paymoney {
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 40px;
+            border-top: 1px solid #eeeeee;
+            background: #ffffff;
+        }
+        
+        .lo_btn {
+            width: 55%;
+            height: 2rem;
+            line-height: 2rem;
+            text-align: center;
+            /* letter-spacing: 5px; */
+            /* border-radius: 2rem; */
+            margin: .5rem auto 0;
+            padding: .5rem;
+        }
+        
+        .color_99 {
+            color: #999999;
+        }
+        /* //单选按钮  */
+        
+        .common_radio {
+            width: 1.4rem;
+            height: 1.4rem;
+            min-width: 1.4rem;
+            min-height: 1.4rem;
+            border-radius: 50%;
+            border: 1px solid #999999;
+            position: relative;
+            display: inline-block;
+            background: #ffffff;
+        }
+        
+        .common_radio.on {
+            background: #23ab3d !important;
+            border: 1px solid #23ab3d;
+        }
+        
+        .common_radio.on::before {
+            position: absolute;
+            content: "";
+            width: 5px;
+            height: 10px;
+            top: 0.1rem;
+            left: 0.45rem;
+            border: 2px solid #fff;
+            border-top: none;
+            border-left: none;
+            -webkit-transform: rotate(45deg);
+            transform: rotate(45deg);
+        }
+        /* 确认交易密码样式 */
+        
+        .black_overlay1 {
+            position: fixed;
+            top: 0%;
+            left: 0%;
+            bottom: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, .5);
+            z-index: 10001;
+        }
+        
+        .black_overlay1 .iiii {
+            width: 80%;
+        }
+        
+        .paswdimg {
+            width: 46px;
+            height: 46px;
+            position: absolute;
+            top: -23px;
+            left: 50%;
+            transform: translate(-50%);
+        }
+        
+        .password {
+            color: #cfa767;
+            width: 90%;
+            height: 40px;
+            line-height: 40px;
+            text-indent: 10px;
+            background-color: #ffffff;
+            border-radius: 5px;
+            border: solid 1px #cfa767;
+            margin-top: 25px;
+            font-size: 14px;
+            padding: 0rem !important;
+        }
+        
+        .password::placeholder {
+            font-size: 14px;
+            color: #cfa767;
+        }
+        
+        .btn1 {
+            width: 48%;
+            height: 40px;
+            background-color: #cfa767;
+            border-radius: 5px;
+            color: #ffffff;
+            line-height: 40px;
+            text-align: center;
+            font-size: 14px;
+        }
+        
+        .btn2 {
+            width: 48%;
+            height: 40px;
+            background-color: #fdecb8;
+            border-radius: 5px;
+            color: #333333;
+            line-height: 40px;
+            text-align: center;
+            font-size: 14px;
+        }
+        
+        .popups {
+            position: fixed;
+            width: 100%;
+            bottom: 0rem;
+            z-index: 99999;
+        }
+    </style>
+</head>
+
+<body class="has_header color_black6 bg_white">
+    <div id="hot_index" class="bg_white" v-cloak>
+        <header class="header color_default1 bbd">
+            <i class="iconfont icon-xiangzuo" onclick="goBack()"></i>
+            <span class="b_header" :class="{'Actvie':type==1}" @click="switchover(1)">{{langContent.title1?langContent.title1:''}}</span>
+            <span class="b_header" :class="{'Actvie':type==2}" @click="switchover(2)">{{langContent.title2?langContent.title2:''}}</span>
+
+            <span class="tomyfeed" onclick="toPage('myvideo','../my/myvideo.html')">
+                <!-- <img src="../../image/user_mission.png" alt="" class="ioc_my"> -->
+                {{langContent.subtitle?langContent.subtitle:''}}
+            </span>
+        </header>
+
+        <!-- `````````````````````````````````````````````````````速推版```````````````````````````````````````````` -->
+        <div v-if="type==1" class="cont bg_white">
+            <div class="BBB1 flex_row_left padding1">
+                <img :src="videoinfo.video_img?videoinfo.video_img:''" alt="" class="shipintouxiang">
+                <div class="text-overflow_2 color_black6 shipin_title">
+                    {{videoinfo.title?videoinfo.title:langContent.vdesc}}
+                </div>
+            </div>
+            <div class="BBB1 padding1">
+                <!-- ``````````````````````````````````选择播放人数 ``````````````````````````````````````-->
+                <div class="fontSize14 padding1 color_black3">{{langContent.recount?langContent.recount:''}}</div>
+                <div class="flex_row_left flex_wrap">
+                    <div class="item text_center fontSize14 color_99" v-for="obj in putlist_obj" @click="renshu(obj.quantity,obj.money,obj.JXA)" :class="{'checked_box fontSize16':recomendnum == obj.quantity}">
+                        <div class="">{{obj.quantity}}+</div>
+                    </div>
+                    <!-- <div class="item text_center" @click="customcharge(6)" :class="{'checked_box':recomendnum == 6}">
+                        <div class="fontSize14">自定义</div>
+                    </div> -->
+                </div>
+                <div class="padding1 color_black6">{{langContent.comptime&&langContent.comptime.one?langContent.comptime.one:''}}
+                    <span style="color: red;">{{langContent.comptime&&langContent.comptime.two?langContent.comptime.two:''}}</span> {{langContent.comptime&&langContent.comptime.tree?langContent.comptime.tree:''}}
+                </div>
+                <!-- <div class="fontSize14 padding1 color_gold">你希望提升那一项?</div>
+                <div class="flex marginB1">
+                    <div class="dianzan_box" @click="promoteliststyle(1)" :class="{'checked_box1':promote == 1}"><span>❤ </span> 点赞评论量</div>
+                    <div></div>
+                    <div class="dianzan_box" @click="promoteliststyle(2)" :class="{'checked_box1':promote == 2}"><span>❤ </span> 粉丝量</div>
+                </div> -->
+            </div>
+            <div class="padding1 flex_row_left color_black6">
+                <div class="common_radio marginR10 text_center" :class="{'on':videostyle == true}" @click="videostyles"></div>
+                <div>{{langContent.read&&langContent.read.me?langContent.read.me:''}}
+                    <span class="color_default1" onclick="toPage('hot_agreement','./hot_agreement.html')">{{langContent.read&&langContent.read.fwxx?langContent.read.fwxx:''}}</span>{{langContent.read&&langContent.read.and?langContent.read.and:''}}
+                    <span class="color_default1" onclick="toPage('hot_require','./hot_require.html')">{{langContent.read&&langContent.read.tfyq?langContent.read.tfyq:''}}</span>
+                </div>
+            </div>
+            <div style="height: 62px;"></div>
+            <div class="flex_row_between padding1 paymoney">
+                <div class="fontSize16"> ￥<span style="color: #fc3e5a;">{{money}}</span> RMB <span style="margin-left: 1rem;">{{langContent.total?langContent.total:''}}<span class="color_gold">{{JXA}}</span>JXA</span>
+                </div>
+                <div @click="toPay()" style="background-color: #fc3e5a; padding: .5rem 2rem; color: aliceblue;">{{langContent.pay?langContent.pay:''}}</div>
+            </div>
+
+
+
+            <!-- 新写的 密码弹框-->
+            <div class="black_overlay1 flex_row_center publicpsw" v-show="isShow" @touchmove.prevent>
+                <div class="publicpswitem posi_relative padding1 bg-white text_center">
+                    <img class="paswdimg" src="../../image//tree/password.svg" alt="">
+                    <div class="flex_row_left">
+                        <input type="password" :placeholder="langContent.psw_input" v-model="password">
+                    </div>
+                    <div class="flex_row_between marginT1">
+                        <div @click.stop="submitpay(1)" class="btn">{{langContent.sure?langContent.sure:''}}</div>
+                        <div @click.stop="password='';isShow=false;" class="btn btn1">{{langContent.cancel?langContent.cancel:''}}</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- `````````````````````````````````````````````````````定向版```````````````````````````````````````````` -->
+        <div v-if="type==2" class="cont">
+            <!-- 用户视频简介 -->
+            <div class="flex_row_left BBB1 padding1">
+                <img :src="videoinfo.headImg?videoinfo.headImg:'../../image/logo.png'" alt="" class="userPortrait">
+                <div style="flex: 1;overflow: hidden;" class="text-overflow_2 color_violet">{{videoinfo.title?videoinfo.title:langContent.vdesc}}</div>
+                <img :src="videoinfo.video_img?videoinfo.video_img:'../../image/4.jpg'" alt="" class="shipintouxiang">
+            </div>
+            <!-- ``````````````````````````````````兴趣标签 ``````````````````````````````````````-->
+            <div class="">
+                <div class="fontSize14 marginT1 padding1">
+                    <span>{{langContent.op?langContent.op:''}}</span>
+                    <!-- <img src="../../image/wh.png" alt="" class="ioc_wenhao" @click="tuijianwenhao(1)"> -->
+                </div>
+                <div class="marginT1">
+                    <!-- 系统智能投放 -->
+                    <div class="flex_row_left padding1" @click="selectstyle(1)">
+                        <div class="common_radio marginR10" :class="{'on':selectstyles == 1}"></div>
+                        <div>{{langContent.op1?langContent.op1:''}}</div>
+                    </div>
+                    <!-- 自定义定向投放 -->
+                    <div class="flex_row_left padding1" @click="selectstyle(2)">
+                        <div class="common_radio marginR10" :class="{'on':selectstyles == 2}"></div>
+                        <div>{{langContent.op2?langContent.op2:''}}</div>
+                        <div class="hint">({{langContent.op3?langContent.op3:''}})</div>
+                    </div>
+                    <!-- 自定义定向投放        地域       兴趣标签(      -->
+                    <div v-if="selectstyles == 2">
+                        <!-- 地域 -->
+                        <div class="flex_row_left bbd padding1">
+                            <p class="custom_title fontSize14">{{langContent.area?langContent.area:''}}</p>
+                            <div style="flex: 1;" class="padding12 margin_top3px flex_row_left" @click="checkAdd()">
+                                <!-- 申请城市名 -->
+                                <!-- <div>{{langContent.city?langContent.city:''}}</div> -->
+                                <!-- 请选择所在城市 -->
+                                <div class="flex_row_between color_black6" style="margin-left: 1rem;">
+                                    <div>{{area}}</div>
+                                    <i class="iconfont iconjiantou-you " style="position: absolute;right: 1rem;"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 兴趣标签 -->
+                        <p class="custom_title fontSize14 padding1">{{langContent.label?langContent.label:''}}</p>
+                        <div v-if="xqlabel" class="flex_row_left flex_wrap fontSize12 padding1">
+                            <div class="labels text_center fontSize14 color_99" v-for="obj in label_obj" @click="labeldatalist(obj)" :class="{'labels_checked fontSize16':obj.checked}">
+                                <div class="">{{obj.name}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 地域选择 -->
+            <div class="popups">
+                <div>
+                    <!-- 选择国家   后获取省份数据 -->
+                    <van-tree-select v-show="isShowGlobal" :items="countrylist" :main-active-index="mainActiveIndex" @click-nav="onClickNav">
+                        <!-- 选择省份  后获取市区数据 -->
+                        <van-tree-select :items="areaList" :main-active-index="mainActiveIndexByCity" :active-id="activeId" @click-nav="onClickNavList" slot="content" @click-item="onClickItem" max="1" />
+                        <van-tree-select/>
+                </div>
+                <div class="flex_row_between bg_white" v-show="isShowGlobal">
+                    <div class="btn1" @click="affirm">{{langContent.qrxz?langContent.qrxz:''}}</div>
+                    <div class="btn2" @click="cancels">{{langContent.qxxz?langContent.qxxz:''}}</div>
+                </div>
+
+            </div>
+            <!-- ``````````````````````````````````你希望智能推荐给多少人 ``````````````````````````````````````-->
+            <div class="fontSize14 padding1 color_black3">{{langContent.recount?langContent.recount:''}}</div>
+            <div class="flex_row_left flex_wrap BBB1 marginB1 padding1">
+                <div class="item text_center fontSize14 color_99" v-for="obj in putlist_obj" @click="renshu(obj.quantity,obj.money,obj.JXA)" :class="{'checked_box fontSize16':recomendnum == obj.quantity}">
+                    <div class="">{{obj.quantity}}+</div>
+                </div>
+                <!-- <div class="item text_center" @click="customcharge(6)" :class="{'checked_box':recomendnum == 6}">
+                    <div class="fontSize14">自定义</div>
+                </div> -->
+            </div>
+            <!-- 我已阅读并同意 -->
+            <div class="padding1 flex_row_left color_black6">
+                <div class="common_radio marginR10 text_center" :class="{'on':videostyle == true}" @click="videostyles"></div>
+                <div>{{langContent.read&&langContent.read.me?langContent.read.me:''}}
+                    <span class="color_default1" onclick="toPage('hot_agreement','./hot_agreement.html')">{{langContent.read&&langContent.read.fwxx?langContent.read.fwxx:''}}</span>{{langContent.read&&langContent.read.and?langContent.read.and:''}}
+                    <span class="color_default1" onclick="toPage('hot_require','./hot_require.html')">{{langContent.read&&langContent.read.tfyq?langContent.read.tfyq:''}}</span>
+                </div>
+            </div>
+            <div style="height: 62px;"></div>
+            <div class="flex_row_between padding1 paymoney">
+                <div class="fontSize16"> ￥<span style="color: #fc3e5a;">{{money}}</span> RMB <span style="margin-left: 1rem;">{{langContent.total?langContent.total:''}}<span class="color_gold">{{JXA}}</span>JXA</span>
+                </div>
+                <div @click="toPay()" style="background-color: #fc3e5a; padding: .5rem 2rem; color: aliceblue;">{{langContent.pay?langContent.pay:''}}</div>
+            </div>
+
+            <!-- 新写的 密码弹框-->
+            <div class="black_overlay1 flex_row_center publicpsw" v-show="isShow" @touchmove.prevent>
+                <div class="publicpswitem posi_relative padding1 bg-white text_center">
+                    <img class="paswdimg" src="../../image//tree/password.svg" alt="">
+                    <div class="flex_row_left">
+                        <input type="password" class="password" :placeholder="langContent.psw_input" v-model="password">
+                    </div>
+                    <div class="flex_row_between marginT1">
+                        <div @click.stop="submitpay(2)" class="btn">{{langContent.sure?langContent.sure:''}}</div>
+                        <div @click.stop="password='';isShow=false;" class="btn btn1">{{langContent.cancel?langContent.cancel:''}}</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" charset="utf-8" src="../../lib/vant/vant.min.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    var hot_index = new Vue({
+        el: "#hot_index",
+        data: {
+            // checkeds: false, // 兴趣标签样式
+            xqlabel: true, // 兴趣标签
+            type: 1, //速推版1  定向版2
+            videostyle: false, //我已阅读并同意
+            selectstyles: 1, //投放类型
+            customnum: '', // 自定义人数 数量
+            moneynum: '', // 自定义金额  数量
+            recomendnum: 0, //推荐人数
+            promote: 1, //提升类型 点赞1  粉丝2
+
+            money: 0.000, // 后台返回的  钱
+            JXA: 0.000, // 后台返回的  JXA
+            customisShow: false, //   自定义人数区域显示隐藏
+            moneyisShow: false, //   自定义金额区域显示隐藏
+            // isShowselect: false, //  地域组件封装
+            area: '-请选择所在城市-',
+            name: '',
+            label_obj: [], //获取视频标签列表
+            label_xinshuzu: [],
+            putlist_obj: [], // 获取推送量价格列表
+            // pulist_xinshuzu: [],
+
+            videoinfo: {},
+            videotype: 0,
+            isShow: false,
+            password: '',
+            langContent: {},
+            getCodetip: {},
+            // tip: '选择城市后可查看城市等级',
+
+
+            // 选择全球城市
+            isShowGlobal: false,
+            areaList: [], // 省份城市列表,
+            activeId: [], //最后选择的城市
+            mainActiveIndex: 0, //全球选中 国家的number
+            mainActiveIndexByCity: 0, //国家选中城市的number
+            max: 1,
+            globally: {
+                // 导航名称
+                text: '所有城市',
+                // 禁用选项
+                disabled: false,
+                // 该导航下所有的可选项
+                children: []
+            }, //全球地址
+            isShowselect: false,
+            countrylist: [],
+            spread_city: '', //最后选择的城市id
+            isSmrz: 0
+        },
+        created: function() {
+            var that = this
+            apiready = function() {
+                var height = $api.fixStatusBar($api.dom('.header'))
+                if (height > 0) {
+                    $api.css($api.dom('.cont'), 'margin-top:' + (height - 45) + 'px;');
+                }
+                that.videoinfo = api.pageParam.item;
+                hot_index.$data.langContent = GlobleLanguageContent.hot_index;
+                hot_index.$data.getCodetip = GlobleLanguageContent.getCode;
+                that.area = that.langContent.areacity
+                if (that.videoinfo.video_type == 0) {
+                    that.videotype = 1
+                } else if (that.videoinfo.video_type == 1) {
+                    that.videotype = 2
+                }
+                that.getInfo()
+                    //获取视频标签列表
+                http(videoLabel, 'post', {}, function(ret) {
+
+                        that.label_obj = ret.data.info
+                        for (var i = 0; i < ret.data.info.length; i++) {
+                            that.label_obj[i].checked = false
+                        }
+                        that.label_obj = JSON.parse(JSON.stringify(that.label_obj))
+                    })
+                    // 获取推送量价格列表
+                http(putList, 'post', {
+                    type: that.videotype
+                }, function(ret) {
+                    that.putlist_obj = ret.data.list
+                    that.putlist_obj = JSON.parse(JSON.stringify(that.putlist_obj))
+                        // that.money = ret.data.money
+                        // that.JXA = ret.data.JXA
+                    that.money = 000
+                    that.JXA = 000
+                })
+            }
+        },
+        methods: {
+            //确认城市
+            affirm: function() {
+                var that = this;
+                // // 这是选择国家
+                // that.spread_city = that.mainActiveIndex;
+                // //这是选择省份
+                // that.spread_city = that.mainActiveIndexByCity;
+                that.isShowGlobal = !that.isShowGlobal;
+            },
+            // 取消选择
+            cancels: function() {
+                var that = this;
+                that.isShowGlobal = !that.isShowGlobal;
+            },
+            // 点击显示
+            checkAdd: function() {
+                var that = this;
+                that.isShowGlobal = !that.isShowGlobal;
+            },
+
+            // 左侧导航点击时，触发的事件 event.detail.index：被点击的导航的索引  这是选择国家
+            onClickNav: function(event) {
+                var that = this;
+                that.mainActiveIndex = event;
+                that.getCitylist(that.countrylist[event].id);
+                that.isShowGlobal = true;
+                that.area = that.countrylist[event].text;
+                // 传给后台的id
+                that.spread_city = that.countrylist[event].id;
+            },
+            // 左侧导航点击时，触发的事件 event.detail.index：被点击的导航的索引  这是选择省份
+            onClickNavList: function(event) {
+                var that = this;
+                that.mainActiveIndexByCity = event;
+                that.getCitylistUrl(that.areaList[event].id, event);
+                that.isShowGlobal = true;
+                that.area = that.areaList[event].text;
+                // 传给后台的id
+                that.spread_city = that.areaList[event].id;
+
+            },
+            // 右侧选择项被点击时，会触发的事件 	event.detail: 该点击项的数据
+            onClickItem: function(event) {
+                var that = this
+                that.spread_city = event.id;
+                that.globalcity = event.text;
+                that.area = event.text;
+                that.isShowGlobal = false;
+            },
+
+            //获取   省份城市列表  
+            getCitylist: function(id) {
+                var that = this;
+                http(GloballyUrl, 'post', {
+                    pid: id
+                }, function(ret) {
+                    // console.error(JSON.stringify(ret) + '//获取城市列表');
+                    if (ret.code == 200) {
+                        that.areaList = [];
+                        var arryiinfolist = ret.data.info;
+                        arryiinfolist.forEach(function(element) {
+                            that.areaList.push({
+                                text: element.name + '(' + element.name_en + ')',
+                                id: element.id
+                            })
+                        });
+                        that.areaList = JSON.parse(JSON.stringify(that.areaList))
+                            // that.areaList = ret.data;
+                            // console.log(JSON.stringify(that.areaList) + '//获取城市列表');
+                    }
+
+                })
+            },
+            //获取   城市列表    市市市市市市
+            getCitylistUrl: function(id, index) {
+                var that = this;
+                http(GloballyUrl, 'post', {
+                    pid: id
+                }, function(ret) {
+                    // console.error(JSON.stringify(ret) + '// 市市市市市市列表');
+                    if (ret.code == 200) {
+                        // that.activeId = [];
+                        var children = [];
+                        var arryiinfolistUrl = ret.data.info;
+                        arryiinfolistUrl.forEach(function(element) {
+                            children.push({
+                                text: element.name + '(' + element.name_en + ')',
+                                id: element.id,
+                                disabled: false
+                            })
+                        });
+                        that.areaList[index].children = children;
+                        that.areaList = JSON.parse(JSON.stringify(that.areaList))
+                        if (children.length == 0) {
+                            // console.log('没有市区');
+                            that.spread_city = that.areaList[index].id
+                            that.isShowGlobal = false
+                            that.globalcity = that.areaList[index].text
+                            that.area = that.areaList[index].text
+                                // console.log(that.spread_city);
+                        } else {
+                            that.spread_city = 0
+                                // console.log(that.spread_city + '默认全国');
+                        }
+                        // console.log(JSON.stringify(that.areaList) + '//获取城市列表');
+                    }
+
+                })
+            },
+
+
+            //确认支付提交
+            submitpay: function(act) {
+                var that = this;
+                if (that.password == '') {
+                    api.toast({
+                        msg: that.langContent.plpsw,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return;
+                }
+                if (that.area == '-请选择所在城市-' || that.area == '-Please select your city-') {
+                    api.toast({
+                        msg: that.langContent.areacitys,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return;
+                }
+                if (act == 1) {
+                    var param = {
+                        type: that.videotype,
+                        put_quantity: that.recomendnum,
+                        video_id: that.videoinfo.video_id,
+                        password: that.password,
+                        spread_city: 0,
+                        tags: []
+                    }
+                } else if (act == 2) {
+                    var labels = ''
+                    if (that.label_xinshuzu.length > 0) {
+                        that.label_xinshuzu.forEach(function(element) {
+                            labels = labels + element + ','
+                        });
+                    }
+                    var param = {
+                        type: that.videotype,
+                        put_quantity: that.recomendnum,
+                        video_id: that.videoinfo.video_id,
+                        password: that.password,
+                        spread_city: that.spread_city,
+                        tags: labels
+                    }
+                }
+                //视频上热门
+                // console.log(that.spread_city);
+                http(addVorderUrl, 'post', param, function(ret) {
+                    if (ret.code == 200) {
+                        that.isShow = false
+                        api.toast({
+                            msg: that.langContent.sucess,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                        api.execScript({
+                            name: 'root',
+                            frameName: 'frame0',
+                            script: 'frame0.closeFrames();'
+                        });
+                        setTimeout(function() {
+                            goBack()
+                        }, 2500)
+                    }
+                })
+            },
+            toPay: function() {
+                var that = this;
+                if (that.videostyle) {
+                    if (that.recomendnum != 0) {
+                        that.isShow = true
+                    } else {
+                        api.toast({
+                            msg: that.langContent.count,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                        return;
+                    }
+                } else {
+                    api.toast({
+                        msg: that.langContent.agree,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return;
+                }
+            },
+            getInfo: function() {
+                var that = this;
+                http(getQuhao, 'post', {}, function(ret) {
+                    // console.error(JSON.stringify(ret) + '//获取全球城市列表');
+                    if (ret.code == 200) {
+                        // that.globally.children = ret.data.info;
+                        var arryiinfo = ret.data.info;
+                        arryiinfo.forEach(function(element) {
+                            that.countrylist.push({
+                                text: element.name + '(' + element.name_en + ')',
+                                id: element.id
+                            })
+                        });
+                        setTimeout(function() {
+                            // that.isShowGlobal = true;
+                            that.getCitylist(that.countrylist[0].id)
+                        }, 1000);
+                    }
+                    // console.log(JSON.stringify(arryiinfo) + '//获取全球城市列表');
+                })
+            },
+            // 选择播放人数
+            renshu: function(id, money, JXA) {
+                var that = this
+                that.recomendnum = id
+                that.money = money
+                that.JXA = JXA
+                return
+            },
+            // label_obj:   模拟数据的数组
+            labeldatalist: function(obj) {
+                var that = this
+                if (!obj.checked) {
+                    if (that.label_xinshuzu.length < 3) {
+                        obj.checked = !obj.checked
+                        that.label_xinshuzu.push(obj.id)
+                    } else {
+                        api.toast({
+                            msg: that.langContent.most,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                        return
+                    }
+                } else {
+                    if (that.label_xinshuzu.length == 1) {
+                        api.toast({
+                            msg: that.langContent.least,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                        return
+                    } else {
+                        obj.checked = !obj.checked
+                        for (var i = 0; i < that.label_xinshuzu.length; i++) {
+                            if (that.label_xinshuzu[i] == obj.id) {
+                                that.label_xinshuzu.splice(i, 1)
+                            }
+                        }
+
+                    }
+
+                }
+            },
+
+            // 单选按钮
+            videostyles: function() {
+                var that = this;
+                that.videostyle = !that.videostyle
+                return that.videostyle
+            },
+            // 单选按钮
+            selectstyle: function(type) {
+                var that = this;
+                if (type == 1) {
+                    that.selectstyles = type;
+                    that.area = that.langContent.areacity;
+                    that.province = '';
+                    that.city = '';
+                    that.spread_city = 0;
+                    that.label_xinshuzu = [];
+                    for (var i = 0; i < that.label_obj.length; i++) {
+                        that.label_obj[i].checked = false
+                    }
+                    return that.selectstyles
+                } else if (type == 2) {
+                    that.selectstyles = type
+                    return that.selectstyles
+
+                }
+            },
+            //   提升类型  点赞 粉丝量
+            promoteliststyle: function(listtype) {
+                var that = this;
+                that.promote = listtype
+            },
+            //  速推版  定向版选择
+            switchover: function(type) {
+                var that = this;
+                that.type = type
+            },
+
+            toPage: function(name, url, params) {
+                api.openWin({
+                    name: name,
+                    url: url,
+                    reload: true,
+                    pageParam: params || {}
+                });
+            },
+
+        }
+    })
+</script>

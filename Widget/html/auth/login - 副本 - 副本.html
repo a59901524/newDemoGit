@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>登录</title>
+    <link rel="stylesheet" type="text/css" href="../../lib/vant/vant.css" />
+    <link rel="stylesheet" type="text/css" href="../../lib/iconfont2/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <style>
+        /* body  */
+
+        .main {
+            height: 100%;
+            width: 100%;
+            background: url('../../image/login_bgimg.jpg') no-repeat left top;
+            /* background-size: 100% 100%; */
+            background-size: cover;
+            background-position: center;
+        }
+
+        .phone_num {
+            padding: .4rem 1rem;
+            border-radius: 2rem;
+            border: .5px solid #bbbbbb;
+        }
+
+        .login_psw {
+            margin-top: 2rem;
+            padding: .4rem 1rem;
+            border-radius: 2rem;
+            border: .5px solid #bbbbbb;
+        }
+
+        .iconfont {
+            color: #ffffff;
+            font-size: 1.5rem;
+        }
+
+        .login_btn1 {
+            width: 80vw;
+            color: #fff;
+            /* background: linear-gradient(180deg, rgb(206, 163, 95) 0%, rgb(147, 106, 56) 100%); */
+            background: #dcaf57;
+            border-radius: 2rem;
+            padding: .5rem .2rem;
+            text-align: center;
+            margin: 2rem auto;
+            letter-spacing: 12px;
+        }
+
+        input {
+            text-indent: .2rem;
+            font-size: 1.2rem;
+            line-height: 2rem;
+            height: 2rem;
+            color: #ffffff;
+        }
+
+        input::placeholder {
+            font-size: 1.2rem;
+            line-height: 2rem;
+            color: #ffffff;
+        }
+
+        .iconfont {
+            font-size: 22px;
+        }
+
+        .quhao {
+            white-space: nowrap;
+            width: auto;
+            padding: 0 3px;
+            font-size: 1.2rem;
+            line-height: 2rem;
+            color: #ffffff;
+        }
+
+        .van-picker-column__item {
+            text-align: left;
+            padding-left: 15px;
+        }
+    </style>
+
+</head>
+
+<body class="">
+    <div id="login" class="main flex_col_center color_white" :style="{ height: bodyHeight + 'px' }" v-cloak>
+        <div class="" style="margin-top: 20%;">
+            <div @click="selectlang()" class="flex_row_right color_CC padding1" style="display:none;">{{langname?langname:''}}<i class="iconfont icon-direction_down-copy fontSize16 color_white"></i></div>
+            <div class="phone_num flex_row_left">
+                <i class="iconfont icon-shouji  fontSize20"></i>
+                <div @click="showPicker=true" class="quhao"  style="display:none;">{{area_code?area_code:''}}</div>
+                <i @click="showPicker=true" class="iconfont icon-direction_down-copy  fontSize16 color_CC" style="color:#ccc;display:none;"></i>
+                <input class="flex_grow1" type="tel" :placeholder="langContent.phone" v-model="info.mobile">
+            </div>
+            <div class="login_psw flex_row_left">
+                <i class="iconfont icon-mima fontSize20 "></i>
+                <input class="flex_grow1" type="password" :placeholder="langContent.psw " v-model="info.password">
+            </div>
+            <div class="login_btn1 fontSize16" @click="login()" style="background-color:rgb(31, 226, 255)">{{langContent.loginbtn?langContent.loginbtn:''}}</div>
+            <div class="flex_row_between fontSize14 color_white">
+                <span class="link" onclick="toPage( 'forget', '../../html/auth/forget.html', {isShow: 1 }) ">{{langContent.forget?langContent.forget:''}}</span>
+                <span class="link" onclick="toPage( 'register', '../../html/auth/register.html', {}) ">{{langContent.reg?langContent.reg:''}}</span>
+            </div>
+        </div>
+        <van-popup v-model="showPicker" position="bottom">
+            <van-picker show-toolbar title="" :cancel-button-text="getCodetip.vant_cancel_button_text" :confirm-button-text="getCodetip.vant_confirm_button_text" :columns="columns" @cancel="onCancel" @confirm="onConfirm" />
+        </van-popup>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript " src="../../script/api.js "></script>
+<script type="text/javascript " src="../../lib/vue/vue.js "></script>
+<script type="text/javascript " src="../../script/rsa.js "></script>
+<script type="text/javascript " src="../../script/aes.js "></script>
+<script type="text/javascript " src="../../script/const.js "></script>
+<script type="text/javascript " src="../../script/common.js "></script>
+<script src="../../lib/vant/vant.min.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="../../lib/md5.js"></script>
+<script type="text/javascript ">
+    var login = new Vue({
+        el: "#login ",
+        data: {
+            info: {
+                mobile: '',
+                password: '',
+                type: 'pwd'
+            },
+            machine_code: '',
+            ajpush: null,
+            bodyHeight: '',
+            // mobile: '',
+            // code: '',
+            // verifyCodeTips: '获取验证码',
+            // codeEnable: true,
+            // countdown: 60,
+            langContent: {},
+            getCodetip: {},
+            localVersion: '',
+            area_code: 86,
+            columns: [],
+            showPicker: false,
+            quhaolist: [],
+            langname: '简体中文'
+        },
+        created: function() {
+            var that = this;
+            apiready = function() {
+                setTimeout(function() {
+                    api.setStatusBarStyle({
+                        style: 'light',
+                        color: 'rgba(0,0,0,0)'
+                    });
+                }, 200);
+                that.ajpush = api.require('ajpush');
+                // that.machine_code = api.deviceId;
+				if (that.ajpush) {
+					if (api.systemType == 'android') {
+						that.ajpush.init(function(ret) {
+							if (ret && ret.status) {
+								that.ajpush.getRegistrationId(function(ret) {
+									if (ret && ret.id) {
+										that.machine_code = ret.id;
+									} else {
+										api.toast({
+											msg: that.getCodetip.machine_code,
+											duration: 2000,
+											location: 'bottom'
+										});
+									}
+								});
+							}
+						});
+					} else {
+						that.ajpush.getRegistrationId(function(ret) {
+							if (ret && ret.id) {
+								that.machine_code = ret.id;
+							} else {
+								api.toast({
+									msg: that.getCodetip.machine_code,
+									duration: 2000,
+									location: 'bottom'
+								});
+							}
+						});
+					}
+				}
+                that.localVersion = api.appVersion;
+                setTimeout(function() {
+                    api.sendEvent({
+                        name: 'pause',
+                        extra: {}
+                    });
+                }, 1000);
+                that.getAreacode();
+                login.$data.getCodetip = GlobleLanguageContent.getCode;
+                login.$data.langContent = GlobleLanguageContent.login;
+                that.langname = that.langContent.langname;
+                that.getQUnum()
+                if ($api.getStorage('loginmobile')) {
+                    that.info.mobile = $api.getStorage('loginmobile')
+                }
+            }
+        },
+
+        mounted: function() {
+            this.bodyHeight = document.documentElement.clientHeight
+        },
+        methods: {
+            getAreacode: function() {
+                var that = this;
+                if ($api.getStorage('area_code')) {
+                    that.area_code = $api.getStorage('area_code')
+                        // if (that.area_code == '86') {
+                        //     $api.setStorage('multiLangname', 'cn');
+                        // } else {
+                        //     $api.setStorage('multiLangname', 'en');
+                        // }
+                        // setLang()
+                };
+            },
+            selectlang: function() {
+                var that = this;
+                api.actionSheet({
+                    title: that.langContent.lang,
+                    cancelTitle: that.langContent.cancel,
+                    buttons: ['简体中文', 'English']
+                }, function(ret, err) {
+                    var index = ret.buttonIndex;
+                    if (index == 1) {
+                        $api.setStorage('multiLang', 'cn');
+                        $api.setStorage('multiLangname', 'cn');
+                        api.rebootApp();
+                    } else if (index == 2) {
+                        $api.setStorage('multiLang', 'en');
+                        $api.setStorage('multiLangname', 'en');
+                        api.rebootApp();
+                    }
+                    setLang();
+                    login.$data.getCodetip = GlobleLanguageContent.getCode;
+                    login.$data.langContent = GlobleLanguageContent.login;
+                    that.langname = that.langContent.langname;
+                });
+            },
+            onConfirm: function(value, index) {
+                var that = this;
+                that.area_code = that.quhaolist[index].area_code;
+                $api.setStorage('area_code', that.area_code);
+                // if (that.area_code == '86') {
+                //     $api.setStorage('multiLangname', 'cn');
+                // } else {
+                //     $api.setStorage('multiLangname', 'en');
+                // }
+                // setLang();
+                // login.$data.getCodetip = GlobleLanguageContent.getCode;
+                // login.$data.langContent = GlobleLanguageContent.login;
+                that.showPicker = false;
+            },
+            onCancel: function() {
+                var that = this;
+                that.showPicker = false;
+            },
+            getQUnum: function() {
+				return;
+				/*
+                var that = this;
+                http(getQuhao, 'post', {}, function(ret) {
+                    if (ret && ret.code == 200) {
+                        that.quhaolist = ret.data.info;
+                        that.quhaolist.forEach(function(element) {
+                            that.columns.push(element.area_code + ' ' + element.name + ' (' + element.name_en + ')')
+                        });
+                    } else {
+                        api.toast({
+                            msg: ret.msg,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                    }
+                }, function(err) {});
+				*/
+            },
+            //极光推送
+            initJpush: function() {
+                var that = this;
+                that.ajpush = api.require('ajpush');
+				if (!that.ajpush) {
+					return;
+				}
+                var appBundle = api.systemType;
+                if (appBundle == 'android') {
+                    that.ajpush.init(function(ret) {
+                        if (ret && ret.status) {
+                            that.bindJpush();
+                        } else {}
+                    });
+                } else if (appBundle == 'ios') {
+                    that.bindJpush();
+                }
+                //打开软件时清除ios角标
+                that.ajpush.setBadge({
+                    badge: 0
+                });
+
+                //在前台时自行处理的回调
+                that.ajpush.setListener(debounce(function(ret) {
+                    var uid = $api.getStorage('uid');
+                    var token = $api.getStorage('token');
+                    if (uid && token) {
+                        if (ret) {
+                            var content = ret['0'].content;
+                            var extra = ret['0'].extra;
+                            api.confirm({
+                                title: that.getCodetip.jpushtip,
+                                msg: content,
+                                buttons: that.getCodetip.jpushbtn
+                            }, function(ret, err) {
+                                var index = ret.buttonIndex;
+                                if (index == 1) {
+                                    jpushSkip(extra);
+                                }
+                            });
+                        }
+                    }
+                }, 3000));
+
+                function debounce(func, wait) {
+                    var timeout;
+                    return function(ret) {
+                        if (timeout) clearTimeout(timeout);
+                        var callNow = !timeout;
+                        timeout = setTimeout(function() {
+                            timeout = null;
+                        }, wait)
+                        if (callNow) func.call(this, arguments, ret);
+                    }
+                }
+            },
+            //推送跳转的方法
+            jpushSkip: function(extra) {
+                var that = this;
+                if (extra.type == 'user_pipei') { //打款
+                    api.sendEvent({
+                        name: 'pushJYXX',
+                        extra: {}
+                    });
+                } else if (extra.type == 'user_dakuan') { //提示确认收款
+                    api.sendEvent({
+                        name: 'pushJYXX',
+                        extra: {}
+                    });
+                }
+                that.ajpush.setBadge({
+                    badge: 0
+                });
+            },
+            //设备id绑定极光推送
+            bindJpush: function() {
+                var that = this;
+                var uid = $api.getStorage('uid');
+                var token = $api.getStorage('token');
+                if (uid && token) {
+                    http(getuserinfoUrl, 'post', {}, function(ress) {
+                        if (ress.code == 200) {
+                            that.ajpush.getRegistrationId(function(ret, err) {
+                                if (ret && ret.id) {
+                                    var registrationId = ret.id;
+                                    http(RegistrationIdUrl, 'post', {
+                                        push_id: registrationId
+                                    }, function(res) {
+                                        if (res.code == 200) {
+                                            var param = {
+                                                alias: registrationId,
+                                                tags: []
+                                            };
+                                            that.ajpush.bindAliasAndTags(param, function(rets) {
+                                                var statusCode = rets.statusCode;
+                                            });
+                                        }
+                                    });
+                                }
+                            });
+                        } else if (ress.code == 401) {
+                            that.ajpush.removeListener();
+                            http(RegistrationIdUrl, 'post', {
+                                push_id: ''
+                            }, function(res) {});
+                        }
+                    })
+                } else {
+                    that.ajpush.removeListener();
+                    http(RegistrationIdUrl, 'post', {
+                        push_id: ''
+                    }, function(res) {});
+                }
+            },
+            toRegister: function() {
+                toPage('register', '../../html/auth/register.html', {});
+            },
+            toUppwd: function() {
+                toPage('forget', '../../html/auth/forget.html', {
+                    type: 1
+                });
+            },
+            // getToken: function(uid) {
+            //     var that = this;
+            //     var parmas = {
+            //         appid: 'A6015308327436',
+            //         nonce: "5321",
+            //         uid: uid,
+            //         timestamp: Date.parse(new Date()) / 1000,
+            //     }
+            //     var key = 'IxQxi9GoDOAUxrNX';
+            //     var string = 'appid=' + parmas.appid + '&nonce=' + parmas.nonce + '&timestamp=' + parmas.timestamp + '&uid=' + uid + '&key=' + key;
+            //     var sign = hex_md5(string).toLowerCase();
+            //     parmas.sign = sign;
+            //     http(accessTokenUrl, 'post', parmas,
+            //         function(ret, err) {
+            //             if (ret && ret.code == 200) {}
+            //         })
+            // },
+            login: function() {
+                var that = this;
+                // if (/^1[3-9]\d{9}$/.test(that.info.mobile)) {
+                // } else {
+                //     api.toast({
+                //         msg: '请输入合法手机号',
+                //         duration: 2000,
+                //         location: 'bottom'
+                //     });
+                //     return;
+                // }
+                if (that.info.mobile == '') {
+                    api.toast({
+                        msg: that.getCodetip.phonetip,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return;
+                }
+                if (that.info.password == '') {
+                    api.toast({
+                        msg: that.getCodetip.pswtip,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return;
+                }
+                var param = {
+                    mobile: that.info.mobile,
+                    password: that.info.password,
+                    machine_code: that.machine_code,
+                    version: api.appVersion,
+                    area_code: that.area_code
+                }
+                http(mobileLoginUrl, 'post', param, function(ret) {
+                    if (ret && ret.code == 200) {
+                        $api.setStorage('uid', ret.data.uid);
+                        $api.setStorage('token', ret.data.token);
+                        $api.setStorage('loginmobile', that.info.mobile);
+                        api.toast({
+                            msg: ret.msg,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                        that.initJpush();
+                        setTimeout(function() {
+                            api.closeWin();
+                        }, 2000);
+                        // ios推送监听
+                        api.addEventListener({
+                                name: 'noticeclicked'
+                            }, function(rets, err) {
+                                if (rets && rets.value) {
+                                    var ajpush = rets.value;
+                                    var extra = ajpush.extra;
+                                    that.jpushSkip(extra);
+                                }
+                            })
+                            //Android 推送监听
+                        api.addEventListener({
+                            name: 'appintent'
+                        }, function(rets, err) {
+                            if (rets && rets.appParam.ajpush) {
+                                var ajpush = rets.appParam.ajpush;
+                                var extra = ajpush.extra;
+                                that.jpushSkip(extra);
+                            }
+                            if ((api.systemType == "ios " || api.systemType == "IOS ") && ret && ret.appParam.is_certify) {
+                                api.execScript({
+                                    name: 'attestation',
+                                    script: 'attestation.checkCertify()'
+                                });
+                            }
+                        })
+                        api.closeFrame({
+                            name: 'tabBar'
+                        });
+                        /*
+                        api.sendEvent({
+                            name: 'dailyPlayVideo',
+                            extra: {}
+                        });
+                        api.execScript({
+                            name: 'root',
+                            frameName: 'frame0',
+                            script: 'frame0.getlable();frame0.reloadlang()'
+                        }); */
+                        api.execScript({
+                            name: 'root',
+                            frameName: 'frame0',
+                            script: 'frame0.reloadlang()'
+                        });
+                        api.execScript({
+                            name: 'root',
+                            frameName: 'frame1',
+                            script: 'frame1.reloadlang()'
+                        });
+                        api.execScript({
+                            name: 'root',
+                            frameName: 'frame2',
+                            script: 'frame2.reloadlang()'
+                        });
+                        api.execScript({
+                            name: 'root',
+                            frameName: 'frame3',
+                            script: 'frame3.reloadlang()'
+                        });
+                        setTimeout(function() {
+                            api.execScript({
+                                name: 'root',
+                                frameName: 'tabBar',
+                                script: 'tabBar.reloadlang();'
+                            });
+                        }, 10);
+                        if (api.pageParam.from == 'home') {
+                            api.execScript({
+                                name: 'root',
+                                frameName: 'frame0',
+                                script: 'frame0.getList()'
+                            });
+                        }
+                        if (api.pageParam.from == 'ysjzc') {
+                            api.execScript({
+                                name: 'root',
+                                frameName: 'frame2',
+                                script: 'frame2.getInfo()'
+                            });
+                        }
+                        if (api.pageParam.from == 'center') {
+                            api.execScript({
+                                name: 'root',
+                                frameName: 'frame4',
+                                script: 'frame4.getInfo()'
+                            });
+                        }
+                        if (api.pageParam.from == 'other') {
+                            api.execScript({
+                                name: 'other',
+                                script: 'other.getInfo()'
+                            });
+                        }
+                        if (api.pageParam.from == 'setting') {
+                            api.execScript({
+                                name: 'root',
+                                frameName: 'frame4',
+                                script: 'frame4.getInfo()'
+                            });
+                            api.closeWin({
+                                name: 'setting'
+                            });
+                        }
+
+                    } else {
+                        api.toast({
+                            msg: ret.msg,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                    }
+                }, function(err) {
+                    // alert(err);
+                });
+            },
+            wxLogin: function() {
+                var wx = api.require('wx');
+                wx.auth({
+                    apiKey: ''
+                }, function(ret, err) {
+                    if (ret.status) {
+                        wx.getToken({
+                            apiKey: '',
+                            apiSecret: '',
+                            code: ret.code
+                        }, function(ret1, err1) {
+                            if (ret1.status) {
+                                wx.getUserInfo({
+                                    accessToken: ret1.accessToken,
+                                    openId: ret1.openId
+                                }, function(ret2, err2) {
+                                    if (ret2.status) {
+                                        var param = {
+                                            unionid: ret2.unionid,
+                                            nickname: ret2.nickname,
+                                            sex: ret2.sex,
+                                            avatar: ret2.headimgurl
+                                        };
+                                        http(wechatloginUrl, 'post', param,
+                                            function(ret3) {
+                                                if (ret3.code == 200) {
+                                                    $api.setStorage('userInfo', ret3.data);
+                                                    if (api.pageParam.from == 'other') {
+                                                        api.execScript({
+                                                            name: 'other',
+                                                            script: 'other.getInfo()'
+                                                        });
+                                                    }
+                                                    if (api.pageParam.from == 'home') {
+                                                        api.execScript({
+                                                            name: 'root',
+                                                            frameName: 'frame0',
+                                                            script: 'frame0.getList()'
+                                                        });
+                                                    }
+                                                    if (api.pageParam.from == 'center') {
+                                                        api.execScript({
+                                                            name: 'root',
+                                                            frameName: 'frame4',
+                                                            script: 'frame4.getInfo()'
+                                                        });
+                                                    }
+                                                    if (api.pageParam.from == 'setting') {
+                                                        api.execScript({
+                                                            name: 'root',
+                                                            frameName: 'frame4',
+                                                            script: 'frame4.getInfo()'
+                                                        });
+                                                        api.closeWin({
+                                                            name: 'setting'
+                                                        });
+                                                    }
+                                                    api.closeWin();
+                                                }
+                                            },
+                                            function(err) {
+                                                // alert(JSON.stringify(err));
+                                            });
+                                    } else {
+                                        // alert(err2.code);
+                                    }
+                                });
+                            } else {
+                                // alert(err1.code);
+                            }
+                        });
+                    } else {
+                        // alert(err.code);
+                    }
+                });
+            },
+            getCode: function() {
+                var that = this;
+                if (that.codeEnable) {
+                    if (/^1[3-9]\d{9}$/.test(this.mobile)) {
+                        // 提交JSON数据
+                        that.getCodeFromServer();
+                    } else {
+                        api.toast({
+                            msg: '请输入合法手机号',
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                    }
+                } else {
+                    api.toast({
+                        msg: '请稍后再获取验证码',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+            },
+            getCodeFromServer: function() {
+                var that = this;
+                var param = {
+                    mobile: that.mobile,
+                }
+                http(sendMsgUrl, 'post', param, function(ret) {
+                    // console.log(JSON.stringify(ret))
+                    if (ret && ret.code == 200) {
+                        api.toast({
+                            msg: ret.msg,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                        //发送验证码成功后开始倒计时
+                        that.codeEnable = false;
+                        that.countdown = 60;
+                        // that.settime('new');
+                        settime();
+                    } else {
+                        api.toast({
+                            msg: ret.msg,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                    }
+                }, function(err) {
+                    // alert(err);
+                });
+            },
+        }
+    });
+    var settime = function() {
+        if (login.countdown == 1) {
+            login.countdown = 60;
+            login.verifyCodeTips = "获取验证码 ";
+            login.codeEnable = true;
+            return;
+        } else {
+            login.countdown--;
+        }
+        setTimeout("setCountdown() ", 1000)
+    }
+
+    var setCountdown = function() {
+        login.verifyCodeTips = "重新获取( " + login.countdown + "s) ";
+        this.settime();
+    }
+</script>

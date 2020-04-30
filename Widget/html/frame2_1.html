@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>Document</title>
+    <link rel="stylesheet" href="../lib/iconfont2/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+    <link rel="stylesheet" type="text/css" href="../css/new/reset.css">
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background: #000000;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+            background-image: url(../image/ysjzcbg.gif);
+            background-repeat: no-repeat;
+            background-size: 100% auto;
+            background-position: center;
+        }
+
+        .conversion {
+            color: #5fa7ff;
+            border-radius: 4px;
+            border: solid 1px #00a0e9;
+            padding: .1rem .2rem;
+            font-size: 12px;
+        }
+
+        .header {
+            background-color: #000 !important;
+            color: #ffffff !important;
+        }
+    </style>
+    <script src="../script/lib-flexible.js"></script>
+</head>
+
+<body class="color_CC">
+    <div id="frame2_1" class="content" v-cloak>
+        <header class="header ">
+            <i class="iconfont icon-xiangzuo " style="color: #ffffff !important;" onclick="goBack()"></i>
+            <div>转换HD</div>
+        </header>
+        <div class="fontSize14 marginT1 padding1 flex_row_between">
+            <div>{{langContent.kyyzc?langContent.kyyzc:''}}：<span style="color: #f3d577; font-size: 0.5rem;">{{info.world_use_money?info.world_use_money:'0'}}</span></div>
+            <div class="conversion" @click="toPage('fram2transformation','my/fram2transformation.html',{transtype:2})">{{langContent.zczh?langContent.zczh:''}}</div>
+        </div>
+        <div class="fontSize14  padding1">{{langContent.yzc?langContent.yzc:''}}：{{info.world_money?info.world_money:'0'}}</div>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../script/rsa.js"></script>
+<script type="text/javascript" src="../script/aes.js"></script>
+<script type="text/javascript" src="../script/const.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript">
+    var frame2_1 = new Vue({
+        el: "#frame2_1",
+        data: {
+            info: {},
+            langContent: {},
+        },
+        created: function() {
+            var that = this
+            apiready = function() {
+                fixStatusbar('header,.header,.headers', '.content');
+                if (api.deviceModel == 'iPhone10,3' || api.deviceModel == 'iPhone10,6' || api.deviceModel == 'iPhone11,8' || api.deviceModel == 'iPhone11,2' || api.deviceModel == 'iPhone11,6' || api.deviceModel == 'iPhone11,4') {
+                    bottomheight = api.safeArea.bottom + 90;
+                    $api.css($api.dom('.btn'), 'bottom: ' + bottomheight + 'px');
+                }
+                setTimeout(function() {
+                    api.bringFrameToFront({
+                        from: 'tabBar'
+                    });
+                }, 1);
+                frame2_1.$data.langContent = GlobleLanguageContent.frame2_1;
+                that.getInfo()
+                api.setStatusBarStyle({
+                    style: 'light',
+                    color: 'rgba(0,0,0,0)'
+                });
+            }
+        },
+        methods: {
+            getInfo: function() {
+                var that = this;
+                http(getuserinfoUrl, 'get', {}, function(ret) {
+                    if (ret.code == 200) {
+                        that.info = ret.data;
+                    } else if (ret.code == 401) {
+                        api.sendEvent({
+                            name: 'pause',
+                            extra: {}
+                        });
+                        toPage('login', 'auth/login.html', {
+                            from: 'ysjzc'
+                        });
+                    }
+                })
+            },
+            openFrame: function() {
+                api.openFrame({
+                    name: 'frame1_comment',
+                    url: 'comment/frame1_comment.html',
+                    rect: {
+                        x: 0,
+                        y: $api.dom(".header").offsetHeight,
+                        w: 'auto',
+                        h: api.frameHeight - $api.dom('.header').offsetHeight - 57
+                    },
+                    reload: true,
+                    pageParam: {}
+                })
+            },
+            toPage: function(name, url, params) {
+                api.setStatusBarStyle({
+                    style: 'dark',
+                    color: 'rgba(0,0,0,0)'
+                });
+                api.openWin({
+                    name: name,
+                    url: url,
+                    reload: true,
+                    pageParam: params || {}
+                });
+            }
+        }
+    })
+</script>

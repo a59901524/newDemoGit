@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>拍摄按钮</title>
+    <link rel="stylesheet" type="text/css" href="../../lib/iconfont/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/frame2.css" />
+    <style>
+        body,
+        html {
+            background: rgba(0, 0, 0, 0);
+            /* color: #ea387f; */
+            color: #ffffff;
+        }
+        
+        .beautyitem {
+            height: 75px;
+            width: 100%;
+            font-size: 12px;
+        }
+        
+        .beautyitem img {
+            width: 25px;
+            height: 25px;
+            margin: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="beautySet" v-cloak>
+        <img v-show="recordStatus&&!isShowbeauty" @click="back" class="back" style="top:15px;" src="../../image/whiteback.png" alt="" />
+        <div v-show="recordStatus&&!isShowbeauty" class="beauty flex_col_between text_center fontSize12">
+            <div class="beautyitem" @click="beautyturn(1)">
+                <img src="../../image/turn.png" alt="" />
+                <div>{{langContent.fz?langContent.fz:''}}</div>
+            </div>
+            <div class="beautyitem" @click="beautyturn(2)">
+                <img v-show="isOpenlight" src="../../image/openlight.png" alt="" />
+                <img v-show="!isOpenlight" src="../../image/closelight.png" alt="" />
+                <div>{{langContent.sgd?langContent.sgd:''}}</div>
+            </div>
+            <div class="beautyitem" @click="beautyturn(3)">
+                <img src="../../image/beauty.png" alt="" />
+                <div>{{langContent.my?langContent.my:''}}</div>
+            </div>
+            <!-- <div class="beautyitem" @click="openMusic()">
+                <img src="../../image/music.png" alt="" />
+                <div>音乐</div>
+            </div> -->
+        </div>
+
+        <div v-show="recordStatus&&!isShowbeauty" class="spead flex_row_center color_white fontSize12 text_center">
+            <div v-for="obj in spead" :class="{'on' : selectspead == obj.id}" @click="changespead(obj.id)">
+                {{obj.name}}
+            </div>
+        </div>
+        <div v-show="recordStatus&&!isShowbeauty" class="paibtn" @click="Actoshot()">{{langContent.djp?langContent.djp:''}}</div>
+        <img v-show="(!recordStatus)&&!isShowbeauty" class="paibtn" style="background: rgba(0,0,0,0);" src="../../image/stop.png" @click="stop()">
+        <div v-show="!canupload&&!isShowbeauty" class="upload" style="z-index: 2;" @click="uploadgetVideo()">
+            <img src="../../image/upload.png" alt="" />
+            <div>{{langContent.sc?langContent.sc:''}}</div>
+        </div>
+
+        <div v-show="recordStatus&&!isShowbeauty" class="upload flex_row_between" style="z-index: 1;">
+            <!-- <img v-show="candelect" src="../../image/delete.png" alt="" @click="deleteLastFile()" /> -->
+            <img v-show="canupload" src="../../image/yes.png" alt="" @click="save()" />
+        </div>
+
+        <div v-show="isShowbeauty" class="overblack" @click="closeFilter()">
+        </div>
+        <div v-show="isShowbeauty&&beautytype==1" class="meiyanpart">
+            <div class="meiyan width100 flex_row_around">
+                <span>{{langContent.my?langContent.my:''}}:</span>
+                <input type="range" name="range_beauty" id="range_beauty" v-model="beauty" @input="changeBeauty(1,beauty)" />
+                <span>{{beauty}}</span>
+            </div>
+            <div class="meiyan width100 flex_row_around">
+                <span>{{langContent.mb?langContent.mb:''}}:</span>
+                <input type="range" name="range_white" id="range_white" v-model="white" @input="changeBeauty(2,white)" />
+                <span>{{white}}</span>
+            </div>
+            <div class="meiyan width100 flex_row_around">
+                <span>{{langContent.hr?langContent.hr:''}}:</span>
+                <input type="range" name="range_redden" id="range_redden" v-model="redden" @input="changeBeauty(3,redden)" />
+                <span>{{redden}}</span>
+            </div>
+        </div>
+        <div v-show="isShowbeauty&&beautytype==3" class="meiyanpart">
+            <div class="meiyan width100 flex_row_around">
+                <span>{{langContent.dy?langContent.dy:''}}:</span>
+                <input type="range" name="eye_beauty" id="eye_beauty" v-model="eyeSize" @input="changeBeauty(4,eyeSize)" />
+                <span>{{eyeSize}}</span>
+            </div>
+            <div class="meiyan width100 flex_row_around">
+                <span>{{langContent.xb?langContent.xb:''}}:</span>
+                <input type="range" name="chin_beauty" id="chin_beauty" v-model="chinSize" @input="changeBeauty(5,chinSize)" />
+                <span>{{chinSize}}</span>
+            </div>
+            <div class="meiyan width100 flex_row_around">
+                <span>{{langContent.sb?langContent.sb:''}}:</span>
+                <input type="range" name="nose_beauty" id="nose_beauty" v-model="noseSize" @input="changeBeauty(6,noseSize)" />
+                <span>{{noseSize}}</span>
+            </div>
+            <div class="meiyan width100 flex_row_around">
+                <span>{{langContent.zx?langContent.zx:''}}:</span>
+                <input type="range" name="mouth_beauty" id="mouth_beauty" v-model="mouthWidth" @input="changeBeauty(7,mouthWidth)" />
+                <span>{{mouthWidth}}</span>
+            </div>
+            <div class="meiyan width100 flex_row_around">
+                <span>{{langContent.mx?langContent.mx:''}}:</span>
+                <input type="range" name="arch_beauty" id="arch_beauty" v-model="archEyebrow" @input="changeBeauty(8,archEyebrow)" />
+                <span>{{archEyebrow}}</span>
+            </div>
+            <div class="meiyan width100 flex_row_around">
+                <span>{{langContent.yj?langContent.yj:''}}:</span>
+                <input type="range" name="eyeD_beauty" id="eyeD_beauty" v-model="eyeDis" @input="changeBeauty(9,eyeDis)" />
+                <span>{{eyeDis}}</span>
+            </div>
+            <div class="meiyan width100 flex_row_around">
+                <span>{{langContent.yja?langContent.yja:''}}:</span>
+                <input type="range" name="eyeA_beauty" id="eyeA_beauty" v-model="eyeAngle" @input="changeBeauty(10,eyeAngle)" />
+                <span>{{eyeAngle}}</span>
+            </div>
+            <div class="meiyan width100 flex_row_around">
+                <span>{{langContent.sl?langContent.sl:''}}:</span>
+                <input type="range" name="jaw_beauty" id="jaw_beauty" v-model="jawSize" @input="changeBeauty(11,jawSize)" />
+                <span>{{jawSize}}</span>
+            </div>
+
+        </div>
+        <div v-show="isShowbeauty" class="selcetstyle flex_row_around text_center color_white">
+            <div :class="{'on' : beautytype == 1}" @click="changeTpye(1)">{{langContent.my?langContent.my:''}}</div>
+            <div :class="{'on' : beautytype == 2}" @click="changeTpye(2)">{{langContent.lj?langContent.lj:''}}</div>
+            <div v-show="!isAndroid" :class="{'on' : beautytype == 3}" @click="changeTpye(3)">{{langContent.wzx?langContent.wzx:''}}</div>
+        </div>
+    </div>
+
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    var beautySet = new Vue({
+        el: "#beautySet",
+        data: {
+            isOpenlight: Boolean,
+            spead: [{
+                id: 0,
+                name: '极慢'
+            }, {
+                id: 1,
+                name: '慢'
+            }, {
+                id: 2,
+                name: '正常'
+            }, {
+                id: 3,
+                name: '快'
+            }, {
+                id: 4,
+                name: '极快'
+            }],
+            selectspead: 2,
+            recordStatus: true,
+            canupload: false,
+            candelect: false,
+            canselectlocal: true,
+            isShowbeauty: false, //显示美颜设置
+            beautytype: 1,
+            beauty: 0,
+            white: 0,
+            redden: 0,
+            eyeSize: 0, //大眼
+            chinSize: 0, //下巴
+            noseSize: 0, //瘦鼻
+            mouthWidth: 0, //嘴型
+            archEyebrow: 0, //眉型
+            eyeDis: 0, //眼距
+            eyeAngle: 0, //眼角
+            jawSize: 0, //瘦脸
+            isAndroid: false,
+            langContent: {}
+        },
+        created: function() {
+            var that = this;
+            apiready = function() {
+                beautySet.$data.langContent = GlobleLanguageContent.beautySet;
+                that.spead = beautySet.$data.langContent.spead;
+                if ($api.getStorage('beauty')) {
+                    that.beauty = $api.getStorage('beauty')
+                    var beautyvalStr = that.beauty + "% 100%";
+                    $api.css($api.dom('#range_beauty'), 'background-size:' + beautyvalStr);
+                }
+                if ($api.getStorage('white')) {
+                    that.white = $api.getStorage('white')
+                    var whitevalStr = that.white + "% 100%";
+                    $api.css($api.dom('#range_white'), 'background-size:' + whitevalStr);
+                }
+                if ($api.getStorage('redden')) {
+                    that.redden = $api.getStorage('redden')
+                    var valStr = that.redden + "% 100%";
+                    $api.css($api.dom('#range_redden'), 'background-size:' + valStr);
+                }
+                if (api.pageParam) {
+                    that.isOpenlight = api.pageParam.isOpenlight
+                }
+                if (api.systemType == "ios" || api.systemType == "IOS") {
+                    that.isAndroid = false
+                } else {
+                    that.isAndroid = true
+                }
+                /***********   是否可以上传   **************/
+                api.addEventListener({
+                    name: 'isCanupload'
+                }, function(ret, err) {
+                    if (ret) {
+                        that.canupload = ret.value.canupload
+                    }
+                });
+                /***********   是否可以删除上一段   **************/
+                api.addEventListener({
+                    name: 'isCandelect'
+                }, function(ret, err) {
+                    if (ret) {
+                        that.candelect = ret.value.candelect
+                        that.canselectlocal = !that.candelect;
+                    }
+                });
+            }
+        },
+        methods: {
+            back: function() {
+                var that = this;
+                var select = []
+                if (that.canupload) {
+                    select = that.langContent.select
+                } else {
+                    // select = ['返回']
+                    api.sendEvent({
+                        name: 'outShot',
+                        extra: {}
+                    });
+                    setTimeout(function() {
+                        api.closeFrame({
+                            name: 'shotframe'
+                        });
+                        api.closeFrame({});
+                    }, 100);
+                    return;
+                }
+                api.actionSheet({
+                    cancelTitle: that.langContent.cancel,
+                    buttons: select
+                }, function(ret, err) {
+                    var index = ret.buttonIndex;
+                    if (index == 1) {
+                        api.sendEvent({
+                            name: 'outShot',
+                            extra: {}
+                        });
+                        setTimeout(function() {
+                            api.closeFrame({
+                                name: 'shotframe'
+                            });
+                            api.closeFrame({});
+                        }, 500);
+                    } else if (index == 2) {
+                        that.canupload = false
+                        api.sendEvent({
+                            name: 'initFrame2',
+                            extra: {}
+                        });
+                    }
+                })
+            },
+            uploadgetVideo: function() {
+                var that = this;
+                api.actionSheet({
+                    title: that.langContent.uptitle,
+                    cancelTitle: that.langContent.cancel,
+                    buttons: that.langContent.upbtn,
+                }, function(ret, err) {
+                    var index = ret.buttonIndex;
+                    if (index == 1) {
+                        var fs = api.require('fs');
+                        fs.rmdir({
+                            path: 'fs://saveVideo'
+                        }, function(ret, err) {
+                            if (ret.status) {} else {}
+                        });
+                        fs.rmdir({
+                            path: 'fs://localVideo'
+                        }, function(ret, err) {
+                            if (ret.status) {} else {}
+                        });
+                        that.getVideo()
+                    } else if (index == 2) {
+                        that.getMoreVideo()
+                    }
+                });
+            },
+            getMoreVideo: function() {
+                var that = this;
+                var UIAlbumBrowser = api.require('UIAlbumBrowser');
+                UIAlbumBrowser.open({
+                    type: 'video',
+                    max: 3,
+                    styles: {
+                        bg: '#fff',
+                        mark: {
+                            icon: '',
+                            position: 'bottom_left',
+                            size: 20
+                        },
+                        nav: {
+                            bg: 'rgba(0,0,0,0.6)',
+                            titleColor: '#fff',
+                            titleSize: 18,
+                            cancelColor: '#fff',
+                            cancelSize: 16,
+                            finishColor: '#fff',
+                            finishSize: 16
+                        }
+                    },
+                    rotation: true
+                }, function(ret) {
+                    if (ret) {
+                        var newPathold = '';
+                        if (ret.eventType == 'confirm') {
+                            if (api.systemType == "ios" || api.systemType == "IOS") {
+                                var iostime = 0;
+                                if (ret.list.length > 1) {
+                                    ret.list.forEach(function(element) {
+                                        UIAlbumBrowser.transVideoPath({
+                                            path: element.path
+                                        }, function(retrs, err) {
+                                            if (retrs.status) {
+                                                iostime = iostime + Number(retrs.duration);
+                                            } else {
+                                                api.toast({
+                                                    msg: that.langContent.err,
+                                                    duration: 3000,
+                                                    location: 'bottom'
+                                                });
+                                            }
+                                        });
+                                    });
+                                    setTimeout(function() {
+                                        if (iostime > 300 || iostime < 10) {
+                                            api.toast({
+                                                msg: that.langContent.time,
+                                                duration: 3000,
+                                                location: 'bottom'
+                                            });
+                                            that.canupload = false
+                                            setTimeout(function() {
+                                                api.sendEvent({
+                                                    name: 'initFrame2',
+                                                    extra: {}
+                                                });
+                                            }, 3000);
+                                            return;
+                                        } else {
+                                            var patharr = []
+                                            ret.list.forEach(function(e) {
+                                                UIAlbumBrowser.transPath({
+                                                    path: e.path
+                                                }, function(ress, err) {
+                                                    if (ress) {
+                                                        newPathold = ress.path
+                                                        var Name = newPathold.substring(newPathold.lastIndexOf('/') + 1)
+                                                        var fs = api.require('fs');
+                                                        fs.copyTo({
+                                                            oldPath: newPathold,
+                                                            newPath: 'fs://localVideo'
+                                                        }, function(res, err) {
+                                                            if (res.status) {
+                                                                patharr.push('fs://localVideo/' + Name)
+                                                            } else {}
+                                                        });
+                                                    } else {}
+                                                });
+                                            });
+                                            api.showProgress({
+                                                title: that.langContent.trans,
+                                                text: that.langContent.wait,
+                                                modal: false
+                                            });
+                                            setTimeout(function() {
+                                                api.hideProgress();
+                                                var qiniuShortVideo = api.require('qiniuShortVideo');
+                                                qiniuShortVideo.movieCompose({
+                                                    paths: patharr,
+                                                    videoSize: {
+                                                        w: 720, //数字类型；分辨率的width
+                                                        h: 1280, //数字类型；分辨率的height
+                                                    },
+                                                    videoFrameRate: 60
+                                                });
+                                                qiniuShortVideo.addEventListener({
+                                                    name: 'movieCompose',
+                                                }, function(rets) {
+                                                    if (rets) {
+                                                        api.showProgress({
+                                                            title: that.langContent.connet,
+                                                            text: that.langContent.progress + that.fixTwo(rets.progress) * 100 + '%',
+                                                            modal: false
+                                                        });
+                                                        if (rets.filePath) {
+                                                            api.hideProgress();
+                                                            var newPatholds = rets.filePath
+                                                            var Name = newPatholds.substring(newPatholds.lastIndexOf('/') + 1)
+                                                            var fs = api.require('fs');
+                                                            fs.copyTo({
+                                                                oldPath: rets.filePath,
+                                                                newPath: 'fs://ShortVideo'
+                                                            }, function(res, err) {
+                                                                if (res.status) {
+                                                                    api.sendEvent({
+                                                                        name: 'SelectVideo',
+                                                                        extra: {
+                                                                            path: 'fs://ShortVideo/' + Name
+                                                                        }
+                                                                    });
+                                                                } else {}
+                                                            });
+                                                        }
+                                                    }
+                                                });
+                                            }, 5000);
+                                        }
+                                    }, 500);
+
+                                } else {
+                                    api.toast({
+                                        msg: that.langContent.least,
+                                        duration: 2000,
+                                        location: 'bottom'
+                                    });
+                                    return;
+                                }
+                            } else { //安卓多选
+                                var time = 0;
+                                if (ret.list.length > 1) {
+                                    ret.list.forEach(function(element) {
+                                        UIAlbumBrowser.getVideoDuration({
+                                            path: element.path
+                                        }, function(res, err) {
+                                            if (res) {
+                                                time = time + Number(res.duration);
+                                            } else {
+                                                api.toast({
+                                                    msg: that.langContent.err,
+                                                    duration: 3000,
+                                                    location: 'bottom'
+                                                });
+                                            }
+                                        });
+                                    });
+                                    setTimeout(function() {
+                                        if (time > 300000 || time < 10000) {
+                                            api.toast({
+                                                msg: that.langContent.time,
+                                                duration: 3000,
+                                                location: 'bottom'
+                                            });
+                                            that.canupload = false
+                                            setTimeout(function() {
+                                                api.sendEvent({
+                                                    name: 'initFrame2',
+                                                    extra: {}
+                                                });
+                                            }, 3000);
+                                            return;
+                                        } else {
+                                            var patharr = []
+                                            ret.list.forEach(function(e) {
+                                                patharr.push(e.path)
+                                            });
+                                            var qiniuShortVideo = api.require('qiniuShortVideo');
+                                            qiniuShortVideo.movieCompose({
+                                                paths: patharr,
+                                                // videoSize: {
+                                                //     w: 1088, //数字类型；分辨率的width
+                                                //     h: 1440, //数字类型；分辨率的height
+                                                // },
+                                                sizeLevel: '1280*720',
+                                                videoFrameRate: 60
+                                            });
+                                            qiniuShortVideo.addEventListener({
+                                                name: 'movieCompose',
+                                            }, function(rets) {
+                                                if (rets) {
+                                                    api.showProgress({
+                                                        title: that.langContent.connet,
+                                                        text: that.langContent.progress + that.fixTwo(rets.progress) * 100 + '%',
+                                                        modal: false
+                                                    });
+                                                    if (rets.filePath) {
+                                                        api.hideProgress();
+                                                        newPathold = rets.filePath
+                                                        var Name = newPathold.substring(newPathold.lastIndexOf('/') + 1)
+                                                        api.sendEvent({
+                                                            name: 'SelectVideo',
+                                                            extra: {
+                                                                path: 'fs://ShortVideo/' + Name
+                                                            }
+                                                        });
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    }, 500);
+
+                                } else {
+                                    api.toast({
+                                        msg: that.langContent.least,
+                                        duration: 2000,
+                                        location: 'bottom'
+                                    });
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                });
+            },
+            fixTwo: function(num) {
+                if (num && num != 0 && Number(num) != 0) {
+                    return Number(num).toFixed(3);
+                } else {
+                    return 0.00;
+                }
+            },
+            getVideo: function() {
+                var that = this;
+                var UIAlbumBrowser = api.require('UIAlbumBrowser');
+                UIAlbumBrowser.open({
+                    type: 'video',
+                    max: 1,
+                    styles: {
+                        bg: '#fff',
+                        mark: {
+                            icon: '',
+                            position: 'bottom_left',
+                            size: 20
+                        },
+                        nav: {
+                            bg: 'rgba(0,0,0,0.6)',
+                            titleColor: '#fff',
+                            titleSize: 18,
+                            cancelColor: '#fff',
+                            cancelSize: 16,
+                            finishColor: '#fff',
+                            finishSize: 16
+                        }
+                    },
+                    rotation: true
+                }, function(ret) {
+                    if (ret) {
+                        var newPathold = '';
+                        if (ret.eventType == 'confirm') {
+                            if (api.systemType == "ios" || api.systemType == "IOS") {
+                                UIAlbumBrowser.transVideoPath({
+                                    path: ret.list[0].path
+                                }, function(retrs, err) {
+                                    if (retrs.status) {
+                                        if (retrs.duration > 300 || retrs.duration < 10) {
+                                            api.toast({
+                                                msg: that.langContent.time,
+                                                duration: 3000,
+                                                location: 'bottom'
+                                            });
+                                            that.canupload = false
+                                            setTimeout(function() {
+                                                api.sendEvent({
+                                                    name: 'initFrame2',
+                                                    extra: {}
+                                                });
+                                            }, 3000);
+                                            return;
+                                        } else {
+                                            UIAlbumBrowser.transPath({
+                                                path: ret.list[0].path
+                                            }, function(ress, err) {
+                                                if (ress) {
+                                                    newPathold = ress.path
+                                                    var Name = newPathold.substring(newPathold.lastIndexOf('/') + 1)
+                                                    var fs = api.require('fs');
+                                                    fs.copyTo({
+                                                        oldPath: newPathold,
+                                                        newPath: 'fs://localVideo'
+                                                    }, function(res, err) {
+                                                        if (res.status) {
+                                                            api.sendEvent({
+                                                                name: 'SelectVideo',
+                                                                extra: {
+                                                                    path: 'fs://localVideo/' + Name
+                                                                }
+                                                            });
+                                                        } else {}
+                                                    });
+                                                } else {}
+                                            });
+                                        }
+                                    } else {
+                                        api.toast({
+                                            msg: that.langContent.err,
+                                            duration: 3000,
+                                            location: 'bottom'
+                                        });
+                                    }
+                                });
+
+                            } else {
+                                UIAlbumBrowser.getVideoDuration({
+                                    path: ret.list[0].path
+                                }, function(res, err) {
+                                    if (res) {
+                                        if (res.duration > 300000 || res.duration < 10000) {
+                                            api.toast({
+                                                msg: that.langContent.time,
+                                                duration: 3000,
+                                                location: 'bottom'
+                                            });
+                                            that.canupload = false
+                                            setTimeout(function() {
+                                                api.sendEvent({
+                                                    name: 'initFrame2',
+                                                    extra: {}
+                                                });
+                                            }, 3000);
+                                            return;
+                                        } else {
+                                            newPathold = ret.list[0].path
+                                            var Name = newPathold.substring(newPathold.lastIndexOf('/') + 1)
+                                            var fs = api.require('fs');
+                                            fs.copyTo({
+                                                oldPath: newPathold,
+                                                newPath: 'fs://localVideo'
+                                            }, function(res, err) {
+                                                if (res.status) {
+                                                    api.sendEvent({
+                                                        name: 'SelectVideo',
+                                                        extra: {
+                                                            path: 'fs://localVideo/' + Name
+                                                        }
+                                                    });
+                                                } else {}
+                                            });
+                                        }
+                                    } else {
+                                        api.toast({
+                                            msg: that.langContent.err,
+                                            duration: 3000,
+                                            location: 'bottom'
+                                        });
+                                    }
+                                });
+                            }
+
+                        }
+                    }
+                });
+            },
+            save: function() { //删除上一段
+                var that = this
+                api.sendEvent({
+                    name: 'toSave',
+                    extra: {}
+                });
+            },
+            deleteLastFile: function() { //删除上一段
+                var that = this
+                api.sendEvent({
+                    name: 'deleteLastpart',
+                    extra: {}
+                });
+            },
+            Actoshot: function() { //开始拍摄
+                var that = this
+                that.recordStatus = false;
+                that.canselectlocal = false;
+                api.sendEvent({
+                    name: 'startShot',
+                    extra: {}
+                });
+                that.canupload = true;
+            },
+            stop: function() { //停止拍摄
+                var that = this
+                that.recordStatus = true;
+                api.sendEvent({
+                    name: 'stopShot',
+                    extra: {}
+                });
+            },
+            changespead: function(id) { //改变速度
+                var that = this;
+                that.selectspead = id;
+                api.sendEvent({
+                    name: 'changeSpead',
+                    extra: {
+                        id: id
+                    }
+                });
+            },
+            changeBeauty: function(type, num) { //发送设置美颜
+                var that = this;
+                if (type == 1) {
+                    var beautyvalStr = that.beauty + "% 100%";
+                    $api.css($api.dom('#range_beauty'), 'background-size:' + beautyvalStr);
+                    $api.setStorage('beauty', that.beauty);
+                } else if (type == 2) {
+                    var whitevalStr = that.white + "% 100%";
+                    $api.css($api.dom('#range_white'), 'background-size:' + whitevalStr);
+                    $api.setStorage('white', that.white);
+                } else if (type == 3) {
+                    var valStr = that.redden + "% 100%";
+                    $api.css($api.dom('#range_redden'), 'background-size:' + valStr);
+                    $api.setStorage('redden', that.redden);
+                } else if (type == 4) {
+                    var eyevalStr = that.eyeSize + "% 100%";
+                    $api.css($api.dom('#eye_beauty'), 'background-size:' + eyevalStr);
+                    $api.setStorage('eyeSize', that.eyeSize);
+                } else if (type == 5) {
+                    var chinvalStr = that.chinSize + "% 100%";
+                    $api.css($api.dom('#chin_beauty'), 'background-size:' + chinvalStr);
+                    $api.setStorage('chinSize', that.chinSize);
+                } else if (type == 6) {
+                    var nosevalStr = that.noseSize + "% 100%";
+                    $api.css($api.dom('#nose_beauty'), 'background-size:' + nosevalStr);
+                    $api.setStorage('noseSize', that.noseSize);
+                } else if (type == 7) {
+                    var mouthvalStr = that.mouthWidth + "% 100%";
+                    $api.css($api.dom('#mouth_beauty'), 'background-size:' + mouthvalStr);
+                    $api.setStorage('mouthWidth', that.mouthWidth);
+                } else if (type == 8) {
+                    var archvalStr = that.archEyebrow + "% 100%";
+                    $api.css($api.dom('#arch_beauty'), 'background-size:' + archvalStr);
+                    $api.setStorage('archEyebrow', that.archEyebrow);
+                } else if (type == 9) {
+                    var eyeDvalStr = that.eyeDis + "% 100%";
+                    $api.css($api.dom('#eyeD_beauty'), 'background-size:' + eyeDvalStr);
+                    $api.setStorage('eyeDis', that.eyeDis);
+                } else if (type == 10) {
+                    var eyeAvalStr = that.eyeAngle + "% 100%";
+                    $api.css($api.dom('#eyeA_beauty'), 'background-size:' + eyeAvalStr);
+                    $api.setStorage('eyeAngle', that.eyeAngle);
+                } else if (type == 11) {
+                    var jawvalStr = that.jawSize + "% 100%";
+                    $api.css($api.dom('#jaw_beauty'), 'background-size:' + jawvalStr);
+                    $api.setStorage('jawSize', that.jawSize);
+                }
+                api.sendEvent({
+                    name: 'changeBeautyType',
+                    extra: {
+                        type: type,
+                        BeautyType: num,
+                    }
+                });
+            },
+            closeFilter: function() { //关闭滤镜
+                var that = this;
+                that.isShowbeauty = false
+                api.sendEvent({
+                    name: 'closeFilter',
+                    extra: {}
+                });
+            },
+            changeTpye: function(num) { //切换美颜滤镜
+                var that = this;
+                that.beautytype = num;
+                api.sendEvent({
+                    name: 'setBeauty',
+                    extra: {
+                        setnum: 3,
+                        beautytype: num
+                    }
+                });
+                if (num == 2) {
+                    if (that.isAndroid) {
+                        api.closeFrame({});
+                    }
+                }
+            },
+            beautyturn: function(num) { //设置美颜部分
+                var that = this;
+                if (num == 2) {
+                    that.isOpenlight = !that.isOpenlight;
+                }
+                if (num == 3) {
+                    that.isShowbeauty = true;
+                }
+                api.sendEvent({
+                    name: 'setBeauty',
+                    extra: {
+                        setnum: num,
+                        beautytype: that.beautytype
+                    }
+                });
+            }
+        }
+    })
+</script>

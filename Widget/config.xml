@@ -1,0 +1,101 @@
+ <widget id="A6033767950922"  version="0.0.1">
+
+    <name>hello2</name>
+
+    <description>
+
+        Example For APICloud.
+
+    </description>
+
+    <author email="developer@apicloud.com" href="http://www.apicloud.com">
+
+        Developer
+
+    </author>
+
+    <content src="index.html" />
+
+    <access origin="*" />
+
+    <!-- WEB 通信 -->
+    <feature name="myWebSocket">
+        <param name="isGlobal" value="true" />
+    </feature>
+
+    <!-- 微信 -->
+    <!-- <feature name="wx">
+      <param name="urlScheme" value="wxd0d84bbf23b4a0e4"/>
+      <param name="apiKey" value="wxd0d84bbf23b4a0e4"/>
+      <param name="apiSecret" value="a354f72aa1b4c2b8eaad137ac81434cd"/>
+    </feature> -->
+    <feature name="wxPlus">
+      <param name="urlScheme" value="wxd0d84bbf23b4a0e4"/>
+      <param name="apiKey" value="wxd0d84bbf23b4a0e4"/>
+      <param name="apiSecret" value="a354f72aa1b4c2b8eaad137ac81434cd"/>
+      <param name="universalLink" value="https://bjtest.apicloud.com"/>
+    </feature>
+
+    <!-- 支付宝 -->
+    <feature name="aliPayPlus">
+        <param name="urlScheme" value="AliPayPlusA000000011" />
+    </feature>
+
+    <!-- 百度地图 -->
+    <feature name="bMap">
+      <param name="android_api_key" value="dGseqssYKvtHHktLCe1i6QYZcZQ57gtO" />
+      <param name="ios_api_key" value="G8ti5nGQO4OnERQ1uTz2TaU9fQRzmzaa" />
+    </feature>
+
+    <!-- 极光推送 -->
+    <feature name="ajpush">
+      <param name="app_key" value="f8caa5dfb4b57e685983654d" />
+      <param name="channel" value="your channel" />
+    </feature>
+
+  <preference name="checkSslTrusted" value="false"/>
+  <preference name="pageBounce" value="false"/>
+
+	<preference name="appBackground" value="rgba(0,0,0,0.0)"/>
+
+	<preference name="windowBackground" value="rgba(0,0,0,0.0)"/>
+
+	<preference name="frameBackgroundColor" value="rgba(0,0,0,0.0)"/>
+
+	<preference name="hScrollBarEnabled" value="false"/>
+
+	<preference name="vScrollBarEnabled" value="false"/>
+
+	<preference name="autoLaunch" value="true"/>
+
+	<preference name="fullScreen" value="false"/>
+
+	<preference name="autoUpdate" value="true" />
+
+	<preference name="smartUpdate" value="false" />
+
+	<preference name="debug" value="true"/>
+
+	<preference name="statusBarAppearance" value="true"/>
+
+	<permission name="readPhoneState" />
+
+	<permission name="camera" />
+
+	<permission name="record" />
+
+	<permission name="location" />
+
+	<permission name="fileSystem" />
+
+	<permission name="internet" />
+
+	<permission name="bootCompleted" />
+
+	<permission name="hardware" />
+
+  <preference name="softInputMode" value="auto"/>
+  <preference name="appCertificateVerify" value="false"/>
+  <preference name="checkSslTrusted" value="false"/>
+
+</widget>

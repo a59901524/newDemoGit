@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>提交任务</title>
+    <link rel="stylesheet" href="../../lib/iconfont2/iconfont.css">
+    <link rel="stylesheet" href="../../css/common.css">
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        .item {
+            width: 50%;
+            height: 45px;
+            line-height: 45px;
+            text-align: center;
+            background: #51ABF0;
+        }
+        
+        .on {
+            border-bottom: 2px solid #1C83D2;
+        }
+        
+        .video {
+            width: 55px;
+            height: 55px;
+            margin-right: 15px;
+        }
+        
+        .rule {
+            width: 90%;
+            height: auto;
+            margin: 0px auto 20px;
+        }
+        
+        .fixedbtn {
+            margin-left: 50%;
+            width: 80%;
+            transform: translate(-50%, 0%);
+            background-color: rgb(249, 199, 3);
+            color: black;
+            font-weight: 800;
+            font-size: 16px;
+        }
+        
+        .close {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            width: 30px;
+            height: 30px;
+        }
+    </style>
+</head>
+
+<body class="has_header color_black3">
+    <div id="tasks_sub_tips" v-cloak>
+        <header class="header ">
+            <i class="iconfont icon-xiangzuo" onclick="goBack()"></i>
+            <div>{{langContent.title?langContent.title:''}}</div>
+        </header>
+        <div class="cont bg-white">
+            <!-- <div class="padding1 " style="padding-bottom: 0;" v-for="con in langContent.list1">{{con?con:''}}</div> -->
+            <!-- <div class="padding1 " style="padding-bottom: 0;">{{langContent.rule?langContent.rule:''}}</div> -->
+            <div class="padding1 ">
+                <p v-if="userinfo.area_code == 86" v-for="obj in langContent.list2">{{obj?obj:''}}</p>
+                <p v-if="userinfo.area_code != 86" v-for="obj in langContent.Elist2">{{obj?obj:''}}</p>
+                <p class=" ">{{langContent.five?langContent.five:''}}</p>
+            </div>
+
+            <img class="rule" v-if="userinfo.area_code == 86" src="../../image/rule.jpg" alt="" />
+            <img class="rule" v-if="userinfo.area_code != 86" src="../../image/Erule.jpg" alt="" />
+        </div>
+
+
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    var tasks_sub_tips = new Vue({
+        el: "#tasks_sub_tips",
+        data: {
+            langContent: {},
+            getCodetip: {},
+            userinfo: {}
+        },
+        created: function() {
+            var that = this
+            apiready = function() {
+                var height = $api.fixStatusBar($api.dom('.header'))
+                if (height > 0) {
+                    $api.css($api.dom('.cont'), 'padding-top:' + (height - 45) + 'px;');
+                }
+                tasks_sub_tips.$data.langContent = GlobleLanguageContent.tasks_sub_tips;
+                tasks_sub_tips.$data.getCodetip = GlobleLanguageContent.getCode;
+                that.getInfo();
+            }
+        },
+        methods: {
+            getInfo: function() {
+                var that = this;
+
+                http(getuserinfoUrl, 'post', {}, function(ret) {
+                    if (ret.code == 200) {
+                        that.userinfo = ret.data;
+                    }
+                })
+
+            }
+
+        }
+    })
+</script>

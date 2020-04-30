@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>任务详情</title>
+    <link rel="stylesheet" href="../../../lib/vant/vant.css">
+    <link rel="stylesheet" href="../../../lib/iconfont2/iconfont.css">
+    <link rel="stylesheet" href="../../../css/common.css">
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+            color: #999999
+        }
+
+        .post_icon1 {
+            font-size: 2rem;
+            margin-right: .4rem;
+        }
+        /********************** 发布任务任务列表 ****************/
+
+        .lingquxuzhi span {
+            padding: 0 .5rem;
+        }
+
+        ul {
+            padding: 1rem;
+        }
+
+        li {
+            list-style: disc;
+            padding-bottom: 1rem;
+        }
+
+        .stepimg {
+            width: 48%;
+            height: auto !important;
+            max-height: 100%;
+            margin: auto 1%;
+        }
+
+        .stepimg>img {
+            width: 100%;
+            height: auto;
+        }
+
+        .inputarea {
+            width: 96%;
+            height: 40px;
+            line-height: 40px;
+            text-indent: 12px;
+            border: 1px solid;
+            border-radius: 5px;
+            margin: 5px auto;
+        }
+
+        .exmp {
+            position: absolute;
+            top: 0;
+            left: 0;
+            padding: 3px 5px;
+            background: red;
+            border-radius: 0 0 5px 0;
+        }
+
+        .marginBT {
+            padding: 1rem;
+            border-bottom: 1px solid #eeeeee;
+        }
+    </style>
+</head>
+
+<body class="has_header ">
+    <div id="mission_details" v-cloak>
+        <header class="header bg-white">
+            <i class="iconfont icon-xiangzuo " onclick="goBack()"></i>
+            <div>任务详情</div>
+        </header>
+        <div class="cont">
+            <!-------------------------------------------- 任务类型 ---------------------------------------->
+            <div class="   color_default1 padding1 flex_row_left color_black3 " style="font-size: 1.5rem; font-weight: 900;">
+                <div style="background-color: #cfa767; width: 4px; height: 1.5rem; margin-right: 1rem;"></div>
+                <div class="text-overflow_1 "> {{info.title?info.title:''}}</div>
+            </div>
+
+            <div class="bg-white">
+                <!-------------------------------------------- 截止时间 ---------------------------------------->
+                <div class="marginBT flex_row_between">
+                    <div class="flex_row_left color_black3">
+                        <div class="">截止时间</div>
+                    </div>
+                    <div>
+                        <p class="">{{info.end_time?changeDate(info.end_time):''}}</p>
+                    </div>
+                </div>
+                <!-------------------------------------------- 任务限定完成时间 ---------------------------------------->
+                <div class="marginBT flex_row_between">
+                    <div class="flex_row_left color_black3">
+                        <div class="">任务限定完成时间</div>
+                    </div>
+                    <div>
+                        {{info.last_time?info.last_time:''}}小时
+                    </div>
+                </div>
+                <!-------------------------------------------- 任务限定完成时间   提示 ---------------------------------------->
+                <div v-if="!isMytask &&info.my_status&&info.my_status>0" class="marginBT ">
+                    <div class="flex_row_left color_black3">
+                        <div class="">任务限定完成时间</div>
+                    </div>
+                    <div>
+                        <p class="">领取时间：{{info.create_time?changeDate(info.create_time):''}}</p>
+                        <p>此任务限时在 {{info.last_time?info.last_time:''}} 小时内完成，否则视为失效任务。</p>
+                        <!-- <p>最后提交时间：{{info.submit_time?changeDate(info.submit_time):''}}</p> -->
+                    </div>
+                </div>
+            </div>
+            <!-------------------------------------------- 任务ID ---------------------------------------->
+            <div class=" bg-white">
+                <div v-if="info.url!=''" class="flex_row_between marginBT" style="overflow: hidden;" @click="copy(info.url)">
+                    <div class="flex_row_left color_black3">
+                        <div class="">任务链接</div>
+                    </div>
+                    <div style="flex:1;word-wrap:break-word;overflow: hidden; margin-left: 2rem; color: #569cd6;">
+                        <!-- <p style="word-wrap:break-word"> -->
+                        {{info.url?info.url:''}}
+                        <!-- </p> -->
+                    </div>
+                </div>
+                <!-- 任務id -->
+                <div class="flex_row_between marginBT">
+                    <div class="flex_row_left color_black3">
+                        <div class="">任务ID</div>
+                    </div>
+                    <div class="flex_row_right">
+                        <p>{{info.id?info.id:''}}</p>
+                    </div>
+                </div>
+                <!-- 类型 -->
+                <div class="flex_row_between marginBT">
+                    <div class="flex_row_left color_black3">
+                        <div class="">类型</div>
+                    </div>
+                    <div class="flex_row_right">
+                        <p v-show="info.type==1">注册</p>
+                        <p v-show="info.type==2">关注</p>
+                        <p v-show="info.type==3">投票</p>
+                        <p v-show="info.type==4">砍价</p>
+                        <p v-show="info.type==5">转发</p>
+                        <p v-show="info.type==6">其他</p>
+                    </div>
+                </div>
+                <!-- 支持设备 -->
+                <div class="flex_row_between marginBT">
+                    <div class="flex_row_left color_black3">
+                        <div class="">支持设备</div>
+                    </div>
+                    <div class="flex_row_right">
+                        <p v-show="info.equipment==1">安卓</p>
+                        <p v-show="info.equipment==2">iOS</p>
+                        <p v-show="info.equipment==3">安卓与iOS</p>
+                    </div>
+                </div>
+                <!-- 单个奖励 -->
+                <div class="flex_row_between marginBT">
+                    <div class="flex_row_left color_black3">
+                        <div class="">单个奖励</div>
+                    </div>
+                    <div class="flex_row_right">
+                        <p>{{info.bounty?info.bounty:''}}HDC</p>
+                    </div>
+                </div>
+            </div>
+            <!-------------------------------------------- 添加步骤 ---------------------------------------->
+            <div class=" bg-white">
+                <div class="padding1 color_black3">步骤</div>
+                <!-------------------------------------------- 第一步开始 ---------------------------------------->
+                <div v-for="(ste,index) in info.steps">
+                    <div class="fontSize14 color_black3"> <span class="bg_violet" style="width: 3px; margin-left: 1rem;">|</span> 第{{index+1}}步: {{ste.content}}</div>
+                    <!-- 备注 -->
+                    <div class="padding1 fontSize12 color_black3">
+                        {{ste.step_text}}
+                    </div>
+                    <!-- 图片 -->
+                    <div class="flex_row_left color_black3">
+                        <div class="stepimg posi_relative" @click="fnOpenImg(ste.img)">
+                            <img class="" :src="ste.img?ste.img:''" alt="">
+                            <div class="bg_default color_white exmp">示例图</div>
+                        </div>
+                        <!-- <div v-show="info.my_status==1&&substep[index].img==''" @click="addstep(index)" class="addsubpart flex_col_center bg-white padding1">
+                            <img style="width: 25px;height: 25px;" src="../../../image/camera.png" alt="">
+                            <div>上传图片</div>
+                        </div>
+                        <div v-show="info.my_status==1&&substep[index].img!=''" @click="addstep(index)" class="stepimg addsubpart flex_col_center">
+                            <img :src="substep[index].img?substep[index].img:''" alt="">
+                        </div > -->
+                        <div v-show="info.accept&&info.accept.status==1&&substep[index].img==''" @click="addstep(index)" class="addsubpart flex_col_center bg_ccc padding1">
+                            <img style="width: 25px;height: 25px;" src="../../../image/camera.png" alt="">
+                            <div>上传图片</div>
+                        </div>
+                        <div v-show="info.accept&&info.accept.status==1&&substep[index].img!=''" @click="addstep(index)" class="stepimg addsubpart flex_col_center">
+                            <img :src="substep[index].img?substep[index].img:''" alt="">
+                        </div>
+
+                    </div>
+                    <!-- 提供文字信息 -->
+                    <!-- <div>
+                        {{remarks}}
+                    </div> -->
+                </div>
+                <div class="padding1 fontSize16 color_black3">文字验证：{{info.font_verify?info.font_verify:'发布人未要求提供文字验证'}}</div>
+                <!-- <div v-show="info.my_status==1">按要求填入文字验证</div>
+                <input v-show="info.my_status==1" class="inputarea" type="text" v-model="font_verify" placeholder="请按要求填入文字验证"> -->
+                <div v-show="info.accept&&info.accept.status==1" class="padding1">按要求填入文字验证</div>
+                <input v-show="info.accept&&info.accept.status==1" class="inputarea" type="text" v-model="font_verify" placeholder="请按要求填入文字验证">
+                <div class="padding1 fontSize16 color_black3">备注：{{info.remarks?info.remarks:'发布人未提供备注'}}</div>
+            </div>
+            <div class="   text_center flex_row_around padding1 bg-white marginT1">
+                <div class="flex_row_between text_center ">
+                    <i class="iconfont icon-lingqu color_default1 post_icon1 "></i> <span class="marginR5">已被领取:</span> <span class="color_default1">{{info.accept_quantity?info.accept_quantity:'0'}} </span>
+                </div>
+                <div class="flex_row_between text_center">
+                    <i class="iconfont icon-lingqu post_icon1 "></i> <span class="marginR5">未领取:</span> <span> {{info.publish_quantity?(info.publish_quantity - info.accept_quantity):''}}</span>
+                </div>
+            </div>
+
+
+            <!-------------------------------------------- 领取须知 ---------------------------------------->
+            <div class=" ">
+                <div class="padding1 lingquxuzhi">
+                    <p class="text_center color_default1"><span>-</span>领取须知<span>-</span></p>
+                    <ul>
+                        <li>任务领取后,接单人需在发单人要求的任务截止完成时间前完成任务,否则发单人有权取消该接单,如果发单人不取消该单,接单人仍然可以继续做该单;</li>
+                        <li>0-1级的用户,每次只能接1个单,要继续做下一个单,需完成当前的任务方可继续接下一个单;2级以上的用户不限制接单个数;</li>
+                        <li>接单人每天可以免费取消2次接单,超过2次,每取消一次扣除2个经验,若经验为0,7天内不能接单,请谨慎使用免费取消次数;</li>
+                        <li>任务完成后,请尽快提交完成截图,逾期未上传完成截图的,视为放弃任务,无奖励;</li>
+                        <li>任务完成后,上传的完成截图必须真实有效,如上传虚假截图,将会被判定任务失败,多次恶意上传虚假完成截图,将会封号处理;</li>
+                        <li>如发现有人以做任务的名义收取其他费用，可立即举报,见习任务悬赏不收取任何接单费用,所有奖励归接单人,请注意辨别。</li>
+                    </ul>
+                </div>
+                <!-- that.columns = ['全部', '待完成', '审核中', '已通过', '已驳回', '申诉中', '系统驳回']; -->
+                <div v-if="!isMytask">
+                    <div v-show="!info.accept||!info.accept.status||(info.accept&&info.accept.status==0)" @click="acceptreward()" class="bg_gold text_center fontSize16 colorFFF padding1 marginT1" style="border-radius: 5px">
+                        我已确认,领取任务
+                    </div>
+                    <div v-show="info.accept&&info.accept.status==1" @click="subreward()" class="bg_gold text_center fontSize16 colorFFF padding1 marginT1" style="border-radius: 5px">
+                        提交任务
+                    </div>
+                    <div v-show="info.accept&&info.accept.status==2" class="bg_gold text_center fontSize16 colorFFF padding1 marginT1" style="border-radius: 5px">
+                        任务审核中
+                    </div>
+                    <div v-show="info.accept&&info.accept.status==3" class="bg_gold text_center fontSize16 colorFFF padding1 marginT1" style="border-radius: 5px">
+                        任务已通过
+                    </div>
+                    <div v-show="info.accept&&info.accept.status==4" @click="appealreward()" class="bg_gold text_center fontSize16 colorFFF padding1 marginT1" style="border-radius: 5px">
+                        任务已驳回，点击申诉
+                    </div>
+                    <div v-show="info.accept&&info.accept.status==5" class="bg_gold text_center fontSize16 colorFFF padding1 marginT1" style="border-radius: 5px">
+                        任务申诉中
+                    </div>
+                    <div v-show="info.accept&&info.accept.status==6" class="bg_gold text_center fontSize16 colorFFF padding1 marginT1" style="border-radius: 5px">
+                        任务已被管理员驳回
+                    </div>
+                </div>
+
+                <div v-if="isMytask">
+                    <!-- ['待处理', '审核中', '已发布', '已完成', '已终止'] -->
+                    <div v-show="info.status==0&&info.wait_count>0" @click="toCertify()" class="bg_gold text_center fontSize16 colorFFF padding1 marginT1" style="border-radius: 5px">
+                        任务已取消，去审核
+                    </div>
+                    <div v-show="info.status==0" class="bg_gold text_center fontSize16 colorFFF padding1 marginT1" style="border-radius: 5px">
+                        任务已取消
+                    </div>
+                    <div v-show="info.status==1" class="bg_gold text_center fontSize16 colorFFF padding1 marginT1" style="border-radius: 5px">
+                        任务审核中
+                    </div>
+                    <div v-show="info.status!=1&&info.status!=3" @click="releaseaccept()" class="bg_ccc text_center fontSize16 color_black6 padding1 marginT1" style="border-radius: 5px">
+                        清除超时任务
+                    </div>
+                    <div v-show="info.status==2" @click="toCertify()" class="bg_gold text_center fontSize16 colorFFF padding1 marginT1" style="border-radius: 5px">
+                        任务已发布，去审核
+                    </div>
+                    <div v-show="info.status==2" @click="canceltask()" class="bg_gray color_default text_center fontSize16  padding1 marginT1" style="border-radius: 5px">
+                        取消发布任务
+                    </div>
+                    <div v-show="info.status==3" class="bg_gold text_center fontSize16 colorFFF padding1 marginT1" style="border-radius: 5px">
+                        任务已完成
+                    </div>
+                    <div v-show="info.status==4" class="bg_gold text_center fontSize16 colorFFF padding1 marginT1" style="border-radius: 5px">
+                        任务已终止
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../../lib/vant/vant.min.js"></script>
+<script type="text/javascript" src="../../../script/rsa.js"></script>
+<script type="text/javascript" src="../../../script/aes.js"></script>
+<script type="text/javascript" src="../../../script/const.js"></script>
+<script type="text/javascript" src="../../../script/common.js"></script>
+
+
+<script type="text/javascript">
+    var mission_details = new Vue({
+        el: "#mission_details",
+        data: {
+            type: 0,
+            words: '',
+            value: '',
+            showPicker: false,
+            columns: ['注册', '关注', '投票', '砍价', '转发', '其他'],
+            missionTitle: '', //任务标题
+            missionType: '请选择', //任务类型
+            equipmentType: '安卓', //设备类型
+            deadline: '请选择', //截止时间
+            durationType: '30分钟', //时间分类
+            currencyType: 'HDC', // 币种类型
+            awardValue: '', // 单个奖励
+            missionValue: '', //任务数量
+            missionLink: '', //任务链接
+            steps: [{
+                img: '',
+                content: ''
+            }], // 发布步骤
+            remarks: '', //备注
+            info: {},
+            substep: [],
+            font_verify: '', //文字验证
+            isMytask: false,
+            isSmrz: 0
+        },
+        created: function() {
+            var that = this
+            apiready = function() {
+                var height = $api.fixStatusBar($api.dom('.header'))
+                if (height > 0) {
+                    $api.css($api.dom('.cont'), 'margin-top:' + (height - 45) + 'px;');
+                }
+                that.getInfo()
+                    // 检查是否实名认证
+                http(getuserinfoUrl, 'post', {}, function(ret) {
+                    if (ret.code == 200) {
+                        that.isSmrz = ret.data.auth_primary;
+                    } else if (ret.code == 401) {
+                        api.sendEvent({
+                            name: 'pause',
+                            extra: {}
+                        });
+                        console.log("TO login.html");
+                        toPage('login', '../../auth/login.html', {
+                            from: 'center'
+                        });
+                    }
+                })
+            }
+        },
+        methods: {
+            fnOpenImg: function(curimg) {
+                var that = this;
+                var imgs = []
+                that.info.steps.forEach(function(element) {
+                    imgs.push(element.img)
+                });
+                var UIPhotoViewer = api.require('UIPhotoViewer');
+                UIPhotoViewer.open({
+                    images: imgs,
+                    placeholderImg: 'widget://image/loading_more.gif',
+                    bgColor: '#000'
+                }, function(ret, err) {
+                    if (ret) {
+                        if (ret.eventType == 'click') {
+                            UIPhotoViewer.close()
+                        }
+                    } else {}
+                });
+                imgs.forEach(function(element, index) {
+                    if (element == curimg) {
+                        UIPhotoViewer.setIndex({
+                            index: index
+                        });
+                    }
+                });
+            },
+            changeDate: function(datetimes) {
+                var needdate = new Date(datetimes * 1000);
+                Y = needdate.getFullYear() + '/';
+                M = (needdate.getMonth() + 1 < 10 ? '0' + (needdate.getMonth() + 1) : needdate.getMonth() + 1) + '/';
+                D = needdate.getDate() + ' ';
+                h = (needdate.getHours() < 10 ? '0' + needdate.getHours() : needdate.getHours()) + ':';
+                m = (needdate.getMinutes() < 10 ? '0' + needdate.getMinutes() : needdate.getMinutes()) + ':';
+                s = (needdate.getSeconds() < 10 ? '0' + needdate.getSeconds() : needdate.getSeconds());
+                //      年 月 日 时 分 秒
+                return Y + M + D + h + m + s;
+            },
+            copy: function(url) {
+                var that = this
+                var clipBoard = api.require('clipBoard');
+                clipBoard.set({
+                    value: url
+                }, function(ret, err) {
+                    if (ret) {
+                        api.toast({
+                            msg: '复制成功',
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                        // alert(JSON.stringify(ret));
+                    } else {
+                        // alert(JSON.stringify(err));
+                    }
+                });
+            },
+
+            // 获取悬赏任务详情
+            getInfo: function() {
+                var that = this;
+                http(getrewarddesUrl, 'post', {
+                    id: api.pageParam.id
+                }, function(ret) {
+                    if (ret.code == 200) {
+                        that.info = ret.data;
+                        if (ret.data.uid == $api.getStorage('uid')) {
+                            that.isMytask = true
+                        } else {
+                            that.isMytask = false
+                        }
+                        that.info.steps.forEach(function(element) {
+                            that.substep.push({
+                                img: '',
+                                step_text: element.step_text
+                            })
+                        });
+                    }
+                })
+            },
+            // 发布任务去审核   和取消任务后的审核
+            toCertify: function() {
+                var that = this;
+                if (that.info.status == 2 && that.info.accept_quantity > 0 && that.info.wait_verify_count > 0) {
+                    toPage('mission_verify', 'mission_verify.html', {
+                        id: api.pageParam.id
+                    })
+                } else {
+                    api.toast({
+                        msg: '暂无可审核任务',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return;
+                }
+            },
+            // 取消发布任务
+            canceltask: function() {
+                var that = this;
+                http(cancelrewardUrl, 'post', {
+                    id: api.pageParam.id,
+                }, function(ret) {
+                    if (ret.code == 200) {
+                        api.toast({
+                            msg: ret.msg,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                        api.execScript({                                    
+                            name: 'missionMy',
+                            frameName: 'missionMy',
+                            script: 'missionMy.getInfo()'                                
+                        });
+                        api.execScript({                                    
+                            name: 'mission_order',
+                            frameName: 'mission_order',
+                            script: 'mission_order.getInfo()'                                
+                        });
+                        that.getInfo()
+                    }
+                })
+            },
+            // 释放超时的领取
+            releaseaccept: function() {
+                var that = this;
+                http(releaseacceptUrl, 'post', {
+                    id: api.pageParam.id,
+                }, function(ret) {
+                    if (ret.code == 200) {
+                        api.toast({
+                            msg: ret.msg,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                    }
+                })
+            },
+            // 申诉任务
+            appealreward: function() {
+                var that = this;
+                http(appealrewardUrl, 'post', {
+                    id: that.info.accept.id,
+                }, function(ret) {
+                    if (ret.code == 200) {
+                        api.toast({
+                            msg: ret.msg,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                        api.execScript({                                    
+                            name: 'missionMy',
+                            frameName: 'missionMy',
+                            script: 'missionMy.getInfo()'                                
+                        });
+                        api.execScript({                                    
+                            name: 'mission_order',
+                            frameName: 'mission_order',
+                            script: 'mission_order.getInfo()'                                
+                        });
+                        that.getInfo()
+                    }
+                })
+            },
+            // 上传做任务步骤图片
+            addstep: function(i) {
+                var that = this;
+                api.getPicture({
+                    sourceType: 'album',
+                    encodingType: 'jpg',
+                    mediaValue: 'pic',
+                    destinationType: 'base64',
+                    allowEdit: false,
+                    quality: 50,
+                    targetWidth: '',
+                    targetHeight: '',
+                    saveToPhotoAlbum: false
+                }, function(ret, err) {
+                    if (ret && ret.base64Data != '') {
+                        that.substep[i].img = ret.base64Data;
+                    } else {}
+                });
+            },
+            // 提交任务
+            subreward: function() {
+                var that = this;
+                for (var i = 0; i < that.substep.length; i++) {
+                    var stepsData = that.substep[i];
+                    if (stepsData.img == '') {
+                        api.toast({
+                            msg: '请完善您的所有步骤再提交',
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                        return
+                    }
+                }
+                api.showProgress({
+                    title: '悬赏提交中...',
+                    text: '请稍后',
+                    modal: true
+                });
+                var params = {
+                    id: api.pageParam.id,
+                    steps: that.substep,
+                    font_verify: that.font_verify
+                }
+                http(subrewardUrl, 'post', params, function(ret) {
+                    if (ret.code == 200) {
+                        api.hideProgress();
+                        api.toast({
+                            msg: '提交成功',
+                            duration: 3000,
+                            location: 'bottom'
+                        });
+                        api.execScript({                                    
+                            name: 'missionMy',
+                            frameName: 'missionMy',
+                            script: 'missionMy.getInfo()'                                
+                        });
+                        api.execScript({                                    
+                            name: 'mission_order',
+                            frameName: 'mission_order',
+                            script: 'mission_order.getInfo()'                                
+                        });
+                        that.getInfo()
+                    } else {
+                        api.hideProgress();
+                        api.toast({
+                            msg: ret.msg,
+                            duration: 3000,
+                            location: 'bottom'
+                        });
+                    }
+
+                })
+            },
+            // 领取任务
+            acceptreward: function() {
+                var that = this
+                if (that.isSmrz == 0) {
+                    api.toast({
+                        msg: '请先实名认证才能发布任务~',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    setTimeout(function() {
+                        api.openWin({
+                            name: 'personal_data',
+                            url: '../../my/personal_data.html',
+                            reload: true,
+                            pageParam: {}
+                        });
+                    }, 1500);
+                } else {
+                    http(acceptrewardUrl, 'post', {
+                        id: api.pageParam.id
+                    }, function(ret) {
+
+                        if (ret.code == 200) {
+                            api.toast({
+                                msg: '领取成功',
+                                duration: 2000,
+                                location: 'bottom'
+                            });
+                            api.execScript({                                    
+                                name: 'missionMy',
+                                frameName: 'missionMy',
+                                script: 'missionMy.getInfo()'                                
+                            });
+                            api.execScript({                                    
+                                name: 'mission_order',
+                                frameName: 'mission_order',
+                                script: 'mission_order.getInfo()'                                
+                            });
+                            that.getInfo()
+                        }
+                    })
+                }
+
+            },
+
+            // 清除input文字
+            clear: function() {
+                var that = this;
+                that.isShowlist = false;
+                that.words = '';
+                // that.getHotWords();
+                api.closeFrame({
+                    name: 'mission'
+                });
+            },
+            toPage: function(name, url, params) {
+                api.openWin({
+                    name: name,
+                    url: url,
+                    reload: true,
+                    pageParam: params || {}
+                });
+            },
+        },
+    })
+</script>

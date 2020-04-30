@@ -1,0 +1,97 @@
+html, body{
+    height: 100%;
+}
+.login {
+    height: 100%;
+    background-image: url('../../image/new/login.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+}
+.login .contarin{
+    width: 7rem;
+    height: 6.76rem;
+    background-image: url('../../image/new/b1.png');
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    margin: 0 auto;
+    margin-top: 1rem;
+}
+.login .logo{
+  width: 3.11rem;
+  height: 0.87rem;
+  margin: 0 auto;
+  padding-top: 2.3rem;
+}
+.login .ul{
+    padding: 1.8rem 0.9rem 0;
+    font-size: 0.26rem;
+}
+.login .ul .li input{
+    background: none;
+    color: #ffffff;
+    height: 0.4rem;
+    line-height: 0.4rem;
+}
+.login .ul .li{
+    padding: 0.27rem 0.55rem;
+    position: relative;
+}
+.login .ul .userName::before{
+    content: '';
+    position: absolute;
+    width: 0.35rem;
+    height: 0.4rem;
+    background-image: url('../../image/new/username.png');
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    left: 0;
+}
+.login .ul .passWord::before{
+    content: '';
+    position: absolute;
+    width: 0.35rem;
+    height: 0.44rem;
+    background-image: url("../../image/new/password.png");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    left: 0;
+}
+.line{
+    height: 0.05rem;
+    background-image: url("../../image/new/borderBottom.png");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+}
+.login .btn{
+    color: #0e2edc;
+    height: 0.77rem;
+    line-height: 0.77rem;
+    font-size: 0.36rem;
+    text-align: center;
+    border-radius: 0.12rem;
+    background-image: linear-gradient(#1fe1ff, #007ff7);
+    margin-top: 0.52rem;
+    cursor: pointer;
+}
+.login .foot{
+    display: flex;
+    justify-content: space-between;
+    padding: 0.32rem 0;
+    color: #1fe2ff;
+    font-size: 0.26rem;
+}
+
+input::-webkit-input-placeholder,textarea::-webkit-input-placeholder{
+    color:#1daefa;
+}
+input:-moz-placeholder,textarea:-moz-placeholder{
+    color:#1daefa;
+}
+input::-moz-placeholder,textarea::-moz-placeholder{
+    color:#1daefa;
+}
+input:-ms-input-placeholder,textarea:-ms-input-placeholder{
+    color:#1daefa;
+}

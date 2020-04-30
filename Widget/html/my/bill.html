@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>账单中心</title>
+    <link rel="stylesheet" href="../../lib/iconfont2/iconfont.css">
+    <link rel="stylesheet" href="../../css/common.css">
+    <link rel="stylesheet" type="text/css" href="../../css/new/reset.css">
+    <link rel="stylesheet" type="text/css" href="../../css/new/account.css">
+    <script type="text/javascript" src="../../script/lib-flexible.js"></script>
+    <style>
+        .b_header {
+            padding: 10px;
+            white-space: nowrap;
+            width: auto;
+            text-align: center;
+        }
+
+        .on {
+            font-weight: 600;
+            color: #cb974d;
+            border-bottom: 2px solid;
+        }
+
+        .cont::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+
+<body class="has_header color_999">
+    <div id="bill" class='account' v-cloak>
+        <header class="header">
+            <i class="iconfont icon-xiangzuo" onclick="goBack()"></i>
+            <div>账单中心</div>
+        </header>
+        <div class="h88"></div>
+        <div class="ct cont">
+            <div class="nav">
+                <div class="navLi" :class="{'active':type==''}" @click="switchover('')">全部</div>
+                <div class="navLi" :class="{'active':type==7}" @click="switchover(7)">支出</div>
+                <div class="navLi" :class="{'active':type==5}" @click="switchover(5)">买入</div>
+                <div class="navLi" :class="{'active':type==4}" @click="switchover(4)">奖励</div>
+                <div class="navLi" :class="{'active':type==3}" @click="switchover(3)">转换</div>
+                <div class="navLi" :class="{'active':type==1}" @click="switchover(1)">收益</div>
+                <div class="navLi" :class="{'active':type==2}" @click="switchover(2)">冻结</div>
+                <div class="navLi" :class="{'active':type==8}" @click="switchover(8)">系统</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    var bill = new Vue({
+        el: "#bill",
+        data: {
+            type: '',
+            langContent: {},
+        },
+        created: function() {
+            var that = this
+            apiready = function() {
+                var height = $api.fixStatusBar($api.dom('.header'))
+                if (height > 0) {
+                    $api.css($api.dom('.cont'), 'margin-top:' + (height - 45) + 'px;');
+                }
+                bill.$data.langContent = GlobleLanguageContent.bill;
+                setTimeout(function() {
+                    that.openFrame()
+                }, 100);
+            }
+        },
+        methods: {
+            toPage: function(name, url, params) {
+                api.openWin({
+                    name: name,
+                    url: url,
+                    reload: true,
+                    pageParam: params || {}
+                });
+            },
+            switchover: function(type) {
+                var that = this;
+                that.type = type
+                that.openFrame()
+            },
+            openFrame: function() {
+                var that = this
+                api.openFrame({
+                    name: 'bill_comment',
+                    url: 'bill_comment.html',
+                    rect: {
+                        x: 0,
+                        y: $api.dom(".header").offsetHeight + $api.dom(".cont").offsetHeight + 30,
+                        w: 'auto',
+                        h: 'auto'
+                    },
+                    reload: true,
+                    pageParam: {
+                        type: that.type
+                    }
+                })
+            }
+        }
+    })
+</script>

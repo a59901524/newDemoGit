@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <title>微信收款二维码</title>
+    <link rel="stylesheet" href="../../lib/iconfont2/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/new/reset.css">
+    <link rel="stylesheet" type="text/css" href="../../css/new/addWxCode.css">
+    <script type="text/javascript" src="../../script/lib-flexible.js"></script>
+</head>
+
+<body class="has_header ">
+    <div id="bind_wx" class="content addWxCode">
+        <header class="header ">
+            <i class="iconfont icon-xiangzuo" onclick="goBack()"></i>
+            <div>{{isEditS?langContent.ctitle:langContent.atitle}}</div>
+        </header>
+        <div class="content2" :class="{'addImg': !pingzheng}" @click.stop="getImg">
+            <img :src="pingzheng" alt="" >
+        </div>
+        <div class="btn" @click="bindWechat()">提交</div>
+        <!-- <div class="flex_row_center marginT1 wxClass" @click.stop="getImg">
+            <img v-if="pingzheng!=''" :src="pingzheng||'../../image/uppz.png'" alt="" style="width: 100%;height: auto;">
+            <img v-if="pingzheng==''" :src="'../../image/upimg.png'" alt="" style="width: 150px;height: 150px;">
+        </div>
+        <div class="text_center  marginB5 color_999">{{langContent.imgtip?langContent.imgtip:''}}</div> -->
+
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script>
+    var bind_wx = new Vue({
+        el: "#bind_wx",
+        data: {
+            pingzheng: '',
+            isEditS: false,
+            isChange: false,
+            langContent: {},
+            getCodetip: {}
+        },
+        created: function() {
+            var that = this;
+            apiready = function() {
+                fixStatusbar('header,.header,.headers', '.content');
+                http(getuserinfoUrl, 'post', {},
+                    function(res) {
+                        if (res.code == 200) {
+                            that.pingzheng = res.data.wechat;
+                            if (res.data.wechat != '') {
+                                that.isEditS = true
+                            }
+                        }
+                    }
+                )
+                bind_wx.$data.langContent = GlobleLanguageContent.bind_wx;
+                bind_wx.$data.getCodetip = GlobleLanguageContent.getCode;
+            }
+        },
+        methods: {
+            bindWechat: function() {
+                var that = this;
+                var params = {
+                    wechat: that.pingzheng,
+                }
+                if (that.isChange) {
+                    http(bingWechat, 'post', params, function(res) {
+                        api.toast({
+                            msg: res.msg,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                        if (res.code == 200) {
+                            api.execScript({
+                                name: 'personal_data',
+                                script: 'personal_data.getInfo();'
+                            });
+                            setTimeout(function() {
+                                api.closeWin();
+                            }, 1500);
+                        }
+                    })
+                } else {
+                    api.toast({
+                        msg: that.langContent.nochange,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return;
+                }
+
+            },
+            getImg: function() {
+                var that = this
+                api.getPicture({
+                    sourceType: 'album',
+                    encodingType: 'jpg',
+                    mediaValue: 'pic',
+                    destinationType: 'base64',
+                    allowEdit: false,
+                    quality: 50,
+                    targetWidth: 750,
+                    targetHeight: 750,
+                    saveToPhotoAlbum: false
+                }, function(ret, err) {
+                    if (ret && ret.base64Data && ret.base64Data != '') {
+                        that.pingzheng = ret.base64Data;
+                        that.isChange = true
+                    }
+                });
+            },
+
+
+        }
+
+    })
+</script>

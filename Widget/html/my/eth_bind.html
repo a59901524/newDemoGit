@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <title>绑定ETH钱包地址</title>
+    <link rel="stylesheet" href="../../lib/iconfont2/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <style>
+        body {
+            -webkit-user-select: all
+        }
+        
+        textarea {
+            width: 94%;
+            height: 4rem;
+            background-color: #ffffff;
+            /* padding: 0.5rem 4% 0rem; */
+            color: #333;
+            font-size: 1rem;
+            border-radius: 0rem;
+            border: none;
+            padding: .8rem .8rem;
+        }
+        
+        textarea::placeholder {
+            color: #999;
+            font-size: 1.1rem;
+        }
+        
+        .ab_item {
+            width: 92%;
+            margin: 0 auto;
+            border: 1px solid #dddddd;
+            margin-top: 1.5rem;
+        }
+    </style>
+</head>
+
+<body class="has_header   ">
+    <div id="eth_bind" class="content">
+        <header class="header bbd">
+            <i class="iconfont icon-xiangzuo" onclick="goBack()"></i>
+            <div>{{langContent.title?langContent.title:''}}</div>
+            <div class="tomyfeed" @click="bind_bank()">
+                {{langContent.sub?langContent.sub:''}}
+            </div>
+        </header>
+        <!-- <div class=" padding1 marginT1 color_black6">{{langContent.address?langContent.address:''}}</div> -->
+        <div>
+            <div class="ab_item   fontSize14 text_center">
+                <div>
+                    <textarea name="" id="" rows="2" cols="20" style="vertical-align:top;outline:none;" :placeholder="langContent.add_input" v-model="bankcard"></textarea>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script>
+    var eth_bind = new Vue({
+        el: "#eth_bind",
+        data: {
+            bankcard: '',
+            bankcard111: '',
+            langContent: {},
+        },
+        created: function() {
+            var that = this;
+            apiready = function() {
+                fixStatusbar('header,.header,.headers', '.content');
+                http(getuserinfoUrl, 'post', {},
+                    function(res) {
+                        if (res.code == 200) {
+                            that.bankcard = res.data.eth_address
+                            that.bankcard111 = res.data.eth_address //保存一个判断有无更改
+                        }
+                    }
+                )
+                eth_bind.$data.langContent = GlobleLanguageContent.eth_bind;
+            }
+        },
+        methods: {
+            bind_bank: function() {
+                var that = this;
+                var reg = /^0x[a-fA-F0-9]{40}$/;
+                if (reg.test(that.bankcard)) {
+                    var params = {
+                        eth_address: that.bankcard,
+                    }
+                    if (that.bankcard111 == that.bankcard) {
+                        api.toast({
+                            msg: that.langContent.nochange,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                    } else {
+                        http(bindEth, 'post', params, function(res) {
+                            api.toast({
+                                msg: res.msg,
+                                duration: 2000,
+                                location: 'bottom'
+                            });
+                            if (res.code == 200) {
+                                api.execScript({
+                                    name: 'personal_data',
+                                    script: 'personal_data.getInfo();'
+                                });
+                                setTimeout(function() {
+                                    goBack()
+                                }, 2000);
+                            }
+                        })
+                    }
+                } else {
+                    api.toast({
+                        msg: that.langContent.site,
+                        duration: 3000,
+                        location: 'bottom'
+                    });
+                }
+
+
+            },
+
+        }
+
+    })
+</script>

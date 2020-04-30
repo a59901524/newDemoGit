@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>我的社区</title>
+    <link rel="stylesheet" href="../../lib/iconfont2/iconfont.css">
+    <link rel="stylesheet" href="../../css/common.css">
+    <link rel="stylesheet" type="text/css" href="../../css/new/reset.css">
+    <link rel="stylesheet" type="text/css" href="../../css/new/myCommunity.css">
+    <script type="text/javascript" src="../../script/lib-flexible.js"></script>
+</head>
+
+<body class="has_header color_CC ">
+    <div id="group" class='myCommunity' v-cloak>
+        <header class="header">
+            <i class="iconfont icon-xiangzuo" onclick="goBack()"></i>
+            <div>我的社区</div>
+            <!-- <div class="tomyfeed color_black6" onclick="toPage('group_guild','../comment/group_guild.html')">我的公会</div> -->
+        </header>
+        <div class="h88"></div>
+        <div class="cont">
+            <div class="content2">
+                <div class="top">
+                    <div class="topLeft">
+                        <div class="img fl"><img :src="info.pid_avatar||'../../image/user_mission.png'" alt=""></div>
+                        <div class="title fl">
+                            <div class="phone">我的直推人：{{info.pid_mobile}}</div>
+                            <div class="cont colabbdff"  v-if="info.pid_level_id == 1">{{langContent.type1?langContent.type1:''}}</div>
+                            <div class="cont colabbdff"  v-if="info.pid_level_id == 2">{{langContent.type2?langContent.type2:''}}</div>
+                            <div class="cont colabbdff"  v-if="info.pid_level_id == 3">{{langContent.type3?langContent.type3:''}}</div>
+                            <div class="cont colabbdff"  v-if="info.pid_level_id == 4">{{langContent.type4?langContent.type4:''}}</div>
+                            <div class="cont colabbdff"  v-if="info.pid_level_id == 5">{{langContent.type5?langContent.type5:''}}</div>
+                            <div class="cont colabbdff"  v-if="info.pid_level_id == 6">{{langContent.type6?langContent.type6:''}}</div>
+                        </div>
+                    </div>
+                    <div class="topRight" onclick="toPage('group_guild','../comment/group_guild.html')">
+                        我的公会
+                    </div>
+                </div>
+                <div class="nav">
+                    <div class="navLi">
+                        <div class="fontSize22">矿区活跃度</div>
+                        <div class="name fontSize30 col00fbfd">{{fixTwo(slhyd)?fixTwo(slhyd):'0'}}</div>
+                    </div>
+                    <div class="navLi">
+                        <div class="fontSize22">团队活跃度</div>
+                        <div class="name fontSize30 col00fbfd">{{fixTwo(info.team_lively) ?fixTwo(info.team_lively) :'0'}}</div>
+                    </div>
+                    <div class="navLi">
+                        <div class="fontSize22">实名活跃度</div>
+                        <div class="name fontSize30 col00fbfd">{{fixTwo(info.smrz_lively)?fixTwo(info.smrz_lively):'0'}}</div>
+                    </div>
+                    <div class="navLi">
+                        <div class="fontSize22">总活跃度</div>
+                        <div class="name fontSize30 col00fbfd">{{fixTwo(info.total_lively)?fixTwo(info.total_lively):'0'}}</div>
+                    </div>
+                    <div class="navLi">
+                        <div class="fontSize22">贡献度</div>
+                        <div class="name fontSize30 col00fbfd">{{fixTwo(info.partner_lively)?fixTwo(info.partner_lively):'0'}}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="comm">
+                <div class="cm">
+                    <div class="cmLi" :class="{'active':type==1}" @click="switchover(1)">全部</div>
+                    <div class="cmLi" :class="{'active':type==2}" @click="switchover(2)">直推</div>
+                    <div class="cmLi" :class="{'active':type==3}" @click="switchover(3)">已实名</div>
+                    <div class="cmLi" :class="{'active':type==4}" @click="switchover(4)">未实名</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    var group = new Vue({
+        el: "#group",
+        data: {
+            type: 1,
+            info: '',
+            list: '',
+            item: '',
+            info: {},
+            langContent: {},
+            slhyd: ''
+        },
+        created: function() {
+            var that = this
+            apiready = function() {
+                var height = $api.fixStatusBar($api.dom('.header'))
+                if (height > 0) {
+                    $api.css($api.dom('.cont'), 'margin-top:' + (height - 45) + 'px;');
+                }
+                group.$data.langContent = GlobleLanguageContent.group;
+                that.getInfo();
+                api.setStatusBarStyle({
+                    style: 'dark',
+                    color: 'rgba(0,0,0,0)'
+                });
+            }
+        },
+        methods: {
+            toPage: function(name, url, params) {
+                api.openWin({
+                    name: name,
+                    url: url,
+                    reload: true,
+                    pageParam: params || {}
+                });
+            },
+            openFrame: function() {
+                var that = this
+                api.openFrame({
+                    name: 'group_comment',
+                    url: 'group_comment.html',
+                    rect: {
+                        x: 0,
+                        y: $api.dom(".header").offsetHeight + $api.dom(".cont").offsetHeight + 20,
+                        w: 'auto',
+                        h: 'auto'
+                    },
+                    reload: true,
+                    pageParam: {
+                        type: that.type,
+                    }
+                })
+            },
+            fixTwo: function(num) {
+                if (num && num != 0 && Number(num) != 0) {
+                    return Number(num).toFixed(2);
+                } else {
+                    return 0.00;
+                }
+            },
+            switchover: function(type) {
+                var that = this;
+                that.type = type;
+                that.openFrame()
+            },
+            getInfo: function() {
+                var that = this;
+                http(getuserinfoUrl, 'post', {}, function(ret) {
+                    if (ret.code == 200) {
+                        that.info = ret.data;
+                        console.log(that.info)
+                        that.slhyd = Number(ret.data.own_lively) + Number(ret.data.world_lively)
+                        setTimeout(function() {
+                            that.openFrame();
+                        }, 200)
+                    }
+                })
+            },
+        }
+    })
+</script>

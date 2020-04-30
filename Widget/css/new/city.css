@@ -1,0 +1,84 @@
+.city{
+	background-color: #250084;
+	background-image: url('../image/h1.jpg');
+	background-repeat: no-repeat;
+	background-size: 100%;
+	color: #ffffff;
+}
+header{
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 0.88rem;
+	padding-top: 0.4rem;
+	padding-left: 0.12rem;
+	padding-right: 0.12rem;
+	display: flex;
+    justify-content: space-between;
+    align-content: center;
+    align-items: center;
+}
+header .left{
+	width: 0.17rem;
+	height: 0.31rem;
+}
+header .center{
+	position: absolute;
+	left: 50%;
+	transform: translateX(-50%);
+}
+header .right{
+	background: #26057f;
+	width: 1.36rem;
+	height: 0.44rem;
+	line-height: 0.44rem;
+	border-radius: 0.44rem;
+	text-align: center;
+}
+footer{
+	position: fixed;
+	bottom: 0.26rem;
+	left: 0.24rem;
+	right: 0.24rem;
+}
+footer .btn{
+	height: 0.7rem;
+	line-height: 0.7rem;
+	text-align: center;
+	font-size: 0.3rem;
+	color: #0f56e3;
+	border-radius: 0.12rem;
+	background-image: linear-gradient(#1fe2ff, #007ff7);
+}
+.city .content{
+	padding-top: 0.16rem;
+}
+.city .content .nav{
+	display: flex;
+	justify-content: space-around;
+	height: 0.4rem;
+	line-height: 0.4rem;
+}
+.city .content .nav .active{
+	color: #ffffff;
+	background: #006cff;
+}
+.city .content .nav span{
+	width: 1.84rem;
+	height: 0.4rem;
+	line-height: 0.4rem;
+	text-align: center;
+	border-radius: 0.4rem;
+	background: #26057f;
+	display: inline-block;
+}
+.city .content .cityContent{
+	padding: 0.62rem 0.18rem;
+}
+.city .cityContent .con .title{
+	padding: 0.08rem 0 0.2rem;
+}
+.city .cityContent .con .cont{
+	line-height: 0.4rem;
+}

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <title>绑定银行卡</title>
+    <link rel="stylesheet" type="text/css" href="../../css/style.css" />
+    <link rel="stylesheet" href="../../lib/iconfont2/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/bank_bind.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/new/reset.css">
+    <link rel="stylesheet" type="text/css" href="../../css/new/personalData.css">
+    <script type="text/javascript" src="../../script/lib-flexible.js"></script>
+    <style>
+        input {
+            width: 60% !important;
+        }
+
+        .ab_item span {
+            width: 26% !important;
+        }
+
+        input[disabled] {
+            /* background:#141623 */
+            color: #333;
+            -webkit-text-fill-color: #333;
+        }
+    </style>
+</head>
+
+<body class="has_header mall_address_list color_black3 ">
+    <div id="bank_bind" class="content">
+        <header class="header">
+            <i class="iconfont icon-xiangzuo" onclick="goBack()"></i>
+            <div>{{bankcard&&bankcard!=''?langContent.ctitle:langContent.btitle}}</div>
+            <div class="tomyfeed color_white" @click="bind_bank()">{{getCodetip.submit?getCodetip.submit:''}}</div>
+        </header>
+        <div class="h88"></div>
+        <div>
+            <div class="ab_item padding1 bbd bg-white fontSize14">
+                <span>{{langContent.name?langContent.name:''}}</span>
+                <input type="text" :placeholder="langContent.name_input" v-model="bankusername">
+            </div>
+            <div class="ab_item padding1 bbd bg-white fontSize14 flex_row_between" @click="showA=true">
+                <div class="width100 flx">
+                    <span>{{langContent.bank?langContent.bank:''}}</span>
+                    <input type="text" class="input" style="margin-left: 4px;" :placeholder="langContent.bank_input" v-model="bankname" disabled>
+                </div>
+                <div class="fontSize14 color_default1">
+                    <i class="iconfont icon-direction_right"></i>
+                </div>
+            </div>
+            <div class="ab_item padding1 bbd bg-white fontSize14 ">
+                <span>{{langContent.card?langContent.card:''}}</span>
+                <input type="number" :placeholder="langContent.card_input" v-model="bankcard">
+            </div>
+            <div class="ab_item padding1 bbd bg-white fontSize14 ">
+                <span>{{langContent.tel?langContent.tel:''}}</span>
+                <input type="tel" :placeholder="langContent.tel_input" v-model="bank_mobile">
+            </div>
+
+        </div>
+        <div class="box_wrapper" v-if="showA">
+            <div class="box_wrapper" v-if="showA">
+                <div class="box bg_default">
+                    <div class="box_title flex_row_center bbd bg-white fontSize16" @click="chexkBank('')">{{langContent.bank_input?langContent.bank_input:''}}</div>
+                    <div class="box_title flex_row_center bbd bg-white fontSize16" v-for="item in bankList" @click="chexkBank(item)">{{item.name}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script>
+    var bank_bind = new Vue({
+        el: "#bank_bind",
+        data: {
+            bankList: [],
+            bankname: '',
+            showA: false,
+            bankusername: '',
+            bank_mobile: '',
+            bankcard: '',
+            code: '',
+            thumb: '',
+            Imgs: '',
+            verifyCodeTips: '获取验证码',
+            number: 59,
+            id: '',
+            bankInfo: {},
+            S: false,
+            codeEnable: true,
+            pingzheng: '',
+            isEditS: false,
+            langContent: {},
+            getCodetip: {}
+        },
+        created: function() {
+            var that = this;
+            apiready = function() {
+                fixStatusbar('header,.header,.headers', '.content');
+                http(getuserinfoUrl, 'post', {},
+                    function(res) {
+                        if (res.code == 200) {
+                            that.bankusername = res.data.bank_username;
+                            that.bankname = res.data.bank_name;
+                            that.bankcard = res.data.bank_card;
+                            that.bank_mobile = res.data.bank_mobile;
+                            if (res.data.bank_card && res.data.bank_card != '') {
+                                that.S = true
+                            } else {
+                                that.bankusername = ''
+                            }
+                        }
+                    }
+                )
+                bank_bind.$data.langContent = GlobleLanguageContent.bank_bind;
+                bank_bind.$data.getCodetip = GlobleLanguageContent.getCode;
+                that.verifyCodeTips = that.getCodetip.get;
+                that.updateImg();
+                that.getBankList();
+            }
+
+        },
+        methods: {
+            getImg: function() {
+                var that = this
+                api.getPicture({
+                    sourceType: 'album',
+                    encodingType: 'jpg',
+                    mediaValue: 'pic',
+                    destinationType: 'base64',
+                    allowEdit: false,
+                    quality: 50,
+                    targetWidth: 750,
+                    targetHeight: 750,
+                    saveToPhotoAlbum: false
+                }, function(ret, err) {
+                    if (ret) {
+                        that.pingzheng = ret.base64Data;
+                    }
+                });
+            },
+            updateImg: function() {
+                this.Imgs = baseUrl + 'base/captcha?time=' + new Date().getTime()
+            },
+            getBankList: function() {
+                var that = this;
+                http(bankList, 'post', {}, function(res) {
+                    if (res.code == 200) {
+                        that.bankList = res.data;
+                    }
+                })
+            },
+            bind_bank: function() {
+                var that = this;
+                var params = {
+                    bank_username: that.bankusername,
+                    bank_name: that.bankname,
+                    bank_card: that.bankcard,
+                    bank_mobile: that.bank_mobile,
+                    // code: that.code,
+                }
+                http(bingBankUrl, 'post', params, function(res) {
+                    api.toast({
+                        msg: res.msg,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    if (res.code == 200) {
+                        setTimeout(function() {
+                            goBack()
+                        }, 1999);
+                        api.execScript({
+                            name: 'personal_data',
+                            script: 'personal_data.getInfo();'
+                        });
+                    }
+                })
+            },
+            getCode: function() {
+                var that = this;
+                if (that.codeEnable) {
+                    if (/^1[3-9]\d{9}$/.test(that.bank_mobile)) {
+                        that.Verify();
+                    } else {
+                        api.toast({
+                            msg: that.getCodetip.phonetip,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                    }
+                } else {
+                    api.toast({
+                        msg: that.getCodetip.timetip,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+            },
+            //获取验证码
+            Verify: function() {
+                var that = this;
+                var params = {
+                    mobile: that.bank_mobile,
+                    captcha: that.thumb,
+                };
+                http(sendMsgUrl, 'post', params, function(res) {
+                        api.toast({
+                            msg: res.msg,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                        if (res.code == 200) {
+                            that.codeEnable = false;
+                            that.countDown()
+                        }
+                    })
+                    // }
+            },
+            //发送验证码倒计时
+            countDown: function() {
+                var that = this;
+                that.number = 59;
+                var timer = setInterval(function() {
+                    if (that.number <= 1) {
+                        window.clearInterval(timer)
+                            // that.verifyCodeTips = "获取验证码";
+                        that.verifyCodeTips = that.getCodetip.get;
+                        that.number = 59;
+                        that.codeEnable = true;
+                    } else {
+                        that.verifyCodeTips = that.getCodetip.reget + "(" + that.number + ")";
+                        that.number--;
+                    }
+                }, 1000)
+            },
+            chexkBank: function(item) {
+                var that = this;
+                this.showA = !this.showA
+                that.bankname = item.name
+                    // if (params) {
+                    //     that.bankInfo.bank_name = params.bank_name;
+                    //     that.bankInfo.bankId = params.id;
+                    // }
+            }
+        }
+
+    })
+</script>

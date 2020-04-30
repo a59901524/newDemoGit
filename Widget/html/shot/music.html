@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>选择音乐</title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/music.css" />
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <div id="music" class="bg_white" v-cloak>
+        <header class="header bg_white" style="color: #000000;background: #ffffff;">
+            <img src="../../image/close.png" alt="" @click="goBack()" />
+            <div>{{langContent.title?langContent.title:''}}</div>
+        </header>
+        <div class="inputarea flex_row_center">
+            <img src="../../image/search_btn.png" alt="" />
+            <input class="fontSize12" type="text" :placeholder="langContent.search" v-model="words" v-on:input="toSearch()" onpaste="return true" @keyup.enter="toSearch">
+        </div>
+        <div class="contentpart">
+            <div class="fourbtn flex_row_left bg-white fontSize14">
+                <div class="partbtn flex_col_between" v-for="obj in musictypes" @click="toTypes(obj.name,obj.id)">
+                    <img :src="obj.img" alt="" />
+                    <div>{{obj.name}}</div>
+                </div>
+            </div>
+            <div class="selcetstyle flex_row_around text_center color_gray fontSize14 BB1">
+                <div class="posi_relative" :class="{'on' : type == 1}" @click="changeTpye(1)">{{langContent.type1?langContent.type1:''}}
+                    <img class="topimg" src="../../image/top.png" alt="" />
+                </div>
+                <div :class="{'on' : type == 2}" @click="changeTpye(2)">{{langContent.type2?langContent.type2:''}}</div>
+            </div>
+            <div v-show="type == 1">
+                <div v-for="obj in hotlist" @click="play(obj.id,obj.url)">
+                    <div class="musiclist flex_row_between">
+                        <img class="musicimg" :src="obj.cover?obj.cover:'../../image/4.jpg'" alt="" />
+                        <div class="info flex_col_left">
+                            <div class="fontSize14">{{obj.music_name}}</div>
+                            <div class="fontSize12 color_gray">{{obj.singer_name}}</div>
+                            <div class="fontSize12 color_gray">{{obj.music_length}}</div>
+                        </div>
+                        <img @click.stop="addlike(obj,obj.id)" v-show="obj.is_like==0" class="xing" src="../../image/colet.png" alt="" />
+                        <img @click.stop="addlike(obj,obj.id)" v-show="obj.is_like==1" class="xing" src="../../image/coleted.png" alt="" />
+                    </div>
+                    <div v-show="isplay&&playid == obj.id" class="usemusic flex_row_center" @click.stop="usemusic(obj.id,obj.url)">
+                        <img src="../../image/paishe.png" alt="" />
+                        <div>{{langContent.sure?langContent.sure:''}}</div>
+                    </div>
+                </div>
+            </div>
+            <div v-show="type == 2">
+                <div v-for="obj in mylike" @click="play(obj.music_id,obj.music.url)">
+                    <div class="musiclist flex_row_between">
+                        <img class="musicimg" :src="obj.music&&obj.music.cover?obj.music.cover:'../../image/4.jpg'" alt="" />
+                        <div class="info flex_col_left">
+                            <div class="fontSize14">{{obj.music.music_name}}</div>
+                            <div class="fontSize12 color_gray">{{obj.music.singer_name}}</div>
+                            <div class="fontSize12 color_gray">{{obj.music.music_length}}</div>
+                        </div>
+                        <img @click.stop="addlike(obj,obj.music_id)" v-show="obj.is_like==0" class="xing" src="../../image/colet.png" alt="" />
+                        <img @click.stop="addlike(obj,obj.music_id)" v-show="obj.is_like==1" class="xing" src="../../image/coleted.png" alt="" />
+                    </div>
+                    <div v-show="isplay&&playid == obj.music_id" class="usemusic flex_row_center" @click.stop="usemusic(obj.music_id,obj.url)">
+                        <img src="../../image/paishe.png" alt="" />
+                        <div>{{langContent.sure?langContent.sure:''}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script>
+    var music = new Vue({
+        el: '#music',
+        data: {
+            words: '',
+            banner: [],
+            title: '',
+            type: 1,
+            isplay: false,
+            playid: 1,
+            musictypes: [
+                //     {
+                //     img: '../../image/rege.png',
+                //     name: '热歌'
+                // }, {
+                //     img: '../../image/xinge.png',
+                //     name: '新歌'
+                // }, {
+                //     img: '../../image/jingdian.png',
+                //     name: '经典'
+                // }, {
+                //     img: '../../image/liuxing.png',
+                //     name: '流行'
+                // }, {
+                //     img: '../../image/guofeng.png',
+                //     name: '国风'
+                // }
+            ],
+            searchList: [],
+            hotlist: [],
+            mylike: [],
+            langContent: {}
+        },
+        created: function() {
+            var that = this;
+            apiready = function() {
+                var height = $api.fixStatusBar(document.querySelector('header'));
+                var minheight = api.frameHeight - height - 45;
+                $api.css($api.dom('#music'), 'min-height:' + minheight + 'px');
+                $api.css($api.dom('.inputarea'), 'margin-top: ' + (height) + 'px');
+                music.$data.langContent = GlobleLanguageContent.music;
+                that.getCatelist();
+                that.getHotlist();
+            }
+        },
+        methods: {
+            addlike: function(obj, id) { //收藏
+                var that = this;
+                http(colMusicUrl, 'post', {
+                    music_id: id
+                }, function(res) {
+                    if (res.code == 200) {
+                        obj.is_like = res.data.is_like
+                    }
+                }, function(err) {});
+            },
+            getmylikelist: function() {
+                var that = this;
+                http(mycolMusicUrl, 'post', {}, function(res) {
+                        if (res.code == 200) {
+                            that.mylike = res.data;
+                            that.mylike.forEach(function(element) {
+                                element.is_like = 1
+                            });
+                            that.mylike = JSON.parse(JSON.stringify(that.mylike))
+                        }
+                    },
+                    function(err) {});
+            },
+            getHotlist: function() {
+                var that = this;
+                http(hotMusicUrl, 'post', {}, function(res) {
+                        if (res.code == 200) {
+                            that.hotlist = res.data;
+                        }
+                    },
+                    function(err) {});
+            },
+            getCatelist: function() {
+                var that = this;
+                http(getmuCateUrl, 'post', {}, function(res) {
+                        if (res.code == 200) {
+                            that.musictypes = res.data.info;
+                        }
+                    },
+                    function(err) {});
+            },
+            toTypes: function(name, id) {
+                api.openFrame({
+                    name: 'music_type',
+                    url: 'music_type.html',
+                    bounces: true,
+                    rect: {
+                        x: 0,
+                        y: $api.dom('header').offsetHeight - 45,
+                        w: 'auto',
+                        h: 'auto'
+                    },
+                    pageParam: {
+                        title: name,
+                        id: id
+                    }
+                });
+            },
+            usemusic: function(music_id, mp3url) {
+                api.sendEvent({
+                    name: 'usemusic',
+                    extra: {
+                        music_id: music_id,
+                        url: 'fs://ShortMusic/' + mp3url.substring(mp3url.lastIndexOf('/') + 1)
+                    }
+                });
+                api.closeFrame({
+                    name: 'searchmusic_frame'
+                });
+                api.closeFrame({});
+            },
+            play: function(num, mp3url) {
+                var that = this;
+                that.playid = num
+                that.isplay = !that.isplay
+                if (that.isplay) {
+                    api.showProgress({
+                        title: that.langContent.loading,
+                        text: that.langContent.wait,
+                        modal: false
+                    });
+                    api.download({
+                        url: mp3url,
+                        savePath: 'fs://ShortMusic/' + mp3url.substring(mp3url.lastIndexOf('/') + 1),
+                        report: true,
+                        cache: true,
+                        allowResume: true
+                    }, function(ret, err) {
+                        if (ret.state == 1) {
+                            //下载成功
+                            api.hideProgress();
+                            api.startPlay({
+                                path: 'fs://ShortMusic/' + mp3url.substring(mp3url.lastIndexOf('/') + 1),
+                            }, function(ret, err) {
+                                if (ret) {} else {}
+                            });
+                        } else {
+                            // api.toast({
+                            //     msg: '资源加载失败！请稍后重试！',
+                            //     duration: 2000,
+                            //     location: 'bottom'
+                            // });
+                            api.hideProgress();
+                        }
+                    });
+                } else {
+                    api.stopPlay();
+                }
+            },
+            changeTpye: function(num) { //切换类型
+                var that = this;
+                if (that.type != num) {
+                    that.isplay = false;
+                    api.stopPlay();
+                }
+                that.type = num;
+                if (num == 2) {
+                    that.getmylikelist();
+                } else if (num == 1) {
+                    that.getHotlist();
+                }
+            },
+            goBack: function() {
+                api.closeFrame({
+                    name: 'searchmusic_frame'
+                });
+                api.closeFrame({
+                    name: 'music_type'
+                });
+                api.closeFrame({});
+            },
+            getBanner: function() {
+                var that = this;
+                http(musicbannerUrl, 'post', {},
+                    function(res) {
+                        if (res.code == 200) {
+                            that.banner = res.data.list;
+                        }
+                    },
+                    function(err) {}
+                )
+            },
+            openmusic: function() {
+                var that = this;
+                api.openFrame({
+                    name: 'music_frame',
+                    url: './music/music_frame.html',
+                    bounces: true,
+                    rect: {
+                        x: 0,
+                        y: $api.dom('#music').offsetHeight,
+                        w: 'auto',
+                        h: api.frameHeight - $api.dom('#music').offsetHeight,
+                    }
+                });
+            },
+            toSearch: function() {
+                var that = this;
+                that.searchList = [];
+                if (that.words != '') {
+                    api.openFrame({
+                        name: 'searchmusic_frame',
+                        url: 'searchmusic_frame.html',
+                        reload: true,
+                        rect: {
+                            x: 0,
+                            y: $api.dom('.header').offsetHeight + 45,
+                            w: 'auto',
+                            h: 'auto'
+                        },
+                        pageParam: {
+                            words: that.words
+                        },
+                    });
+                } else {
+                    api.closeFrame({
+                        name: 'searchmusic_frame'
+                    });
+                }
+            },
+        }
+    });
+</script>

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>森林兑换</title>
+    <link rel="stylesheet" href="../../lib/iconfont2/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../css/new/reset.css">
+    <link rel="stylesheet" type="text/css" href="../../css/new/minMarket.css">
+    <script type="text/javascript" src="../../script/lib-flexible.js"></script>
+    <link rel="stylesheet" href="../../css/common.css">
+    <style>
+        #frame1_comment {
+            min-height: 100%
+        }
+
+        .black_overlay1 {
+            position: fixed;
+            top: 0%;
+            left: 0%;
+            bottom: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, .5);
+            z-index: 10001;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div id="frame1_comment" class='minMarket' v-cloak>
+        <div class="content2">
+            <div class="contLi" v-for="(item, index) in list">
+                <div class="left"><img :src="'../../image/new/d'+item.id+'.png'" alt=""></div>
+                <div class="right">
+                    <div class="title fontSize26">{{item.forest_name}}<span class="fontSize25" @click="Buy(item.id)">兑换</span></div>
+                    <div class="p dis">
+                        <div class="p1">活跃度：<span class="col00fbfd">{{item.lively}}</span></div>
+                        <div class="p2">开采率：<span class="colff8900">{{item.calculation_power}}/h</span></div>
+                    </div>
+                    <div class="p">开采总量：{{item.profit_total}}HDC</div>
+                    <div class="p">生长周期：<span class="col00fbfd">{{item.cycle/24}} {{langContent.day?langContent.day:''}}</span></div>
+                    <div class="btn fontSize25"><img src="../../image/new/cart.png" alt=""><span>{{trasformnum(item.price)}}HDC</span></div>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="flex_row_left padding1 list bg_white" style="align-items: flex-start;" v-for="item in list">
+            <img class="treetumb Bc marginR5" :src="'../../image/tree/tree'+item.id+'sz.png'" alt="">
+            <div class="color_999 l_left">
+                <div class="flex_row_between">
+                    <div class="fontSize16 font_bold colorfe">{{item.forest_name}}</div>
+                    <div class="flex_row_center bg_f8f8f8 marginT1" style="width: auto;padding: 5px;white-space: nowrap;border-radius: 5px;">
+                        <i class="iconfont icon-gouwuche color_golds"></i>
+                        <div class="color_black6">{{trasformnum(item.price)}} HDC</div>
+                    </div>
+                </div>
+                <div class="flex_row_between" style="align-items: flex-end;">
+                    <div style="flex: 1;">
+                        <div class="fontSize12 marginT1">{{langContent.hyd?langContent.hyd:''}}：{{item.lively}}</div>
+                        <div class="fontSize12 marginT1">{{langContent.kcl?langContent.kcl:''}}：{{item.calculation_power}}/h</div>
+                        <div class="fontSize12 marginT1">{{langContent.kczl?langContent.kczl:''}}：{{item.profit_total}} HDC</div>
+                        <div class="fontSize12 marginT1">{{langContent.szzq?langContent.szzq:''}}：{{item.cycle/24}} {{langContent.day?langContent.day:''}}</div>
+                    </div>
+                    <div class="buy color_white" @click="Buy(item.id)">{{langContent.exbtn?langContent.exbtn:''}}</div>
+                </div>
+            </div>
+        </div> -->
+        <div v-show="isShowpas" class="black_overlay1 flex_row_center publicpsw" @touchmove.prevent>
+            <div class="publicpswitem posi_relative padding1 bg-white text_center">
+                <img class="paswdimg" src="../../image/tree/password.svg" alt="">
+                <div class="flex_row_left">
+                    <input type="password" :placeholder="langContent.psw_input" v-model="password">
+                </div>
+                <div class="flex_row_between marginT1">
+                    <div @click.stop="sureBuy()" class="btn">{{langContent.sure?langContent.sure:''}}</div>
+                    <div @click.stop="password='';isShowpas=false;" class="btn btn1">{{langContent.cancel?langContent.cancel:''}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    var frame1_comment = new Vue({
+        el: "#frame1_comment",
+        data: {
+            list: [],
+            flag: true,
+            from: '',
+            password: '',
+            isShowpas: false,
+            buyid: '',
+            langContent: {}
+        },
+        created: function() {
+            var that = this
+            apiready = function() {
+                if (api.pageParam.from) {
+                    that.from = api.pageParam.from
+                }
+                frame1_comment.$data.langContent = GlobleLanguageContent.frame1_comment;
+                that.getInfo()
+            }
+        },
+        methods: {
+            trasformnum: function(num) {
+                var that = this;
+                // if (num > 0 && num < 1000) {
+                //     return num;
+                // } else if (num >= 1000 && num < 10000) {
+                //     var trs = ((num / 1000))
+                //     return trs + '千'
+                // } else if (num >= 10000 && num < 100000000) {
+                //     var trs = ((num / 10000))
+                //     return trs + '万'
+                // }
+                return num;
+            },
+            toPage: function(name, url, params) {
+                api.openWin({
+                    name: name,
+                    url: url,
+                    reload: true,
+                    pageParam: params || {}
+                });
+            },
+            getInfo: function() {
+                var that = this;
+                http(productListUrl, 'post', {}, function(ret) {
+                    if (ret.code == 200) {
+                        that.list = ret.data.info;
+                    }
+                })
+            },
+            sureBuy: function() {
+                var that = this;
+                if (!that.password || that.password == '') {
+                    api.toast({
+                        msg: that.langContent.pswtip,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return;
+                }
+                if (that.flag) {
+                    that.flag = false
+                    http(productBuyUrl, 'post', {
+                        forest_id: that.buyid,
+                        password: that.password
+                    }, function(res) {
+                        that.flag = true
+                        that.isShowpas = false;
+                        that.buyid = '';
+                        that.password = '';
+                        if (res.code == 200) {
+                            api.toast({
+                                msg: res.msg,
+                                duration: 2000,
+                                location: 'middle'
+                            });
+                            if (that.from && that.from == 'certifylist') {
+                                api.execScript({
+                                    name: 'certifylist',
+                                    script: 'certifylist.middlerz(2),certifylist.middlerz(3)'
+                                });
+                            }
+                        } else {
+                            api.toast({
+                                msg: res.msg,
+                                duration: 2000,
+                                location: 'bottom'
+                            });
+                        }
+                    })
+                } else {
+                    api.toast({
+                        msg: that.langContent.buy,
+                        duration: 2000,
+                        location: 'middle'
+                    });
+                    return;
+                }
+            },
+            Buy: function(id) {
+                var that = this;
+                that.isShowpas = true;
+                that.buyid = id;
+            }
+        }
+    })
+</script>

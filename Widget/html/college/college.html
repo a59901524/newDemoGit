@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>商学院</title>
+    <link rel="stylesheet" href="../../lib/iconfont2/iconfont.css">
+    <link rel="stylesheet" href="../../css/common.css">
+    <style>
+        .b_header {
+            padding: 15px 0;
+            white-space: nowrap;
+            min-width: 15%;
+            max-width: 20%;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .on {
+            font-weight: 900;
+            border-bottom: 2px solid;
+            color: #cb974d;
+        }
+    </style>
+</head>
+
+<body class="has_header color_999 bg-white color_default1 ">
+    <div id="college" v-cloak>
+        <header class="header ">
+            <i class="iconfont icon-xiangzuo" onclick="goBack()"></i>
+            <div class="fontSize16">{{langContent.title?langContent.title:''}}</div>
+        </header>
+        <div class="flex_row_between cont fontSize14 bbd">
+            <div class="b_header" :class="{'on':type==1}" @click="switchover(1)" style="margin-left: 1px;">{{langContent.video?langContent.video:''}}</div>
+            <div class="b_header" :class="{'on':type==2}" @click="switchover(2)">{{langContent.voice?langContent.voice:''}}</div>
+            <div class="b_header" :class="{'on':type==5}" @click="switchover(5)">{{langContent.qianliao?langContent.qianliao:''}}</div>
+            <div class="b_header" :class="{'on':type==3}" @click="switchover(3)">{{langContent.new?langContent.new:''}}</div>
+            <!-- <div class="b_header" :class="{'on':type==4}" @click="changType(4)">素材区</div> -->
+            <div class="b_header" :class="{'on':type==4}" @click="switchover(4)">{{langContent.scq?langContent.scq:''}}</div>
+            <!-- <div class="b_header" :class="{'on':type==4}" @click="switchover(4)">文件下载</div> -->
+        </div>
+
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    var college = new Vue({
+        el: "#college",
+        data: {
+            type: 1,
+            isShow: false,
+            langContent: {}
+        },
+        created: function() {
+            var that = this
+            apiready = function() {
+                college.$data.langContent = GlobleLanguageContent.college;
+                var height = $api.fixStatusBar($api.dom('.header'))
+                if (height > 0) {
+                    $api.css($api.dom('.cont'), 'margin-top:' + (height - 45) + 'px;');
+                }
+                setTimeout(function() {
+                    that.openFrame()
+                }, 100);
+            }
+        },
+        methods: {
+
+            toPage: function(name, url, params) {
+                api.openWin({
+                    name: name,
+                    url: url,
+                    reload: true,
+                    pageParam: params || {}
+                });
+            },
+            switchover: function(type) {
+
+                api.closeFrame({
+                    name: 'college_comment'
+                });
+                var that = this;
+                that.type = type
+                that.isShow = true
+                that.openFrame()
+            },
+            openFrame: function() {
+                var that = this
+                api.openFrame({
+                    name: 'college_comment',
+                    url: 'college_comment.html',
+                    rect: {
+                        x: 0,
+                        y: $api.dom(".header").offsetHeight + $api.dom(".cont").offsetHeight,
+                        w: 'auto',
+                        h: 'auto'
+                    },
+                    reload: true,
+                    pageParam: {
+                        type: that.type,
+                        isShow: that.isShow
+                    }
+                })
+            }
+        }
+    })
+</script>

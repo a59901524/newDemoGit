@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>选择音乐</title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/music.css" />
+    <style>
+        #music_type {
+            background-color: #110e24;
+            min-height: calc(100vh - 45px);
+        }
+        
+        .header {
+            background-color: #110e24;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="music_type" style="padding-top: 45px" v-cloak>
+        <header class="header" style="background-color: #110e24;color: #ffffff;">
+            <img src="../../image/whiteback.png" alt="" @click="goBack()" />
+            <div>{{title?title:''}}</div>
+        </header>
+        <div class="contentpart">
+            <div v-for="obj in searchList" class="bg-white" @click="play(obj.id,obj.url)">
+                <div class="musiclist flex_row_between">
+                    <img class="musicimg" :src="obj.cover?obj.cover:'../../image/4.jpg'" alt="" />
+                    <div class="info flex_col_left">
+                        <div class="fontSize14">{{obj.music_name}}</div>
+                        <div class="fontSize12 color_gray">{{obj.singer_name}}</div>
+                        <div class="fontSize12 color_gray">{{obj.music_length}}</div>
+                    </div>
+                    <img @click.stop="addlike(obj)" v-show="obj.is_like==0" class="xing" src="../../image/colet.png" alt="" />
+                    <img @click.stop="addlike(obj)" v-show="obj.is_like==1" class="xing" src="../../image/coleted.png" alt="" />
+                </div>
+                <div v-show="isplay&&playid == obj.id" class="usemusic flex_row_center" @click.stop="usemusic(obj.id,obj.url)">
+                    <img src="../../image/paishe.png" alt="" />
+                    <div>{{langContent.sure?langContent.sure:''}}</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script>
+    var music_type = new Vue({
+        el: '#music_type',
+        data: {
+            title: '',
+            isplay: false,
+            playid: 1,
+            searchList: [],
+            langContent: {}
+        },
+        created: function() {
+            var that = this;
+            apiready = function() {
+                that.title = api.pageParam.title;
+                music_type.$data.langContent = GlobleLanguageContent.music;
+                that.getlist();
+            }
+        },
+        methods: {
+            addlike: function(obj) { //收藏
+                var that = this;
+                http(colMusicUrl, 'post', {
+                    music_id: obj.id
+                }, function(res) {
+                    if (res.code == 200) {
+                        obj.is_like = res.data.is_like
+                    }
+                }, function(err) {});
+            },
+            getlist: function() {
+                var that = this;
+                http(searchMusicUrl, 'post', {
+                        keyword: '',
+                        category_id: api.pageParam.id
+                    }, function(res) {
+                        if (res.code == 200) {
+                            that.searchList = res.data;
+                        }
+                    },
+                    function(err) {});
+            },
+            usemusic: function(music_id, mp3url) {
+                api.sendEvent({
+                    name: 'usemusic',
+                    extra: {
+                        music_id: music_id,
+                        url: 'fs://ShortMusic/' + mp3url.substring(mp3url.lastIndexOf('/') + 1)
+                    }
+                });
+                api.closeFrame({
+                    name: 'music'
+                });
+                api.closeFrame({
+                    name: 'searchmusic_frame'
+                });
+                api.closeFrame({});
+            },
+            play: function(num, mp3url) {
+                var that = this;
+                that.playid = num
+                that.isplay = !that.isplay
+                if (that.isplay) {
+                    api.showProgress({
+                        title: that.langContent.loading,
+                        text: that.langContent.wait,
+                        modal: false
+                    });
+                    api.download({
+                        url: mp3url,
+                        savePath: 'fs://ShortMusic/' + mp3url.substring(mp3url.lastIndexOf('/') + 1),
+                        report: true,
+                        cache: true,
+                        allowResume: true
+                    }, function(ret, err) {
+                        if (ret.state == 1) {
+                            //下载成功
+                            api.hideProgress();
+                            api.startPlay({
+                                path: 'fs://ShortMusic/' + mp3url.substring(mp3url.lastIndexOf('/') + 1),
+                            }, function(ret, err) {
+                                if (ret) {} else {}
+                            });
+                        } else {
+                            api.hideProgress();
+                        }
+                    });
+                } else {
+                    api.stopPlay();
+                }
+            },
+            goBack: function() {
+                api.closeFrame({});
+            },
+        }
+    });
+</script>

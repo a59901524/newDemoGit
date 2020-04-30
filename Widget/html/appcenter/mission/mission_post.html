@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>发布任务</title>
+    <link rel="stylesheet" href="../../../lib/vant/vant.css">
+    <link rel="stylesheet" href="../../../lib/iconfont2/iconfont.css">
+    <link rel="stylesheet" href="../../../css/common.css">
+    <style>
+        /********************** 发布任务任务列表 ****************/
+
+        .post_input {
+            width: 100%;
+            text-align: right;
+            font-size: 1.2rem;
+            line-height: 1.5rem;
+            padding: .3rem 0rem;
+        }
+
+        .post_input::placeholder {
+            font-size: 1.2rem;
+            line-height: 1.5rem;
+            padding: .3rem 0rem;
+        }
+
+        .post_input_title {
+            width: 100%;
+            font-size: 1.2rem;
+            line-height: 1.5rem;
+            padding: .3rem 0rem;
+            color: #cfa767;
+        }
+
+        .post_input_title::placeholder {
+            font-size: 1.2rem;
+            line-height: 1.5rem;
+            padding: .3rem 0rem;
+            color: #cfa767;
+        }
+
+        .lo_btn {
+            width: 55%;
+            height: 2rem;
+            line-height: 2rem;
+            text-align: center;
+            letter-spacing: 5px;
+            margin: .5rem auto 0;
+            padding: .5rem;
+        }
+
+        .tomyfeed {
+            font-size: 1rem;
+            position: absolute;
+            right: 1rem;
+            bottom: 10px;
+        }
+
+        .text_title_lfte {
+            font-size: 1.2rem;
+            padding: .3rem 0rem;
+        }
+
+        .text_right_right {
+            font-size: 1.2rem;
+            padding: .3rem 0rem;
+            margin-right: 1rem;
+        }
+
+        textarea {
+            width: 92%;
+            height: 3rem;
+            display: block;
+            border: none;
+            resize: none;
+            padding: 0.5rem 4% 0rem;
+            font-size: 1rem;
+            line-height: 0.96rem;
+            outline: none;
+            border-radius: 0rem;
+        }
+
+        .borderTextarea {
+            border: 1px solid #dddddd;
+        }
+    </style>
+</head>
+
+<body class="has_header color_black3 ">
+    <div id="mission_post" v-cloak>
+        <header class="header bbd ">
+            <i class="iconfont icon-xiangzuo " onclick="goBack()"></i>
+            <div>发布悬赏</div>
+            <div class="tomyfeed color_black6" onclick="toPage('mission_notice','./mission_notice.html')">发布须知</div>
+        </header>
+
+        <div class="cont ">
+            <!--  任务类型 ---------------------------------------->
+            <div class="">
+                <div class=" bg-white padding1_left_right bbd ">
+                    <div class="padding1_top_bottom">任务标题 + 任务头像</div>
+                    <div class="flex_row_between ">
+                        <div @click="gopics()" style="width: 56px;height: 56px; background-color: #999; margin-right: 5px; "><img :src="img_url?img_url:'../../../image/appcenter/up_img.png'" alt=""></div>
+                        <div style="flex:1" class="borderTextarea"><textarea v-model="missionTitle" ref="focus" style="height: 48px; color: #999;" name="" id="" maxlength="20" placeholder="请一句话描述你的需求"></textarea></div>
+                    </div>
+                    <div style="height: 1.2rem;"></div>
+                </div>
+
+
+
+                <div class="flex_row_between padding1  bbd bg-white">
+                    <div class="text_title_lfte">类型</div>
+                    <div class="flex_row_right color_999" @click="switchover(1)">
+                        <div class="text_right_right">{{missionType}}</div>
+                        <div>
+                            <!-- <img src="../../../image/selectdown.png" alt="" class="post_icon" v-if="type!=1">
+                            <img src="../../../image/user_top.png" alt="" class="post_icon" v-if="type==1"> -->
+                            <i class="iconfont icon-direction_right color_default1 "></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex_row_between padding1  bbd bg-white">
+                    <div class="text_title_lfte">支持设备</div>
+                    <div class="flex_row_right color_999" @click="switchover(2)">
+                        <div class="text_right_right">{{equipmentType}}</div>
+                        <div>
+                            <!-- <img src="../../../image/selectdown.png" alt="" class="post_icon" v-if="type!=2">
+                            <img src="../../../image/user_top.png" alt="" class="post_icon" v-if="type==2"> -->
+                            <i class="iconfont icon-direction_right color_default1 "></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex_row_between padding1  bbd bg-white">
+                    <div class="text_title_lfte">截止时间</div>
+                    <div class="flex_row_right color_999" @click="switchover(3)">
+                        <div class="text_right_right">{{deadline}}</div>
+                        <div>
+                            <!-- <img src="../../../image/selectdown.png" alt="" class="post_icon" v-if="type!=3">
+                            <img src="../../../image/user_top.png" alt="" class="post_icon" v-if="type==3"> -->
+                            <i class="iconfont icon-direction_right color_default1 "></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex_row_between padding1  bbd bg-white">
+
+                    <div class="text_title_lfte">接单最晚完成时间</div>
+                    <div class="flex_row_right color_999" @click="switchover(4)">
+                        <div class="text_right_right">{{durationType}}</div>
+                        <div>
+                            <!-- <img src="../../../image/selectdown.png" alt="" class="post_icon" v-if="type!=4">
+                            <img src="../../../image/user_top.png" alt="" class="post_icon" v-if="type==4"> -->
+                            <i class="iconfont icon-direction_right color_default1 "></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="height: 6px;"></div>
+            <!-------------------------------------------- 任务奖励 ---------------------------------------->
+            <div class="bg-white ">
+
+                <div class="flex_row_between padding1  bbd">
+                    <div class="text_title_lfte">币种</div>
+                    <div class="flex_row_right color_999" @click="switchover(5)">
+                        <div class="text_right_right">{{currencyType}}</div>
+                        <div>
+                            <!-- <img src="../../../image/selectdown.png" alt="" class="post_icon" v-if="type!=5">
+                            <img src="../../../image/user_top.png" alt="" class="post_icon" v-if="type==5"> -->
+                            <i class="iconfont icon-direction_right color_default1 "></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex_row_between padding1  bbd">
+                    <div class="text_title_lfte">单个奖励</div>
+                    <div class="flex_row_right color_999">
+                        <input type="number" placeholder="请填写单个奖励" maxlength="3" οnkeyup="this.value=this.value.toString().match(/^\d+(?:\.\d{0,2})?/)" class="post_input" v-model="awardValue">
+                    </div>
+                </div>
+
+                <div class="flex_row_between padding1  bbd">
+                    <div class="text_title_lfte">任务数量</div>
+                    <div class="flex_row_right color_999">
+                        <input type="number" maxlength="3" οnkeyup="this.value=this.value.toString().match(/^\d+(?:\.\d{0,0})?/)" placeholder="请填写任务数量" class="post_input" v-model="missionValue">
+                    </div>
+                </div>
+                <div class="flex_row_between padding1  bbd">
+                    <div class="text_title_lfte">任务链接(选填)</div>
+                    <div class="flex_row_right color_999">
+                        <input type="text" placeholder="请粘贴任务链接" class="post_input" v-model="missionLink">
+                    </div>
+                </div>
+            </div>
+            <div style="height: 6px;"></div>
+
+            <!-------------------------------------------- 添加步骤 ---------------------------------------->
+            <div class=" bg-white">
+                <div class="flex_row_between padding1  ">
+                    <div class="text_title_lfte">添加步骤</div>
+                    <div class="flex_row_right color_999">
+                        <div class=" ">上传任务步骤，<span class="color_default1">最多可添加10步</span> </div>
+                    </div>
+                </div>
+
+                <!-------------------------------------------- 第一步 ---------------------------------------->
+                <div v-for="(adddata,index) in steps">
+                    <div class="fontSize14" style="margin-left: 1rem;">第 <span>{{index+1}}</span> 步</div>
+                    <div class="flex_row_between " style="padding: .2rem 1rem .6rem;">
+                        <div style="width: 56px;height: 56px;   margin-right: 5px" @click="gopic(adddata)"><img :src="adddata.img?adddata.img:'../../../image/appcenter/up_img.png'" alt=""></div>
+                        <div style="flex:1 " class="borderTextarea"><textarea v-model="adddata.step_text" name="" id="" maxlength="50" placeholder="请叙述详细步骤,不超过50个字" style="height: 48px; color: #ccc;"></textarea></div>
+                        <div>
+                            <!-- <img src="../../../image/jh.png" alt="" style=" width: 20px;height: 20px; margin-left: 5px;" @click="deletestep(adddata)"> -->
+                            <i class="iconfont icon-jianshao" style="margin-left: 5px; color: #ff6262; font-size: 20px;" @click="deletestep(adddata)"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex_row_right color_999 padding1" @click="addSteps">
+                    <u class="fontSize14 color_default1">继续添加步骤</u>
+                </div>
+                <div style="height: 1px;" class=""></div>
+                <!-------------------------------------------- 文字验证(选填) ---------------------------------------->
+
+                <div class="padding1 bbd">
+                    <div class="text_title_lfte ">文字验证 (选填)</div>
+                    <div class="borderTextarea">
+                        <textarea name="" id="" cols="30" rows="2" maxlength="50" v-model="textVerify" placeholder="如需接单者提供文字信息,请在此输入,其它地方输入无效。" style="height: 6rem; color: #ccc;">
+                        </textarea>
+                    </div>
+                    <div style="height: 1rem;"></div>
+                </div>
+                <!-------------------------------------------- 备注(选填) ---------------------------------------->
+                <div class="padding1 ">
+                    <div class="text_title_lfte ">备注 (选填)</div>
+                    <div class="borderTextarea">
+                        <textarea name="" id="" cols="30" rows="2" maxlength="200" v-model="remarks" placeholder="请叙述备注,不超过200个字" style="height: 6rem; color: #ccc;">
+                            </textarea>
+                    </div>
+                    <div style="height: 1rem;"></div>
+                </div>
+            </div>
+            <div style="height: 75px;"></div>
+
+            <div class="bottom_btn_fixed">
+                <div class="bottom_bgimg_fixed" @click="publish">
+                    确定发布
+                </div>
+            </div>
+
+
+            <!-- 新写的 -->
+            <!-- <div class="black_overlay1 flex_row_center" v-show="isShow" @touchmove.prevent>
+                <div class="item posi_relative padding1 bg-white text_center">
+                    <img class="paswdimg" src="../../../image/tree/password.svg" alt="">
+                    <input type="password" class="password" placeholder="请输入交易密码" v-model="password">
+                    <div class="flex_row_between marginT1">
+                        <div @click.stop="submitpay()" class="btn1">确定</div>
+                        <div @click.stop="password='';isShow=false;" class="btn2">取消</div>
+                    </div>
+                </div>
+            </div> -->
+
+
+            <div v-show="isShow" class="black_overlay1 flex_row_center publicpsw" @touchmove.prevent>
+                <div class="publicpswitem posi_relative padding1 bg-white text_center">
+                    <img class="paswdimg" src="../../../image/tree/password.svg" alt="">
+                    <div class="flex_row_left">
+                        <input type="password" placeholder="请输入交易密码" v-model="password">
+                    </div>
+                    <div class="flex_row_between marginT1">
+                        <div @click.stop="submitpay()" class="btn">确定</div>
+                        <div @click.stop="password='';isShow=false;" class="btn btn1">取消</div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <van-popup v-model="isShowtime" position="bottom">
+                <van-datetime-picker type="datetime" :min-date="minDate" @cancel="showPicker = false" @confirm="onInput" />
+            </van-popup>
+            <van-popup v-model="showPicker" position="bottom">
+                <van-picker show-toolbar :columns="columns" @cancel="showPicker = false" @confirm="onConfirm" />
+            </van-popup>
+        </div>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../../lib/vant/vant.min.js"></script>
+<script type="text/javascript" src="../../../script/rsa.js"></script>
+<script type="text/javascript" src="../../../script/aes.js"></script>
+<script type="text/javascript" src="../../../script/const.js"></script>
+<script type="text/javascript" src="../../../script/common.js"></script>
+
+
+<script type="text/javascript">
+    var rewards = new Vue({
+        el: "#mission_post",
+        data: {
+            isShow: false,
+            isSmrz: 0,
+            type: 0,
+            words: '',
+            value: '',
+            showPicker: false,
+            columns: ['注册', '关注', '投票', '砍价', '转发', '其他'],
+            img_url: '', //任务任务头像
+            missionTitle: '', //任务标题
+            missionType: '请选择', //任务类型
+            missionTypes: '1', //任务类型 传给后台
+            equipmentType: '安卓', //设备类型
+            equipmentTypes: '1', //设备类型 传给后台
+            deadline: '请选择', //截止时间
+            durationType: '1小时', //时间分类
+            durationTypes: '1', //时间分类 传给后台
+            currencyType: 'HDC', // 币种类型
+            currencyTypes: '1', // 币种类型 传给后台
+            awardValue: '', // 单个奖励
+            missionValue: '', //任务数量
+            missionLink: '', //任务链接
+            // 发布步骤
+            steps: [{
+                img: '',
+                step_text: ''
+            }],
+            textVerify: '', //文字验证
+            remarks: '', //备注
+            isShowtime: false,
+            minDate: new Date(),
+            currentDate: new Date().getTime(),
+            endtime: 0, // 时间戳
+            password: ''
+        },
+        created: function() {
+            var that = this
+            apiready = function() {
+                var height = $api.fixStatusBar($api.dom('.header'))
+                if (height > 0) {
+                    $api.css($api.dom('.cont'), 'margin-top:' + (height - 45) + 'px;');
+                }
+                that.minDate.setHours(that.minDate.getHours() + 72);
+                // 检查是否实名认证
+                http(getuserinfoUrl, 'post', {}, function(ret) {
+                    if (ret.code == 200) {
+                        that.isSmrz = ret.data.auth_primary;
+                    } else if (ret.code == 401) {
+                        api.sendEvent({
+                            name: 'pause',
+                            extra: {}
+                        });
+                        console.log("TO login.html");
+                        toPage('login', '../../auth/login.html', {
+                            from: 'center'
+                        });
+                    }
+                })
+            }
+        },
+        mounted() {
+            var that = this
+            that.$refs.focus.focus()
+        },
+        methods: {
+            fixTwo: function(num) {
+                if (num && num != 0 && Number(num) != 0) {
+                    return Number(num).toFixed(2);
+                } else {
+                    return 0.00;
+                }
+            },
+            changeDate: function(datetimes) {
+                var needdate = new Date(datetimes);
+                Y = needdate.getFullYear() + '/';
+                M = (needdate.getMonth() + 1 < 10 ? '0' + (needdate.getMonth() + 1) : needdate.getMonth() + 1) + '/';
+                D = needdate.getDate() + ' ';
+                h = (needdate.getHours() < 10 ? '0' + needdate.getHours() : needdate.getHours()) + ':';
+                m = (needdate.getMinutes() < 10 ? '0' + needdate.getMinutes() : needdate.getMinutes()) + ':';
+                s = (needdate.getSeconds() < 10 ? '0' + needdate.getSeconds() : needdate.getSeconds());
+                //      年 月 日 时 分 秒
+                return Y + M + D + h + m + s;
+            },
+
+            onInput: function(event) {
+                var that = this;
+                that.endtime = new Date(event).getTime();
+                that.deadline = that.changeDate(that.endtime);
+                that.isShowtime = false;
+            },
+            //选取图片 步骤不骗
+            gopic: function(obj) {
+                var that = this;
+                api.getPicture({
+                    sourceType: 'album',
+                    encodingType: 'jpg',
+                    mediaValue: 'pic',
+                    destinationType: 'base64',
+                    allowEdit: false,
+                    quality: 50,
+                    targetWidth: '',
+                    targetHeight: '',
+                    saveToPhotoAlbum: false
+                }, function(ret, err) {
+                    if (ret && ret.base64Data != '') {
+                        obj.img = ret.base64Data
+                    } else {
+                        // alert(err);
+                    }
+                });
+            },
+            // 任务头像图片
+            gopics: function() {
+                var that = this;
+                api.getPicture({
+                    sourceType: 'album',
+                    encodingType: 'jpg',
+                    mediaValue: 'pic',
+                    destinationType: 'base64',
+                    allowEdit: false,
+                    quality: 50,
+                    targetWidth: '',
+                    targetHeight: '',
+                    saveToPhotoAlbum: false
+                }, function(ret, err) {
+                    if (ret && ret.base64Data != '') {
+                        that.img_url = ret.base64Data
+                    } else {
+                        // alert(err);
+                    }
+                });
+            },
+            // 添加步骤
+            addSteps: function() {
+                var that = this
+                if (that.steps.length == 10) {
+                    api.toast({
+                        msg: '最多添加十个步骤',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return
+                } else {
+                    that.steps.push({
+                        img: '',
+                        step_text: ''
+                    })
+                }
+            },
+            deletestep: function(data) {
+                var that = this
+                if (that.steps.length == 1) {
+                    api.toast({
+                        msg: '最少要有一个步骤',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return
+                } else {
+                    var  index  = that.steps.indexOf(data);
+                    that.steps.splice(index, 1)
+                    that.steps = JSON.parse(JSON.stringify(that.steps))
+                }
+            },
+            switchover: function(type) {
+                var that = this;
+
+                if (type != 3) {
+                    that.isShowtime = false
+                }
+                if (type == 1) {
+                    that.columns = ['注册', '关注', '投票', '砍价', '转发', '其他']
+                    that.showPicker = true
+                    that.isShowtime = false
+                } else if (type == 2) {
+                    that.columns = ['安卓和苹果', '安卓', '苹果']
+                    that.showPicker = true
+                    that.isShowtime = false
+                } else if (type == 3) {
+                    that.showPicker = false
+                    that.isShowtime = true;
+                } else if (type == 4) {
+                    // that.columns = ['请选择', '1小时', '2小时', '3小时', '6小时', '12小时', '24小时', '不限制']
+                    that.columns = ['1小时', '2小时', '3小时', '6小时', '12小时', '24小时', '不限制']
+                    that.showPicker = true
+                    that.isShowtime = false
+                } else if (type == 5) {
+                    that.columns = ['HDC']
+                    that.showPicker = true
+                    that.isShowtime = false
+                }
+                that.type = type
+            },
+            // 清除input文字
+            clear: function() {
+                var that = this;
+                that.isShowlist = false;
+                that.words = '';
+                // that.getHotWords();
+                api.closeFrame({
+                    name: 'mission'
+                });
+            },
+            //选择组件Value
+            onConfirm: function(value, index) {
+                var that = this
+                if (that.type == 1) { //  任务类型
+                    that.missionType = value
+                    if (value == '注册') {
+                        that.missionTypes = 1
+                    } else if (value == '关注') {
+                        that.missionTypes = 2
+                    } else if (value == '投票') {
+                        that.missionTypes = 3
+                    } else if (value == '砍价') {
+                        that.missionTypes = 4
+                    } else if (value == '转发') {
+                        that.missionTypes = 5
+                    } else if (value == '其他') {
+                        that.missionTypes = 6
+                    }
+                } else if (that.type == 2) { // 设备类型
+                    that.equipmentType = value
+                    if (value == '安卓') {
+                        that.equipmentTypes = 1
+                    } else if (value == '苹果') {
+                        that.equipmentTypes = 2
+                    } else {
+                        that.equipmentTypes = 3
+                    }
+
+                } else if (that.type == 3) { //截止时间
+                    that.deadline = value
+                } else if (that.type == 4) { //接单最晚完成时间
+                    that.durationType = value
+                    var str = value.split('小时')
+                    that.durationTypes = str[0]
+
+                } else if (that.type == 5) { // 币种类型
+                    that.currencyType = value
+                    if (value == 'HDC') {
+                        that.currencyTypes = 1
+                    }
+                    // else if (value == 'USDT') {
+                    //     that.currencyTypes = 2
+                    // }
+                }
+                that.showPicker = false;
+                that.type = 0
+
+            },
+
+            toPage: function(name, url, params) {
+                api.openWin({
+                    name: name,
+                    url: url,
+                    reload: true,
+                    pageParam: params || {}
+                });
+            },
+            // 发布任务 提交
+            publish: function() {
+                var that = this
+                if (that.isSmrz == 0) {
+                    api.toast({
+                        msg: '请先实名认证才能发布任务~',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    setTimeout(function() {
+                        api.openWin({
+                            name: 'personal_data',
+                            url: '../../my/personal_data.html',
+                            reload: true,
+                            pageParam: {}
+                        });
+                    }, 1500);
+                } else {
+                    // img_url:  '',//任务任务头像
+                    //  missionTitle: '', //任务标题
+                    // missionTypes: '请选择', //任务类型
+                    // equipmentTypes: '安卓', //设备类型
+                    // endtime: '请选择', //截止时间   // deadline: '请选择', //截止时间 这个还没写
+                    // durationTypes: '1', //时间分类
+                    // currencyType: 'HDC', // 币种类型
+                    // awardValue: '', // 单个奖励
+                    // missionValue: '', //任务数量
+                    // missionLink: '', //任务链接
+                    var reg = /^[1-9]?[0-9]*\.[0-9]*$/; //任务数量控制整数
+                    var ret = /^\d+(\.\d{1,2})?$/; // 控制金额不能超过2位小数点
+                    for (var i = 0; i < that.steps.length; i++) {
+                        var stepsData = that.steps[i];
+                        if (stepsData.img == '' || stepsData.step_text == '') {
+                            api.toast({
+                                msg: '请完善您添加的步骤信息',
+                                duration: 2000,
+                                location: 'bottom'
+                            });
+                            return
+                        }
+                    }
+                    if (that.awardValue == '') {　　
+                        api.toast({
+                            msg: '金额不能为空',
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                        return
+                    } else if (!ret.test(that.awardValue)) {　　
+                        api.toast({
+                            msg: '单个奖励小数不能超过2位',
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                        return;
+                    }
+                    if (that.missionTitle == '' || that.endtime == '' || that.endtime == '请选择' || that.missionType == '' || that.missionType == '请选择' || that.currencyType == '' || that.img_url == '' || that.durationType == '请选择' || that.durationType == '') {
+                        api.toast({
+                            msg: '请完善发布信息',
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                        return
+                    } else if (that.awardValue < 0.5 || that.awardValue > 200) {
+                        api.toast({
+                            msg: '单个奖励不能少于0.5HDC,大于200HDC',
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                        return
+                    } else if (that.missionValue == '' || reg.test(that.missionValue) == true || that.missionValue >= 1001) {
+                        api.toast({
+                            msg: '请输入1-1000任务数量',
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                        return
+                    } else {
+                        that.isShow = true
+                    }
+                }
+            },
+            submitpay: function() {
+                var that = this
+                if (that.password == '') {
+                    api.toast({
+                        msg: '请输入密码',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return;
+                } else {
+                    var param = {
+                        publish_quantity: that.missionValue, //发布任务数量
+                        type: that.missionTypes, //任务类型
+                        url: that.missionLink, //任务链接
+                        title: that.missionTitle, //任务标题
+                        equipment: that.equipmentTypes, // 设备类型
+                        end_time: that.endtime, // 截止时间
+                        last_time: that.durationTypes, // 时间分类
+                        currency_type: that.currencyTypes, // 币种类型
+                        bounty: that.awardValue, //单个奖励
+                        font_verify: that.textVerify, // 文字验证
+                        remarks: that.remarks, //备注
+                        password: that.password, // 用户密码
+
+                        steps: that.steps, // 步骤数组 adddata.step   adddata.img  adddata.step_text
+                        img_url: that.img_url, //任务任务头像
+
+                    }
+                    api.showProgress({
+                        title: '悬赏发布中...',
+                        text: '请稍后',
+                        modal: true
+                    });
+                    http(addReward, 'post', param, function(ret) {
+                        if (ret.code == 200) {
+                            api.hideProgress();
+                            api.toast({
+                                msg: ret.msg,
+                                duration: 3000,
+                                location: 'bottom'
+                            });
+                            setTimeout(function() {
+                                api.closeWin({
+                                    name: 'mission_post'
+                                });
+                            }, 3000);
+                        } else {
+                            api.hideProgress();
+                            api.toast({
+                                msg: ret.msg,
+                                duration: 3000,
+                                location: 'bottom'
+                            });
+                        }
+                    })
+                }
+                that.isShow = false;
+            }
+        },
+        watch: {
+            showPicker: function() {
+                if (this.showPicker == false) {
+                    this.type = 0
+                }
+            }
+        }
+    })
+</script>

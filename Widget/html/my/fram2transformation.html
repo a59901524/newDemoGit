@@ -1,0 +1,197 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>云资产兑换</title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../lib/iconfont2/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <style>
+        .textNameLeft {
+            width: 30%;
+        }
+        
+        input {
+            width: 100%;
+        }
+        
+        .width60 {
+            width: 60%;
+        }
+    </style>
+</head>
+
+<body class="">
+    <div id="fram2transformation" class="content color_999 " v-cloak>
+        <header class="header bbd bg-white ">
+            <i class="iconfont icon-xiangzuo" @click="goBack()"></i>
+            <div>{{langContent.title?langContent.title:''}}</div>
+            <div class="tomyfeed" @click="submit">
+                {{langContent.sub?langContent.sub:''}}
+            </div>
+        </header>
+        <div>
+            <div class="bbd bg-white marginT1">
+                <div class=" flex_row_left padding12">
+                    <div v-show="rechargetype==3&&transtype==2" class="fontSize14 color_black3 textNameLeft">{{langContent.slzcl?langContent.slzcl:''}}</div>
+                    <div v-show="rechargetype==3&&transtype==2" class="fontSize14  text-overflow_1">
+                        {{info.forest_money}}
+                    </div>
+                </div>
+            </div>
+            <div class="bbd bg-white">
+                <div class=" flex_row_left padding12">
+                    <div v-show="rechargetype==3&&transtype==2" class="fontSize14 color_black3 textNameLeft">{{langContent.kyJXA?langContent.kyJXA:''}}</div>
+                    <div v-show="rechargetype==3&&transtype==2" class="fontSize14  text-overflow_1">
+                        {{info.user_money}}</div>
+                </div>
+            </div>
+            <div class="bbd bg-white">
+                <div v-show="rechargetype==3&&transtype==2" class=" flex_row_left padding12 ">
+                    <div class="fontSize14 color_black3 textNameLeft">{{langContent.zhysj?langContent.zhysj:''}}</div>
+                    <div class="width60">
+                        <input type="number" :placeholder="langContent.num" v-model="num">
+                    </div>
+                </div>
+            </div>
+
+            <div class="bbd bg-white">
+                <div class=" flex_row_left padding12 ">
+                    <div class="fontSize14 color_black3 textNameLeft">{{langContent.psw?langContent.psw:''}}</div>
+                    <div class="width60">
+                        <input type="password" :placeholder="langContent.psw_input" v-model="password">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    var fram2transformation = new Vue({
+        el: '#fram2transformation',
+        data: {
+            mobile: '',
+            num: '',
+            password: '',
+            rechargetype: 3,
+            info: {},
+            isShow: false,
+            transtype: 2,
+            langContent: {},
+            coin_type: 'world_money',
+            getCodetip: {},
+            flag: true
+        },
+        created: function() {
+            var that = this;
+            apiready = function() {
+                fixStatusbar('header,.header,.headers', '.content');
+                if (api.pageParam.transtype) {
+                    that.transtype = api.pageParam.transtype
+                    if (api.pageParam.transtype == 2) {
+                        that.rechargetype = 3
+                    }
+                }
+                fram2transformation.$data.langContent = GlobleLanguageContent.fram2transformation;
+                fram2transformation.$data.getCodetip = GlobleLanguageContent.getCode;
+                that.getinfo()
+            }
+        },
+        methods: {
+            goBack: function(name, animation) {
+                api.setStatusBarStyle({
+                    style: 'light',
+                    color: 'rgba(0,0,0,0)'
+                });
+                api.closeWin({
+                    name: name || '',
+                    animation: animation || {
+                        type: "push", //动画类型（详见动画类型常量）
+                        subType: "from_left", //动画子类型（详见动画子类型常量）
+                        duration: 300 //动画过渡时间，默认300毫秒
+                    }
+                });
+            },
+            submit: function() {
+                var that = this;
+                if (that.num == '' || that.num < 0) {
+                    api.toast({
+                        msg: that.langContent.nonum,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return;
+                }
+                if (that.password == '') {
+                    api.toast({
+                        msg: that.langContent.nopsw,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return;
+                }
+                if (that.flag) {
+                    that.flag = false
+                    http(exchangeUrl, 'post', {
+                        num: that.num,
+                        coin_type: that.coin_type,
+                        password: that.password
+                    }, function(res) {
+                        that.flag = true
+                        if (res.code == 200) {
+                            api.toast({
+                                msg: res.msg,
+                                duration: 2000,
+                                location: 'bottom'
+                            });
+                            that.getinfo()
+                            api.execScript({
+                                name: 'root',
+                                frameName: 'frame4',
+                                script: 'frame4.getInfo()'
+                            });
+                            api.execScript({
+                                name: 'root',
+                                frameName: 'frame2',
+                                script: 'frame2.getInfo()'
+                            });
+                            that.password = '';
+                            that.num = ''
+                        }
+                    }, function(err) {})
+                } else {
+                    api.toast({
+                        msg: that.getCodetip.submit_tips,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+
+
+            },
+            getinfo: function() {
+                var that = this;
+                http(getuserinfoUrl, 'post', {}, function(res) {
+                    if (res.code == 200) {
+                        that.info = res.data;
+                    }
+                }, function(err) {})
+            },
+        }
+    });
+</script>

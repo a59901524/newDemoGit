@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="../../lib/iconfont2/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <style>
+        #interaction {
+            background: #161823;
+        }
+    </style>
+</head>
+
+<body class="has_header">
+
+    <div id="interaction">
+        <header class="header  color_default1">
+            <i class="iconfont icon-xiangzuo" onclick="goBack()"></i>
+            <div>{{langContent.pl?langContent.pl:''}}</div>
+        </header>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    var interaction = new Vue({
+        el: "#interaction",
+        data: {
+            langContent: {},
+        },
+        created: function() {
+            var that = this
+            apiready = function() {
+                interaction.$data.langContent = GlobleLanguageContent.message;
+                fixStatusbar('header,.header,.headers', '.content');
+                that.openFrame()
+            }
+        },
+        methods: {
+            openFrame: function() {
+                api.openFrame({
+                    name: 'interaction_frame',
+                    url: 'interaction_frame.html',
+                    rect: {
+                        x: 0,
+                        y: $api.dom(".header").offsetHeight,
+                        w: 'auto',
+                        h: 'auto'
+                    },
+                    reload: true,
+                    pageParam: {}
+                })
+            }
+        }
+    })
+</script>

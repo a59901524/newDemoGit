@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>交易中心</title>
+    <link rel="stylesheet" href="../lib/vant/vant.css">
+    <link rel="stylesheet" href="../lib/iconfont2/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+    <style>
+        #frame3 {
+            min-height: 100%;
+            max-width: 100%;
+        }
+
+        .showBg {
+            background-image: url("../image/bg_trad.jpg");
+            background-repeat: no-repeat;
+            -moz-background-size: 100%;
+            background-size: 100%;
+        }
+        /* <!-- 参考价格 --> */
+
+        .reference_left span {
+            font-size: 2rem;
+        }
+        /* <!-- 可用额度 模块 --> */
+
+        .Amount {
+            background: linear-gradient(90deg, #cb974d 0%, #fdecb8 100%);
+            margin-top: 1rem;
+            padding: 1rem 1rem;
+            border-radius: 10px;
+            color: #333;
+        }
+
+        .Amount_Amount {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #fce5ab;
+        }
+
+        .Amount_right {
+            font-size: 1rem;
+            background-color: #ff6262;
+            border-radius: 5px;
+            color: #ffffff;
+            padding: .5rem;
+        }
+        /* 箭头图片 */
+        /* 求购列表选中样式 */
+
+        .on {
+            border-bottom: 2px solid #cb974d;
+            color: #cb974d;
+            font-weight: 800
+        }
+        /* 大小区 */
+
+        .buyList {
+            padding: 0.3rem .8rem;
+            border-radius: 2rem;
+            margin-right: 1rem;
+        }
+
+        .buyList1 {
+            padding: 0.3rem .8rem;
+            border-radius: 2rem;
+            margin-right: 1rem;
+            color: #cb974d;
+            font-weight: 800;
+        }
+
+        .fontSize11 {
+            font-size: .95rem;
+        }
+
+        input {
+            text-indent: .2rem;
+            font-size: 1.2rem;
+            line-height: 2rem;
+            height: 2rem;
+            width: 18rem;
+        }
+
+        input::placeholder {
+            font-size: 1.2rem;
+            line-height: 2rem;
+            color: #ccc;
+        }
+
+        .development {
+            position: fixed;
+            top: 35%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 180px;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 8px;
+            z-index: 10;
+            overflow: hidden;
+            display: none;
+        }
+
+        .Amount_left {
+            text-align: center;
+        }
+
+        .dealNumColor {
+            color: #d2ba91;
+        }
+
+        .padingbo {
+            padding-top: 0px!important;
+        }
+        /* 新写的  求购列表 */
+        /* 头像 */
+
+        .xian {
+            margin: 0 5px;
+        }
+
+        .user_img {
+            width: 4rem;
+            height: 4rem;
+            border-radius: 50%;
+            margin-right: .5rem;
+        }
+        /* 图标 */
+
+        .margin-left6 {
+            margin: 0rem .6rem;
+        }
+
+        .margin-left2 {
+            margin: 0rem .2rem;
+        }
+
+        .margin-right6 {
+            margin: 0rem .6rem;
+        }
+
+        .jyuser {
+            width: 20px;
+            height: auto;
+            font-size: 20px;
+        }
+
+        .jystyle {
+            width: 20px;
+            height: auto;
+            font-size: 20px;
+        }
+        /* 卖出按钮 */
+
+        .maichu {
+            border-radius: 3px;
+            background: #2cc597;
+            color: #fff;
+            width: 3rem;
+            text-align: center;
+            font-size: 1.2rem;
+            padding: .3rem .6rem;
+        }
+
+        .fanmang {
+            border-radius: 3px;
+            background: #dddddd;
+            color: #999999;
+            width: 3rem;
+            text-align: center;
+            font-size: 1.2rem;
+            padding: .3rem .6rem;
+        }
+        /* 交易信箱 */
+
+        .onDeal_x1 {
+            color: #fff;
+            background-color: #ccaa7a;
+            border-top: solid 1px #ccaa7a !important;
+            border-bottom: solid 1px #ccaa7a !important;
+            border-left: solid 1px #ccaa7a !important;
+            border-radius: 5px 0px 0px 5px;
+            padding: .4rem 1.8rem;
+        }
+
+        .onDeal_x2 {
+            color: #fff;
+            background-color: #ccaa7a;
+            border-top: solid 1px #ccaa7a !important;
+            border-bottom: solid 1px #ccaa7a !important;
+            border-right: solid 1px #ccaa7a !important;
+            padding: .4rem 1.8em;
+            border-radius: 0px 5px 5px 0px;
+        }
+        /* 买入 */
+
+        .mairu_x1 {
+            border-top: solid 1px #dddddd;
+            border-bottom: solid 1px #dddddd;
+            border-left: solid 1px #dddddd;
+            border-radius: 5px 0px 0px 5px;
+            padding: .4rem 1.8rem;
+        }
+        /* 卖出 */
+
+        .maichu_x2 {
+            border-top: solid 1px #dddddd;
+            border-bottom: solid 1px #dddddd;
+            border-right: solid 1px #dddddd;
+            border-radius: 0px 5px 5px 0px;
+            padding: .4rem 1.8em;
+        }
+        /* 完成 */
+
+        .sta2 {
+            padding-right: 15px;
+        }
+
+        .act {
+            color: #cb974d;
+        }
+        /*页面标题 弹出*/
+
+        header.header {
+            left: 0;
+            top: 0;
+            position: fixed;
+            z-index: 100000;
+            display: block;
+            width: 100%;
+            font-size: 1.3rem;
+            height: 0;
+            overflow: hidden;
+            color: #999999 !important;
+            /* background: #ffffff; */
+        }
+
+        .iiiiiiii {
+            display: none;
+        }
+    </style>
+</head>
+
+<body class="has_header">
+    <div id="frame3" class="content color_999 " v-cloak>
+        <header class="header bg_black">
+            <div class="iiiiiiii">
+                <!-- 求购列表 -->
+                <!-- 求购列表  中国区-->
+                <div v-if="default_sort == '86'" class="flex_row_between  bg-white fontSize16 padding12_left_right">
+                    <div style="padding: .6rem 0rem;" :class="{'on':type==1}" @click="changeListtype(1,'买入')">
+                        <p>{{langContent.buylist?langContent.buylist:''}}</p>
+                    </div>
+                    <div style="padding: .6rem 0rem;" :class="{'on':type==3}" @click="changeListtype(3,'交易信箱')">
+                        <p>{{langContent.tradinglist?langContent.tradinglist:''}}</p>
+                        <span></span>
+                    </div>
+                    <div style="padding: .6rem 0rem;" :class="{'on':type==2}" @click="changeListtype(2,'买入')">
+                        <p>{{langContent.globle?langContent.globle:''}}</p>
+                        <span></span>
+                    </div>
+                </div>
+                <!-- 求购列表  国际区-->
+                <div v-if="default_sort != '86'" class="flex_row_between marginT1 bg-white fontSize16 padding12_left_right">
+                    <div style="padding: .6rem 0rem;" :class="{'on':type==2}" @click="changeListtype(2,'买入')">
+                        <p>{{langContent.globle?langContent.globle:''}}</p>
+                        <span></span>
+                    </div>
+                    <div style="padding: .6rem 0rem;" :class="{'on':type==3}" @click="changeListtype(3,'交易信箱')">
+                        <p>{{langContent.tradinglist?langContent.tradinglist:''}}</p>
+                        <span></span>
+                    </div>
+                    <div style="padding: .6rem 0rem;" :class="{'on':type==1}" @click="changeListtype(1,'买入')">
+                        <!-- <p>{{langContent.buylist?langContent.buylist:''}}</p> -->
+                        <p>{{langContent.Southeast_Asia?langContent.Southeast_Asia:''}}</p>
+                    </div>
+                </div>
+                <!-- 搜索框 -->
+                <div v-show="isPartner>0" class="padding1 bg_eee">
+                    <div class="flex_row_between bg-white" style="border-radius: 2rem; padding: 0rem 1rem;">
+                        <div class="flex_row_left">
+                            <i class="iconfont icon-sousuo color_default1"></i>
+                            <input id="partnerSearch" v-model="keywords" type="tel" :placeholder="langContent.tel_input" @keyup.enter="openFrame_ss">
+                        </div>
+                        <i class="iconfont icon-guanbi2" @click="clear()"></i>
+                    </div>
+                </div>
+                <div v-show="type == 1&&isPartner==0" style="height: 0.8rem;"></div>
+
+                <!-- 大小区 -->
+                <div v-show="type == 1" v-if="range_show ==1" class="flex_row_left padding1 bg_eee fontSize12" style="padding-top: 0;">
+                    <div class=" buyList bg-white" :class="{'buyList1':buytype==1}" @click="changebuyList(1,'体验区')">{{langContent.xdq?langContent.xdq:''}}</div>
+                    <div class=" buyList bg-white" :class="{'buyList1':buytype==2}" @click="changebuyList(2,'大单区')">{{langContent.ddq?langContent.ddq:''}}</div>
+                </div>
+
+            </div>
+
+        </header>
+        <div v-show="showTime" class="showcontent">
+            <!-- 隐藏部分模块 -->
+            <div class="showBox">
+                <!-- 可用额度 模块 -->
+                <div class="padding12 showBg">
+                    <div class="flex_row_between marginT1">
+                        <div class="">
+                            <div>{{langContent.ksed?langContent.ksed:''}}</div>
+                            <div class="Amount_Amount">
+                                {{nosswr(info.user_assets&&info.user_assets.limit_money?info.user_assets.limit_money:'0')}}
+                            </div>
+                        </div>
+                        <div class="Amount_left">
+                            <div>ETH{{langContent.price?langContent.price:''}}</div>
+                            <div class="Amount_Amount">
+                                <span class="fontSize14 color_999"> $ </span>{{HBprice?HBprice:'0'}}
+                            </div>
+                        </div>
+                        <div class="Amount_right " @click="openBuyFrame('buy')">
+                            {{langContent.buyorder?langContent.buyorder:''}}
+                        </div>
+                    </div>
+                    <div class="flex_row_between text_center">
+                        <div class="flex_col_center">
+                            <div class="fontSize11">{{langContent.jrjysxf?langContent.jrjysxf:''}}</div>
+                            <div class="dealNumColor">{{info.today_trade_cost?info.today_trade_cost:'0'}}</div>
+                        </div>
+                        <div class="flex_col_center">
+                            <div class="fontSize11">{{langContent.zjysx?langContent.zjysx:''}}</div>
+                            <div class="dealNumColor">{{info.trade_total_cost?info.trade_total_cost:'0'}}</div>
+                        </div>
+                        <!-- <div class="flex_col_center">
+                                        <div class="fontSize11">平台当前求购量</div>
+                                        <div>{{info.buy_JXA?info.buy_JXA:'0'}}</div>
+                                    </div> -->
+                        <div class="flex_col_center">
+                            <div class="fontSize11">{{langContent.grxyf?langContent.grxyf:''}}</div>
+                            <div class="dealNumColor">{{info.user_assets&&info.user_assets.credit_value?info.user_assets.credit_value:'0'}}</div>
+                        </div>
+                        <div class="flex_col_center">
+                            <div class="fontSize11">{{langContent.ptzjyl?langContent.ptzjyl:''}}</div>
+                            <div class="dealNumColor">{{info.trade_total_volume?info.trade_total_volume:'0'}}</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 交易规则   显示列表 -->
+                <div class=" color_black3 flex_row_between " style="padding: .6rem 1rem;">
+                    <div> <u @click="toPage('about_us','my/about_us.html',{title:'交易规则',info:info.rule})">{{langContent.rule?langContent.rule:''}}</u></div>
+                    <!-- <div @click="myshow()"><u>显示列表</u></div> -->
+                </div>
+                <!-- 参考价格 -->
+                <div class="flex_row_between color_black6 bg-white padding12">
+                    <div class="reference_left">
+                        <div>{{langContent.tprice?langContent.tprice:''}}</div>
+                        <div class="text_center"> $ <span class="color_default1">{{fixTwo(info.trade_JXA_today_price)}}</span> ({{langContent.hl?langContent.hl:''}}1:7)</div>
+                        <div> ≈ {{fixTwo(info.trade_rmb_today_price)}}CNY</div>
+                    </div>
+                    <div class="reference_right">
+                        <div>{{langContent.yestoday?langContent.yestoday:''}}:${{fixTwo(info.trade_JXA_yesterday_price)}}</div>
+                        <div>{{langContent.today?langContent.today:''}}:{{info.today_trade_volume?info.today_trade_volume:'0'}}</div>
+                    </div>
+                </div>
+                <div class="marginT1"></div>
+            </div>
+
+            <!-- 求购列表  导航-->
+            <div>
+                <!-- 求购列表  中国区-->
+                <div v-if="default_sort == '86'" class="flex_row_between  bg-white fontSize16 padding12_left_right">
+                    <div style="padding: .6rem 0rem;" :class="{'on':type==1}" @click="changeListtype(1,'买入')">
+                        <p>{{langContent.buylist?langContent.buylist:''}}</p>
+                    </div>
+                    <div style="padding: .6rem 0rem;" :class="{'on':type==3}" @click="changeListtype(3,'交易信箱')">
+                        <p>{{langContent.tradinglist?langContent.tradinglist:''}}</p>
+                        <span></span>
+                    </div>
+                    <div style="padding: .6rem 0rem;" :class="{'on':type==2}" @click="changeListtype(2,'买入')">
+                        <p>{{langContent.globle?langContent.globle:''}}</p>
+                        <span></span>
+                    </div>
+                </div>
+                <!-- 求购列表  国际区-->
+                <div v-if="default_sort != '86'" class="flex_row_between marginT1 bg-white fontSize16 padding12_left_right">
+                    <div style="padding: .6rem 0rem;" :class="{'on':type==2}" @click="changeListtype(2,'买入')">
+                        <p>{{langContent.globle?langContent.globle:''}}</p>
+                        <span></span>
+                    </div>
+                    <div style="padding: .6rem 0rem;" :class="{'on':type==3}" @click="changeListtype(3,'交易信箱')">
+                        <p>{{langContent.tradinglist?langContent.tradinglist:''}}</p>
+                        <span></span>
+                    </div>
+                    <div style="padding: .6rem 0rem;" :class="{'on':type==1}" @click="changeListtype(1,'买入')">
+                        <!-- <p>{{langContent.buylist?langContent.buylist:''}}</p> -->
+                        <p>{{langContent.Southeast_Asia?langContent.Southeast_Asia:''}}</p>
+                    </div>
+                </div>
+                <!-- 搜索框 -->
+                <div v-show="isPartner>0" class="padding1">
+                    <div class="flex_row_between bg-white" style="border-radius: 2rem; padding: 0rem 1rem;">
+                        <div class="flex_row_left">
+                            <i class="iconfont icon-sousuo color_default1"></i>
+                            <input id="partnerSearch" v-model="keywords" type="tel" :placeholder="langContent.tel_input" @keyup.enter="openFrame_ss">
+                        </div>
+                        <i class="iconfont icon-guanbi2" @click="clear()"></i>
+                    </div>
+                </div>
+                <div v-show="type == 1&&isPartner==0" style="height: 0.8rem;"></div>
+                <!-- 大小区 -->
+                <div class="flex_row_left padding1" style="padding-top: 0;" v-show="type == 1" v-if="range_show ==1">
+                    <div class=" buyList bg-white" :class="{'buyList1':buytype==1}" @click="changebuyList(1,'体验区')">{{langContent.xdq?langContent.xdq:''}}</div>
+                    <div class=" buyList bg-white" :class="{'buyList1':buytype==2}" @click="changebuyList(2,'大单区')">{{langContent.ddq?langContent.ddq:''}}</div>
+                </div>
+            </div>
+            <!-- 新写的求购列表 展示 -->
+            <div v-if="title=='买入'">
+                <van-pull-refresh id="getBuylist" v-model="downLoading" @refresh="getBuylist" :pulling-text="getCodetip.vant_pulling" :loosing-text="getCodetip.vant_loosing" :loading-text="getCodetip.vant_loading">
+                    <van-list class="list" v-model="upLoading" :finished="finished" :finished-text="getCodetip.vantlistfinished" @load="getBuylist" :immediate-check="false">
+                        <div class=" color_black6 bg-white">
+                            <div class="flex_row_between fontSize12 padding1   bbd " v-for="(item,index) in list" :key="index">
+                                <!-- 挂单用户头像 -->
+                                <div><img :src="item.avatar?item.avatar:'../image/logo.png'" alt="" class="user_img"></div>
+                                <!-- 挂单用户手机号 -->
+                                <div style="width: 85%;">
+                                    <!-- 上部分  号码 图标 分数 -->
+                                    <div class="flex_row_between">
+                                        <div class="fontSize18 flex_row_left ">
+                                            <div class="color_black3">{{item.buyer_mobile?item.buyer_mobile:''}}</div>
+                                            <img class="jyuser margin-left6" src="../image/vip.svg" alt="" />
+                                            <div class="fontSize14  flex_row_center">
+                                                <img v-show="item.pay_type==1" class="jystyle " src="../image/jywx.png" alt="" />
+                                                <img v-show="item.pay_type==2" class="jystyle " src="../image/jyzfb.png" alt="" />
+                                                <!-- 以太坊 -->
+                                                <i v-show="item.pay_type==3" class="iconfont icon-ETH jystyle  color_default1"></i>
+                                                <img v-show="item.pay_type==4" class="jystyle" src="../image/jyyhk.png" alt="" />
+                                            </div>
+                                        </div>
+                                        <div class="fontSize16">
+                                            {{item.trade_count}}<span class="xian">|</span>{{item.credit_value}}{{langContent.mark?langContent.mark:''}}
+                                        </div>
+                                    </div>
+                                    <!-- 下 数量 单价 卖出 繁忙-->
+                                    <div class="fontSize12  flex_row_between" style="height: 1.5rem; ;line-height: 1.5rem; margin-top: .5rem;">
+                                        <div style="width: 35%;">
+                                            {{langContent.num?langContent.num:''}}:<span class=" color_default1 fontSize18">{{item.num}}</span>
+                                        </div>
+                                        <div>
+                                            {{langContent.price_dj?langContent.price_dj:''}}: ${{item.unit_price}}
+                                        </div>
+                                        <!-- 卖出 -->
+                                        <div class="flex_row_right " v-if="item.is_buyer_busy == 0 " @click="openBuy_aFrame(item.id,index)">
+                                            <div class="flex_row_center color_default1  maichu">{{langContent.sell?langContent.sell:''}}</div>
+                                        </div>
+                                        <!-- 繁忙 -->
+                                        <div class="flex_row_right " v-if="item.is_buyer_busy == 1 ">
+                                            <div class="flex_row_center color_default1  fanmang">{{langContent.busy?langContent.busy:''}}</div>
+                                        </div>
+                                        <!--刷新繁忙 -->
+                                        <!-- <div class="flex_row_right " v-if="isBuyeBusy">
+                                            <div class="flex_row_center color_default1  fanmang">{{langContent.busy?langContent.busy:''}}</div>
+                                        </div> -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </van-list>
+                </van-pull-refresh>
+            </div>
+
+            <!-- 交易信箱 类型选择 -->
+            <div class="  fontSize12 color_999 flex_row_between bg-white padding1" v-if="title=='交易信箱'">
+                <div class="flex_row_left">
+                    <div class="mairu_x1" :class="{'onDeal_x1':status==1}" @click="changeStatus(1)">{{langContent.status1?langContent.status1:''}}</div>
+                    <div class="maichu_x2" :class="{'onDeal_x2':status==2}" @click="changeStatus(2)">{{langContent.status2?langContent.status2:''}}</div>
+                </div>
+                <div>
+                    <div class="flex_row_left  fontSize12 color_999" v-if="title=='交易信箱'">
+                        <!-- 1:挂单中, 2:交易中, 3:已完成 -->
+                        <div v-show="status==1" class="sta2" :class="{'act':substatus==1}" @click="changesubStatus(1)">{{langContent.status4?langContent.status4:''}}</div>
+                        <div class="sta2" :class="{'act':substatus==2}" @click="changesubStatus(2)">{{langContent.status5?langContent.status5:''}}</div>
+                        <div :class="{'act':substatus==3}" @click="changesubStatus(3)">{{langContent.status6?langContent.status6:''}}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 新写的交易信箱 展示 -->
+            <div v-if="title=='交易信箱'">
+                <van-pull-refresh id="getLetterlist" v-model="downLoading" @refresh="getLetterlist" :pulling-text="getCodetip.vant_pulling" :loosing-text="getCodetip.vant_loosing" :loading-text="getCodetip.vant_loading">
+                    <van-list class="list" v-model="upLoading" :finished="finished" :finished-text="getCodetip.vantlistfinished" @load="getLetterlist" :immediate-check="false">
+
+                        <div class="bbd padding12 bg-white" v-for="(item, index) in list" :key="index">
+                            <div class="flex_row_between fontSize14  color_999 ">
+                                <div>{{langContent.order?langContent.order:''}}：{{item.order_sn}}</div>
+                                <div v-if="item.trade_status==1">
+                                    {{item.create_time}}
+                                </div>
+                                <div v-if="item.trade_status!=1">
+                                    {{item.trade_time}}
+                                </div>
+                            </div>
+                            <div class="fontSize14  color_black3 marginT1">
+                                {{item.show_msg}}
+                            </div>
+
+                            <div class="flex_row_between  color_999  fontSize14">
+                                <!-- 卖家资料 -->
+                                <div class="marginT1" v-if="status==1&&item.trade_status!=1&&item.trade_status!=4" style=" text-align: center;" @click="openBuyFrame_tips(1,item.seller_uid,item.id,item.trade_status,item.num,item.unit_price,item.eth_price,item.type)">
+                                    <i class="iconfont icon-ziliao fontSize14 " style="color: #009ad6;"></i> {{langContent.info1?langContent.info1:''}}
+                                </div>
+                                <!-- 买家资料 -->
+                                <div class="marginT1" v-if="status==2&&item.trade_status!=1&&item.trade_status!=4" @click="openBuyFrame_tips(3,item.buyer_uid,item.id,item.trade_status,item.num,item.unit_price,item.eth_price,item.type)">
+                                    <i class="iconfont icon-ziliao fontSize14" style="color: #009ad6;"></i>{{langContent.info2?langContent.info2:''}}
+                                </div>
+                                <!-- 确认交易 -->
+                                <!-- <div v-if="(status==1&&item.trade_status==2)||(status==2&&item.trade_status==3)" @click="openBuyFrame_tips(2,item.user_ID,item.id,item.trade_status,item.num,item.unit_price,item.eth_price,item.type)">
+                                <i class="iconfont  icon-jiaoyi fontSize14 " style="color: #23ab3d;"></i> {{langContent.sure?langContent.sure:''}}
+                                </div> -->
+                                <div class="marginT1" v-if="(status==1&&item.trade_status==2)" @click="openBuyFrame_tips(2,item.seller_uid,item.id,item.trade_status,item.num,item.unit_price,item.eth_price,item.type)">
+                                    <i class="iconfont  icon-jiaoyi fontSize14 " style="color: #23ab3d;"></i> {{langContent.sure?langContent.sure:''}}
+                                </div>
+                                <div class="marginT1" v-if="(status==2&&item.trade_status==3)" @click="openBuyFrame_tips(2,item.buyer_uid,item.id,item.trade_status,item.num,item.unit_price,item.eth_price,item.type)">
+                                    <i class="iconfont  icon-jiaoyi fontSize14 " style="color: #23ab3d;"></i> {{langContent.sure?langContent.sure:''}}
+                                </div>
+                                <!-- <div class='' v-if="status==1&&item.trade_status==1">取消交易</div> -->
+                                <!-- 买家投诉卖家 -->
+                                <!-- <div class="marginT1" v-if="status==1&&item.trade_status!=1&&item.order_status!=3" @click="toPage(item.ts_status,'feedback','./my/feedback.html',{from:'jyzx',dingdan:item.order_sn,id:item.id,user_ID:item.seller_uid,type_id:1})"> -->
+                                <div class="marginT1" v-if="status==1&&item.trade_status!=1&&item.order_status!=3" @click="toPage('feedback','./my/feedback.html',{from:'jyzx',dingdan:item.order_sn,id:item.id,user_ID:item.seller_uid,type_id:1})">
+                                    <i class="iconfont icon-jubao fontSize14 " style="color: #ff6262;"></i> {{langContent.report?langContent.report:''}}
+                                </div>
+                                <!-- 卖家投诉买家 -->
+                                <!-- <div class="marginT1" v-if="status==2&&item.trade_status!=1&&item.order_status!=3" @click="toPage(item.ts_status,'feedback','./my/feedback.html',{from:'jyzx',dingdan:item.order_sn,id:item.id,user_ID:item.buyer_uid,type_id:1})"> -->
+                                <div class="marginT1" v-if="status==2&&item.trade_status!=1&&item.order_status!=3" @click="toPage('feedback','./my/feedback.html',{from:'jyzx',dingdan:item.order_sn,id:item.id,user_ID:item.buyer_uid,type_id:1})">
+                                    <i class="iconfont icon-jubao fontSize14 " style="color: #ff6262;"></i> {{langContent.report?langContent.report:''}}
+                                </div>
+                            </div>
+                            <!-- <div v-if="(status!=3)&&item.trade_status==0" @click="cancel(item.id)" class="color_black6 flex_row_center fontSize14">
+                            <i class="iconfont icon-quxiaodingdan fontSize14 marginR5 " style="color: #ff6262; "></i> 取消挂单
+                            </div> -->
+                            <!-- 取消挂单 1-->
+                            <div v-if="(status!=3)&&item.trade_status==1" @click="openBuyFrame_tips(0,item.buyer_uid,item.id,item.trade_status,item.num,item.unit_price,item.eth_price,item.type)" class="color_black6 flex_row_center fontSize14 marginT1">
+                                <i class="iconfont icon-quxiaodingdan fontSize14 marginR5 " style="color: #ff6262; "></i> {{langContent.cancel?langContent.cancel:''}}
+                            </div>
+                        </div>
+                    </van-list>
+                </van-pull-refresh>
+            </div>
+
+            <div style="height: 60px;"></div>
+
+        </div>
+        <!-- 关闭交易时候出现的页面 -->
+        <div v-show="!showTime" class="showcontent ">
+        </div>
+
+
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../lib/vant/vant.min.js"></script>
+<script type="text/javascript" src="../script/rsa.js"></script>
+<script type="text/javascript" src="../script/aes.js"></script>
+<script type="text/javascript" src="../script/const.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript">
+    var frame3 = new Vue({
+        el: "#frame3",
+        data: {
+            title: '买入',
+            info: '',
+            type: 1,
+            keywords: '',
+            showTime: true,
+            open: {},
+            listtype: 1,
+            isPartner: 0,
+            buytype: 2, // 先打开大单区
+            buytitle: '体验区',
+            isShow: 1,
+            langContent: {},
+            getCodetip: {},
+            HBprice: 0,
+            timeer: '',
+            websocket: '',
+            default_sort: '', //区号,
+            // 新写的 求购列表
+            page: 1,
+            list: [{
+                trade_status: 2
+            }],
+            downLoading: false,
+            upLoading: false,
+            finished: false,
+            // 新写的交易信箱
+            status: 1,
+            substatus: 1,
+            range_show: '', //控制大小区展示
+            isBuyeBusy: false, //0 false不繁忙 1 true繁忙
+        },
+        created: function() {
+            var that = this
+            apiready = function() {
+                fixStatusbar('header,.header,.headers', '.content');
+                setTimeout(function() {
+                    api.bringFrameToFront({
+                        from: 'tabBar'
+                    });
+                }, 1);
+                frame3.$data.langContent = GlobleLanguageContent.frame3;
+                frame3.$data.getCodetip = GlobleLanguageContent.getCode;
+                var height = $api.fixStatusBar(document.querySelector('header'));
+                if (api.deviceModel == 'iPhone10,3' || api.deviceModel == 'iPhone10,6' || api.deviceModel == 'iPhone11,8' || api.deviceModel == 'iPhone11,2' || api.deviceModel == 'iPhone11,6' || api.deviceModel == 'iPhone11,4') {
+                    that.frameHgt = api.frameHeight - $api.dom('.header').offsetHeight - $api.dom(".showcontent").offsetHeight - 56 - api.safeArea.bottom;
+                } else {
+                    that.frameHgt = api.frameHeight - $api.dom('.header').offsetHeight - $api.dom(".showcontent").offsetHeight - 56;
+                }
+                var minheight = api.winHeight - height;
+                $api.css($api.dom('#frame3'), 'min-height:' + minheight + 'px');
+
+                that.HBprice = $api.getStorage('latestHBprice')
+                that.websocket = api.require('myWebSocket');
+				if (that.websocket) {
+					that.websocket.bindEvent(function(ret, err) {
+						var type = ret.type;
+						var str = ret.data;
+						switch (type) {
+							case 'opened':
+								// console.log("连接成功");
+								break;
+							case 'receive':
+								if (str == 'Please return password') {
+									that.websocket.send({
+										msg: '{"type":"get"}'
+									});
+								} else {
+									var price = JSON.parse(str)
+									if (price && price.type == 'ping') {
+										that.websocket.send({
+											msg: '{"type":"pong"}'
+										});
+									} else if (price && price.latest) {
+										if (price.latest && price.latest != 0 && price.latest != '' && price.latest != undefined && price.latest != null) {
+											$api.setStorage('latestHBprice', price.latest);
+										}
+										that.HBprice = $api.getStorage('latestHBprice') ? $api.getStorage('latestHBprice') : price.latest;
+									}
+								}
+								break;
+							case 'error':
+								console.log("连接发生错误");
+								//打印关闭的log
+								break;
+							case 'closed':
+								// console.log("连接已断开");
+								break;
+						}
+					});
+
+				}//end-if=if (that.websocket)
+                that.getHeader();
+                that.getinfo();
+                // that.changeListtype(1, '买入'); // 默认中国区 1
+                that.changesubStatus(2); //默认显示交易中
+                that.changebuyList(2); //默认显示大区
+                window.onscroll = function() {
+                    that.handleScroll()
+                }
+
+            }
+        },
+        watch: {
+            // 搜索功能
+            keywords: function(curVal, oldVal) {
+                var that = this
+                clearTimeout(this.timeout);
+                this.timeout = setTimeout(function() {
+                    that.openFrame_ss(curVal);
+                }, 500);
+            }
+        },
+        methods: {
+            // 搜索功能刷新
+            openFrame_ss: function(txt) {
+                var that = this;
+                that.getBuylist();
+                setTimeout(function() {
+                    if (txt) {
+                        api.setFocus({
+                            focus: true,
+                            inputId: 'partnerSearch' // 你的dom中input元素id
+                        });
+                    }
+                }, 300);
+            },
+
+            // 弹出支付提示语
+            openBuyFrame_tips: function(type, user_ID, id, trade_status, num, unit_price, eth_price, isShow_type) {
+                var that = this
+                    // 提示交易金额   看这里看这里
+                    // 卖家资料1  买家资料3  确认交易2 取消交易0
+                if (type == 1 || type == 2 || type == 3 || type == 0) {
+                    api.openFrame({
+                        name: 'material_tips',
+                        url: './comment/material_tips.html',
+                        reload: true,
+                        rect: {
+                            x: 0,
+                            y: 0,
+                            w: 'auto',
+                            h: 'auto'
+                        },
+                        pageParam: {
+                            type: type,
+                            user_ID: user_ID,
+                            id: id,
+                            trade_status: trade_status,
+                            num: num,
+                            unit_price: unit_price,
+                            status: that.status,
+                            eth_price: eth_price,
+                            isShow_type: isShow_type
+                        }
+                    });
+                }
+
+            },
+
+            // 点击卖出
+            openBuy_aFrame: function(id, index) {
+                var that = this
+                http(getBuyerBusy, 'post', {
+                        buyer_uid: id
+                    },
+                    function(ret) {
+                        // console.log(id, index);
+                        // console.log(JSON.stringify(ret));
+                        if (ret.code == 200) {
+                            if (ret.data.is_buyer_busy == 0) {
+                                // that.isBuyeBusy = false
+                                // 新写的卖出拆分
+                                api.openFrame({
+                                    name: 'op_sell_JXA',
+                                    url: './comment/op_sell_JXA.html',
+                                    reload: true,
+                                    rect: {
+                                        x: 0,
+                                        y: 0,
+                                        w: 'auto',
+                                        h: 'auto'
+                                    },
+                                    pageParam: {
+                                        id: id,
+                                    }
+                                });
+                            } else {
+                                // that.isBuyeBusy = true
+                                that.getBuylist();
+
+                            }
+                        }
+                    });
+
+            },
+
+            //获取屏幕滚动的距离，并判断位置
+            handleScroll: function() {
+                var that = this;
+                var haederBox = $api.dom('.header');
+                var iiiiiiii = $api.dom('.iiiiiiii');
+                var changHeadDom = $api.dom('.bg_black');
+                var showBox = $api.dom('.showBox').offsetHeight;
+                var height = $api.fixStatusBar(document.querySelector('header'));
+                var scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
+                if (scrollTop > showBox) {
+                    $api.css(iiiiiiii, 'display: block;');
+                    $api.css(haederBox, 'height: auto;');
+                    $api.css(changHeadDom, 'background: #ffffff !important');
+                    api.setStatusBarStyle({
+                        style: 'dark',
+                        color: 'rgba(0,0,0,0)'
+                    });
+
+                } else {
+                    $api.css(iiiiiiii, 'display: none;');
+                    $api.css(haederBox, 'height: 0;');
+                    $api.css(changHeadDom, 'background: black !important');
+                    api.setStatusBarStyle({
+                        style: 'light',
+                        color: 'rgba(0,0,0,0)'
+                    });
+                }
+
+            },
+
+            // 选择交易信箱类型 1.买入 2.卖出
+            changeStatus: function(num) {
+                var that = this;
+                this.status = num;
+                if (num == 2 && that.substatus == 1) {
+                    that.substatus = 2
+                }
+                that.getLetterlist();
+            },
+
+            // 选择交易信箱类型 1:挂单中, 2:交易中, 3:已完成
+            changesubStatus: function(num) {
+                this.substatus = num;
+                this.getLetterlist();
+            },
+
+            // 求购列表 信息
+            getBuylist: function() {
+                var that = this;
+
+                if (that.upLoading) { //上拉加载
+                    that.page++;
+                    param = {
+                        page: that.page,
+                        keys: that.keywords,
+                        type: that.type,
+                        range: that.buytype
+                    }
+                } else {
+                    that.page = 1; //刷新
+                    param = {
+                        page: 1,
+                        keys: that.keywords,
+                        type: that.type,
+                        range: that.buytype
+                    }
+                    that.finished = true;
+                }
+                http(getOrderUrl, 'post', param,
+                    function(ret) {
+                        if (ret.code == 200) {
+                            if (that.upLoading) {
+                                that.list = that.list.concat(ret.data.data);
+                                that.upLoading = false;
+                            } else {
+                                that.list = ret.data.data;
+                                that.downLoading = false;
+                                that.finished = false;
+                            }
+                            if (ret.data && ret.data.data && ret.data.data.length < 10) {
+                                that.finished = true;
+                            }
+                        }
+                    });
+            },
+
+            // 交易信箱信息
+            getLetterlist: function() {
+                var that = this;
+                if (that.upLoading) { //上拉加载
+                    that.page++;
+                    param = {
+                        type: that.status,
+                        page: that.page,
+                        keys: that.keywords,
+                        status: that.substatus
+                    }
+                } else {
+                    that.page = 1; //刷新
+                    param = {
+                        page: 1,
+                        type: that.status,
+                        keys: that.keywords,
+                        status: that.substatus
+                    }
+                    that.finished = true;
+                }
+                http(tradeListUrl, 'post', param,
+                    function(ret) {
+                        if (ret.code == 200) {
+                            if (that.upLoading) {
+                                that.list = that.list.concat(ret.data.data);
+                                that.upLoading = false;
+                            } else {
+                                that.list = ret.data.data;
+                                that.downLoading = false;
+                                that.finished = false;
+                            }
+                            if (ret.data && ret.data.data && ret.data.data.length < 10) {
+                                that.finished = true;
+                            }
+                        }
+                    });
+            },
+
+            // 选择显示 列表类型  求购列表1-2 和交易信箱3
+            changeListtype: function(type, title) {
+                var that = this;
+                that.downLoading = false;
+                that.upLoading = false;
+                that.finished = false;
+                var url;
+                var param;
+                that.title = title;
+                that.type = type;
+                that.page = 1;
+                that.list = [];
+                if (type == 1 || type == 2) {
+                    that.getBuylist();
+                } else {
+                    that.getLetterlist(2);
+                }
+            },
+
+            // 小单区 大单区  求购列表
+            changebuyList: function(type, title) {
+                var that = this;
+                that.buytype = type;
+                that.buytitle = title;
+                that.getBuylist();
+            },
+
+            // 获取用户区号    //获取当前时间
+            getinfo: function() {
+                var that = this;
+                api.setStatusBarStyle({
+                    style: 'light',
+                    color: 'rgba(0,0,0,0)'
+                });
+                http(getuserinfoUrl, 'post', {}, function(ret) {
+                    if (ret.code == 200) {
+                        that.isPartner = ret.data.is_partner;
+                        // 获取用户区号
+                        that.default_sort = ret.data.area_code
+                        if (ret.data.area_code != '86') {
+                            that.type = 2
+                            that.changeListtype(2, '买入')
+                        } else {
+                            that.type = 1
+                            that.changeListtype(1, '买入')
+                        }
+                    } else if (ret.code == 401) {
+                        api.openWin({
+                            name: 'login',
+                            url: 'auth/login.html',
+                            slidBackEnabled: false,
+                            reload: true,
+                            pageParam: {
+                                from: 'center'
+                            }
+                        });
+                    }
+                })
+                Vue.nextTick(function() {
+                    that.getHeader()
+                    setTimeout(function() {
+                        that.getBuylist();
+                    }, 100);
+                    //获取当前时间
+                    var date = new Date();
+                    var now = Number(date.getTime());
+                })
+            },
+
+            //交易中心首页接口 和 大小区控制显示
+            getHeader: function() {
+                var that = this;
+                http(getJyzxUrl, 'post', {}, function(ret) {
+                    if (ret.code == 200) {
+                        that.info = ret.data;
+                        if (ret.data && ret.data != []) {
+                            that.range_show = ret.data.range_show
+                        }
+
+                    }
+                });
+            },
+
+            // 保留3位小数
+            fixTwo: function(num) {
+                if (num && num != 0 && Number(num) != 0) {
+                    return Number(num).toFixed(3);
+                } else {
+                    return 0.00;
+                }
+            },
+            // 清除input文字
+            clear: function() {
+                var that = this;
+                that.isShowlist = false;
+                that.keywords = '';
+
+            },
+            // 保留三位小数
+            nosswr: function(num) {
+                var that = this;
+                if (num && num != 0 && Number(num) != 0) {
+                    var res = parseInt(num * 1000) / 1000;
+                    var xsd = res.toString().split(".");
+                    if (xsd.length == 1) {
+                        res = res.toString() + ".000";
+                        return res;
+                    }
+                    if (xsd.length > 1) {
+                        if (xsd[1].length == 1) {
+                            res = res.toString() + "00";
+                        } else if (xsd[1].length == 2) {
+                            res = res.toString() + "0";
+                        } else {}
+                        return res;
+                    }
+                } else {
+                    return 0.000;
+                }
+            },
+
+            //挂买单
+            openBuyFrame: function(type, title) {
+                if (type == 'buy') {
+                    api.openFrame({
+                        name: 'op_buylimit',
+                        url: 'comment/op_buylimit.html',
+                        reload: true,
+                        rect: {
+                            x: 0,
+                            y: $api.dom(".header").offsetHeight,
+                            w: 'auto',
+                            h: api.frameHeight - $api.dom('.header').offsetHeight
+                        },
+                        pageParam: {}
+                    });
+                } else if (type == 'sell') {
+                    api.openFrame({
+                        name: 'op_selllimit',
+                        url: 'comment/op_selllimit.html',
+                        reload: true,
+                        rect: {
+                            x: 0,
+                            y: $api.dom(".header").offsetHeight,
+                            w: 'auto',
+                            h: api.frameHeight - $api.dom('.header').offsetHeight
+                        },
+                        pageParam: {}
+                    });
+                } else if (type == 'type') {
+                    api.openFrame({
+                        name: 'type_comment',
+                        url: 'comment/type_comment.html',
+                        reload: true,
+                        rect: {
+                            x: 0,
+                            y: $api.dom(".header").offsetHeight,
+                            w: 'auto',
+                            h: api.frameHeight - $api.dom('.header').offsetHeight
+                        },
+                        pageParam: {
+                            title: title
+                        }
+                    });
+                }
+
+            },
+
+            // 跳转页面 换头颜色
+            toPage: function(name, url, params) {
+                api.setStatusBarStyle({
+                    style: 'dark',
+                    color: 'rgba(0,0,0,0)'
+                });
+                api.openWin({
+                    name: name,
+                    url: url,
+                    reload: true,
+                    pageParam: params || {}
+                });
+            },
+
+            // ETH
+            WebSocketTest: function() {
+                var that = this;
+                that.websocket.open({
+                    url: 'wss://medozp.com/websocket',
+                    // pingInterval: 1,
+                    // pingData: 'ping',
+                    autoReconnect: true //开启自动重连
+                }, function(ret, err) {
+                    // if (ret.status) {} else {}
+                });
+                // if ("WebSocket" in window) {
+                //     that.websocket = new WebSocket("wss://medozp.com/websocket");
+                //     that.websocket.onopen = function(evt) {
+                //         that.onwebsocketOpen(evt)
+                //     };
+                //     that.websocket.onclose = function(evt) {
+                //         that.onwebsocketClose(evt)
+                //     };
+                //     that.websocket.onmessage = function(evt) {
+                //         that.onwebsocketMessage(evt)
+                //     };
+                //     that.websocket.onerror = function(evt) {
+                //         that.onwebsocketError(evt)
+                //     };
+                // } else {
+                //     // 浏览器不支持 WebSocket
+                //     api.toast({
+                //         msg: 'Your browser does not support WebSocket!',
+                //         duration: 2000,
+                //         location: 'top'
+                //     });
+                // }
+            },
+            onwebsocketOpen: function(evt) {
+                var that = this;
+                // console.log('连接成功')
+            },
+            onwebsocketClose: function(evt) {
+                var that = this;
+                if (that.websocket && that.websocket != '') {
+                    that.websocket.close();
+                }
+            },
+            onwebsocketMessage: function(evt) {
+                var that = this;
+                if (evt.data == 'Please return password') {
+                    if (typeof that.websocket === "undefined") {
+                        // alert("websocket还没有连接，或者连接失败，请检测");
+                        return false;
+                    }
+                    if (that.websocket.readyState == 3) {
+                        // alert("websocket已经关闭，请重新连接");
+                        return false;
+                    }
+                    that.websocket.send('{"type":"get"}');
+                } else {
+                    var price = JSON.parse(evt.data)
+                    if (price && price.type == 'ping') {
+                        that.websocket.send('{"type":"pong"}');
+                    } else if (price && price.latest) {
+                        if (price.latest && price.latest != 0 && price.latest != '' && price.latest != undefined && price.latest != null) {
+                            $api.setStorage('latestHBprice', price.latest);
+                        }
+                        that.HBprice = $api.getStorage('latestHBprice') ? $api.getStorage('latestHBprice') : price.latest;
+                    }
+                }
+
+            },
+            onwebsocketError: function(evt) {
+                var that = this;
+                console.log('<span style="color: red;">发生错误:</span> ' + evt.data)
+            },
+            reloadlang: function() {
+                var that = this;
+                frame3.$data.langContent = GlobleLanguageContent.frame3;
+                frame3.$data.getCodetip = GlobleLanguageContent.getCode;
+            },
+
+        }
+    })
+</script>

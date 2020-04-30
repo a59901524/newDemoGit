@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>账单中心上下拉刷新</title>
+    <link rel="stylesheet" type="text/css" href="../../css/new/reset.css">
+    <link rel="stylesheet" type="text/css" href="../../lib/vant/vant.css" />
+    <link rel="stylesheet" type="text/css" href="../../lib/iconfont2/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/new/account.css">
+    <script src="../../script/lib-flexible.js"></script>
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <div id="bill_comment" class="content account" v-cloak>
+          <div class="bj bjTu" v-if='list.length'>
+              <div class="li" v-for="item in list" v-if="item.remark!='实名认证通过赠送推荐人活跃值'">
+                  <div class="liRight">
+                      <div class="title fontSize28">{{item.remark}}</div>
+                      <p class="fontSize22 colabbdff">{{item.create_time}}</p>
+                  </div>
+                  <div class="left fontSize28">{{item.num}}</div>
+              </div>
+          </div>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    var bill_comment = new Vue({
+        el: "#bill_comment",
+        data: {
+            type: '',
+            page: 2,
+            list: [],
+            getCodetip: {},
+        },
+        created: function() {
+            var that = this
+            apiready = function() {
+                that.type = api.pageParam.type;
+                bill_comment.$data.getCodetip = GlobleLanguageContent.getCode;
+                api.refreshHeaderLoadDone();
+                that.getList();
+                //上拉加载
+                api.addEventListener({
+                    name: 'scrolltobottom',
+                    extra: {
+                        threshold: 5 //设置距离底部多少距离时触发，默认值为0，数字类型
+                    }
+                }, function(ret, err) {
+                    // if (api.pageParam.title == '交易信箱') {
+
+                    // } else {
+                    that.getList('loadMore');
+                    // }
+                });
+                api.setRefreshHeaderInfo({
+                    visible: true,
+                    bgColor: 'rgba(0,0,0,0)',
+                    textColor: '#666',
+                    textDown: that.getCodetip.textDown,
+                    textUp: that.getCodetip.textUp,
+                    textLoading: that.getCodetip.textLoading,
+                    showTime: false,
+                }, function(ret, err) {
+                    that.page = 2;
+                    that.getList();
+                    api.addEventListener({
+                        name: 'scrolltobottom',
+                        extra: {
+                            threshold: 5 //设置距离底部多少距离时触发，默认值为0，数字类型
+                        }
+                    }, function(ret, err) {
+                        that.getList('loadMore');
+                    });
+                    that.toDoRequest()
+                });
+            }
+        },
+        methods: {
+            changeDate: function(datetimes) {
+                var needdate = new Date(datetimes * 1000);
+                Y = needdate.getFullYear() + '/';
+                M = (needdate.getMonth() + 1 < 10 ? '0' + (needdate.getMonth() + 1) : needdate.getMonth() + 1) + '/';
+                D = needdate.getDate() + ' ';
+                h = (needdate.getHours() < 10 ? '0' + needdate.getHours() : needdate.getHours()) + ':';
+                m = (needdate.getMinutes() < 10 ? '0' + needdate.getMinutes() : needdate.getMinutes()) + ':';
+                s = (needdate.getSeconds() < 10 ? '0' + needdate.getSeconds() : needdate.getSeconds());
+                //      年 月 日 时 分 秒
+                return Y + M + D + h + m + s;
+            },
+            toPage: function(name, url, params) {
+                api.openWin({
+                    name: name,
+                    url: url,
+                    reload: true,
+                    pageParam: params || {}
+                });
+            },
+            getList: function(type) {
+                var that = this
+                var param
+                if (type) {
+                    param = {
+                        page: that.page,
+                        type_id: that.type
+                    }
+                } else {
+                    param = {
+                        page: 1,
+                        type_id: that.type
+                    }
+                }
+                http(recordUrl, 'post', param, function(ret) {
+                    if (ret.code == 200) {
+                        if (type == 'loadMore') {
+                            that.page++;
+                            that.list = that.list.concat(ret.data.data);
+                            if (ret.data.length < 10) {
+                                api.removeEventListener({
+                                    name: 'scrolltobottom'
+                                })
+                            }
+                        } else {
+                            that.list = ret.data.data;
+                        }
+                    }
+                })
+            },
+            // 刷新 初始化加载
+            toDoRequest: function() {
+                var that = this;
+                setTimeout(function() {
+                    api.refreshHeaderLoadDone(); //复位下拉刷新
+                    api.toast({
+                        msg: that.getCodetip.aready,
+                        duration: '1000',
+                        localtion: 'middle'
+                    });
+                }, 2000)
+            }
+        }
+    })
+</script>

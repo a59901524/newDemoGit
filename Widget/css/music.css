@@ -1,0 +1,171 @@
+html,
+body {
+    margin: 0;
+    padding: 0;
+    background: #ffffff;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+#music {
+    min-height: calc(100vh - 50px);
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+}
+
+#music::-webkit-scrollbar {
+    display: none;
+}
+
+.header img {
+    width: 25px;
+    height: 25px;
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+}
+
+.inputarea {
+    margin: 50px auto 10px auto;
+    width: 92%;
+    height: 45px;
+    background-color: #f5f5f5;
+    border-radius: 45px;
+    /*border: 1px solid #eeeae1;
+    */
+    overflow: hidden;
+    -webkit-border-radius: 45px;
+    -moz-border-radius: 45px;
+    -ms-border-radius: 45px;
+    -o-border-radius: 45px;
+}
+
+.inputarea img {
+    width: 22px;
+    height: 22px;
+    margin: 0 20px;
+}
+
+.inputarea input {
+    width: 50%;
+    height: 100%;
+    line-height: 45px;
+    /* text-indent: 10px; */
+    flex: 1;
+}
+
+::-webkit-input-placeholder {
+    font-size: 14px;
+    color: #969696;
+}
+
+
+/* 使用webkit内核的浏览器 */
+
+:-moz-placeholder {
+    font-size: 14px;
+    color: #969696;
+}
+
+
+/* Firefox版本4-18 */
+
+::-moz-placeholder {
+    font-size: 14px;
+    color: #969696;
+}
+
+
+/* Firefox版本19+ */
+
+:-ms-input-placeholder {
+    font-size: 14px;
+    color: #969696;
+}
+
+.fourbtn {
+    height: 70px;
+    /* border-bottom: 1px solid #F2F2F2; */
+    overflow-x: scroll;
+}
+
+.fourbtn::-webkit-scrollbar {
+    display: none;
+}
+
+.partbtn {
+    width: calc(100% / 5);
+    min-width: calc(100% / 5);
+    height: 60px;
+    margin: auto;
+    /* border-left: 1px solid #F2F2F2; */
+}
+
+.partbtn img {
+    width: 35px;
+    height: auto;
+    max-height: 35px;
+}
+
+.selcetstyle {
+    width: 100%;
+    height: 45px;
+}
+
+.selcetstyle div.on {
+    color: #ea387f;
+}
+
+.topimg {
+    height: 18px;
+    width: auto;
+    position: absolute;
+    top: 1px;
+    right: -90%;
+}
+
+.musiclist {
+    /* height: 65px; */
+    padding: 10px 15px;
+}
+
+.musiclist .musicimg {
+    width: 65px;
+    height: 65px;
+    margin-right: 15px;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -ms-border-radius: 5px;
+    -o-border-radius: 5px;
+}
+
+.info {
+    height: 65px;
+    flex: 1;
+}
+
+.info div {
+    height: calc(65px / 3);
+    line-height: calc(80px / 3);
+}
+
+.xing {
+    height: 28px;
+    width: 28px;
+}
+
+.usemusic {
+    width: 92%;
+    margin: 0 auto;
+    height: 35px;
+    line-height: 35px;
+    text-align: center;
+    background: #ea387f;
+    color: #ffffff;
+}
+
+.usemusic img {
+    height: 20px;
+    width: auto;
+}

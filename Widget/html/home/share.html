@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>分享.上热门.保存.举报</title>
+    <link rel="stylesheet" type="text/css" href="../../lib/iconfont2/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <!-- <link rel="stylesheet" type="text/css" href="../../css/music.css" /> -->
+    <style>
+        body,
+        html,
+        #share {
+            border-radius: 5px 5px 0 0;
+            background: rgba(0, 0, 0, 0)
+        }
+        
+        #share {
+            width: 100vw;
+            height: 100vh;
+            background: #ffffff;
+            color: #666666;
+        }
+        
+        .colorgray {
+            color: #969696;
+        }
+        
+        .close {
+            width: 18px;
+            height: 18px;
+        }
+        
+        .heads {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: #ffffff;
+        }
+        
+        .list {
+            padding-top: 42px;
+        }
+        
+        .iconimg {
+            height: 50px;
+            width: 50px;
+            border-radius: 50%;
+            background: #ffffff;
+            margin: auto;
+        }
+        
+        .item {
+            width: 25%;
+            margin: 10px 0;
+        }
+        
+        .item div {
+            line-height: 30px;
+        }
+        
+        .graybg {
+            background: #eeeeee;
+        }
+        
+        .new {
+            height: 25px;
+            width: 25px;
+            border-radius: 50%;
+        }
+        
+        .close {
+            width: 18px;
+            height: 18px;
+        }
+    </style>
+</head>
+
+<body class="">
+    <div id="share" class="" v-cloak>
+        <div class="heads flex_row_between colorgray padding1 fontSize14">
+            <div>{{langContent.title?langContent.title:''}}</div>
+            <i @click="close" class="iconfont icon-guanbi fontSize16 color_black6 close"></i>
+        </div>
+        <div class="list flex_row_left flex_wrap fontSize14 colorgray">
+            <div class="item flex_col_center" @click="share(1,video_img)">
+                <img class="iconimg" src="../../image/wechaticon.png" alt="" />
+                <div>{{langContent.wx?langContent.wx:''}}</div>
+            </div>
+            <div class="item flex_col_center" @click="share(2,video_img)">
+                <img class="iconimg" src="../../image/friend.png" alt="" />
+                <div>{{langContent.pyq?langContent.pyq:''}}</div>
+            </div>
+            <!-- <div class="item flex_col_center">
+                <img class="iconimg" src="../../image/qqzeon.png" alt="" />
+                <div>QQ空间</div>
+            </div>
+            <div class="item flex_col_center">
+                <img class="iconimg" src="../../image/qqicon.png" alt="" />
+                <div>QQ</div>
+            </div>-->
+            <div v-show="item.is_me==0" class="item flex_col_center" @click="report()">
+                <div class="iconimg graybg flex_row_center">
+                    <img class="iconimg graybg new" src="../../image/home/jubao.png" alt="" />
+                </div>
+                <div>{{langContent.report?langContent.report:''}}</div>
+            </div>
+            <div v-show="item.is_me==1" class="item flex_col_center" @click="delect">
+                <div class="iconimg graybg flex_row_center">
+                    <img class="iconimg graybg new" src="../../image/home/deletemy.png" alt="" />
+                </div>
+                <div>{{langContent.delet?langContent.delet:''}}</div>
+            </div>
+            <div class="item flex_col_center" @click="copy(item.video_url)">
+                <div class="iconimg graybg flex_row_center">
+                    <img class="iconimg graybg new" src="../../image/home/lianjie.png" alt="" />
+                </div>
+                <div>{{langContent.copy?langContent.copy:''}}</div>
+            </div>
+            <div class="item flex_col_center" @click="saveVideo">
+                <div class="iconimg graybg flex_row_center">
+                    <img class="iconimg graybg new" src="../../image/home/xiazai.png" alt="" />
+                </div>
+                <div>{{langContent.save?langContent.save:''}}</div>
+            </div>
+            <div class="item flex_col_center" @click="hot">
+                <div class="iconimg graybg flex_row_center">
+                    <img class="iconimg graybg new" src="../../image/home/hot.png" alt="" />
+                </div>
+                <div>{{langContent.hot?langContent.hot:''}}</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    var share = new Vue({
+        el: "#share",
+        data: {
+            item: {},
+            video_img: '',
+            langContent: {}
+        },
+        created: function() {
+            var that = this;
+            apiready = function() {
+                // fixStatusbar('header,.header,.headers', '.content');
+                that.item = api.pageParam.item
+                that.video_img = that.item.video_url.substring(that.item.video_url.lastIndexOf('/') + 1).split(".")[0] + '.jpg';
+                // if (that.item.video_img) {
+                //     api.download({
+                //         url: that.item.video_img,
+                //         savePath: 'fs://ShareImg/' + that.video_img,
+                //         report: true,
+                //         cache: true,
+                //         allowResume: true
+                //     }, function(ret, err) {
+                //         if (ret.state == 1) {
+                //             //下载成功
+                //         }
+                //     });
+                // }
+                share.$data.langContent = GlobleLanguageContent.share;
+            }
+        },
+        methods: {
+            hot: function() {
+                var that = this;
+                api.sendEvent({
+                    name: 'pause',
+                    extra: {}
+                });
+                api.openWin({
+                    name: 'hot_index',
+                    url: 'hot_index.html',
+                    bounces: false,
+                    pageParam: {
+                        item: that.item,
+                    }
+                });
+            },
+            report: function() {
+                var that = this;
+                api.sendEvent({
+                    name: 'pause',
+                    extra: {}
+                });
+                api.openWin({
+                    name: 'report',
+                    url: '../chat/report.html',
+                    bounces: false,
+                    pageParam: {
+                        uid: that.item.uid,
+                        report_type: 1,
+                        video_id: that.item.video_id,
+                    }
+                });
+            },
+            saveVideo: function() {
+                var that = this;
+                api.showProgress({
+                    title: '',
+                    text: that.langContent.saving,
+                    modal: true
+                });
+                var name = 'fs://saveVideo/' + that.item.video_url.substring(that.item.video_url.lastIndexOf('/') + 1);
+                api.download({
+                    url: that.item.video_url,
+                    savePath: name,
+                    report: true,
+                    cache: true,
+                    allowResume: true
+                }, function(ret, err) {
+                    if (ret.state == 1) {
+                        api.saveMediaToAlbum({
+                            path: name,
+                            groupName: 'MeetJXA'
+                        }, function(ret, err) {
+                            if (ret && ret.status) {
+                                api.hideProgress();
+                                api.toast({
+                                    msg: that.langContent.saveSuc,
+                                    duration: 2000,
+                                    location: 'bottom'
+                                });
+                                setTimeout(function() {
+                                    api.closeFrame({});
+                                }, 1500);
+                            } else {
+                                api.hideProgress();
+                                api.toast({
+                                    msg: that.langContent.saveFail,
+                                    duration: 2000,
+                                    location: 'bottom'
+                                });
+                            }
+                        });
+                    }
+                });
+            },
+            share: function(type, img) {
+                var that = this;
+                // var shareImg = 'fs://ShareImg/' + that.video_img;
+                api.showProgress({
+                    title: that.langContent.getinfo,
+                    text: that.langContent.wait,
+                    modal: false
+                });
+                http(getshareVideoUrl, 'post', {
+                    uid: that.item.uid,
+                    video_id: that.item.video_id
+                }, function(res) {
+                    if (res.code == 200) {
+                        api.hideProgress();
+                        if (type == 1) {
+                            var wx = api.require('wx');
+                            wx.shareWebpage({
+                                apiKey: '',
+                                scene: 'session',
+                                title: that.langContent.sharetitle,
+                                // description: '我在见习JXA看到一个很好看的视频,快来跟我一起围观吧~',
+                                description: that.item.title,
+                                // thumb: shareImg || 'widget://image/applogo.png',
+                                thumb: 'widget://image/applogo.png',
+                                contentUrl: res.data.share_url
+                            }, function(ret, err) {
+                                if (ret.status) {
+                                    // alert('分享成功');
+                                    getCount()
+                                } else {
+                                    if (err.code == -1) {
+                                        api.toast({
+                                            msg: that.langContent.shareStatu1,
+                                            duration: 2000,
+                                            location: 'bottom'
+                                        });
+                                    } else if (err.code == 2) {
+                                        api.toast({
+                                            msg: that.langContent.shareStatu2,
+                                            duration: 2000,
+                                            location: 'bottom'
+                                        });
+                                    } else if (err.code == 3) {
+                                        api.toast({
+                                            msg: that.langContent.shareStatu3,
+                                            duration: 2000,
+                                            location: 'bottom'
+                                        });
+                                    }
+                                }
+                            });
+                        } else {
+                            var wx = api.require('wx');
+                            wx.shareWebpage({
+                                apiKey: '',
+                                scene: 'timeline',
+                                title: that.langContent.sharetitle,
+                                // description: '我在见习JXA看到一个很好看的视频,快来跟我一起围观吧~',
+                                description: that.item.title,
+                                // thumb: shareImg || 'widget://image/applogo.png',
+                                thumb: 'widget://image/applogo.png',
+                                contentUrl: res.data.share_url
+                            }, function(ret, err) {
+                                if (ret.status) {
+                                    // alert('分享成功');
+                                    getCount()
+                                } else {
+                                    if (err.code == -1) {
+                                        api.toast({
+                                            msg: that.langContent.shareStatu1,
+                                            duration: 2000,
+                                            location: 'bottom'
+                                        });
+                                    } else if (err.code == 2) {
+                                        api.toast({
+                                            msg: that.langContent.shareStatu2,
+                                            duration: 2000,
+                                            location: 'bottom'
+                                        });
+                                    } else if (err.code == 3) {
+                                        api.toast({
+                                            msg: that.langContent.shareStatu3,
+                                            duration: 2000,
+                                            location: 'bottom'
+                                        });
+                                    }
+                                }
+                            });
+                        }
+
+                    }
+                }, function(err) {})
+            },
+            delect: function() {
+                var that = this;
+                http(delVideoUrl, 'post', {
+                    video_id: that.item.video_id
+                }, function(res) {
+                    if (res.code == 200) {
+                        api.toast({
+                            msg: res.msg,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                        setTimeout(function() {
+                            api.sendEvent({
+                                name: 'delectemyVideo',
+                                extra: {
+                                    index: api.pageParam.index
+                                }
+                            });
+                            that.close()
+                        }, 2000);
+                    }
+                }, function(err) {})
+            },
+            close: function() {
+                api.sendEvent({
+                    name: 'CanSwiper',
+                    extra: {}
+                });
+                api.closeFrame({});
+            },
+            copy: function(text) {
+                var that = this;
+                var clipBoard = api.require('clipBoard');
+                clipBoard.set({
+                    value: text
+                }, function(ret, err) {
+                    if (ret.status) {
+                        api.toast({
+                            msg: that.langContent.copyStatu,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                        setTimeout(function() {
+                            that.close()
+                        }, 2000);
+                    } else {}
+                });
+            }
+        }
+    })
+
+    function getCount() {
+        http(shareCountUrl, 'post', {
+            uid: share.item.uid,
+            video_id: share.item.video_id
+        }, function(res) {
+            if (res.code == 200) {
+                setTimeout(function() {
+                    api.sendEvent({
+                        name: 'changeVideoCount',
+                        extra: {
+                            id: share.item.video_id,
+                            share_count: res.data.share_count
+                        }
+                    });
+                    share.close()
+                }, 2000);
+            }
+        }, function(err) {})
+    }
+</script>

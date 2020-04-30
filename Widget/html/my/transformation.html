@@ -1,0 +1,230 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>转换中心</title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../lib/iconfont2/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <link rel="stylesheet" href="../../css/new/reset.css">
+    <link rel="stylesheet" href="../../css/new/convert.css">
+
+    <style>
+        .common_radio {
+            width: 0.5rem;
+            height: 0.5rem;
+            min-width: 0.5rem;
+            min-height: 0.5rem;
+            border-radius: 50%;
+            border: 1px solid #999999;
+            position: relative;
+            display: inline-block;
+            background: #ffffff;
+        }
+
+        .common_radio.on {
+            background: #23ab3d !important;
+            border: 1px solid #23ab3d;
+        }
+
+        .common_radio.on::before {
+            position: absolute;
+            content: "";
+            width: 5px;
+            height: 10px;
+            top: 0.08rem;
+            left: 0.15rem;
+            border: 2px solid #fff;
+            border-top: none;
+            border-left: none;
+            -webkit-transform: rotate(45deg);
+            transform: rotate(45deg);
+        }
+    </style>
+    <script src="../../script/lib-flexible.js"></script>
+</head>
+
+<body class="has_header">
+      <div id="transformation" class="content convert" v-cloak>
+          <header class="header ">
+              <i class="iconfont icon-xiangzuo" onclick="goBack()"></i>
+              <div>转换HDC</div>
+          </header>
+          <div class="content2">
+              <div class="navLi" v-if="transtype==1">
+                  <h3 class="fontSize26">金币</h3>
+                  <p class="fontSize30 col00fbfd">{{info.candy_money}}</p>
+              </div>
+              <div class="navLi">
+                  <h3 class="fontSize26">可用HD</h3>
+                  <p class="fontSize30 col00fbfd">{{info.world_use_money}}</p>
+              </div>
+              <div class="navLi" v-if="transtype==2">
+                  <h3 class="fontSize26">HDC</h3>
+                  <p class="fontSize30 col00fbfd">{{info.world_money}}</p>
+              </div>
+          </div>
+          <div class="cont bj bjTu">
+             <div class="contLi jtRight"  @click="isShow = true"  v-show="rechargetype==1&&transtype==1">
+                 <label for="">{{langContent.kytg?langContent.kytg:''}}</label>
+                 <input type="text" v-model="info.candy_money" disabled>
+             </div>
+             <div class="contLi jtRight"  @click="isShow = true" v-show="rechargetype==2&&transtype==1">
+                 <label for="">{{langContent.kyysj?langContent.kyysj:''}}</label>
+                 <input type="text" value="{{info.candy_money}}" disabled>
+             </div>
+             <div class="contLi jtRight"  @click="isShow = true" v-show="rechargetype==3&&transtype==2">
+                 <label for="">{{langContent.kyJXA?langContent.kyJXA:''}}</label>
+                 <input type="text" value="{{info.user_money}}" disabled>
+             </div>
+             <div class="contLi" v-show="(rechargetype==1)&&transtype==1">
+                 <label for="">{{langContent.title?langContent.title:''}}HDC</label>
+                 <input type="number" :placeholder="langContent.tgtoJXA" v-model="num">
+             </div>
+             <div class="contLi" v-show="(rechargetype==2)&&transtype==1">
+                 <label for="">{{langContent.title?langContent.title:''}}HDC</label>
+                 <input type="number" :placeholder="langContent.ysjtoJXA" v-model="num">
+             </div>
+             <div class="contLi" v-show="rechargetype==3&&transtype==2">
+                 <label for="">{{langContent.zhysj?langContent.zhysj:''}}</label>
+                 <input type="number" :placeholder="langContent.zhysj_input" v-model="num">
+             </div>
+             <div class="contLi">
+                 <label for="">交易密码</label>
+                 <input type="password" :placeholder="langContent.psw_input" v-model="password">
+             </div>
+         </div>
+         <div class="btn" @click="submit">提交</div>
+        <div class="box_wrapper fontSize16 color_black3" v-show="isShow">
+            <div class="box bg-white posi_relative">
+                <div v-show="transtype==1" class="flex_row_between padding1 bbd" @click="rechargetype=1,isShow=false,num='',coin_type = 'candy_money'">
+                    {{langContent.type1?langContent.type1:''}}
+                    <div class="common_radio" :class="{'on':rechargetype == 1}"></div>
+                </div>
+                <div v-show="transtype==1" class="flex_row_between padding1 bbd" @click="rechargetype=2,isShow=false,num='',coin_type = 'world_use_money'">
+                    {{langContent.type2?langContent.type2:''}}
+                    <div class=" common_radio" :class="{'on':rechargetype == 2}"></div>
+                </div>
+                <div v-show="transtype==2" class="flex_row_between padding1 bbd" @click="rechargetype=3,isShow=false,num='',coin_type = 'world_money'">
+                    {{langContent.type3?langContent.type3:''}}
+                    <div class=" common_radio" :class="{'on':rechargetype == 3}"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    var transformation = new Vue({
+        el: '#transformation',
+        data: {
+            mobile: '',
+            num: '',
+            password: '',
+            rechargetype: 1,
+            info: {},
+            isShow: false,
+            transtype: 1,
+            langContent: {},
+            getCodetip: {},
+            flag: true,
+            coin_type: 'candy_money'
+        },
+        created: function() {
+            var that = this;
+            apiready = function() {
+                fixStatusbar('header,.header,.headers', '.content');
+                if (api.pageParam.transtype) {
+                    that.transtype = api.pageParam.transtype
+                    if (api.pageParam.transtype == 2) {
+                        that.rechargetype = 3
+                        that.coin_type = 'world_money'
+                    }
+                }
+                transformation.$data.langContent = GlobleLanguageContent.transformation;
+                transformation.$data.getCodetip = GlobleLanguageContent.getCode;
+                that.getinfo()
+                api.setStatusBarStyle({
+                    style: 'dark',
+                    color: 'rgba(0,0,0,0)'
+                });
+
+            }
+        },
+        methods: {
+            submit: function() {
+                var that = this;
+
+                if (that.num == '' || that.num < 0) {
+                    api.toast({
+                        msg: that.langContent.nonum,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return;
+                }
+                if (that.password == '') {
+                    api.toast({
+                        msg: that.langContent.nopsw,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return;
+                }
+                var param = {
+                    num: that.num,
+                    coin_type: that.coin_type,
+                    password: that.password
+                }
+                if (that.flag) {
+                    that.flag = false
+                    http(exchangeUrl, 'post', param, function(res) {
+                        that.flag = true
+                        if (res.code == 200) {
+                            api.toast({
+                                msg: res.msg,
+                                duration: 2000,
+                                location: 'bottom'
+                            });
+                            that.getinfo()
+                            api.execScript({
+                                name: 'root',
+                                frameName: 'frame4',
+                                script: 'frame4.getInfo()'
+                            });
+                            that.password = '';
+                            that.num = ''
+                        }
+                    }, function(err) {})
+                } else {
+                    api.toast({
+                        msg: that.getCodetip.submit_tips,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+
+            },
+            getinfo: function() {
+                var that = this;
+                http(getuserinfoUrl, 'post', {}, function(res) {
+                    if (res.code == 200) {
+                        that.info = res.data;
+                    }
+                }, function(err) {})
+            },
+        }
+    });
+</script>

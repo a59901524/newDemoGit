@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>商学院视频详情</title>
+    <link rel="stylesheet" href="../../lib/iconfont2/iconfont.css">
+    <link rel="stylesheet" href="../../css/common.css">
+    <style>
+        .b_header {
+            padding: 15px;
+            white-space: nowrap;
+            min-width: 15%;
+        }
+        
+        .on {
+            font-weight: 600;
+            border-bottom: 2px solid;
+        }
+        
+        .cont::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .title_mv {
+            margin: 0 auto;
+        }
+    </style>
+</head>
+
+<body class="has_header bg-white">
+    <div id="college_mv" v-cloak>
+        <header class="header bg_default1 color_default1">
+            <i class="iconfont icon-xiangzuo" onclick="goBack()"></i>
+            <div class="fontSise16">{{langContent.title?langContent.title:''}}</div>
+        </header>
+        <div class="cont text_center padding12 fontSize16 ">
+            {{info.title}}
+        </div>
+        <div class="text_center padding1"> <video class="width100 height100" :src="info.url" :poster="info.url?info.url+'?vframe/jpg/offset/1':'../image/loading.gif'" webkit-playsinline playsinline x5-video-player-type="h5" x5-playsinline="" x-webkit-airplay="allow" controls></video></div>
+        <!-- <div class="fontSize14 color_default1 padding1" v-html="info.content"></div> -->
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    var college_mv = new Vue({
+        el: "#college_mv",
+        data: {
+            type: 1,
+            info: {},
+            langContent: {}
+        },
+        created: function() {
+            var that = this
+            apiready = function() {
+                var height = $api.fixStatusBar($api.dom('.header'))
+                if (height > 0) {
+                    $api.css($api.dom('.cont'), 'margin-top:' + (height - 45) + 'px;');
+                }
+                that.info = api.pageParam.item
+                college_mv.$data.langContent = GlobleLanguageContent.college_comment;
+            }
+        },
+        methods: {
+
+        }
+    })
+</script>

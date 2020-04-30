@@ -1,0 +1,48 @@
+@charset "utf-8";
+
+html,body{height: 100%;-webkit-user-select:none;user-select:none;}
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,blockquote,th,td,hr,button,article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section {margin:0;padding:0;}
+body{max-width:750px;min-width:320px; margin: 0 auto;background: #fff;
+	/*font-family:-apple-system-font,Helvetica,sans-serif;*/
+	font-family: -apple-system, BlinkMacSystemFont, "PingFang SC","Helvetica Neue",STHeiti,"Microsoft Yahei",Tahoma,Simsun,sans-serif;
+	line-height: 1;font-size: 12px;-webkit-overflow-scrolling : touch;}
+html {-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%; }
+a,button,input, select, textarea,div,span {-webkit-tap-highlight-color:rgba(255,255,255,0);}
+table{border-collapse:collapse; border-spacing:0;}
+h1,h2,h3,h4,h5,h6{font-weight: normal;}
+ul,ol,li{list-style:none;}
+em,i{font-style:normal;}
+img{border:none;}
+
+
+/* input标签 去掉默认样式 */
+/*input{*/
+	/*border: none;*/
+	/*-webkit-appearance: none;*/
+/*}*/
+
+/* a标签的下划线 */
+a{
+	text-decoration: none;
+}
+
+
+
+/* 清除浮动 */
+.f_l{
+	float: left;
+}
+.f_r{
+	float: right;
+}
+
+/* 清除浮动 */
+.clearfix::before,
+.clearfix::after{
+	content:'';
+	display: block;
+	line-height: 0;
+	height: 0;
+	visibility: hidden;
+	clear: both;
+}

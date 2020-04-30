@@ -1,0 +1,67 @@
+.mySociety{
+	color: #ffffff;
+}
+.mySociety .top{
+	margin: 0.16rem 0.13rem;
+	padding: 0.18rem 0.32rem;
+	background-color: rgba(37, 0, 115, 0.5);
+	border-radius: 0.12rem;
+}
+.mySociety .top .topLeft {
+	font-size: 0.26rem;
+	display: flex;
+	align-items: center;
+}
+.mySociety .top .topLeft .img{
+	width: 1rem;
+	height: 1rem;
+	border: 0.04rem solid #08aef1;
+	border-radius: 50%;
+}
+.mySociety .top .topLeft .img img{
+	border-radius: 50%;
+}
+.mySociety .top .topLeft .title{
+	margin-left: 0.16rem;
+	font-size: 0.34rem;
+}
+.mySociety .title .contTitle{
+	font-size: 0.26rem;
+	height: 0.38rem;
+	line-height: 0.38rem;
+	margin-bottom: 0.18rem;
+}
+.mySociety .title .level{
+	height: 0.38rem;
+	line-height: 0.38rem;
+	border-radius: 0.38rem;
+	padding: 0 0.26rem;
+	background: #fd5300;
+	color: #ffffff;
+	font-size: 0.26rem;
+	display: inline;
+}
+.mySociety .nav{
+	display: flex;
+	justify-content: space-between;
+	margin-top: 0.30rem;
+	flex-wrap: wrap;
+	font-size: 0.26rem;
+}
+.mySociety .nav .navLi{
+	flex: 0 0 50%;
+    text-align: left;
+    position: relative;
+    margin-bottom: 0.18rem;
+}
+
+.mySociety .content2{
+	margin: 0.3rem 0.12rem;
+}
+.mySociety .content2 p{
+	line-height: 0.4rem;
+	margin: 0.2rem 0 0.3rem;
+}
+.bj{
+	padding: 0.1rem 0.18rem;
+}

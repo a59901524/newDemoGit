@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>悬赏审核</title>
+    <link rel="stylesheet" href="../../../lib/vant/vant.css">
+    <link rel="stylesheet" href="../../../lib/iconfont2/iconfont.css">
+    <link rel="stylesheet" href="../../../css/common.css">
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        }
+        
+        .btnpart {
+            height: 50px;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #fff;
+        }
+        
+        .btn {
+            width: 45%;
+            height: 3rem;
+            line-height: 3rem;
+            border-radius: 5px;
+            color: #ffffff;
+            background: #72a7fe;
+            text-align: center;
+            font-style: 1.5rem;
+            font-weight: 800;
+        }
+    </style>
+</head>
+
+<body class="color_black6">
+    <div id="mission_verify" v-cloak>
+        <header class="header ">
+            <i class="iconfont icon-xiangzuo " onclick="goBack()"></i>
+            <div>悬赏审核</div>
+        </header>
+        <div class="cont bg-white">
+            <div style="height: 45px;"></div>
+            <div class="fontSize14 padding1">做悬赏人：{{info.nickname?info.nickname:''}}(ID:{{info.number?info.number:''}})</div>
+            <div class="fontSize14 padding1 bbd">
+                <p>首次报名时间：{{info.create_time?changeDate(info.create_time):''}}</p>
+                <p>最后提交时间：{{info.submit_time?changeDate(info.submit_time):''}}</p>
+            </div>
+            <div v-for="(ste,index) in info.steps">
+                <div class="fontSize14 padding1"> <span class="bg_violet" style="width: 3px; margin-right: 1rem">|</span> 第{{index+1}}步: {{ste.step_text}}</div>
+                <div class="flex_row_left padding1">
+                    <img class="stepimg" :src="ste.img?ste.img:''" alt="">
+                </div>
+            </div>
+            <div class="padding1 fontSize14">文字验证：{{info.font_verify?info.font_verify:''}}</div>
+            <div style="height: 50px;"></div>
+            <div class="btnpart flex_row_around">
+                <div class="btn" @click="verifyreward(info.id,1)">审核通过</div>
+                <div class="btn" @click="verifyreward(info.id,0)">审核拒绝</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../../lib/vant/vant.min.js"></script>
+<script type="text/javascript" src="../../../script/rsa.js"></script>
+<script type="text/javascript" src="../../../script/aes.js"></script>
+<script type="text/javascript" src="../../../script/const.js"></script>
+<script type="text/javascript" src="../../../script/common.js"></script>
+<script type="text/javascript">
+    var mission_verify = new Vue({
+        el: "#mission_verify",
+        data: {
+            info: {},
+        },
+        created: function() {
+            var that = this
+            apiready = function() {
+                var height = $api.fixStatusBar($api.dom('.header'))
+                if (height > 0) {
+                    $api.css($api.dom('.cont'), 'padding-top:' + (height) + 'px;');
+                    $api.css($api.dom('#mission_verify'), 'min-height:calc(' + (100 % -height) + ')');
+                }
+                that.getInfo()
+            }
+        },
+        methods: {
+            changeDate: function(datetimes) {
+                var needdate = new Date(datetimes * 1000);
+                Y = needdate.getFullYear() + '/';
+                M = (needdate.getMonth() + 1 < 10 ? '0' + (needdate.getMonth() + 1) : needdate.getMonth() + 1) + '/';
+                D = needdate.getDate() + ' ';
+                h = (needdate.getHours() < 10 ? '0' + needdate.getHours() : needdate.getHours()) + ':';
+                m = (needdate.getMinutes() < 10 ? '0' + needdate.getMinutes() : needdate.getMinutes()) + ':';
+                s = (needdate.getSeconds() < 10 ? '0' + needdate.getSeconds() : needdate.getSeconds());
+                //      年 月 日 时 分 秒
+                return Y + M + D + h + m + s;
+            },
+            // 审核任务
+            verifyreward: function(id, opt) {
+                var that = this;
+                var params = {
+                    id: id,
+                    opt: opt
+                }
+                http(verifyrewardUrl, 'post', params, function(ret) {
+                    if (ret.code == 200) {
+                        api.toast({
+                            msg: ret.msg,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                    }
+                    api.execScript({                                    
+                        name: 'missionMy',
+                        frameName: 'missionMy',
+                        script: 'missionMy.getInfo()'                                
+                    });
+                    setTimeout(function() {
+                        that.getInfo()
+                    }, 2000);
+                })
+            },
+            // 获取已领取任务的列表（一个一个来）
+            getInfo: function() {
+                var that = this;
+                that.info = {}
+                api.showProgress({
+                    title: '',
+                    text: '审核内容加载中...',
+                    modal: true
+                });
+                // 获取已领取任务
+                http(getacceptUrl, 'post', {
+                    id: api.pageParam.id
+                }, function(ret) {
+                    api.hideProgress();
+                    if (ret.code == 200) {
+
+                        if (ret.data.info === null) {
+                            api.toast({
+                                msg: '暂无可审核任务~请稍后再来',
+                                duration: 3000,
+                                location: 'bottom'
+                            });
+                            setTimeout(function() {
+                                api.closeWin();
+                            }, 3000);
+                        } else {
+                            if (ret.data && ret.data != []) {
+                                that.info = ret.data;
+                            }
+                        }
+                    }
+                })
+            },
+            toPage: function(name, url, params) {
+                api.openWin({
+                    name: name,
+                    url: url,
+                    reload: true,
+                    pageParam: {
+                        missionOrder: 1,
+                        missionBill: 2
+                    }
+                });
+            },
+        },
+    })
+</script>

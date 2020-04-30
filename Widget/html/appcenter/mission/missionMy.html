@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>悬赏中心</title>
+    <link rel="stylesheet" href="../../../lib/vant/vant.css">
+    <link rel="stylesheet" href="../../../lib/iconfont2/iconfont.css">
+    <link rel="stylesheet" href="../../../css/common.css">
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        }
+
+        .mission_myicon {
+            width: 7rem;
+            height: 7rem;
+            border-radius: 50%;
+            margin-right: 1.5rem;
+        }
+        /* 接单  | 样式*/
+
+        .fangkuai {
+            background-color: #B3A795;
+            width: 3px;
+            height: 14px;
+            margin-right: 5px;
+        }
+
+        .my_box {
+            width: 33.33%;
+            line-height: 30px;
+            color: #ccc;
+        }
+        /*
+        .Lv {
+            position: absolute;
+            background-color: gold;
+            color: #fff;
+            padding: .2rem .6rem;
+            border-radius: 2rem;
+            font-weight: 800;
+            left: 3rem;
+            top: 2rem;
+        }
+         */
+        /* .Exp {
+            position: absolute;
+            right: 1.2rem;
+            top: 2.2rem;
+        }
+         */
+
+        .padding05 {
+            padding: 0.5rem 0.83rem;
+        }
+
+        .flex_grow1 {
+            width: 50%;
+        }
+
+        .color_default1 {
+            font-size: 1.8rem;
+        }
+    </style>
+</head>
+
+<body class="has_header  fontSize14 color_999">
+    <div id="missionMy" v-cloak>
+        <header class="header bg-white bbd">
+            <i class="iconfont icon-xiangzuo " onclick="goBack()"></i>
+            <div>悬赏中心</div>
+        </header>
+        <div class="cont ">
+            <div class=" padding1  flex_row_left  padding1 bg-white color_black3 ">
+                <div> <img :src="info.my_avatar?info.my_avatar:'../../../image/applogo.png'" alt="" class="mission_myicon"></div>
+                <div class="fontSize18 ">
+                    {{info.my_nickname?info.my_nickname:''}}
+                    <p class="marginT1 fontSize12">用户ID：{{info.my_user_sn?info.my_user_sn:''}}</p>
+                </div>
+            </div>
+            <div class="padding05">我的资产(HDC)</div>
+
+
+            <div class="flex_row_between bg-white padding12_top_bottom width100">
+                <div class="text_center flex_grow1" style="border-right: 1px solid #dddddd">
+                    <p>当前余额</p>
+                    <p class="padding1 color_default1">{{info.my_yjl?info.my_yjl:'0'}}</p>
+
+                </div>
+                <div class="text_center flex_grow1" style="border-left: 1px solid #dddddd">
+                    <p>累计奖励</p>
+                    <p class="padding1 color_default1">{{info.all_bounty?info.all_bounty:'0'}}</p>
+                </div>
+            </div>
+            <!-- 我的等级 -->
+            <!-- <div style="width: 100%; margin: auto; position: relative;">
+                <div class="fontSize14 color_gold margin1" style="margin-left: 2rem;"> 我的等级</div>
+                <div class="Lv">Lv{{4}}</div>
+                <div style="width: 60%; margin: auto;">
+                    <div style=" margin: auto;">
+                        <van-progress :percentage="percent" pivot-text="" pivot-color="#7232dd" color="linear-gradient(to right, #be99ff, #7232dd)" />
+                    </div>
+                </div>
+                <div class="Exp"> {{myEp}}/{{maxEp}}</div>
+            </div>
+            <div class="padding1 text_center">
+                <span>您可以通过做悬赏提升等级。</span> <b style="color: chocolate;" onclick="toPage('mission_mygrade','./mission_myexp.html')">等级越高,可做悬赏越多&gt; &gt;</b>
+            </div> -->
+            <div class=" flex_row_between padding05 text_center  fontSize14" @click="changeorder()">
+                <div> 我接的单</div>
+            </div>
+            <div class="flex_row_left flex_wrap padding1 bg-white" v-if="order">
+                <div class="my_box text_center marginT1 marginB1" @click="order_type(1,'待完成')">
+                    <div class="color_default1">{{info.my_accept_wait?info.my_accept_wait:'0'}}</div>
+                    <div>待完成</div>
+                </div>
+                <div class="my_box text_center marginT1 marginB1" @click="order_type(1,'审核中')">
+                    <div class="color_default1">{{info.my_accept_verify?info.my_accept_verify:'0'}}</div>
+                    <div>审核中</div>
+                </div>
+                <div class="my_box text_center marginT1 marginB1" @click="order_type(1,'已通过')">
+                    <div class="color_default1">{{info.my_accept_finish?info.my_accept_finish:'0'}}</div>
+                    <div>已通过</div>
+                </div>
+                <div class="my_box text_center marginT1 marginB1" @click="order_type(1,'已驳回')">
+                    <div class="color_default1">{{info.my_accept_return?info.my_accept_return:'0'}}</div>
+                    <div>已驳回</div>
+                </div>
+                <div class="my_box text_center marginT1 marginB1" @click="order_type(1,'申诉中')">
+                    <div class="color_default1">{{info.my_accept_appeal?info.my_accept_appeal:'0'}}</div>
+                    <div>申诉中</div>
+                </div>
+                <div class="my_box text_center marginT1 marginB1" @click="order_type(1,'系统驳回')">
+                    <div class="color_default1">{{info.my_accept_system?info.my_accept_system:'0'}}</div>
+                    <div>系统驳回</div>
+                </div>
+
+            </div>
+
+            <div class="  flex_row_between padding05 text_center  fontSize14" @click="changebill()">
+                <div> 我发的单</div>
+            </div>
+            <div class="flex_row_left flex_wrap padding1 bg-white" v-if="bill">
+                <!-- <div class="my_box text_center marginT1 marginB1" @click="order_type(2,'已取消')">
+                    <div class="color_default1">{{info.my_bounty_cancel?info.my_bounty_cancel:'0'}}</div>
+                    <div>已取消</div>
+                </div> -->
+                <div class="my_box text_center marginT1 marginB1" @click="order_type(2,'审核中')">
+                    <div class="color_default1">{{info.my_bounty_verify?info.my_bounty_verify:'0'}}</div>
+                    <div>系统审核中</div>
+                </div>
+                <div class="my_box text_center marginT1 marginB1 posi_relative" @click="order_type(2,'已发布')">
+                    <div class="color_default1">{{info.my_bounty_publish?info.my_bounty_publish:'0'}}</div>
+                    <div>已发布</div>
+                </div>
+                <div class="my_box text_center marginT1 marginB1" @click="order_type(2,'已完成')">
+                    <div class="color_default1">{{info.my_bounty_finish?info.my_bounty_finish:'0'}}</div>
+                    <div>已完成</div>
+                </div>
+                <!-- <div class="my_box text_center marginT1 marginB1" @click="order_type(2,'已终止')">
+                    <div class="color_default1">{{info.my_reward_end?info.my_reward_end:'0'}}</div>
+                    <div>已终止</div>
+                </div> -->
+                <div class="my_box text_center marginT1 marginB1" @click="order_type(2,'已终止')">
+                    <div class="color_default1">{{info.my_bounty_cancel?info.my_bounty_cancel:'0'}}</div>
+                    <div>已取消</div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../lib/vue/vue.js"></script>
+<!-- <script type="text/javascript" src="../../../lib/vant/vant.min.js"></script> -->
+<script type="text/javascript" src="../../../script/rsa.js"></script>
+<script type="text/javascript" src="../../../script/aes.js"></script>
+<script type="text/javascript" src="../../../script/const.js"></script>
+<script type="text/javascript" src="../../../script/common.js"></script>
+<script type="text/javascript">
+    var missionMy = new Vue({
+        el: "#missionMy",
+        data: {
+            order: true,
+            bill: true,
+            percent: 0, // 百分比
+            maxEp: 20, //等级上限经验
+            myEp: 1, //当前等级经验
+            info: {},
+        },
+        created: function() {
+            var that = this
+            apiready = function() {
+                var height = $api.fixStatusBar($api.dom('.header'))
+                if (height > 0) {
+                    $api.css($api.dom('.cont'), 'margin-top:' + (height - 45) + 'px;');
+                }
+                that.percent = (that.myEp / that.maxEp) * 100
+                that.getInfo()
+            }
+        },
+        methods: {
+            getInfo: function() {
+                var that = this;
+                http(rewardCenterUrl, 'post', {}, function(ret) {
+                    if (ret.code == 200) {
+                        that.info = ret.data;
+                    }
+                })
+
+            },
+            order_type: function(id, value) {
+                toPage('mission_order', './mission_order.html', {
+                    my: id,
+                    status: value
+                })
+
+            },
+            changeorder: function() {
+                var that = this
+                that.order = !that.order
+            },
+            changebill: function() {
+                var that = this
+                that.bill = !that.bill
+            },
+
+            toPage: function(name, url, params) {
+                api.openWin({
+                    name: name,
+                    url: url,
+                    reload: true,
+                    pageParam: {
+                        missionOrder: 1,
+                        missionBill: 2
+                    }
+                });
+            },
+        },
+    })
+</script>

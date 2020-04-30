@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>悬赏大厅</title>
+    <link rel="stylesheet" href="../../../lib/vant/vant.css">
+    <link rel="stylesheet" href="../../../lib/iconfont2/iconfont.css">
+    <link rel="stylesheet" href="../../../css/common.css">
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        }
+
+        .tomyfeed {
+            font-size: 1rem;
+            position: absolute;
+            right: 1rem;
+            bottom: 10px;
+        }
+        /*
+        .mission_icon {
+            height: 35px;
+            line-height: 35px;
+            width: 35px;
+            text-align: center;
+        }
+         */
+
+        .b_header {
+            padding: 15px;
+            white-space: nowrap;
+            min-width: 8%;
+            text-align: center;
+        }
+
+        .on {
+            font-weight: 600;
+            border-bottom: 2px solid#cb974d;
+        }
+
+        .type_icon {
+            float: right;
+            width: 12px;
+            height: 12px;
+            line-height: 12px;
+            text-align: center;
+            margin-left: .3rem;
+        }
+        /**********************8 任务列表 ****************/
+
+        .mission_list {
+            color: #999;
+            margin-bottom: .5rem;
+        }
+
+        .mission_list_content {
+            padding: 1rem;
+            margin-bottom: .5rem;
+        }
+
+        .mission_list_center_leftT {
+            height: 40px;
+            line-height: 30px;
+            text-align: center;
+            align-items: baseline;
+        }
+
+        .mission_list_left {
+            width: 60px;
+            height: 60px;
+        }
+
+        .mission_list_left>img {
+            width: 60px;
+            height: 60px;
+            border-radius: 5px;
+        }
+
+        .mission_list_center {
+            flex: 1;
+            overflow: hidden;
+            padding: 0 1rem;
+        }
+
+        .mission_list_right {
+            width: 80px;
+        }
+
+        .zuixinrenwu {
+            /* background: linear-gradient(90deg, #cfa767 0%, #fdecb8 100%); */
+            background-color: #0065e9;
+            border-radius: .8rem;
+            padding: .2rem .6rem;
+            margin-left: 2rem;
+            font-size: 0.9rem;
+            color: #fff;
+        }
+        /* 新写的样式 */
+        /* 发布任务 */
+
+        .issue {
+            background-image: url("../../../image/mission/bg_task.png");
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+            -moz-background-size: 100% 100%;
+        }
+
+        input {
+            font-size: 1rem;
+            height: 2.5rem;
+            line-height: 2.5rem;
+        }
+
+        input::placeholder {
+            font-size: 1rem;
+            height: 2.5rem;
+            line-height: 2.5rem;
+        }
+
+        .input-box {
+            border-radius: 2rem;
+            width: 100%;
+            height: 2.5rem;
+            padding: 0 1rem;
+        }
+    </style>
+</head>
+
+<body class="has_header color_999">
+    <div id="mission" v-cloak>
+        <header class="header ">
+            <i class="iconfont icon-xiangzuo " onclick="goBack()"></i>
+            <div>悬赏大厅</div>
+            <div class="tomyfeed color_black6" onclick="toPage('missionMy','./missionMy.html',{})">悬赏中心</div>
+        </header>
+        <div class="cont ">
+            <div class="padding1 color_black3 ">
+                <div class="issue fontSize18 padding1" onclick="toPage('mission_post','./mission_post.html')">
+                    <p class="font_bold">发布任务</p>
+                    <p class="fontSize10"> 见习帮已帮<span class="fontSize16">{{peoplenum?peoplenum:'0'}}</span>人解决问题，快来发布任务吧!</p>
+                </div>
+            </div>
+
+            <div class="  flex_row_between fontSize12 padding12_left_right padding12_bottom">
+                <div class=" flex_row_between bg-white input-box">
+                    <div class="flex_row_left">
+                        <i class="iconfont icon-sousuo  " style="font-size: 1.6rem;"></i>
+                        <input type="text" placeholder="搜索悬赏任务" v-model="words" v-on:input="toSearch(words)" onpaste="return true" @keyup.enter="toSearch" style="text-indent: 1rem; font-size: 1.3rem; color: #ccc;">
+                    </div>
+                    <div>
+                        <i class="iconfont icon-guanbi2 fontSize16 " @click="clear();"></i>
+                    </div>
+                </div>
+                <i class="iconfont icon-bangzhu color_default1 marginL1" onclick="toPage('mission_help','./mission_help.html')" style="font-size: 1.8rem;"></i>
+            </div>
+
+
+            <div class="flex_row_between bg-white padding12_left_right bbd">
+                <div class="flex_row_left  bg-white " style="flex-wrap: nowrap;overflow-x: scroll;overflow-y: hidden;position: relative;">
+                    <div class="b_header" :class="{'on':type==1}" @click="switchover(1)" style="margin-left: 1px;">
+                        {{missionType}}<img src="../../../image/selectdown.png" alt="" class="type_icon" v-if="type!=1">
+                        <img src="../../../image/user_top.png" alt="" class="type_icon" v-if="type==1">
+                    </div>
+                    <div class="b_header" :class="{'on':type==2}" @click="switchover(2)">
+                        {{rewardType}}<img src="../../../image/selectdown.png" alt="" class="type_icon" v-if="type!=2">
+                        <img src="../../../image/user_top.png" alt="" class="type_icon" v-if="type==2">
+                    </div>
+                    <div class="b_header" :class="{'on':type==3}" @click="switchover(3)">
+                        {{propertyType}}<img src="../../../image/selectdown.png" alt="" class="type_icon" v-if="type!=3">
+                        <img src="../../../image/user_top.png" alt="" class="type_icon" v-if="type==3">
+                    </div>
+                </div>
+                <div @click="is_new=1;getList()" class=" flex_row_right zuixinrenwu">
+                    最新任务
+                </div>
+            </div>
+        </div>
+        <van-popup v-model="showPicker" position="bottom">
+            <van-picker show-toolbar :columns="columns" @cancel="showPicker = false" @confirm="onConfirm" /> </van-popup>
+        <van-pull-refresh id="getList" v-model="downLoading" @refresh="getList">
+            <van-list class="" v-model="upLoading" :finished="finished" finished-text="--没有更多了--" @load="getList" :immediate-check="false">
+
+                <div class="mission_list bg-white">
+                    <div v-for="obj in list" class="mission_list_content flex_row_between bbd" @click="toPage('mission_details','./mission_details.html',{id:obj.id})">
+                        <div class="mission_list_left"><img :src="obj.img_url?obj.img_url:'../../../image/applogo.png'" alt=""></div>
+                        <div class="mission_list_center">
+                            <div class="fontSize14 text-overflow_1 mission_list_center_leftT text_left color_black3" style="text-align: left;;">{{obj.title?obj.title:''}}</div>
+                            <div class="fontSize12 mission_list_center_leftB flex_row_left">
+                                <img src="../../../image/appcenter/ic_topUp_coins.png" alt="" style="width: 1rem;height: 1rem;">
+                                <div style="width: .4rem"></div>
+                                <span>{{obj.finish_quantity?obj.finish_quantity:'0'}}</span>人已赚到赏金
+                            </div>
+                        </div>
+                        <div class="mission_list_right">
+                            <div class="flex_row_right mission_list_center_leftT"> <span class="fontSize16 mission_list_center_leftT color_default1">{{obj.bounty?obj.bounty:''}}</span>HDC </div>
+                            <div class="flex_row_right mission_list_center_leftB">剩余<span class="color_default1">{{obj.publish_quantity?(obj.publish_quantity - obj.accept_quantity):'0'}}</span>人</div>
+                        </div>
+                    </div>
+                </div>
+
+            </van-list>
+        </van-pull-refresh>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../../lib/vant/vant.min.js"></script>
+<script type="text/javascript" src="../../../script/rsa.js"></script>
+<script type="text/javascript" src="../../../script/aes.js"></script>
+<script type="text/javascript" src="../../../script/const.js"></script>
+<script type="text/javascript" src="../../../script/common.js"></script>
+<script type="text/javascript">
+    var mission = new Vue({
+        el: "#mission",
+        data: {
+            type: 0,
+            words: '',
+            value: '',
+            showPicker: false,
+            columns: ['全部', '注册', '关注', '投票', '砍价', '转发', '其他'],
+            missionType: '类型',
+            rewardType: '赏金',
+            propertyType: '资产',
+            page: 1,
+            downLoading: false,
+            upLoading: false,
+            finished: false,
+            list: [],
+            typeindex: 0,
+            currency_typeindex: 1,
+            rewardindex: 0,
+            is_new: 0,
+            peoplenum: 0
+        },
+        created: function() {
+            var that = this
+            apiready = function() {
+                var height = $api.fixStatusBar($api.dom('.header'))
+                if (height > 0) {
+                    $api.css($api.dom('.cont'), 'margin-top:' + (height - 45) + 'px;');
+                }
+                that.getList()
+            }
+        },
+        methods: {
+            getList: function() {
+                var that = this;
+                if (that.upLoading) { //上拉加载
+                    that.page++;
+                    var param = {
+                        page: that.page,
+                        // uid: $api.getStorage('userInfo').uid,
+                        type: that.typeindex,
+                        currency_type: that.currency_typeindex,
+                        bounty: that.rewardindex,
+                        is_new: that.is_new,
+                        keyword: that.words
+                    }
+                } else {
+                    that.page = 1; //刷新
+                    that.finished = true;
+                    var param = {
+                        page: 1,
+                        // uid: $api.getStorage('userInfo').uid,
+                        type: that.typeindex,
+                        currency_type: that.currency_typeindex,
+                        bounty: that.rewardindex,
+                        is_new: that.is_new,
+                        keyword: that.words
+                    }
+                }
+                // 获取任务列表
+                http(getRewardUrl, 'post', param, function(ret) {
+                    if (ret.code == 200) {
+                        that.peoplenum = ret.data.bounty_finish_count;
+
+
+                        if (that.upLoading) {
+                            that.list = that.list.concat(ret.data.bounty_list.data);
+                            that.upLoading = false;
+                        } else {
+                            that.list = ret.data.bounty_list.data;
+                            that.downLoading = false;
+                            that.finished = false;
+                        }
+                        if (ret.data.bounty_list.data && ret.data.bounty_list.data && ret.data.bounty_list.data.length < 15) {
+                            that.finished = true;
+                        }
+                    }
+                })
+            },
+            switchover: function(type) {
+                var that = this;
+                if (type == 1) {
+                    that.columns = ['全部', '注册', '关注', '投票', '砍价', '转发', '其他'];
+                    that.showPicker = true
+                } else if (type == 2) {
+                    that.columns = ['默认', '赏金由高到低', '赏金由低到高']
+                    that.showPicker = true
+                } else if (type == 3) {
+                    that.columns = ['全部', 'HDC'] //, 'USDT'
+                    that.showPicker = true
+                }
+                that.type = type
+            },
+            // 清除input文字
+            clear: function() {
+                var that = this;
+                that.isShowlist = false;
+                that.words = '';
+                that.getList()
+            },
+
+            onConfirm: function(value, index) {
+                var that = this;
+                if (that.type == 1) {
+                    that.typeindex = index
+                    that.missionType = value
+                } else if (that.type == 2) {
+                    that.rewardType = value
+                    that.rewardindex = index
+                } else if (that.type == 3) {
+                    that.propertyType = value
+                    that.currency_typeindex = index
+                }
+                that.showPicker = false;
+                that.type = 0;
+                that.getList()
+            },
+            toSearch: function(words) {
+                var that = this;
+                that.getList()
+            },
+
+            toPage: function(name, url, params) {
+                api.openWin({
+                    name: name,
+                    url: url,
+                    reload: true,
+                    pageParam: params || {}
+                });
+            },
+        },
+    })
+</script>

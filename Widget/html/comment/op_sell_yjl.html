@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <title>出售HDC</title>
+    <link rel="stylesheet" href="../../lib/iconfont/iconfont.css">
+    <link rel="stylesheet" href="../../css/common.css">
+    <style>
+        html,
+        body {
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        input::placeholder {
+            font-size: 14px;
+            color: #ccc;
+        }
+
+        #op_sell_yjl {
+            width: 100%;
+            min-height: 100%;
+        }
+
+        .item input {
+            -webkit-apprarance: none;
+            -webkit-tap-highlight-color: transparent;
+            width: calc(100% - 1.4rem);
+            padding: .8rem;
+            border: 1px solid #dddddd;
+            border-radius: .3rem;
+            -webkit-appearance: none;
+            color: #333333;
+        }
+
+        input[disabled] {
+            color: #333333 !important;
+            opacity: 1;
+        }
+
+        .sell_yjl {
+            padding: .6rem;
+            border: 1px solid #50535d;
+            border-radius: .3rem;
+            background-color: #1a1c29;
+        }
+        /* 选着付款方式 */
+
+        .black_overlay1 {
+            position: fixed;
+            top: 0%;
+            left: 0%;
+            width: 100%;
+            height: 100%;
+            background: rgba(191, 191, 191, .5);
+            z-index: 1001;
+        }
+
+        .marginL1 {
+            margin-left: .5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="op_sell_yjl" class="flex_row_center  color_black6" v-cloak>
+        <div class="padding12 width100 Brd1">
+            <div class=" padding12 bg-white bbd fontSize18" style="border-top-left-radius: 1rem;border-top-right-radius: 1rem">
+                <div class="text_center" style="margin: 0 auto;">{{langContent.title?langContent.title:''}}HDC</div>
+            </div>
+            <div class="bg-white padding12 fontSize14 item " style="border-bottom-left-radius: 1rem;border-bottom-right-radius: 1rem">
+                <div>{{langContent.sellnum?langContent.sellnum:''}}</div>
+                <input class="marginT5 " type="tel" placeholder="0" v-model="num">
+                <div class="marginT5">{{langContent.price?langContent.price:''}}($)</div>
+                <input class="marginT5 " type="number" placeholder="" v-model="unit_price" disabled>
+                <!-- <div class="marginT5">
+                    {{langContent.style?langContent.style:''}}
+                </div>
+                <div class="flex_row_between marginT5  sell_yjl" @click="isShow=true">
+                    <div>{{title}}</div>
+                    <i class="iconfont iconjiantou-xia " @click="isShow=true"></i>
+                </div> -->
+                <div class="marginT5">{{langContent.psw?langContent.psw:''}}</div>
+                <input class="marginT5 " type="password" :placeholder="langContent.psw_input" v-model="pwd">
+                <div class="padding12   fontSize14 marginT1 ">
+                    {{langContent.tip1?langContent.tip1:''}}
+                </div>
+                <div class="flex_row_between marginT1">
+                    <div class=" submit_style" @click="submit">
+                        {{langContent.sure?langContent.sure:''}}
+                    </div>
+                    <div class=" cancel_style" @click="cancel">
+                        {{langContent.cancel?langContent.cancel:''}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="black_overlay1 flex_row_center " v-if="isShow">
+            <div class="bg-white Brd1" style="width: 75%;padding: 2rem 1rem;font-size: 18px">
+                <div class="flex_row_left" @click="changePay(langContent.wx)">
+                    <i class="iconfont icondanxuanxuanzhong " v-if="title=='微信'||title=='WeChat'"></i>
+                    <i class="iconfont icondanxuanweixuanzhong " v-if="title!='微信'&&title!='WeChat'"></i>
+                    <div class="marginL1">{{langContent.wx?langContent.wx:''}}</div>
+                </div>
+                <div class="flex_row_left marginT1" @click="changePay(langContent.zfb)">
+                    <i class="iconfont icondanxuanxuanzhong " v-if="title=='支付宝'||title=='Alipay'"></i>
+                    <i class="iconfont icondanxuanweixuanzhong " v-if="title!='支付宝'&&title!='Alipay'"></i>
+                    <div class="marginL1">{{langContent.zfb?langContent.zfb:''}}</div>
+                </div>
+                <div class="flex_row_left marginT1" @click="changePay(langContent.ytf)">
+                    <i class="iconfont icondanxuanxuanzhong " v-if="title=='以太坊'||title=='Ethereum'"></i>
+                    <i class="iconfont icondanxuanweixuanzhong " v-if="title!='以太坊'&&title!='Ethereum'"></i>
+                    <div class="marginL1">{{langContent.ytf?langContent.ytf:''}}</div>
+                </div>
+                <div class="flex_row_left marginT1" @click="changePay(langContent.yhk)">
+                    <i class="iconfont icondanxuanxuanzhong " v-if="title=='银行卡'||title=='Bank Card'"></i>
+                    <i class="iconfont icondanxuanweixuanzhong " v-if="title!='银行卡'&&title!='Bank Card'"></i>
+                    <div class="marginL1">{{langContent.yhk?langContent.yhk:''}}</div>
+                </div>
+            </div>
+        </div> -->
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    var op_sell_yjl = new Vue({
+        el: "#op_sell_yjl",
+        data: {
+            isShow: false,
+            title: '微信',
+            unit_price: '',
+            num: '',
+            pwd: '',
+            flag: true,
+            langContent: {},
+        },
+        created: function() {
+            var that = this
+            apiready = function() {
+                op_sell_yjl.$data.langContent = GlobleLanguageContent.op_sell_HDC;
+                that.title = op_sell_yjl.$data.langContent.wx;
+                http(getJyzxUrl, 'post', {}, function(ret) {
+                    if (ret.code == 200) {
+                        that.unit_price = ret.data.trade_yjl_today_price;
+                    }
+                })
+            }
+        },
+        methods: {
+            cancel: function() {
+                api.closeFrame({
+                    name: 'op_sell_yjl'
+                });
+            },
+            changePay: function(title) {
+                this.isShow = !this.isShow;
+                this.title = title;
+                if (title == '银行卡' || title == 'Bank Card') {
+                    this.check = 4;
+                } else if (title == '支付宝' || title == 'Alipay') {
+                    this.check = 2;
+                } else if (title == '微信' || title == 'WeChat') {
+                    this.check = 1;
+                } else if (title == '以太坊' || title == 'Ethereum') {
+                    this.check = 3;
+                }
+            },
+            toPage: function(name, url, params) {
+                api.openWin({
+                    name: name,
+                    url: url,
+                    reload: true,
+                    pageParam: params || {}
+                });
+            },
+            submit: function() {
+                var that = this
+                var reg = /^[1-9]?[0-9]*\.[0-9]*$/; //任务数量控制整数
+                if (!that.num) {
+                    api.toast({
+                        msg: that.langContent.nonum,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return
+                }
+                if (!that.unit_price) {
+                    api.toast({
+                        msg: that.langContent.noprice,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return
+                }
+                if (reg.test(that.num) == true) {
+                    api.toast({
+                        msg: that.langContent.noinit,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return
+                }
+                if (!that.pwd) {
+                    api.toast({
+                        msg: that.langContent.nopsw,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return
+                }
+                var param = {
+                        num: that.num,
+                        password: that.pwd,
+                        id: api.pageParam.id
+                    }
+                    // console.log(JSON.stringify(param));
+                if (that.flag) {
+                    that.flag = false;
+                    http(tradeUrl, 'post', param, function(ret) {
+                        // console.log(JSON.stringify(ret));
+                        that.flag = true;
+                        if (ret.code == 200) {
+                            api.toast({
+                                msg: ret.msg,
+                                duration: 2000,
+                                location: 'bottom'
+                            });
+                            api.execScript({
+                                name: 'root',
+                                frameName: 'frame3',
+                                script: 'frame3.getHeader()'
+                            });
+                            api.execScript({
+                                name: 'root',
+                                frameName: 'frame3',
+                                script: 'frame3.getinfo()'
+                            });
+
+                            // api.execScript({
+                            //     name: 'root',
+                            //     frameName: 'frame3',
+                            //     script: 'frame3.getBuylist()'
+                            // });
+
+                            setTimeout(function() {
+                                api.closeFrame()
+                            }, 2000);
+                        } else if (ret.code == 405) {
+                            api.toast({
+                                msg: ret.msg,
+                                duration: 2000,
+                                location: 'bottom'
+                            });
+                            setTimeout(function() {
+                                api.openWin({
+                                    name: 'personal_data',
+                                    url: '../my/personal_data.html',
+                                    reload: true,
+                                    pageParam: {}
+                                });
+                                that.cancel();
+                            }, 1999);
+                        }
+                    })
+                } else {
+                    api.toast({
+                        msg: that.langContent.wait,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+            },
+
+        }
+    })
+</script>

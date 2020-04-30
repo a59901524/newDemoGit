@@ -1,0 +1,165 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>城市合伙人</title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../lib/iconfont2/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <style>
+        .bgimg_cs {
+            width: 60%;
+            margin: 2rem auto;
+            padding: .5rem;
+            text-align: center;
+            color: #333333;
+            font-weight: bold;
+            font-size: 1.3rem;
+            background-image: url("../../image/appcenter/partner_bgimg.png");
+            background-size: 100% 100%
+        }
+
+        .padding_box {
+            padding: 0rem 1.5rem;
+        }
+
+        li {
+            line-height: 1.8rem;
+        }
+
+        span {
+            color: #cb974d;
+        }
+
+        .li_left {
+            margin-left: 1rem;
+        }
+    </style>
+</head>
+
+<body class="bg-white">
+    <div id="partner" class="content color_black3  bg-white" v-cloak>
+        <header class="header  color_golden  bbd">
+            <i class="iconfont icon-xiangzuo" onclick="goBack()"></i>
+            <div class="fontSize16">{{langContent.title?langContent.title:''}}</div>
+            <div style="position: absolute;right: 1rem;font-size: 14px;bottom: 12px; color: #666666; display:none;" @click="toPage('Bmap.html','./Bmap.html',{})">{{langContent.map?langContent.map:''}}</div>
+        </header>
+        <div class=" bg-white" v-if="langContent.list" v-for="obj in langContent.list">
+            <div class="bgimg_cs">
+                {{obj.ele?obj.ele:''}}
+            </div>
+            <div class="padding_box">
+                <ul>
+                    <li v-for="cont in obj.requre">
+                        <div v-html="cont"></div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- <div class="bgimg_cs">
+            申请须知
+        </div>
+        <div class="padding_box">
+            <ul>
+                <li> 1. 对见习的理念、发展规划、商业模式具绝对的认可与信任。</li>
+                <li> 2. 在当地有办公场地，可以进行学习交流活动。</li>
+                <li> 3. 拥有推广渠道及资源，具备一定的推广经验。</li>
+                <li> 4.负责当地见习、区块链知识普及，帮助当地见习用户解答问题。</li>
+                <li> 5.每个市级区域，只招募一个城市合伙人。</li>
+            </ul>
+        </div>
+
+        <div class="bgimg_cs">
+            申请条件
+        </div>
+        <div class="padding_box">
+            <ul>
+                <li> 不同阶段不同招募政策，具体请咨询对接客服。</li>
+                <li> 要求如下：</li>
+                <li>1.认同平台理念、价值互联网及区块链技术。</li>
+                <li>2.合伙人不得参与其他项目推广。 </li>
+                <li>3.有推广团队、推广渠道及资源。 </li>
+                <li>4.微商团队领导人、线下拥有广告客户资源等拥有推广渠道及资源者优先。</li>
+                <li>5.在见习APP应用中心城市合伙人提交申请，工作人员审批，审批通过以后，缴纳一定的代理费用。</li>
+                <li>6.按照城市等级缴纳城市合伙人费用：</li>
+                <li class="li_left">一线城市<span>15000USDT </span>，二线城市 &nbsp;<span> 9000USDT</span>，</li>
+                <li class="li_left">三线及以下城市<span>6000USDT</span>或等值HDC。</li>
+            </ul>
+        </div>
+
+        <div class="bgimg_cs">
+            特殊权益
+        </div>
+        <div class="padding_box">
+            <ul>
+                <li> 1、享受该城市会员1%的基本活跃度加成(以登陆APP归属地来区分会员所属城市)。</li>
+                <li> 2、赠送高级森林一个。</li>
+                <li> 3、永久享受全球交易手续费10%分红。</li>
+                <li> 4、享受整个城市森林市场分红的1‰至5‱ 的城市总森林分红（分红范围结合见习HDC所有数据评估发放）。</li>
+                <li> 5、永久享受该城市广告分红30% (商家付费短视频直接分润30% ) HDC支付。</li>
+                <li> 6、享受该城市商家入驻审核权利及城市独立短视频广告位一个。</li>
+                <li> 7、享受商城直播游戏版块手续费分润10%。</li>
+                <li> 8、更多权益敬请期待。</li>
+
+            </ul>
+        </div> -->
+
+        <div class="height6"></div>
+        <!-- v-if="isParter==0||isParter>1" -->
+        <div onclick="toPage('apply','apply.html')" class="bottom_btn_fixed ">
+            <div class="bottom_bgimg_fixed">
+                {{langContent.apply?langContent.apply:''}}
+            </div>
+        </div>
+
+        <!-- <div v-if="isParter==1" class="btn">
+            <div class="buttom_bgimg">
+                {{langContent.isParter?langContent.isParter:''}}
+            </div>
+        </div> -->
+
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    var partner = new Vue({
+        el: '#partner',
+        data: {
+            isParter: Number,
+            langContent: {}
+        },
+        created: function() {
+            var that = this;
+            apiready = function() {
+                fixStatusbar('header,.header,.headers', '.content');
+                that.getInfo()
+                partner.$data.langContent = GlobleLanguageContent.partner;
+            }
+        },
+        methods: {
+            getInfo: function() {
+                var that = this;
+                //获取判断是否合伙人
+                // http(getuserinfoUrl, 'post', {}, function(ret) {
+                //     // console.log(JSON.stringify(ret.data.is_partner) + '//获取判断是否合伙人');
+                //     if (ret.code == 200) {
+                //         that.isParter = ret.data.is_partner;
+                //     }
+                // })
+
+            },
+        }
+    });
+</script>

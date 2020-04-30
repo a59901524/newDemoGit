@@ -1,0 +1,116 @@
+.rewark{
+	background-color: #250084;
+	background-image: url('../image/xs.jpg');
+	background-repeat: no-repeat;
+	background-size: contain;
+	color: #ffffff;
+}
+.rewark .header{
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 0.88rem;
+	padding-top: 0.4rem;
+}
+.rewark .header:before{
+	content: '';
+	position: absolute;
+	width: 0.17rem;
+	height: 0.31rem;
+	background: url('../image/back.png') no-repeat;
+	background-size: 100% 100%;
+	bottom: 0.29rem;
+	left: 0.21rem;
+}
+.rewark .header .search{
+	margin: 0.1rem 0.28rem 0 0.75rem;
+	position: relative;
+}
+.rewark .header .search:before{
+	content: '';
+	position: absolute;
+	width: 0.3rem;
+	height: 0.3rem;
+	background: url('../image/search.png') no-repeat;
+	background-size: 100% 100%;
+	left: 0.18rem;
+	top: 0.21rem;
+}
+.rewark .header .search input{
+	height: 0.66rem;
+	line-height: 0.66rem;
+	border-radius: 0.12rem;
+	background: #270b8e;
+	padding: 0 0.83rem;
+	box-sizing: border-box;
+	color: #c1bfe1;
+}
+.rewark .nav{
+	display: flex;
+	justify-content: space-around;
+	padding-top: 3.98rem;
+}
+.rewark .nav .navLi{
+	text-align: center;
+}
+.rewark .nav .navLi img{
+	width: 0.99rem;
+	height: 0.99rem;
+}
+.rewark .nav .navLi span{
+	display: inline-block;
+	margin-top: 0.18rem;
+}
+.rewark .rek{
+	position: relative;
+	padding: 0.8rem 0.2rem;
+	font-size: 0.3rem;
+}
+.rewark .rek .h3{
+	display: inline-flex;
+}
+.rewark .rek .h3 img{
+	width: 0.28rem;
+	height: 0.33rem;
+	margin-right: 0.13rem;
+}
+.rewark .rekLeft, .rewark .rekRight{
+	display: flex;
+	justify-content: space-around;
+}
+.rewark .rekLeft .rekLi, .rewark .rekRight .rekLi{
+	display: flex;
+	justify-content: space-around;
+	flex: 1;
+}
+.rewark .rekLeft .rekLi {
+	border-bottom: 0.01rem solid #370e9f;
+}
+.rewark .rekLeft .rekLi:first-child{
+	padding: 0.14rem 0.22rem 0.27rem 0.10rem;
+	border-right: 0.01rem solid #370e9f;
+}
+.rewark .rekRight .rekLi:first-child{
+	padding: 0.14rem 0.22rem 0.14rem 0.10rem;
+	border-right: 0.01rem solid #370e9f;
+}
+.rewark .rekLeft .rekLi:last-child {
+	padding: 0.14rem 0 0.27rem 0.17rem;
+}
+.rewark .rekRight .rekLi:last-child {
+	padding: 0.14rem 0 0.14rem 0.17rem;
+}
+.rewark .rekLeft .rekLi .img, .rewark .rekRight .rekLi .img{
+	width: 0.8rem;
+	height: 0.8rem;
+}
+.rekLi .content {
+	flex: 1;
+	margin-left: 0.08rem;
+}
+.rekLi .content .p{
+	display: flex;
+	justify-content: space-between;
+	margin-top: 0.25rem;
+}

@@ -1,0 +1,64 @@
+.college{
+	background-color: #250084;
+	background-image: url('../image/h1.jpg');
+	background-repeat: no-repeat;
+	background-size: 100%;
+	color: #ffffff;
+}
+.college .content{
+	padding: 0 0.2rem;
+}
+.college .content .nav{
+	display: flex;
+	justify-content: space-between;
+	font-size: 0.25rem;
+	height: 0.4rem;
+	line-height: 0.4rem;
+	margin-bottom: 0.36rem;
+}
+.college .content .nav .navLi{
+	padding: 0 0.25rem;
+	background-color: rgba(37, 0, 115, 0.5);
+	border-radius: 0.4rem;
+	text-align: center;
+	color: #768ff6;
+}
+.college .content .nav .active{
+	background: #006cff;
+	color: #ffffff;
+}
+.college .li{
+	padding: 0.28rem 0;
+	display: flex;
+	justify-content: flex-start;
+	border-bottom: 0.01rem solid #370e9f;
+}
+.college .li:last-child{
+	border-bottom: none;
+}
+.college .li .liLeft{
+	width: 1.92rem;
+	height: 1.22rem;
+	position: relative;
+}
+.college .li .liLeft:before{
+	content: '';
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	width: 0.7rem;
+	height: 0.7rem;
+	background: url('../image/bf.png') no-repeat;
+	background-size: 100% 100%;
+	transform: translate(-50%, -50%)
+}
+.college .li .liRight{
+	flex: 1;
+	padding: 0.28rem 0.28rem 0 0.28rem;
+}
+.college .li .liRight .title{
+	margin-bottom: 0.34rem;
+}
+.bj{
+	padding: 0 0.18rem;
+}

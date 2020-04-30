@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=0">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <link rel="stylesheet" href="./style/reset.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vant@2.5/lib/index.css" />
+    <link rel="stylesheet" href="./style/login.css">
+    <script src="./js/lib-flexible.js"></script>
+    <title>登录</title>
+</head>
+<BR/>
+<BR/>
+<BR/>
+<BR/>
+
+<BR/>
+<body class="login">
+    <div id="login" class="contarin">
+        <div class="ul">
+            <div class="li userName">
+                <input type="text" placeholder="手机号/邮箱/用户名">
+            </div>
+            <div class="line"></div>
+            <div class="li passWord">
+                <input type="text" placeholder="请输入密码">
+            </div>
+            <div class="line"></div>
+            <div class="btn">
+                登录
+            </div>
+            <div class="foot">
+                <span>忘记密码</span>
+                <span>立即注册</span>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vant@2.5/lib/vant.min.js"></script>
+    <script>
+        var app= new Vue({
+            el:"#login",
+            data () {
+                return {
+                    value: '',
+                    checked: false
+                }
+            }
+		})
+    </script>
+</body>
+</html>

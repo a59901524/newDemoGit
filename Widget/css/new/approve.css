@@ -1,0 +1,44 @@
+.approve{
+	color: #ffffff;
+}
+.approve .content2{
+	padding: 0.2rem;
+}
+.approve .content2 .li{
+	background: url('../../image/new/mk.png') no-repeat;
+	background-size: 100% 100%;
+	padding: 0.18rem;
+	margin-bottom: 0.1rem;
+}
+.approve .content2 .li .title{
+	padding-top: 0.18rem;
+	padding-bottom: 0.18rem;
+	text-align: center;
+}
+.approve .content2 .li .ct{
+	padding: 0 0.38rem;
+	line-height: 0.4rem;
+}
+.approve .content2 .li .ct .nn{
+	display: flex;
+	justify-content: space-between;
+	flex-wrap: wrap;
+}
+.approve .content2 .li .btn{
+	background: url('../../image/new/btnBj2.png') no-repeat;
+	background-size: 100% 100%;
+	width: 4.56rem;
+	height: 0.5rem;
+	line-height: 0.5rem;
+	text-align: center;
+	font-size: 0.25rem;
+	color: #8791e2;
+	margin: 0 auto;
+	margin-top: 0.25rem;
+    margin-bottom: 0.1rem;
+}
+.approve .content2 .li .rz{
+	background: url('../../image/new/btnBj.png') no-repeat;
+	background-size: 100% 100%;
+	color: #fff606;
+}

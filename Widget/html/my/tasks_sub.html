@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>提交任务</title>
+    <link rel="stylesheet" href="../../lib/iconfont2/iconfont.css">
+    <link rel="stylesheet" href="../../css/common.css">
+    <style>
+        .rwClass {
+            width: 90%;
+            height: auto;
+            margin: 4%;
+            overflow: hidden;
+            background: #ffffff;
+        }
+    </style>
+</head>
+
+<body class="has_header ">
+    <div id="tasks_sub" v-cloak>
+        <header class="header color_default1">
+            <i class="iconfont icon-xiangzuo" onclick="goBack()"></i>
+            <div>{{langContent.title?langContent.title:''}}</div>
+            <div @click="submitRw()" class="tomyfeed ">{{langContent.sub?langContent.sub:''}}</div>
+        </header>
+        <div class="cont">
+
+            <div class="flex_row_center  rwClass" @click.stop="getImg">
+                <img v-if="renWuTu!=''" :src="renWuTu||'../../image/uppz.png'" alt="" style="width: 100%;height: auto;">
+                <img v-if="renWuTu==''" :src="'../../image/upimg.png'" alt="" style="width: 150px;height: 150px;">
+            </div>
+            <div @click="toPage('tasks_sub_tips','./tasks_sub_tips.html')" style="color: #ff6262; padding-left: 1rem; " class="fontSize14">
+                <u>{{langContent.postRw?langContent.postRw:''}}</u>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../lib/language/multi-lang-es5.js"></script>
+<script type="text/javascript" src="../../lib/language/languageJson.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../../script/rsa.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/const.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    var tasks_sub = new Vue({
+        el: "#tasks_sub",
+        data: {
+            // fb_hour: '',
+            renWuTu: '',
+            isEditS: false,
+            langContent: {},
+        },
+        created: function() {
+            var that = this
+            apiready = function() {
+                var height = $api.fixStatusBar($api.dom('.header'))
+                if (height > 0) {
+                    $api.css($api.dom('.cont'), 'padding-top:' + (height - 45) + 'px;');
+                }
+                tasks_sub.$data.langContent = GlobleLanguageContent.tasks_sub;
+                // that.getInfo()
+            }
+        },
+        methods: {
+
+            submitRw: function() {
+                var that = this;
+                if (that.renWuTu == '') {
+                    api.toast({
+                        msg: that.langContent.tip1,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return;
+                }
+                var params = {
+                    img: that.renWuTu,
+                }
+                http(posttaskUrl, 'post', params, function(res) {
+                    api.toast({
+                        msg: res.msg,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    if (res.code == 200) {
+                        api.execScript({
+                            name: 'personal_data',
+                            script: 'personal_data.getInfo();'
+                        });
+                        setTimeout(function() {
+                            api.closeWin();
+                        }, 1500);
+                    }
+                })
+
+
+            },
+            // 选取图片
+            getImg: function() {
+                var that = this
+                api.getPicture({
+                    sourceType: 'album',
+                    encodingType: 'jpg',
+                    mediaValue: 'pic',
+                    destinationType: 'base64',
+                    allowEdit: false,
+                    quality: 50,
+                    targetWidth: 750,
+                    targetHeight: 750,
+                    saveToPhotoAlbum: false
+                }, function(ret, err) {
+                    if (ret && ret.base64Data && ret.base64Data != '') {
+                        that.renWuTu = ret.base64Data;
+                    }
+                });
+            },
+
+            toPage: function(name, url, params) {
+                api.openWin({
+                    name: name,
+                    url: url,
+                    reload: true,
+                    pageParam: params || {}
+                });
+            },
+            // getInfo: function() {
+            //     var that = this;
+            //     http(posttaskUrl, 'get', {}, function(ret) {
+            //         console.log(ret.data.fb_hour);
+            //         if (ret.code == 200) {
+            //             that.fb_hour = ret.data.fb_hour;
+            //         }
+            //     })
+            // }
+        }
+    })
+</script>
