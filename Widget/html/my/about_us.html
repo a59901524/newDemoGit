@@ -9,25 +9,18 @@
     <title>Document</title>
     <link rel="stylesheet" href="../../lib/iconfont2/iconfont.css">
     <link rel="stylesheet" href="../../css/common.css">
-    <style>
-        html,
-        body {
-            height: 100%;
-            margin: 0;
-            padding: 0;
-            background: #ffffff;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="../../css/new/reset.css">
+    <script type="text/javascript" src="../../script/lib-flexible.js"></script>
+
 </head>
 
-<body class="has_header bg-white color_black3">
+<body class="bg-white">
     <div id="about_us" v-cloak>
-        <header class="header bg_default1 bbd">
-            <i class="iconfont icon-xiangzuo" onclick="goBack()"></i>
-            <div>{{langContent.title?langContent.title:title}}</div>
+        <header class="header bg-white bbd">
+            <i class="iconfont icon-xiangzuo" style="color: #cb974d" onclick="goBack()"></i>
+            <div style="color: #cb974d">帮助详情</div>
         </header>
+        <div class="h88"></div>
         <div class="padding12 fontSize14 cont bg-white" v-html="info">
             <!-- 腾远科技演示专用 -->
         </div>
@@ -104,7 +97,7 @@
                     }
                 })
             },
-            // 解码  
+            // 解码
             decodeUnicode: function(str) {
                 str = str.replace(/\\/g, "%");
                 //转换中文

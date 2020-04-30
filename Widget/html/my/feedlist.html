@@ -18,7 +18,7 @@
         <header>
             <div class="left" onclick="goBack()"><img src="../../image/new/back.png" alt=""></div>
             <div class="center fontSize35">反馈列表</div>
-            <div class="right fontSize24 col3744b7" onclick="toPage('feedback','feedback.html',{from:'center',type_id:2})">去反馈</div>
+            <div class="right fontSize32" onclick="toPage('feedback','feedback.html',{from:'center',type_id:2})">去反馈</div>
         </header>
         <div class="h88"></div>
         <div class="content">
@@ -27,18 +27,18 @@
                 <span :class="{'active':type_id==2}" @click="choice(2)">建议</span>
             </div>
         </div>
-        <div class="cont bj bjTu" v-if="list.length>0">
-          <van-pull-refresh id="getInfo" v-model="downLoading" @refresh="getInfo" :pulling-text="getCodetip.vant_pulling" :loosing-text="getCodetip.vant_loosing" :loading-text="getCodetip.vant_loading">
-              <van-list class="list" v-model="upLoading" :finished="finished" :finished-text="getCodetip.vantlistfinished" @load="getInfo" :immediate-check="false">
+        <van-pull-refresh id="getInfo" v-model="downLoading" @refresh="getInfo" :pulling-text="getCodetip.vant_pulling" :loosing-text="getCodetip.vant_loosing" :loading-text="getCodetip.vant_loading">
+            <van-list class="list" v-model="upLoading" :finished="finished" :finished-text="getCodetip.vantlistfinished" @load="getInfo" :immediate-check="false">
+              <div class="cont bj bjTu" v-if="list.length > 0">
                 <div class="ul">
                     <div class='li' v-for="item in list" @click="tofeeddetailPage('feeddetail','feeddetail.html',{item:item})" >
                         <div class="title">{{item.title?item.title:""}}</div>
                         <p>{{item.create_time?changeDate(item.create_time):""}}</p>
                     </div>
                 </div>
-              </van-list>
-          </van-pull-refresh>
-        </div>
+              </div>
+            </van-list>
+        </van-pull-refresh>
     </div>
 
 </body>

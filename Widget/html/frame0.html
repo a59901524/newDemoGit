@@ -181,7 +181,7 @@
 <script type="text/javascript" src="../script/const.js"></script>
 <script type="text/javascript" src="../script/common.js"></script>
 <script type="text/javascript">
-    var frame0 = new Vue({
+    var frame3 = new Vue({
         el: "#frame0",
         data: {
             title: '买入',
@@ -226,8 +226,8 @@
                         from: 'tabBar'
                     });
                 }, 1);
-                frame0.$data.langContent = GlobleLanguageContent.frame0;
-                frame0.$data.getCodetip = GlobleLanguageContent.getCode;
+                frame3.$data.langContent = GlobleLanguageContent.frame3;
+                frame3.$data.getCodetip = GlobleLanguageContent.getCode;
                 var height = $api.fixStatusBar(document.querySelector('header'));
                 if (api.deviceModel == 'iPhone10,3' || api.deviceModel == 'iPhone10,6' || api.deviceModel == 'iPhone11,8' || api.deviceModel == 'iPhone11,2' || api.deviceModel == 'iPhone11,6' || api.deviceModel == 'iPhone11,4') {
                     that.frameHgt = api.frameHeight - $api.dom('.header').offsetHeight - $api.dom(".showcontent").offsetHeight - 56 - api.safeArea.bottom;
@@ -235,7 +235,7 @@
                     that.frameHgt = api.frameHeight - $api.dom('.header').offsetHeight - $api.dom(".showcontent").offsetHeight - 56;
                 }
                 var minheight = api.winHeight - height;
-                $api.css($api.dom('#frame0'), 'min-height:' + minheight + 'px');
+                $api.css($api.dom('#frame3'), 'min-height:' + minheight + 'px');
 
                 that.HBprice = $api.getStorage('latestHBprice')
                 that.websocket = api.require('myWebSocket');
@@ -763,11 +763,11 @@
                 console.log('<span style="color: red;">发生错误:</span> ' + evt.data)
             },
             reloadlang: function() {
-                console.log('22222')
                 var that = this;
-                frame0.$data.langContent = GlobleLanguageContent.frame0;
-                frame0.$data.getCodetip = GlobleLanguageContent.getCode;
-            }
+                frame3.$data.langContent = GlobleLanguageContent.frame3;
+                frame3.$data.getCodetip = GlobleLanguageContent.getCode;
+            },
+
         }
     })
 </script>

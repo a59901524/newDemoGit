@@ -1,6 +1,6 @@
 .rewark{
 	background-color: #250084;
-	background-image: url('../image/xs.jpg');
+	background-image: url('../../image/new/xs.jpg');
 	background-repeat: no-repeat;
 	background-size: 100%;
 	color: #ffffff;
@@ -18,7 +18,7 @@
 	position: absolute;
 	width: 0.17rem;
 	height: 0.31rem;
-	background: url('../image/back.png') no-repeat;
+	background: url('../../image/new/back.png') no-repeat;
 	background-size: 100% 100%;
 	bottom: 0.29rem;
 	left: 0.21rem;
@@ -32,7 +32,7 @@
 	position: absolute;
 	width: 0.3rem;
 	height: 0.3rem;
-	background: url('../image/search.png') no-repeat;
+	background: url('../../image/new/search.png') no-repeat;
 	background-size: 100% 100%;
 	left: 0.18rem;
 	top: 0.21rem;
@@ -106,11 +106,11 @@
 	width: 0.8rem;
 	height: 0.8rem;
 }
-.rekLi .content {
+.rekLi .content2 {
 	flex: 1;
 	margin-left: 0.08rem;
 }
-.rekLi .content .p{
+.rekLi .content2 .p{
 	display: flex;
 	justify-content: space-between;
 	margin-top: 0.25rem;

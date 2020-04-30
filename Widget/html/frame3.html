@@ -10,203 +10,133 @@
     <link rel="stylesheet" href="../lib/vant/vant.css">
     <link rel="stylesheet" href="../lib/iconfont2/iconfont.css">
     <link rel="stylesheet" type="text/css" href="../css/common.css" />
-    <style>
-        html,
-        body {
-            height: 100%;
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-        }
-
-        .tomyfeed {
-            font-size: 1rem;
-            position: absolute;
-            right: 1rem;
-            bottom: 10px;
-        }
-        /*
-        .mission_icon {
-            height: 35px;
-            line-height: 35px;
-            width: 35px;
-            text-align: center;
-        }
-         */
-
-        .b_header {
-            padding: 15px;
-            white-space: nowrap;
-            min-width: 8%;
-            text-align: center;
-        }
-
-        .on {
-            font-weight: 600;
-            border-bottom: 2px solid#cb974d;
-        }
-
-        .type_icon {
-            float: right;
-            width: 12px;
-            height: 12px;
-            line-height: 12px;
-            text-align: center;
-            margin-left: .3rem;
-        }
-        /**********************8 任务列表 ****************/
-
-        .mission_list {
-            color: #999;
-            margin-bottom: .5rem;
-        }
-
-        .mission_list_content {
-            padding: 1rem;
-            margin-bottom: .5rem;
-        }
-
-        .mission_list_center_leftT {
-            height: 40px;
-            line-height: 30px;
-            text-align: center;
-            align-items: baseline;
-        }
-
-        .mission_list_left {
-            width: 60px;
-            height: 60px;
-        }
-
-        .mission_list_left>img {
-            width: 60px;
-            height: 60px;
-            border-radius: 5px;
-        }
-
-        .mission_list_center {
-            flex: 1;
-            overflow: hidden;
-            padding: 0 1rem;
-        }
-
-        .mission_list_right {
-            width: 80px;
-        }
-
-        .zuixinrenwu {
-            /* background: linear-gradient(90deg, #cfa767 0%, #fdecb8 100%); */
-            background-color: #0065e9;
-            border-radius: .8rem;
-            padding: .2rem .6rem;
-            margin-left: 2rem;
-            font-size: 0.9rem;
-            color: #fff;
-        }
-        /* 新写的样式 */
-        /* 发布任务 */
-
-        .issue {
-            background-image: url("../image/mission/bg_task.png");
-            background-repeat: no-repeat;
-            background-size: 100% 100%;
-            -moz-background-size: 100% 100%;
-        }
-
-        input {
-            font-size: 1rem;
-            height: 2.5rem;
-            line-height: 2.5rem;
-        }
-
-        input::placeholder {
-            font-size: 1rem;
-            height: 2.5rem;
-            line-height: 2.5rem;
-        }
-
-        .input-box {
-            border-radius: 2rem;
-            width: 100%;
-            height: 2.5rem;
-            padding: 0 1rem;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="../css/new/reset.css">
+    <link rel="stylesheet" href="../css/new/rewark.css">
+    <script src="../script/lib-flexible.js"></script>
 </head>
 
-<body class="has_header color_999">
-    <div id="mission" v-cloak>
-        <header class="header ">
-            <i class="iconfont icon-xiangzuo " style="display:none;"></i>
-            <div>悬赏大厅</div>
-            <div class="tomyfeed color_black6" onclick="toPage('missionMy','./appcenter/mission/missionMy.html',{})">悬赏中心</div>
-        </header>
-        <div class="cont ">
-            <div class="padding1 color_black3 ">
-                <div class="issue fontSize18 padding1" onclick="toPage('mission_post','./appcenter/mission/mission_post.html')">
-                    <p class="font_bold">发布任务</p>
-                    <p class="fontSize10"> 已帮<span class="fontSize16">{{peoplenum?peoplenum:'0'}}</span>人解决问题，快来发布任务吧!</p>
-                </div>
-            </div>
-
-            <div class="  flex_row_between fontSize12 padding12_left_right padding12_bottom">
-                <div class=" flex_row_between bg-white input-box">
-                    <div class="flex_row_left">
-                        <i class="iconfont icon-sousuo  " style="font-size: 1.6rem;"></i>
-                        <input type="text" placeholder="搜索悬赏任务" v-model="words" v-on:input="toSearch(words)" onpaste="return true" @keyup.enter="toSearch" style="text-indent: 1rem; font-size: 1.3rem; color: #ccc;">
-                    </div>
-                    <div>
-                        <i class="iconfont icon-guanbi2 fontSize16 " @click="clear();"></i>
-                    </div>
-                </div>
-                <i class="iconfont icon-bangzhu color_default1 marginL1" onclick="toPage('mission_help','./appcenter/mission/mission_help.html')" style="font-size: 1.8rem;"></i>
-            </div>
-
-
-            <div class="flex_row_between bg-white padding12_left_right bbd">
-                <div class="flex_row_left  bg-white " style="flex-wrap: nowrap;overflow-x: scroll;overflow-y: hidden;position: relative;">
-                    <div class="b_header" :class="{'on':type==1}" @click="switchover(1)" style="margin-left: 1px;">
-                        {{missionType}}<img src="../image/selectdown.png" alt="" class="type_icon" v-if="type!=1">
-                        <img src="../image/user_top.png" alt="" class="type_icon" v-if="type==1">
-                    </div>
-                    <div class="b_header" :class="{'on':type==2}" @click="switchover(2)">
-                        {{rewardType}}<img src="../image/selectdown.png" alt="" class="type_icon" v-if="type!=2">
-                        <img src="../image/user_top.png" alt="" class="type_icon" v-if="type==2">
-                    </div>
-                    <div class="b_header" :class="{'on':type==3}" @click="switchover(3)">
-                        {{propertyType}}<img src="../image/selectdown.png" alt="" class="type_icon" v-if="type!=3">
-                        <img src="../image/user_top.png" alt="" class="type_icon" v-if="type==3">
-                    </div>
-                </div>
-                <div @click="{{is_new?is_new=0:is_new=1}};getList()" class=" flex_row_right zuixinrenwu">{{is_new?'√':''}}最新任务</div>
+<body class=" rewark">
+    <div id="mission" class="contarin" style="padding-bottom: 1.2rem;">
+        <div class="header">
+            <div class="back"><img src="../image/new/back.png" alt=""></div>
+            <div class="search">
+                <input  type="text" placeholder="搜索悬赏任务" v-model="words" v-on:input="toSearch(words)" onpaste="return true" @keyup.enter="toSearch">
             </div>
         </div>
-        <van-popup v-model="showPicker" position="bottom">
-            <van-picker show-toolbar :columns="columns" @cancel="showPicker = false" @confirm="onConfirm" /> </van-popup>
-        <van-pull-refresh id="getList" v-model="downLoading" @refresh="getList">
-            <van-list class="" v-model="upLoading" :finished="finished" finished-text="--没有更多了--" @load="getList" :immediate-check="false">
-
-                <div class="mission_list bg-white">
-                    <div v-for="obj in list" class="mission_list_content flex_row_between bbd" @click="toPage('mission_details','./appcenter/mission/mission_details.html',{id:obj.id})">
-                        <div class="mission_list_left"><img :src="obj.img_url?obj.img_url:'../image/applogo.png'" alt=""></div>
-                        <div class="mission_list_center">
-                            <div class="fontSize14 text-overflow_1 mission_list_center_leftT text_left color_black3" style="text-align: left;;">{{obj.title?obj.title:''}}</div>
-                            <div class="fontSize12 mission_list_center_leftB flex_row_left">
-                                <img src="../image/appcenter/ic_topUp_coins.png" alt="" style="width: 1rem;height: 1rem;">
-                                <div style="width: .4rem"></div>
-                                <span>{{obj.finish_quantity?obj.finish_quantity:'0'}}</span>人已赚到赏金
+        <div class="nav fontSize26 colffffff">
+            <div class="navLi"><img src="../image/new/b2.png" alt=""><span>悬赏标准</span></div>
+            <div class="navLi"><img src="../image/new/b3.png" alt=""><span>推广排行</span></div>
+            <div class="navLi"><img src="../image/new/b4.png" alt=""><span>发布任务</span></div>
+            <div class="navLi"><img src="../image/new/b5.png" alt=""><span>悬赏中心</span></div>
+        </div>
+        <div class="rek">
+            <div class="h3"><img src="../image/new/b7.png" alt="">今日头条</div>
+            <div class="rekUl bj bjTu fontSize26">
+                <div class="rekLeft">
+                    <div class="rekLi">
+                        <div class="img"><img src="../image/new/b8.png" alt=""></div>
+                        <div class="content2">
+                            <div class="title">1秒任务必过秒申</div>
+                            <div class="p">
+                                <span class="fontSize22 col3744b7">微信注册</span>
+                                <span class="fontSize28 colff8900">+6.5HDC</span>
                             </div>
                         </div>
-                        <div class="mission_list_right">
-                            <div class="flex_row_right mission_list_center_leftT"> <span class="fontSize16 mission_list_center_leftT color_default1">{{obj.bounty?obj.bounty:''}}</span> HDC </div>
-                            <div class="flex_row_right mission_list_center_leftB">剩余<span class="color_default1">{{obj.publish_quantity?(obj.publish_quantity - obj.accept_quantity):'0'}}</span>人</div>
+                    </div>
+                    <div class="rekLi">
+                        <div class="img"><img src="../image/new/b8.png" alt=""></div>
+                        <div class="content2">
+                            <div class="title">1秒任务必过秒申</div>
+                            <div class="p">
+                                <span class="fontSize22 col3744b7">微信注册</span>
+                                <span class="fontSize28 colff8900">+6.5HDC</span>
+                            </div>
                         </div>
                     </div>
                 </div>
-
-            </van-list>
-        </van-pull-refresh>
+                <div class="rekRight">
+                    <div class="rekLi">
+                        <div class="img"><img src="../image/new/b8.png" alt=""></div>
+                        <div class="content2">
+                            <div class="title">1秒任务必过秒申</div>
+                            <div class="p">
+                                <span class="fontSize22 col3744b7">微信注册</span>
+                                <span class="fontSize28 colff8900">+6.5HDC</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="rekLi">
+                        <div class="img"><img src="../image/new/b8.png" alt=""></div>
+                        <div class="content2">
+                            <div class="title">1秒任务必过秒申</div>
+                            <div class="p">
+                                <span class="fontSize22 col3744b7">微信注册</span>
+                                <span class="fontSize28 colff8900">+6.5HDC</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="rek marginT5">
+            <div class="h3"><img src="../image/new/b12.png" alt="">为你推荐</div>
+            <div class="rekUl bj bjTu fontSize26">
+                <div class="ul">
+                    <div class="img">
+                        <img src="../image/new/b8.png" alt="">
+                    </div>
+                    <div class="li">
+                        <div class="top head">
+                            <div class="fontSize26">微信注册辅助</div>
+                            <div class="fontSize22"><span class="fontSize28 colff8900">0.60</span>HDC</div>
+                        </div>
+                        <div class="top foot">
+                            <div class="left fontSize22 col3744b7">
+                                <img src="../image/new/b13.png" alt="">
+                                26人已赚到赏金
+                            </div>
+                            <div class="right">剩余 <span class="col00fbfd">3</span> 人</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ul">
+                    <div class="img">
+                        <img src="../image/new/b8.png" alt="">
+                    </div>
+                    <div class="li">
+                        <div class="top head">
+                            <div class="fontSize26">微信注册辅助</div>
+                            <div class="fontSize22"><span class="fontSize28 colff8900">0.60</span>HDC</div>
+                        </div>
+                        <div class="top foot">
+                            <div class="left fontSize22 col3744b7">
+                                <img src="../image/new/b13.png" alt="">
+                                26人已赚到赏金
+                            </div>
+                            <div class="right">剩余 <span class="col00fbfd">3</span> 人</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ul">
+                    <div class="img">
+                        <img src="../image/new/b8.png" alt="">
+                    </div>
+                    <div class="li">
+                        <div class="top head">
+                            <div class="fontSize26">微信注册辅助</div>
+                            <div class="fontSize22"><span class="fontSize28 colff8900">0.60</span>HDC</div>
+                        </div>
+                        <div class="top foot">
+                            <div class="left fontSize22 col3744b7">
+                                <img src="../image/new/b13.png" alt="">
+                                26人已赚到赏金
+                            </div>
+                            <div class="right">剩余 <span class="col00fbfd">3</span> 人</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 

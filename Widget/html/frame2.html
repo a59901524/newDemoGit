@@ -25,7 +25,7 @@
                     <div class="swiper-slide " v-for="(itme,index) in linkdata">
                         <div>
                             <a href="##">
-                                <img :src="itme.ad_image" alt="" class="investpro border_yuanjiao" @click.stop="toInfo(itme.ad_link)">
+                                <img :src="itme.ad_image || '../image/new/swiper.png'" alt="" class="investpro border_yuanjiao" @click.stop="toInfo(itme.ad_link)">
                             </a>
                         </div>
                     </div>

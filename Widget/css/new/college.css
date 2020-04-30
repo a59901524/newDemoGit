@@ -1,14 +1,10 @@
 .college{
-	background-color: #250084;
-	background-image: url('../image/h1.jpg');
-	background-repeat: no-repeat;
-	background-size: 100%;
 	color: #ffffff;
 }
-.college .content{
+.college .content2{
 	padding: 0 0.2rem;
 }
-.college .content .nav{
+.college .content2 .nav{
 	display: flex;
 	justify-content: space-between;
 	font-size: 0.25rem;
@@ -16,14 +12,14 @@
 	line-height: 0.4rem;
 	margin-bottom: 0.36rem;
 }
-.college .content .nav .navLi{
+.college .content2 .nav .navLi{
 	padding: 0 0.25rem;
 	background-color: rgba(37, 0, 115, 0.5);
 	border-radius: 0.4rem;
 	text-align: center;
 	color: #768ff6;
 }
-.college .content .nav .active{
+.college .content2 .nav .active{
 	background: #006cff;
 	color: #ffffff;
 }
@@ -48,7 +44,7 @@
 	top: 50%;
 	width: 0.7rem;
 	height: 0.7rem;
-	background: url('../image/bf.png') no-repeat;
+	background: url('../../image/new/bf.png') no-repeat;
 	background-size: 100% 100%;
 	transform: translate(-50%, -50%)
 }

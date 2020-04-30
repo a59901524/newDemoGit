@@ -1,14 +1,10 @@
 .submitFeedback{
-	background-color: #250084;
-	background-image: url('../image/h1.jpg');
-	background-repeat: no-repeat;
-	background-size: 100%;
 	color: #ffffff;
 }
-.submitFeedback .content{
+.submitFeedback .content2{
 	padding: 0.16rem 0.12rem;
 }
-.submitFeedback .content .tab{
+.submitFeedback .content2 .tab{
 	background-color: rgba(37, 0, 115, 0.5);
 	border-radius: 0.12rem;
 	padding: 0.12rem 0.2rem;
@@ -16,27 +12,27 @@
 	position: relative;
 	overflow: hidden;
 }
-.submitFeedback .content .tab .title{
+.submitFeedback .content2 .tab .title{
 	line-height: 1.09rem;
 }
-.submitFeedback .content .tab .title3{
+.submitFeedback .content2 .tab .title3{
 	font-size: 0.22rem;
 	padding-top: 0.1rem;
     padding-bottom: 0.3rem;
 }
-.submitFeedback .content .title2{
+.submitFeedback .content2 .title2{
 	line-height: 0.76rem;
 	padding: 0 0.2rem;
 	font-size: 0.28rem;
 }
-.submitFeedback .content .tab .ul{
+.submitFeedback .content2 .tab .ul{
 	font-size: 0.2rem;
 	display: flex;
 	justify-content: flex-start;
 	flex-wrap: wrap;
 	width: 113%;
 }
-.submitFeedback .content .tab .ul .li{
+.submitFeedback .content2 .tab .ul .li{
 	flex: 0 0 33.33%;
 	margin-bottom: 0.35rem;
 }
@@ -61,8 +57,14 @@
 .submitFeedback .tUl .tLi{
 	width: 1.15rem;
 	height: 1.15rem;
-	background: url('../image/add.png') no-repeat;
-	background-size: 100% 100%;
+	position: relative;
+	/*background: url('../../image/new/add.png') no-repeat;
+	background-size: 100% 100%;*/
+}
+.submitFeedback .tUl .tLi span{
+	position: absolute;
+  right: -0.1rem;
+  top: -0.1rem;
 }
 .submitFeedback .btn{
 	height: 0.68rem;

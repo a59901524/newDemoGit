@@ -8,126 +8,41 @@
     <title>意见反馈</title>
     <link rel="stylesheet" href="../../lib/iconfont2/iconfont.css">
     <link rel="stylesheet" type="text/css" href="../../css/common.css" />
-    <style>
-        .tomyfeed {
-            font-size: 1rem;
-            position: absolute;
-            right: 1rem;
-        }
-        
-        textarea {
-            font-size: 14px;
-            color: #B3A795;
-        }
-        
-        textarea::placeholder {
-            font-size: 14px;
-            color: #B3A795;
-        }
-        
-        input {
-            flex: 1;
-        }
-        
-        input::placeholder {
-            font-size: 14px;
-            color: #B3A795;
-        }
-        /* input::-ms-input-placeholder {
-            text-align: right;
-        }
-        
-        input::-webkit-input-placeholder {
-            text-align: right;
-        } */
-        
-        input:disabled {
-            color: #B3A795;
-        }
-        
-        .camera {
-            width: 6rem;
-            margin-left: 1rem;
-            border: 1px dashed #999999;
-        }
-        
-        .evalC_img_item {
-            width: 6rem;
-            height: 6rem;
-            position: relative;
-        }
-        
-        .evalC_img_item:nth-child(1) {
-            margin-left: 1rem;
-        }
-        
-        .evalC_img_item span {
-            position: absolute;
-            right: -5px;
-            background: #e74143;
-            border-radius: 100%;
-            width: 1.3rem;
-            height: 1.3rem;
-            font-size: 1rem;
-            top: -5px;
-            color: #fff;
-            text-align: center
-        }
-        
-        .BB1 {
-            border-bottom: 1px solid #000000;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="../../css/new/submitFeedback.css">
+    <link rel="stylesheet" type="text/css" href="../../css/new/reset.css">
+    <script src="../../script/lib-flexible.js"></script>
 </head>
 
-<body class="has_header">
-    <div id="feedback" class="content color_default1" v-cloak>
-        <header class="header  bbd">
+<body class="has_header submitFeedback">
+    <div id="feedback" class="content color_white contarin" v-cloak>
+        <header class="header">
             <i class="iconfont icon-xiangzuo" onclick="goBack()"></i>
-            <div>{{(titles&&titles!='')?titles:langContent.title}}</div>
-            <div class="tomyfeed" @click="getType('submit')">{{langContent.btn?langContent.btn:''}}</div>
+            <div>意见反馈</div>
+            <!-- <div class="tomyfeed" @click="getType('submit')">{{langContent.btn?langContent.btn:''}}</div> -->
         </header>
-        <div v-show="!onlyshow " class="color_black3 bg_white">
-            <div v-if="isFomeYJ" class="flex_row_between bbd padding12">
-                <span>{{langContent.tsdd?langContent.tsdd:''}}</span>
-                <span class="color_default1">{{dingdan}}</span>
+        <div class="content2">
+            <div class="tab">
+                <div class="title">反馈类型:</div>
+                <div class="ul">
+                    <div class="li" v-for="item in typeList" @click="choose(item)"><span class="" :class="{'active': type == item.name}">{{getCodetip.language_id==1?item.name:item.name_en}}</span></div>
+                </div>
             </div>
-            <div class="flex_row_between bbd padding12">
-                <span class="marginR5">{{langContent.fklx?langContent.fklx:''}}</span>
-                <span v-if="isFomeYJ" class="color_default1" style="flex: 1;">{{type}}</span>
-                <span v-if="!isFomeYJ" @click="choose()" class="color_default1" style="flex: 1;">{{type}}</span>
-                <i class="iconfont icon-direction_right color_default1 fontSize18 "></i>
+            <div class="title2">反馈内容:</div>
+            <div class="textarea">
+                <textarea rows="8" :placeholder="langContent.text_input" v-model="content"></textarea>
             </div>
-            <div class="flex_row_left bbd padding12">
-                <span style="white-space: nowrap;" class="marginR5">{{langContent.bt?langContent.bt:''}}</span>
-                <input type="text" :placeholder="langContent.bt_input" class="color_default1" v-model="title" style="flex: 5;">
+            <div class="tab marginT5">
+                <div class="title3">请提供相关问题的截图或者照片</div>
+                <div class="tUl">
+                    <div class="tLi" v-for="(obj,index) in imgs">
+                        <span @click="deleteImg(imgs,index)">×</span>
+                        <img :src="obj?obj:'../../image/new/add.png'" alt="">
+                    </div>
+                    <div class="tLi" v-if="imgs.length < 3" @click="gopic()"><img src="../../image/new/add.png" alt=""></div>
+                </div>
             </div>
-            <div class="flex_row_left bbd padding12" v-show="type=='投诉/举报'">
-                <span style="white-space: nowrap;" class="marginR5">{{langContent.tel?langContent.tel:''}}</span>
-                <input type="tel" :placeholder="langContent.tel_input" class="color_default1" v-model="bts_mobile" style="flex: 4;" disabled>
-            </div>
+            <div class="btn" @click="getType('submit')">提交</div>
         </div>
-        <div class="padding12 color_999 bg_white bbd">
-            <textarea style="font-size: 1rem;width: calc(100% - 2rem); height: 120px; border-radius: 5px; outline: none;background: transparent;padding: 1rem;" rows="5" class="flex_1" :placeholder="langContent.text_input" v-model="content"></textarea>
-        </div>
-
-        <div class="flex_row_left bbd padding12 bg_white">
-            <div style="white-space: nowrap;" class="marginR5 color_black3">{{langContent.img?langContent.img:''}}</div>
-            <div class="evalC_img_item marginR5 marginB5" v-for="(obj,index) in imgs">
-                <span @click="deleteImg(imgs,index)">×</span>
-                <img :src="obj?obj:'../../image/img7.png'" alt="">
-            </div>
-            <div class="camera" v-if="imgs.length < 3" @click="gopic()">
-                <img src="../../image/uppz.png" alt="">
-            </div>
-        </div>
-
-        <p class="color_999 padding1 bg_white">{{langContent.tip?langContent.tip:''}}</p>
-        <!-- <div class="common_submit_btn padding1" @click="getType('submit')">{{langContent.btn?langContent.btn:''}}</div> -->
-
-        <ul style="position: fixed;top: 8.3rem;width: 100%;background: #eeeeee;padding: 1rem;text-align: center;" v-if="showType">
-            <li class="marginT1 color_default1" v-for="item in typeList" @click="choose(item)">{{getCodetip.language_id==1?item.name:item.name_en}}</li>
-        </ul>
     </div>
 </body>
 

@@ -29,7 +29,6 @@
 }
 .feedback .cont{
 	margin: 0.22rem 0.12rem;
-	min-height: 10rem;
 }
 .feedback .cont .ul .li{
 	border-bottom: 0.01rem solid #370e9f;

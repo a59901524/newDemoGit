@@ -319,7 +319,7 @@ header .left{
     width: 0.17rem;
     height: 0.31rem;
     position: absolute;
-    top: 0.6rem;
+    top: 0.45rem;
     left: 0.12rem;
     right: 0.12rem;
 }
@@ -330,6 +330,6 @@ header .center{
 }
 header .right{
     position: absolute;
-    top: 0.6rem;
+    top: 0.45rem;
     right: 0.12rem;
 }

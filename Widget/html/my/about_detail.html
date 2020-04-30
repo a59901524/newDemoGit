@@ -10,6 +10,8 @@
     <link rel="stylesheet" type="text/css" href="../../lib/iconfont2/iconfont.css" />
     <link rel="stylesheet" type="text/css" href="../../css/common.css" />
     <link rel="stylesheet" type="text/css" href="../../css/edit.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/new/reset.css">
+    <script type="text/javascript" src="../../script/lib-flexible.js"></script>
     <style>
         body,
         html {
@@ -22,8 +24,8 @@
 <body>
     <div id="about_detail" class="content" v-cloak>
         <header class="header bbd">
-            <i class="iconfont icon-xiangzuo" onclick="goBack()"></i>
-            <div>{{title?title:'关于我们'}}</div>
+            <i class="iconfont icon-xiangzuo" style="color: #cb974d" onclick="goBack()"></i>
+            <div style="color: #cb974d">{{title?title:'关于我们'}}</div>
         </header>
         <div v-show="!problem" class="padding1 color_black3 bg_white">
             <div class="" v-html="content"></div>
