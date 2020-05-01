@@ -1,12 +1,10 @@
 .home{
-	background-color: #250084;
-	background-image: url('../../image/new/h1.jpg');
-	background-repeat: no-repeat;
 	background-size: 100%;
 }
 
 .home .contarin{
 	padding: 1.02rem 0.12rem;
+	box-sizing: border-box;
 }
 
 .home .head{
@@ -62,16 +60,13 @@
 	font-size: 0.26rem;
 	padding: 0.16rem 0 0.44rem;
 }
-.hb .content{
+.hb .content2{
 	font-size: 0.26rem;
 	margin-bottom: 0.57rem;
 }
 .hb .hbFixe{
 	display: flex;
 	justify-content: space-around;
-}
-.list {
-	margin-bottom: 1rem;
 }
 .list .tabNav{
 	display: flex;
@@ -110,7 +105,10 @@
 	width: 0.91rem;
 	height: 0.91rem;
 }
-.ul .content {
+.ul .li .img img{
+	border-radius: 50%;
+}
+.ul .content2 {
 	flex: 1;
 	padding-left: 0.08rem;
 }

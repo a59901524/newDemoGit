@@ -9,66 +9,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>出售HDC</title>
     <link rel="stylesheet" href="../../lib/iconfont/iconfont.css">
-    <link rel="stylesheet" href="../../css/common.css">
+    <!-- <link rel="stylesheet" href="../../css/common.css"> -->
+    <link rel="stylesheet" type="text/css" href="../../css/new/reset.css">
+    <link rel="stylesheet" type="text/css" href="../../lib/vant/vant.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/new/home.css">
     <style>
-        html,
-        body {
-            background: rgba(0, 0, 0, 0.2);
-        }
-
-        input::placeholder {
-            font-size: 14px;
-            color: #ccc;
-        }
-
-        #op_sell_yjl {
-            width: 100%;
-            min-height: 100%;
-        }
-
-        .item input {
-            -webkit-apprarance: none;
-            -webkit-tap-highlight-color: transparent;
-            width: calc(100% - 1.4rem);
-            padding: .8rem;
-            border: 1px solid #dddddd;
-            border-radius: .3rem;
-            -webkit-appearance: none;
-            color: #333333;
-        }
-
-        input[disabled] {
-            color: #333333 !important;
-            opacity: 1;
-        }
-
-        .sell_yjl {
-            padding: .6rem;
-            border: 1px solid #50535d;
-            border-radius: .3rem;
-            background-color: #1a1c29;
-        }
-        /* 选着付款方式 */
-
-        .black_overlay1 {
-            position: fixed;
-            top: 0%;
-            left: 0%;
-            width: 100%;
+        .flex_col_center {
             height: 100%;
-            background: rgba(191, 191, 191, .5);
-            z-index: 1001;
-        }
-
-        .marginL1 {
-            margin-left: .5rem;
+            display: flex;
+            align-content: center;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 0.24rem;
         }
     </style>
+    <script src="../../script/lib-flexible.js"></script>
 </head>
 
 <body>
-    <div id="op_sell_yjl" class="flex_row_center  color_black6" v-cloak>
-        <div class="padding12 width100 Brd1">
+    <div id="op_sell_yjl" class="flex_col_center color_black6 padding1" style="height: 100%;" v-cloak>
+        <div class="sell bjTu">
+            <div class="title">出售HDC</div>
+            <div class="input">
+                <label class="fontSize28">出售数量</label>
+                <input  type="tel" placeholder="0" v-model="num">
+            </div>
+            <div class="input">
+                <label class="fontSize28">出售单价（$）</label>
+                <input type="number" placeholder="" v-model="unit_price" disabled>
+            </div>
+            <div class="input">
+                <label class="fontSize28">交易密码</label>
+                <input type="password" :placeholder="langContent.psw_input" v-model="pwd">
+            </div>
+            <div class="content fontSize24">
+                <span class="colffffff">请注意：</span>{{langContent.tip1?langContent.tip1:''}}
+            </div>
+            <div class="foot">
+                <div class="btn confirm"  @click="submit">确认</div>
+                <div class="btn cacel"  @click="cancel">取消</div>
+            </div>
+        </div>`
+        <!-- <div class="padding12 width100 Brd1">
             <div class=" padding12 bg-white bbd fontSize18" style="border-top-left-radius: 1rem;border-top-right-radius: 1rem">
                 <div class="text_center" style="margin: 0 auto;">{{langContent.title?langContent.title:''}}HDC</div>
             </div>
@@ -77,13 +59,6 @@
                 <input class="marginT5 " type="tel" placeholder="0" v-model="num">
                 <div class="marginT5">{{langContent.price?langContent.price:''}}($)</div>
                 <input class="marginT5 " type="number" placeholder="" v-model="unit_price" disabled>
-                <!-- <div class="marginT5">
-                    {{langContent.style?langContent.style:''}}
-                </div>
-                <div class="flex_row_between marginT5  sell_yjl" @click="isShow=true">
-                    <div>{{title}}</div>
-                    <i class="iconfont iconjiantou-xia " @click="isShow=true"></i>
-                </div> -->
                 <div class="marginT5">{{langContent.psw?langContent.psw:''}}</div>
                 <input class="marginT5 " type="password" :placeholder="langContent.psw_input" v-model="pwd">
                 <div class="padding12   fontSize14 marginT1 ">
@@ -96,30 +71,6 @@
                     <div class=" cancel_style" @click="cancel">
                         {{langContent.cancel?langContent.cancel:''}}
                     </div>
-                </div>
-            </div>
-        </div>
-        <!-- <div class="black_overlay1 flex_row_center " v-if="isShow">
-            <div class="bg-white Brd1" style="width: 75%;padding: 2rem 1rem;font-size: 18px">
-                <div class="flex_row_left" @click="changePay(langContent.wx)">
-                    <i class="iconfont icondanxuanxuanzhong " v-if="title=='微信'||title=='WeChat'"></i>
-                    <i class="iconfont icondanxuanweixuanzhong " v-if="title!='微信'&&title!='WeChat'"></i>
-                    <div class="marginL1">{{langContent.wx?langContent.wx:''}}</div>
-                </div>
-                <div class="flex_row_left marginT1" @click="changePay(langContent.zfb)">
-                    <i class="iconfont icondanxuanxuanzhong " v-if="title=='支付宝'||title=='Alipay'"></i>
-                    <i class="iconfont icondanxuanweixuanzhong " v-if="title!='支付宝'&&title!='Alipay'"></i>
-                    <div class="marginL1">{{langContent.zfb?langContent.zfb:''}}</div>
-                </div>
-                <div class="flex_row_left marginT1" @click="changePay(langContent.ytf)">
-                    <i class="iconfont icondanxuanxuanzhong " v-if="title=='以太坊'||title=='Ethereum'"></i>
-                    <i class="iconfont icondanxuanweixuanzhong " v-if="title!='以太坊'&&title!='Ethereum'"></i>
-                    <div class="marginL1">{{langContent.ytf?langContent.ytf:''}}</div>
-                </div>
-                <div class="flex_row_left marginT1" @click="changePay(langContent.yhk)">
-                    <i class="iconfont icondanxuanxuanzhong " v-if="title=='银行卡'||title=='Bank Card'"></i>
-                    <i class="iconfont icondanxuanweixuanzhong " v-if="title!='银行卡'&&title!='Bank Card'"></i>
-                    <div class="marginL1">{{langContent.yhk?langContent.yhk:''}}</div>
                 </div>
             </div>
         </div> -->

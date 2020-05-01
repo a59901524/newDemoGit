@@ -7,188 +7,417 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
     <title>交易中心</title>
+    <link rel="stylesheet" href="../lib/vant/vant.css">
+    <link rel="stylesheet" href="../lib/iconfont2/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
     <link rel="stylesheet" type="text/css" href="../css/new/reset.css">
-    <link rel="stylesheet" type="text/css" href="../lib/vant/vant.css" />
-    <link rel="stylesheet" type="text/css" href="../lib/iconfont2/iconfont.css" />
     <link rel="stylesheet" type="text/css" href="../css/new/home.css">
     <script src="../script/lib-flexible.js"></script>
+    <style>
+        #frame3 {
+            min-height: 100%;
+            max-width: 100%;
+        }
+
+        .showBg {
+            background-image: url("../image/bg_trad.jpg");
+            background-repeat: no-repeat;
+            -moz-background-size: 100%;
+            background-size: 100%;
+        }
+        /* <!-- 参考价格 --> */
+
+        .reference_left span {
+            font-size: 2rem;
+        }
+        /* <!-- 可用额度 模块 --> */
+
+        .Amount {
+            background: linear-gradient(90deg, #cb974d 0%, #fdecb8 100%);
+            margin-top: 1rem;
+            padding: 1rem 1rem;
+            border-radius: 10px;
+            color: #333;
+        }
+
+        .Amount_Amount {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #fce5ab;
+        }
+
+        .Amount_right {
+            font-size: 1rem;
+            background-color: #ff6262;
+            border-radius: 5px;
+            color: #ffffff;
+            padding: .5rem;
+        }
+        /* 箭头图片 */
+        /* 求购列表选中样式 */
+
+        .on {
+            border-bottom: 2px solid #cb974d;
+            color: #cb974d;
+            font-weight: 800
+        }
+        /* 大小区 */
+
+        .buyList {
+            padding: 0.3rem .8rem;
+            border-radius: 2rem;
+            margin-right: 1rem;
+        }
+
+        .buyList1 {
+            padding: 0.3rem .8rem;
+            border-radius: 2rem;
+            margin-right: 1rem;
+            color: #cb974d;
+            font-weight: 800;
+        }
+
+        .fontSize11 {
+            font-size: .95rem;
+        }
+
+        input {
+            text-indent: .2rem;
+            font-size: 1.2rem;
+            line-height: 2rem;
+            height: 2rem;
+            width: 18rem;
+        }
+
+        input::placeholder {
+            font-size: 1.2rem;
+            line-height: 2rem;
+            color: #ccc;
+        }
+
+        .development {
+            position: fixed;
+            top: 35%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 180px;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 8px;
+            z-index: 10;
+            overflow: hidden;
+            display: none;
+        }
+
+        .Amount_left {
+            text-align: center;
+        }
+
+        .dealNumColor {
+            color: #d2ba91;
+        }
+
+        .padingbo {
+            padding-top: 0px!important;
+        }
+        /* 新写的  求购列表 */
+        /* 头像 */
+
+        .xian {
+            margin: 0 5px;
+        }
+
+        .user_img {
+            width: 4rem;
+            height: 4rem;
+            border-radius: 50%;
+            margin-right: .5rem;
+        }
+        /* 图标 */
+
+        .margin-left6 {
+            margin: 0rem .6rem;
+        }
+
+        .margin-left2 {
+            margin: 0rem .2rem;
+        }
+
+        .margin-right6 {
+            margin: 0rem .6rem;
+        }
+
+        .jyuser {
+            width: 20px;
+            height: auto;
+            font-size: 20px;
+        }
+
+        .jystyle {
+            width: 20px;
+            height: auto;
+            font-size: 20px;
+        }
+        /* 卖出按钮 */
+
+        .maichu {
+            border-radius: 3px;
+            background: #2cc597;
+            color: #fff;
+            width: 3rem;
+            text-align: center;
+            font-size: 1.2rem;
+            padding: .3rem .6rem;
+        }
+
+        .fanmang {
+            border-radius: 3px;
+            background: #dddddd;
+            color: #999999;
+            width: 3rem;
+            text-align: center;
+            font-size: 1.2rem;
+            padding: .3rem .6rem;
+        }
+        /* 交易信箱 */
+
+        .onDeal_x1 {
+            color: #fff;
+            background-color: #ccaa7a;
+            border-top: solid 1px #ccaa7a !important;
+            border-bottom: solid 1px #ccaa7a !important;
+            border-left: solid 1px #ccaa7a !important;
+            border-radius: 5px 0px 0px 5px;
+            padding: .4rem 1.8rem;
+        }
+
+        .onDeal_x2 {
+            color: #fff;
+            background-color: #ccaa7a;
+            border-top: solid 1px #ccaa7a !important;
+            border-bottom: solid 1px #ccaa7a !important;
+            border-right: solid 1px #ccaa7a !important;
+            padding: .4rem 1.8em;
+            border-radius: 0px 5px 5px 0px;
+        }
+        /* 买入 */
+
+        .mairu_x1 {
+            border-top: solid 1px #dddddd;
+            border-bottom: solid 1px #dddddd;
+            border-left: solid 1px #dddddd;
+            border-radius: 5px 0px 0px 5px;
+            padding: .4rem 1.8rem;
+        }
+        /* 卖出 */
+
+        .maichu_x2 {
+            border-top: solid 1px #dddddd;
+            border-bottom: solid 1px #dddddd;
+            border-right: solid 1px #dddddd;
+            border-radius: 0px 5px 5px 0px;
+            padding: .4rem 1.8em;
+        }
+        /* 完成 */
+
+        .sta2 {
+            padding-right: 15px;
+        }
+
+        .act {
+            color: #cb974d;
+        }
+        /*页面标题 弹出*/
+
+        header.header {
+            left: 0;
+            top: 0;
+            position: fixed;
+            z-index: 100000;
+            display: block;
+            width: 100%;
+            font-size: 1.3rem;
+            height: 0;
+            overflow: hidden;
+            color: #999999 !important;
+            /* background: #ffffff; */
+        }
+
+        .iiiiiiii {
+            display: none;
+        }
+    </style>
 </head>
 
-<body class="home">
-  <div id="frame0" class="contarin">
-      <div class="header"></div>
-      <div class="head iiiiiiii">
-          <div class="headLeft">
-              <div class="h3">可售额度</div>
-              {{nosswr(info.user_assets&&info.user_assets.limit_money?info.user_assets.limit_money:'0')}}
-          </div>
-          <div class="headRight">
-              <div class="pUl">
-                  <div class="li">
-                      <div class="p colffffff fontSize22">今日交易手续费</div>
-                      {{info.today_trade_cost?info.today_trade_cost:'0'}}
-                  </div>
-                  <div class="li">
-                      <div class="p colffffff fontSize22">个人荣誉分</div>
-                      {{info.user_assets&&info.user_assets.credit_value?info.user_assets.credit_value:'0'}}
-                  </div>
-              </div>
-              <div class="pUl">
-                  <div class="li">
-                      <div class="p colffffff fontSize22">总交易手续</div>
-                      {{info.trade_total_cost?info.trade_total_cost:'0'}}
-                  </div>
-                  <div class="li">
-                      <div class="p colffffff fontSize22">平台总交易量</div>
-                      {{info.trade_total_volume?info.trade_total_volume:'0'}}
-                  </div>
-              </div>
-          </div>
-      </div>
-      <div class="btn" @click="openBuyFrame('buy')">挂买单</div>
-      <div class="hb bj bjTu">
-          <div class="title">今日参考价</div>
-          <div class="content col04e5ee">$<span class="fontSize52">{{fixTwo(info.trade_JXA_today_price)}}</span><span class="colffffff fontSize24">（汇率1：7）≈{{fixTwo(info.trade_rmb_today_price)}}CNY</span></div>
-          <div class="hbFixe fontSize26">
-              <div class="left">
-                  昨日参考价：<span class="col04e5ee">${{fixTwo(info.trade_JXA_yesterday_price)}}</span>
-              </div>
-              <div class="right">
-                  今日交易量：<span class="colff8900">{{info.today_trade_volume?info.today_trade_volume:'0'}}</span>
-              </div>
-          </div>
-      </div>
-      <div class="list bj bjTu">
-          <div class="tabNav">
-              <span @click="changeListtype(1,'买入')" :class="{'col04e5ee': type==1}">求购列表</span>
-              <span :class="{'col04e5ee': type==3}" @click="changeListtype(3,'交易信箱')">交易信箱</span>
-          </div>
-          <div v-show='type==1'>
-              <div class="tab">
-                  <div class="tabLi"><span>10-20体验区</span></div>
-                  <div class="tabLi"><span class="col04e5ee">20-1000体验区</span></div>
-              </div>
-              <van-pull-refresh id="getBuylist" v-model="downLoading" @refresh="getBuylist" :pulling-text="getCodetip.vant_pulling" :loosing-text="getCodetip.vant_loosing" :loading-text="getCodetip.vant_loading">
-                  <van-list class="list" v-model="upLoading" :finished="finished" :finished-text="getCodetip.vantlistfinished" @load="getBuylist" :immediate-check="false">
-                      <div class="ul">
-                          <div class="li" v-for="(item,index) in list" :key="index">
-                              <div class="img"><img :src="item.avatar?item.avatar:'../image/logo.png'" alt=""></div>
-                              <div class="content">
-                                  <div class="ptop">
-                                      <div class="left">{{item.buyer_mobile?item.buyer_mobile:''}}
-                                        <span v-show="item.pay_type==1"><img src="../image/new/wb.png" alt=""></span>
-                                        <span v-show="item.pay_type==2"><img src="../image/new/wx.png" alt=""></span>
-                                        <span v-show="item.pay_type==4"><img src="../image/new/zf.png" alt=""></span>
-                                      </div>
-                                      <div class="right">{{item.trade_count}} | {{item.credit_value}}分</div>
-                                  </div>
-                                  <div class="pbot fontSize22">
-                                      <div class="left">
-                                          <div class="num">数量: <span class="fontSize32 col00fbfd">{{item.num}}</span></div>
-                                          <div class="price col04e5ee">单价：${{item.unit_price}}</div>
-                                      </div>
-                                      <div class="right fontSize24" v-if="item.is_buyer_busy == 0 " @click="openBuy_aFrame(item.id,index)">出售</div>
-                                      <div class="right fontSize24" style='background: #cccccc; color: #ffffff' v-if="item.is_buyer_busy == 1 ">{{langContent.busy?langContent.busy:''}}</div>
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
-                  </van-list>
-              </van-pull-refresh>
-          </div>
-          <div v-show="type==3">
-              <div class="tabUl">
-                  <div class="ulLeft">
-                      <span @click="changeStatus(1)">买入</span>
-                      <span @click="changeStatus(2)">卖出</span>
-                  </div>
-                  <div class="ulRight">
-                      <span v-show="status==1" :class="{'col04e5ee':substatus==1}"  @click="changesubStatus(1)">挂单中</span>
-                      <span :class="{'col04e5ee':substatus==2}" @click="changesubStatus(2)">交易中</span>
-                      <span :class="{'col04e5ee':substatus==3}" @click="changesubStatus(3)">已完成</span>
-                  </div>
-              </div>
-              <van-pull-refresh id="getLetterlist" v-model="downLoading" @refresh="getLetterlist" :pulling-text="getCodetip.vant_pulling" :loosing-text="getCodetip.vant_loosing" :loading-text="getCodetip.vant_loading">
-                  <van-list class="list" v-model="upLoading" :finished="finished" :finished-text="getCodetip.vantlistfinished" @load="getLetterlist" :immediate-check="false">
-                    <div class="jyUl">
-                        <div class="jyLi" v-for="(item,index) in list" :key="index">
-                            <div class="hd">
-                                <span>{{langContent.order?langContent.order:''}}：{{item.order_sn}}</span>
-                                <span v-if="item.trade_status==1">{{item.create_time}}</span>
-                                <span v-if="item.trade_status!=1">{{item.trade_time}}</span>
+<body class="has_header home">
+    <div id="frame3" class="content color_999 contarin" v-cloak>
+        <header class="header bg_black">
+            <div class="iiiiiiii">
+                <!-- 求购列表 -->
+                <!-- 求购列表  中国区-->
+                <!-- <div class="flex_row_between  bg-white fontSize16 padding12_left_right">
+                    <div style="padding: .6rem 0rem;" :class="{'on':type==1}" @click="changeListtype(1,'买入')">
+                        <p>求购列表</p>
+                    </div>
+                    <div style="padding: .6rem 0rem;" :class="{'on':type==3}" @click="changeListtype(3,'交易信箱')">
+                        <p>交易信箱</p>
+                        <span></span>
+                    </div>
+                </div>> -->
+                <!-- 大小区 -->
+                <!-- <div v-show="type == 1" v-if="range_show ==1" class="flex_row_left padding1 bg_eee fontSize12" style="padding-top: 0;">
+                    <div class=" buyList bg-white" :class="{'buyList1':buytype==1}" @click="changebuyList(1,'体验区')">{{langContent.xdq?langContent.xdq:''}}</div>
+                    <div class=" buyList bg-white" :class="{'buyList1':buytype==2}" @click="changebuyList(2,'大单区')">{{langContent.ddq?langContent.ddq:''}}</div>
+                </div> -->
+
+            </div>
+
+        </header>
+        <div v-show="showTime" class="showcontent">
+            <!-- 隐藏部分模块 -->
+            <div class="showBox">
+                <!-- 可用额度 模块 -->
+                <div class="head">
+                    <div class="headLeft">
+                        <div class="h3">可售额度</div>
+                        {{nosswr(info.user_assets&&info.user_assets.limit_money?info.user_assets.limit_money:'0')}}
+                    </div>
+                    <div class="headRight">
+                        <div class="pUl">
+                            <div class="li">
+                                <div class="p colffffff fontSize22">今日交易手续费</div>
+                                {{info.today_trade_cost?info.today_trade_cost:'0'}}
                             </div>
-                            <div class="bd">
-                                {{item.show_msg}}
+                            <div class="li">
+                                <div class="p colffffff fontSize22">个人荣誉分</div>
+                                {{info.user_assets&&info.user_assets.credit_value?info.user_assets.credit_value:'0'}}
+                            </div>
+                        </div>
+                        <div class="pUl">
+                            <div class="li">
+                                <div class="p colffffff fontSize22">总交易手续</div>
+                                {{info.trade_total_cost?info.trade_total_cost:'0'}}
+                            </div>
+                            <div class="li">
+                                <div class="p colffffff fontSize22">平台总交易量</div>
+                                {{info.trade_total_volume?info.trade_total_volume:'0'}}
                             </div>
                         </div>
                     </div>
-                  </van-list>
-              </van-pull-refresh>
-          </div>
-      </div>
-      <!-- <van-popup v-model="show">
-          <div class="sell bjTu">
-              <div class="title">买入HDC</div>
-              <div class="input">
-                  <label class="fontSize28">购买数量</label>
-                  <input type="text">
-              </div>
-              <div class="input">
-                  <label class="fontSize28">购买单价（$）</label>
-                  <input type="text">
-              </div>
-              <div class="input jt">
-                  <label class="fontSize28">交易方式</label>
-                  <input type="text" disabled>
-              </div>
-              <div class="input">
-                  <label class="fontSize28">交易密码</label>
-                  <input type="text">
-              </div>
-              <div class="content fontSize24">
-                  <span class="colffffff">请注意：</span>挂单完成后，取消订单将扣除挂单剩余数量百分之十的手续费，请慎重挂单。<br/>发起买入信息后请及时关注您的防弹匹配情况，请确保匹配成功，对方开启收款信息后1小时内计时付款并上传支付凭证，否则被投诉将会影响您的信用。
-              </div>
-              <div class="foot">
-                  <div class="btn confirm">确认</div>
-                  <div class="btn cacel" >取消</div>
-              </div>
-          </div>
-      </van-popup>
-      <van-popup
-        v-model="payMentShow"
-        position="bottom"
-        :style="{ height: '30%' }"
-      >
-          <van-picker
-            show-toolbar
-            title="支付方式"
-            :columns="columns"
-            @cancel="onCancel"
-            @confirm="onConfirm"
-          />
-      </van-popup> -->
-  </div>
+                </div>
+                <div class="btn" @click="openBuyFrame('buy')">挂买单</div>
+                <div class="hb bj bjTu">
+                    <div class="title">今日参考价</div>
+                    <div class="content2 col04e5ee">$<span class="fontSize52">{{fixTwo(info.trade_JXA_today_price)}}</span><span class="colffffff fontSize24">（汇率1：7）≈{{fixTwo(info.trade_rmb_today_price)}}CNY</span></div>
+                    <div class="hbFixe fontSize26">
+                        <div class="left">
+                            昨日参考价：<span class="col04e5ee">${{fixTwo(info.trade_JXA_yesterday_price)}}</span>
+                        </div>
+                        <div class="right">
+                            今日交易量：<span class="colff8900">{{info.today_trade_volume?info.today_trade_volume:'0'}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="marginT5"></div>
+            </div>
+            <div class="list bj bjTu">
+                <div class="tabNav">
+                    <span @click="changeListtype(1,'买入')" :class="{'col04e5ee': type==1}">求购列表</span>
+                    <span :class="{'col04e5ee': type==3}" @click="changeListtype(3,'交易信箱')">交易信箱</span>
+                </div>
+                <div v-show='type==1'>
+                    <div class="tab">
+                        <div class="tabLi" ><span :class="{'col04e5ee':buytype==1}" @click="changebuyList(1,'体验区')">{{langContent.xdq?langContent.xdq:''}}</span></div>
+                        <div class="tabLi"><span :class="{'col04e5ee':buytype==2}" @click="changebuyList(2,'大单区')">{{langContent.ddq?langContent.ddq:''}}</span></div>
+                    </div>
+                    <van-pull-refresh id="getBuylist" v-model="downLoading" @refresh="getBuylist" :pulling-text="getCodetip.vant_pulling" :loosing-text="getCodetip.vant_loosing" :loading-text="getCodetip.vant_loading">
+                        <van-list class="list" v-model="upLoading" :finished="finished" :finished-text="getCodetip.vantlistfinished" @load="getBuylist" :immediate-check="false">
+                            <div class="ul">
+                                <div class="li" v-for="(item,index) in list" :key="index">
+                                    <div class="img"><img :src="item.avatar?item.avatar:'../image/logo.png'" alt=""></div>
+                                    <div class="content2">
+                                        <div class="ptop">
+                                            <div class="left">{{item.buyer_mobile?item.buyer_mobile:''}}
+                                              <span v-show="item.pay_type==1"><img src="../image/new/wb.png" alt=""></span>
+                                              <span v-show="item.pay_type==2"><img src="../image/new/wx.png" alt=""></span>
+                                              <span v-show="item.pay_type==4"><img src="../image/new/zf.png" alt=""></span>
+                                            </div>
+                                            <div class="right">{{item.trade_count}} | {{item.credit_value}}分</div>
+                                        </div>
+                                        <div class="pbot fontSize22">
+                                            <div class="left">
+                                                <div class="num">数量: <span class="fontSize32 col00fbfd">{{item.num}}</span></div>
+                                                <div class="price col04e5ee">单价：${{item.unit_price}}</div>
+                                            </div>
+                                            <div class="right fontSize24" v-if="item.is_buyer_busy == 0 " @click="openBuy_aFrame(item.id,index)">出售</div>
+                                            <div class="right fontSize24" style='background: #cccccc; color: #ffffff' v-if="item.is_buyer_busy == 1 ">{{langContent.busy?langContent.busy:''}}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </van-list>
+                    </van-pull-refresh>
+                </div>
+                <div v-show="type==3">
+                    <div class="tabUl">
+                        <div class="ulLeft">
+                            <span :class="{'col04e5ee':status==1}" @click="changeStatus(1)">买入</span>
+                            <span :class="{'col04e5ee':status==2}" @click="changeStatus(2)">卖出</span>
+                        </div>
+                        <div class="ulRight">
+                            <span v-show="status==1" :class="{'col04e5ee':substatus==1}"  @click="changesubStatus(1)">挂单中</span>
+                            <span :class="{'col04e5ee':substatus==2}" @click="changesubStatus(2)">交易中</span>
+                            <span :class="{'col04e5ee':substatus==3}" @click="changesubStatus(3)">已完成</span>
+                        </div>
+                    </div>
+                    <van-pull-refresh id="getLetterlist" v-model="downLoading" @refresh="getLetterlist" :pulling-text="getCodetip.vant_pulling" :loosing-text="getCodetip.vant_loosing" :loading-text="getCodetip.vant_loading">
+                        <van-list class="list" v-model="upLoading" :finished="finished" :finished-text="getCodetip.vantlistfinished" @load="getLetterlist" :immediate-check="false">
+                          <div class="jyUl">
+                              <div class="jyLi" v-for="(item,index) in list" :key="index">
+                                  <div class="hd">
+                                      <span>{{langContent.order?langContent.order:''}}：{{item.order_sn}}</span>
+                                      <span v-if="item.trade_status==1">{{item.create_time}}</span>
+                                      <span v-if="item.trade_status!=1">{{item.trade_time}}</span>
+                                  </div>
+                                  <div class="bd">
+                                      {{item.show_msg}}
+                                  </div>
+                              </div>
+                          </div>
+                        </van-list>
+                    </van-pull-refresh>
+                </div>
+            </div>
+            <div style="height: 60px;"></div>
+        </div>
+        <!-- 关闭交易时候出现的页面 -->
+        <div v-show="!showTime" class="showcontent ">
+        </div>
+
+
+    </div>
 </body>
 
 </html>
-<script type="text/javascript" src="../lib/vue/vue.js"></script>
-<script type="text/javascript" src="../lib/vant/vant.min.js"></script>
 <script type="text/javascript" src="../lib/language/multi-lang-es5.js"></script>
 <script type="text/javascript" src="../lib/language/languageJson.js"></script>
 <script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../lib/vue/vue.js"></script>
+<script type="text/javascript" src="../lib/vant/vant.min.js"></script>
 <script type="text/javascript" src="../script/rsa.js"></script>
 <script type="text/javascript" src="../script/aes.js"></script>
 <script type="text/javascript" src="../script/const.js"></script>
 <script type="text/javascript" src="../script/common.js"></script>
 <script type="text/javascript">
-    var frame0 = new Vue({
-        el: "#frame0",
+    var frame3 = new Vue({
+        el: "#frame3",
         data: {
             title: '买入',
             info: '',
             type: 1,
             keywords: '',
             showTime: true,
+            tabShow: false,
             open: {},
             listtype: 1,
             isPartner: 0,
@@ -214,8 +443,6 @@
             substatus: 1,
             range_show: '', //控制大小区展示
             isBuyeBusy: false, //0 false不繁忙 1 true繁忙
-            payMentShow: false,
-            show: false
         },
         created: function() {
             var that = this
@@ -226,16 +453,16 @@
                         from: 'tabBar'
                     });
                 }, 1);
-                frame0.$data.langContent = GlobleLanguageContent.frame0;
-                frame0.$data.getCodetip = GlobleLanguageContent.getCode;
-                // var height = $api.fixStatusBar(document.querySelector('header'));
-                // if (api.deviceModel == 'iPhone10,3' || api.deviceModel == 'iPhone10,6' || api.deviceModel == 'iPhone11,8' || api.deviceModel == 'iPhone11,2' || api.deviceModel == 'iPhone11,6' || api.deviceModel == 'iPhone11,4') {
-                //     that.frameHgt = api.frameHeight - $api.dom('.header').offsetHeight - $api.dom(".showcontent").offsetHeight - 56 - api.safeArea.bottom;
-                // } else {
-                //     that.frameHgt = api.frameHeight - $api.dom('.header').offsetHeight - $api.dom(".showcontent").offsetHeight - 56;
-                // }
-                // var minheight = api.winHeight - height;
-                // $api.css($api.dom('#frame0'), 'min-height:' + minheight + 'px');
+                frame3.$data.langContent = GlobleLanguageContent.frame3;
+                frame3.$data.getCodetip = GlobleLanguageContent.getCode;
+                var height = $api.fixStatusBar(document.querySelector('header'));
+                if (api.deviceModel == 'iPhone10,3' || api.deviceModel == 'iPhone10,6' || api.deviceModel == 'iPhone11,8' || api.deviceModel == 'iPhone11,2' || api.deviceModel == 'iPhone11,6' || api.deviceModel == 'iPhone11,4') {
+                    that.frameHgt = api.frameHeight - $api.dom('.header').offsetHeight - $api.dom(".showcontent").offsetHeight - 56 - api.safeArea.bottom;
+                } else {
+                    that.frameHgt = api.frameHeight - $api.dom('.header').offsetHeight - $api.dom(".showcontent").offsetHeight - 56;
+                }
+                var minheight = api.winHeight - height;
+                $api.css($api.dom('#frame3'), 'min-height:' + minheight + 'px');
 
                 that.HBprice = $api.getStorage('latestHBprice')
                 that.websocket = api.require('myWebSocket');
@@ -283,7 +510,7 @@
                 that.changesubStatus(2); //默认显示交易中
                 that.changebuyList(2); //默认显示大区
                 window.onscroll = function() {
-                    // that.handleScroll()
+                    that.handleScroll()
                 }
 
             }
@@ -359,8 +586,8 @@
                                 // that.isBuyeBusy = false
                                 // 新写的卖出拆分
                                 api.openFrame({
-                                    name: 'op_sell_JXA',
-                                    url: './comment/op_sell_JXA.html',
+                                    name: 'op_sell_yjl',
+                                    url: './comment/op_sell_yjl.html',
                                     reload: true,
                                     rect: {
                                         x: 0,
@@ -764,8 +991,8 @@
             },
             reloadlang: function() {
                 var that = this;
-                frame0.$data.langContent = GlobleLanguageContent.frame0;
-                frame0.$data.getCodetip = GlobleLanguageContent.getCode;
+                frame3.$data.langContent = GlobleLanguageContent.frame3;
+                frame3.$data.getCodetip = GlobleLanguageContent.getCode;
             },
 
         }
