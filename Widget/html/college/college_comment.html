@@ -12,158 +12,49 @@
     <link rel="stylesheet" type="text/css" href="../../css/new/reset.css">
     <link rel="stylesheet" href="../../css/new/college.css">
     <script type="text/javascript" src="../../script/lib-flexible.js"></script>
-    <style>
-        .video_left1 {
-            flex: 1;
-            line-height: 30px;
-            overflow: hidden;
-            color: #333333;
-        }
-
-        .video_right {
-            width: 40%;
-            height: 100px;
-            margin-right: 1rem;
-        }
-        /* 音频 */
-
-        .voice_img {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%
-        }
-        /* .bgc {
-            background: #38373D;
-        } */
-
-        .playicon {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            right: 20px;
-            bottom: 20px;
-            width: 40px;
-            height: 40px;
-        }
-
-        .playicon1 {
-            position: absolute;
-            top: 20px;
-            left: calc(50% - 30px);
-            bottom: 20px;
-            width: 60px;
-            height: 60px;
-        }
-
-        .development {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 200px;
-            height: 180px;
-            background: rgba(0, 0, 0, 0.6);
-            border-radius: 8px;
-            z-index: 10;
-            overflow: hidden;
-            display: none;
-        }
-    </style>
 </head>
 
 <body class="college">
-    <div class="navList bj bjTu">
-        <div class="li">
-            <div class="liLeft"><img src="./image/cs.jpg" alt=""></div>
-            <div class="liRight">
-                <div class="title fontSize28">上传视频任务去水印教程</div>
-                <p class="fontSize22 colabbdff">2020-02-05   20：07：05</p>
-            </div>
-        </div>
-        <div class="li">
-            <div class="liLeft"><img src="./image/cs.jpg" alt=""></div>
-            <div class="liRight">
-                <div class="title fontSize28">上传视频任务去水印教程</div>
-                <p class="fontSize22 colabbdff">2020-02-05   20：07：05</p>
-            </div>
-        </div>
-        <div class="li">
-            <div class="liLeft"><img src="./image/cs.jpg" alt=""></div>
-            <div class="liRight">
-                <div class="title fontSize28">上传视频任务去水印教程</div>
-                <p class="fontSize22 colabbdff">2020-02-05   20：07：05</p>
-            </div>
-        </div>
-        <div class="li">
-            <div class="liLeft"><img src="./image/cs.jpg" alt=""></div>
-            <div class="liRight">
-                <div class="title fontSize28">上传视频任务去水印教程</div>
-                <p class="fontSize22 colabbdff">2020-02-05   20：07：05</p>
-            </div>
-        </div>
-    </div>
-    <div id="college_comment" class="color_black3 " v-cloak>
-        <!-- <div v-if="type==1" class="text_center color_gray">暂无数据</div> -->
-        <!-- <div v-if="type==2" class="text_center color_gray">暂无数据</div> -->
-        <!-- 视频区 -->
-        <div v-if="type==1" class="bg-white">
-            <div v-for="obj in list" class="flex_row_between padding12  bbd" @click="toPage('college_mv','./college_mv.html',{item:obj})">
-                <div class="video_right posi_relative">
-                    <img :src="obj.url?obj.url+'?vframe/jpg/offset/1':'../../image/applogo.png'" alt="">
-                    <img class="playicon1" src="../../image/playmp3.png" alt="" />
-                </div>
-                <div class="video_left1">
-                    <div class="fontSize14  text-overflow_1">{{obj.title?obj.title:langContent.tip1}}</div>
-                    <div class="color_gray text-overflow_1">{{obj.create_time?obj.create_time:''}}</div>
-                </div>
-
-            </div>
-        </div>
-        <!-- 音频区 -->
-        <div v-if="type==2" class="bg-white">
-            <div v-for="(obj,index) in list" @click="playaudio(obj.id,obj.url)" class="flex_row_between padding12 bbd">
-                <div class="posi_relative">
-                    <img src="../../image/applogo.png" alt="" class="voice_img">
-                    <img v-if="playid!=obj.id" class="playicon" src="../../image/playmp3.png" alt="">
-                    <img v-if="playid==obj.id" class="playicon" src="../../image/pusemp3.png" alt="">
-                </div>
-                <div class="video_left1" style="padding-left: 10px">
-                    <div class="fontSize14 text-overflow_2">{{obj.title?obj.title:langContent.tip1}}</div>
-                    <div class="color_gray text-overflow_1">{{obj.create_time?obj.create_time:''}}</div>
+    <div id="college_comment" v-cloak>
+        <div class="navList bj bjTu" v-if="type==1" >
+            <div class="li" v-for="obj in list"  @click="toPage('college_mv','./college_mv.html',{item:obj})">
+                <div class="liLeft"><img :src="obj.url?obj.url+'?vframe/jpg/offset/1':'../../image/applogo.png'" alt=""></div>
+                <div class="liRight">
+                    <div class="title fontSize28">{{obj.title?obj.title:langContent.tip1}}</div>
+                    <p class="fontSize22 colabbdff">{{obj.create_time?obj.create_time:''}}</p>
                 </div>
             </div>
         </div>
-        <!-- 分享千聊区 -->
-        <div v-if="type==5" class="bg-white">
-            <div v-for="obj in list" class="flex_row_between padding12  bbd">
-                <div class="video_right flex_row_center" style="width: 22%;">
-                    <img style="width: 100%;height: auto;max-height: 100%;" :src="obj.thumb?obj.thumb:'../../image/applogo.png'" alt="">
+        <div class="navList bj bjTu" v-if="type==2" >
+            <div class="li" v-for="(obj,index) in list" @click="playaudio(obj.id,obj.url)" >
+                <div class="liLeft borderRadius"><img src="../../image/applogo.png" alt=""></div>
+                <div class="liRight">
+                    <div class="title fontSize28">{{obj.title?obj.title:langContent.tip1}}</div>
+                    <p class="fontSize22 colabbdff">{{obj.create_time?obj.create_time:''}}</p>
                 </div>
-                <div class="video_left1">
-                    <div v-show="getCodetip.language_id == 1" class="fontSize14  text-overflow_1">{{obj.title?obj.title:langContent.tip1}}</div>
-                    <div v-show="getCodetip.language_id == 2" class="fontSize14  text-overflow_1">{{obj.title_en?obj.title_en:langContent.tip1}}</div>
-                    <div class="color_gray text-overflow_1">{{obj.create_time?obj.create_time:''}}</div>
+            </div>
+        </div>
+        <div class="navList bj bjTu" v-if="type==5" >
+            <div class="li" v-for="obj in list">
+                <div class="liLeft displan"><img :src="obj.thumb?obj.thumb:'../../image/applogo.png'" alt=""></div>
+                <div class="liRight">
+                    <div class="title fontSize28">{{obj.title?obj.title:langContent.tip1}}</div>
+                    <p class="fontSize22 colabbdff">{{obj.create_time?obj.create_time:''}}</p>
                 </div>
                 <img @click="shareql(obj)" style="width: 40px;" src="../../image/sxyshare.png" alt="" />
             </div>
         </div>
-        <!-- 新手指南 -->
-        <div v-if="type==3" class="bg-white">
-            <!-- 写好新页面后再把点击函数加上 因为暂时没有内容 -->
-            <div @click="toPage('about_us','../my/about_us.html',{title:'新手指南',id:item.id})" v-for="item in list" class="padding1  bbd">
-                <!-- <div v-for="item in list" class="padding1  bbd"> -->
-                <div class="fontSize14 text-overflow_1">
-                    {{item.title}}
-                </div>
-                <div class="color_gray marginT5">
-                    {{item.create_time}}
+        <div class="navList bj bjTu" v-if="type==3" >
+            <div class="li" @click="toPage('about_us','../my/about_us.html',{title:'新手指南',id:item.id})" v-for="item in list">
+                <div class="liRight">
+                    <div class="title fontSize28">{{item.title}}</div>
+                    <p class="fontSize22 colabbdff">{{item.create_time}}</p>
                 </div>
             </div>
         </div>
-        <!-- 开发中 -->
-        <div class="flex_col_center development">
+        <div class="flex_col_center development" v-if="type==4">
             <i class="iconfont icon-development  text_shadow color_white" style="font-size: 100px;"></i>
-            <div class="color_white fontSize14">{{getCodetip.develop?getCodetip.develop:''}}</div>
+            <div class="color_white fontSize14">开发中</div>
         </div>
     </div>
 </body>

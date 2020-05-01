@@ -15,6 +15,9 @@
 	border: 0.04rem solid #290898;
 	border-radius: 50%;
 }
+.personal .top .topLeft .img img{
+	border-radius: 50%;
+}
 .personal .top .topLeft .title{
 	margin-left: 0.1rem;
 	font-size: 0.34rem;

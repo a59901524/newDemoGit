@@ -51,20 +51,20 @@ footer .btn{
 	border-radius: 0.12rem;
 	background-image: linear-gradient(#1fe2ff, #007ff7);
 }
-.city .content{
+.city .content2{
 	padding-top: 0.16rem;
 }
-.city .content .nav{
+.city .content2 .nav{
 	display: flex;
 	justify-content: space-around;
 	height: 0.4rem;
 	line-height: 0.4rem;
 }
-.city .content .nav .active{
+.city .content2 .nav .active{
 	color: #ffffff;
 	background: #006cff;
 }
-.city .content .nav span{
+.city .content2 .nav span{
 	width: 1.84rem;
 	height: 0.4rem;
 	line-height: 0.4rem;
@@ -73,7 +73,7 @@ footer .btn{
 	background: #26057f;
 	display: inline-block;
 }
-.city .content .cityContent{
+.city .content2 .cityContent{
 	padding: 0.62rem 0.18rem;
 }
 .city .cityContent .con .title{

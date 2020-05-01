@@ -10,20 +10,22 @@
     <link rel="stylesheet" type="text/css" href="../../css/api.css" />
     <link rel="stylesheet" type="text/css" href="../../lib/iconfont2/iconfont.css" />
     <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/new/reset.css">
+    <script type="text/javascript" src="../../script/lib-flexible.js"></script>
     <style>
         input {
-            height: 2rem;
-            line-height: 2rem;
-            font-size: 1.3rem;
+            height: 0.5rem;
+            line-height: 0.5rem;
+            font-size: 0.28rem;
             color: #333 !important;
             width: 100%;
         }
 
         input::placeholder {
-            font-size: 1.167rem;
+            font-size: 0.28rem;
             color: #999999 !important;
-            height: 2rem;
-            line-height: 2rem;
+            height: 0.5rem;
+            line-height: 0.5rem;
             width: 100%;
         }
 
@@ -32,11 +34,6 @@
             color: #333;
             -webkit-text-fill-color: #333;
             width: 100%;
-        }
-
-        .bg-white {
-            height: 2rem;
-            line-height: 2rem;
         }
 
         .margin_top3px {
@@ -170,14 +167,14 @@
 </head>
 
 <body class="color_default">
-    <div id="apply" class="content  marginT5" v-cloak>
-        <header class="header color_default1">
-            <i class="iconfont icon-xiangzuo" onclick="goBack()"></i>
-            <div class="fontSize16">{{langContent.title?langContent.title:''}}</div>
+    <div id="apply" class="content marginT5" v-cloak>
+        <header class="header color_default1 bbd">
+            <i class="iconfont icon-xiangzuo"  style="color: #cb974d" onclick="goBack()"></i>
+            <div  style="color: #cb974d">{{langContent.title?langContent.title:''}}</div>
             <!-- <div class="fontSize14 color_default" style="position: absolute; right: 1.5rem;" @click="submit">
                 提交
             </div> -->
-            <div class="fontSize14  color_black6" style="position: absolute; right: 1.5rem;" @click="isshow_tips">
+            <div class="fontSize14  color_black6" style="position: absolute; right:10px" @click="isshow_tips">
                 {{langContent.sunmit?langContent.sunmit:''}}
             </div>
         </header>
@@ -185,7 +182,7 @@
         <div class="color_99">
             <div class=" fontSize14 ">
                 <!-- 请输入您的姓名 -->
-                <div class="bg-white padding12 color_black3 flex_row_left">
+                <div class="padding12 color_black3 flex_row_left bbd">
                     <div class="  textname_left">
                         {{langContent.name?langContent.name:''}}
                     </div>
@@ -195,18 +192,18 @@
                 </div>
 
                 <!-- 性别 -->
-                <div class=" bg-white padding12 margin_top3px flex_row_left color_black3" @click="selectSex()">
+                <div class="bbd padding12 margin_top3px flex_row_left color_black3" @click="selectSex()">
                     <div class=" textname_left">
                         {{langContent.sex?langContent.sex:''}}
                     </div>
                     <div class="flex_row_between textname_right">
                         <input type="text" :placeholder="sexstr?sexstr:langContent.sex_input" disabled>
                         <!-- <div>{{sexstr?sexstr:langContent.sex_input}}</div> -->
-                        <i class="iconfont icon-direction_right color_default1" style="position: absolute;right: 1rem;"></i>
+                        <i class="iconfont icon-direction_right color_default1" style="position: absolute;right: 10px;"></i>
                     </div>
                 </div>
                 <!-- 年龄 -->
-                <div class="bg-white padding12 margin_top3px color_black3 flex_row_left">
+                <div class="bbd padding12 margin_top3px color_black3 flex_row_left">
                     <div class=" textname_left ">
                         {{langContent.age?langContent.age:''}}
                     </div>
@@ -216,7 +213,7 @@
 
                 </div>
 
-                <div class="bg-white padding12 margin_top3px flex_row_left color_black3" @click="checkAdd()" style="display:none;">
+                <div class="bbd padding12 margin_top3px flex_row_left color_black3" @click="checkAdd()" style="display:none;">
                     <!-- 申请城市名 -->
                     <div class="textname_left " style="display:none;">{{langContent.city?langContent.city:''}}</div>
                     <!-- 请选择所在城市 -->
@@ -229,22 +226,22 @@
                 <!-- 选择城市后可查看城市等级 -->
                 <!-- <div class="color_default1 padding12" style="text-align: center;">{{tip}}</div> -->
                 <!-- 手机号码 -->
-                <div class="bg-white padding12 margin_top3px color_black3 flex_row_left">
+                <div class="bbd padding12 margin_top3px color_black3 flex_row_left">
                     <div class="textname_left">{{langContent.phone?langContent.phone:''}} </div>
                     <div class="textname_right"><input type="tel" :placeholder="langContent.phone_input" v-model="mobile"></div>
                 </div>
                 <!-- 邮箱地址 -->
-                <div class="bg-white padding12 margin_top3px color_black3 flex_row_left">
+                <div class="bbd padding12 margin_top3px color_black3 flex_row_left">
                     <div class="textname_left">{{langContent.email?langContent.email:''}}</div>
                     <div class="textname_right"><input type="text" :placeholder="langContent.email_input" v-model="email"></div>
                 </div>
                 <!-- 微信账号 -->
-                <div class="bg-white padding12 margin_top3px color_black3 flex_row_left">
+                <div class="bbd padding12 margin_top3px color_black3 flex_row_left">
                     <div class="textname_left">{{langContent.wechat?langContent.wechat:''}}</div>
                     <div class="textname_right"><input type="text" :placeholder="langContent.wechat_input" v-model="wechat"></div>
                 </div>
                 <!-- 详情地址 -->
-                <div class="bg-white padding12 margin_top3px color_black3 flex_row_left">
+                <div class="bbd padding12 margin_top3px color_black3 flex_row_left">
                     <div class="textname_left">{{langContent.address?langContent.address:''}}</div>
                     <div class="textname_right"> <input type="text" :placeholder="langContent.address_input" v-model="address"></div>
                 </div>

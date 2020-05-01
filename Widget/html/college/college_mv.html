@@ -9,34 +9,37 @@
     <title>商学院视频详情</title>
     <link rel="stylesheet" href="../../lib/iconfont2/iconfont.css">
     <link rel="stylesheet" href="../../css/common.css">
+    <link rel="stylesheet" type="text/css" href="../../css/new/reset.css">
+    <script type="text/javascript" src="../../script/lib-flexible.js"></script>
     <style>
         .b_header {
             padding: 15px;
             white-space: nowrap;
             min-width: 15%;
         }
-        
+
         .on {
             font-weight: 600;
             border-bottom: 2px solid;
         }
-        
+
         .cont::-webkit-scrollbar {
             display: none;
         }
-        
+
         .title_mv {
             margin: 0 auto;
         }
     </style>
 </head>
 
-<body class="has_header bg-white">
+<body class="bg-white">
     <div id="college_mv" v-cloak>
-        <header class="header bg_default1 color_default1">
-            <i class="iconfont icon-xiangzuo" onclick="goBack()"></i>
-            <div class="fontSise16">{{langContent.title?langContent.title:''}}</div>
+        <header class="header bg-white bbd">
+            <i class="iconfont icon-xiangzuo" style="color: #cb974d" onclick="goBack()"></i>
+            <div style="color: #cb974d">{{langContent.title?langContent.title:''}}</div>
         </header>
+        <div class="h88"></div>
         <div class="cont text_center padding12 fontSize16 ">
             {{info.title}}
         </div>
