@@ -55,11 +55,11 @@
           </header>
           <div class="content2">
               <div class="navLi" v-if="transtype==1">
-                  <h3 class="fontSize26">金币</h3>
+                  <h3 class="fontSize26">金币HD</h3>
                   <p class="fontSize30 col00fbfd">{{info.candy_money}}</p>
               </div>
               <div class="navLi">
-                  <h3 class="fontSize26">可用HD</h3>
+                  <h3 class="fontSize26">可用YS</h3>
                   <p class="fontSize30 col00fbfd">{{info.world_use_money}}</p>
               </div>
               <div class="navLi" v-if="transtype==2">
@@ -101,11 +101,11 @@
         <div class="box_wrapper fontSize16 color_black3" v-show="isShow">
             <div class="box bg-white posi_relative">
                 <div v-show="transtype==1" class="flex_row_between padding1 bbd" @click="rechargetype=1,isShow=false,num='',coin_type = 'candy_money'">
-                    {{langContent.type1?langContent.type1:''}}
+                    糖果转换HD
                     <div class="common_radio" :class="{'on':rechargetype == 1}"></div>
                 </div>
                 <div v-show="transtype==1" class="flex_row_between padding1 bbd" @click="rechargetype=2,isShow=false,num='',coin_type = 'world_use_money'">
-                    {{langContent.type2?langContent.type2:''}}
+                    可用YS
                     <div class=" common_radio" :class="{'on':rechargetype == 2}"></div>
                 </div>
                 <div v-show="transtype==2" class="flex_row_between padding1 bbd" @click="rechargetype=3,isShow=false,num='',coin_type = 'world_money'">

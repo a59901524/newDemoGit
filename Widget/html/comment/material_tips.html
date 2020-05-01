@@ -9,6 +9,8 @@
     <title>订单温馨提示</title>
     <link rel="stylesheet" href="../../lib/iconfont/iconfont.css">
     <link rel="stylesheet" href="../../css/common.css">
+    <link rel="stylesheet" type="text/css" href="../../css/new/reset.css">
+    <script type="text/javascript" src="../../script/lib-flexible.js"></script>
     <style>
         html,
         body {
@@ -23,20 +25,21 @@
         .box {
             /* padding: 19vw 19vw 10vw 19vw;
             font-weight: 800; */
+            width: 100%;
             background-color: #fff;
             border-radius: 5px;
             color: #000;
-            padding: 3.5rem 1rem 1rem 1rem;
+            padding: 1rem 0.2rem 0.2rem 0.2rem;
         }
 
         p {
-            line-height: 1.5rem;
-            padding-bottom: .5rem;
+            line-height: 0.4rem;
+            padding-bottom: .3rem;
         }
 
         strong {
             color: #ff6263;
-            font-size: 1.3rem;
+            font-size: 0.28rem;
         }
 
         .tipbg {
@@ -46,10 +49,10 @@
         }
 
         .common_radio {
-            width: 1.4rem;
-            height: 1.4rem;
-            min-width: 1.4rem;
-            min-height: 1.4rem;
+            width: 0.4rem;
+            height: 0.4rem;
+            min-width: 0.4rem;
+            min-height: 0.4rem;
             border-radius: 50%;
             border: 1px solid #000;
             position: relative;
@@ -59,24 +62,23 @@
         /* 叹号图片 */
 
         .tips_img {
-            width: 4rem;
-            height: 4rem;
-            position: absolute;
-            top: -2rem;
-            left: 50%;
-            transform: translate(-50%);
+          width: 1rem;
+          height: 1rem;
+          position: absolute;
+          top: -0.5rem;
+          left: 50%;
+          transform: translate(-50%);
         }
         /* 文本提示 */
 
         .tips_text {
-            text-indent: 2em;
-            font-size: 1.2rem;
-            line-height: 2rem;
+          text-indent: 0.2em;
+          font-size: 0.35rem;
+          line-height: 0.4rem;
         }
 
         .quexiao_tips {
-            font-size: 1.2rem;
-            line-height: 2rem;
+            font-size: 0.28;
             color: #ff6263;
         }
         /* 勾选按钮 */
@@ -107,7 +109,7 @@
 </head>
 
 <body>
-    <div id="material_tips" class="flex_row_center padding12 fontSize16 " v-cloak>
+    <div id="material_tips" class="flex_row_center padding12" style='font-size: 0.28rem' v-cloak>
         <!-- 买入HDC，提示支付金额-->
         <!-- status == 2 买家状态 -->
         <div class=" box posi_relative" v-if="status == 1 && trade_status!=1">
@@ -120,15 +122,15 @@
 
             <!-- <p class="tips_text">请严格按照每个订单数量金额核对进行交易，上传凭证 <span style="color: rgb(143, 60, 60);">（账单详情页为标准，其它都视为假图）</span> 确认后再进行下一个订单交易（请认真核对此订单的凭证，保障自身利益。）,以免造成多单订单金额交叉错误。 如果是您自己订单交易错误所造成的损失由您自己承担，平台概不负责，请悉知。</p> -->
             <p class="tips_text" v-html="langContent.buytip"></p>
-            <div class="fontSize12 marginT1 tips_yes">
+            <div class="fontSize12 marginT5 tips_yes">
                 <div class="common_radio marginR10 " :class="{'on':partner == true}" style="vertical-align:middle;" @click="partner =! partner"></div>
                 <span>{{langContent.read?langContent.read:''}}</span>
             </div>
             <div class="flex_row_between width100">
 
-                <div class="submit_style fontSize16 marginT1  " @click="submit_data" v-if="type == 1">{{langContent.sellinfo?langContent.sellinfo:''}}</div>
-                <div class="submit_style fontSize16 marginT1  " @click="submit_data" v-if="type == 2">{{langContent.sure?langContent.sure:''}}</div>
-                <div class="cancel_style fontSize16 marginT1  " @click="cancel">{{langContent.back?langContent.back:''}}</div>
+                <div class="submit_style fontSize16 marginT5  " @click="submit_data" v-if="type == 1">{{langContent.sellinfo?langContent.sellinfo:''}}</div>
+                <div class="submit_style fontSize16 marginT5  " @click="submit_data" v-if="type == 2">{{langContent.sure?langContent.sure:''}}</div>
+                <div class="cancel_style fontSize16 marginT5  " @click="cancel">{{langContent.back?langContent.back:''}}</div>
             </div>
         </div>
 
@@ -155,19 +157,18 @@
         <!-- 取消挂单 -->
         <div class=" box posi_relative" v-if="(status!=3)&&trade_status==1">
             <img src="../../image/warning.svg" alt="" class="tips_img">
-            <p>{{langContent.num?langContent.num:''}}： <strong>{{num}} HDC</strong> </p>
-            <p>{{langContent.fee?langContent.fee:''}}： <strong>{{num10}} HDC</strong></p>
-            <p class="quexiao_tips">{{langContent.tip?langContent.tip:''}}：</p>
-            <p>{{langContent.tip1?langContent.tip1:''}}</p>
-            <p>{{langContent.tip2?langContent.tip2:''}}</p>
-            <div class="fontSize12 marginT1 tips_yes">
+            <p>您的当前订单数量： <strong>{{num}} HDC</strong> </p>
+            <p>取消手续费： <strong>{{num10}} HDC</strong></p>
+            <p class="quexiao_tips">注意事项：</p>
+            <p>1，取消订单将扣除挂单剩余数量百分之十的手续费</p>
+            <p>2，账号HDC余额小于-200将导致账号被冻结,请慎重对待每个订单！</p>
+            <div class="fontSize12 marginT5 tips_yes">
                 <div class="common_radio marginR10 " :class="{'on':partner == true}" style="vertical-align:middle;" @click="partner =! partner"></div>
-                <span>{{langContent.read?langContent.read:''}}</span>
+                <span>我已阅读并同意</span>
             </div>
-
             <div class="flex_row_between width100">
-                <div class="submit_style fontSize16 marginT1 " @click="abolish()">{{langContent.surecan?langContent.surecan:''}}</div>
-                <div class="cancel_style fontSize16 marginT1  " @click="cancel">{{langContent.backorder?langContent.backorder:''}}</div>
+                <div class="submit_style fontSize16 marginT5 " @click="abolish()">确认取消</div>
+                <div class="cancel_style fontSize16 marginT5  " @click="cancel">返回挂单</div>
             </div>
         </div>
 
@@ -241,12 +242,12 @@
                                 });
                                 api.execScript({
                                     name: 'root',
-                                    frameName: 'frame3',
-                                    script: 'frame3.getHeader()'
+                                    frameName: 'frame0',
+                                    script: 'frame0.getHeader()'
                                 });
                                 api.execScript({
-                                    frameName: 'frame3_comment',
-                                    script: 'frame3_comment.getGoods()'
+                                    frameName: 'frame0_comment',
+                                    script: 'frame0_comment.getGoods()'
                                 });
                                 setTimeout(function() {
                                     api.closeFrame();

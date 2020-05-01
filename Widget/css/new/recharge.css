@@ -1,8 +1,4 @@
 .recharge{
-	background-color: #250084;
-	background-image: url('../image/h1.jpg');
-	background-repeat: no-repeat;
-	background-size: 100%;
 	color: #ffffff;
 }
 header{
@@ -36,7 +32,7 @@ header .right{
 	border-radius: 0.44rem;
 	text-align: center;
 }
-.recharge .content{
+.recharge .content2{
 	margin: 0.16rem 0.12rem 0;
 	background-color: rgba(37, 0, 115, 0.5);
 	height: 1.5rem;
@@ -44,14 +40,14 @@ header .right{
 	padding-left: 0.45rem;
 	position: relative;
 }
-.recharge .content .p{
+.recharge .content2 .p{
 	line-height: 0.8rem;
 	height: 0.8rem;
 }
-.recharge .content .phone{
+.recharge .content2 .phone{
 	font-size: 0.29rem;
 }
-.recharge .content .img{
+.recharge .content2 .img{
 	width: 0.3rem;
 	height: 0.36rem;
 	position: absolute;
@@ -63,7 +59,7 @@ header .right{
     flex-wrap: wrap;
 }
 .rechargeUl .rechargeLi{
-	background-image: url('../image/li.png');
+	background-image: url('../../image/new/li.png');
 	background-repeat: no-repeat;
 	background-size: 100% 100%;
 	width: 2.26rem;

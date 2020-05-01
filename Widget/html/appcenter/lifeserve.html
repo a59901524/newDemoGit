@@ -9,6 +9,8 @@
     <title>生活服务</title>
     <link rel="stylesheet" href="../../lib/iconfont2/iconfont.css">
     <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/new/reset.css">
+    <script type="text/javascript" src="../../script/lib-flexible.js"></script>
     <style>
         .my_store {
             display: flex;
@@ -20,20 +22,19 @@
             font-size: 14px;
             text-align: center;
             vertical-align: middle;
-            padding-top: 2rem;
+            padding-top: 1rem;
         }
 
         .my_store img {
-            width: 2.3rem;
-            height: 2.3rem;
-            max-width: 2.3rem;
+            width: 0.8rem;
+            height: 0.8rem;
             vertical-align: middle;
             margin: 0 auto;
         }
 
         p {
-            height: 2.5rem;
-            line-height: 2.5rem;
+            height: 0.4rem;
+            line-height: 0.4rem;
         }
         /* 开发中样式  本页面没有引入公共样式 */
 
@@ -63,55 +64,51 @@
             font-size: 100px;
             text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
         }
-
-        .fontSize14 {
-            font-size: 1.167rem !important;
-        }
     </style>
 </head>
 
-<body class="has_header color_black6 bg-white">
+<body class="color_black6 bg-white">
     <!--********************************九宫格分隔线**********************************88 -->
     <div id="lifeserve" class="content " v-cloak>
         <header class="header bbd">
-            <i class="iconfont icon-xiangzuo" onclick="goBack()"></i>
-            <div>{{langContent.title?langContent.title:''}}</div>
+            <i class="iconfont icon-xiangzuo color_gg" onclick="goBack()"></i>
+            <div class="color_gg">生活服务</div>
         </header>
 
         <div class="my_store">
             <!-- 加油卡充值 -->
             <div class="btn_cj" tapmode @click="voucher('rechargetel','./rechargetel.html',{})">
                 <img src="../../image/appcenter/ic_server_phone.png" alt="">
-                <p>{{langContent.sjcz?langContent.sjcz:''}}</p>
+                <p>手机充值</p>
             </div>
             <!-- 手机充值 -->
             <div class="btn_cj" tapmode @click="voucher('refuel','./refuel.html',{})">
                 <img src="../../image/appcenter/ic_server_oil.png" alt="">
-                <p>{{langContent.jykcz?langContent.jykcz:''}}</p>
+                <p>加油卡充值</p>
             </div>
             <div class="btn_cj" @click="kaifazhong">
                 <img src="../../image/appcenter/ic_server_tourism.png" alt="">
-                <p>{{langContent.jdly?langContent.jdly:''}} </p>
+                <p>酒店旅游 </p>
             </div>
             <div class="btn_cj" @click="kaifazhong">
                 <div class="btn_jz">
                     <img src="../../image/appcenter/ic_server_merchants.png" alt="">
-                    <p>{{langContent.fjsj?langContent.fjsj:''}}</p>
+                    <p>附件商家</p>
                 </div>
             </div>
         </div>
         <div class="my_store">
             <div class="btn_cj" @click="kaifazhong">
                 <img src="../../image/appcenter/ic_server_ticket.png" alt="">
-                <p>{{langContent.hcp?langContent.hcp:''}}</p>
+                <p>火车票/机票</p>
             </div>
             <div class="btn_cj" @click="kaifazhong">
                 <img src="../../image/appcenter/ic_server_taxi.png" alt="">
-                <p>{{langContent.dc?langContent.dc:''}}</p>
+                <p>打车</p>
             </div>
             <div class="btn_cj" @click="kaifazhong">
                 <img src="../../image/appcenter/ic_server_fun.png" alt="">
-                <p>{{langContent.xxyl?langContent.xxyl:''}}</p>
+                <p>休闲娱乐</p>
             </div>
         </div>
         <!-- 开发中样式显示隐藏 -->

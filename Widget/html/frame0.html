@@ -14,7 +14,7 @@
     <link rel="stylesheet" type="text/css" href="../css/new/home.css">
     <script src="../script/lib-flexible.js"></script>
     <style>
-        #frame3 {
+        #frame0 {
             min-height: 100%;
             max-width: 100%;
         }
@@ -250,7 +250,7 @@
 </head>
 
 <body class="has_header home">
-    <div id="frame3" class="content color_999 contarin" v-cloak>
+    <div id="frame0" class="content color_999 contarin" v-cloak>
         <header class="header bg_black">
             <div class="iiiiiiii">
                 <!-- 求购列表 -->
@@ -382,6 +382,40 @@
                                   <div class="bd">
                                       {{item.show_msg}}
                                   </div>
+                                  <div class="flex_row_between  color_999  fontSize14">
+                                      <!-- 卖家资料 -->
+                                      <div class="marginT5" v-if="status==1&&item.trade_status!=1&&item.trade_status!=4" style=" text-align: center;" @click="openBuyFrame_tips(1,item.seller_uid,item.id,item.trade_status,item.num,item.unit_price,item.eth_price,item.type)">
+                                          <i class="iconfont icon-ziliao fontSize14 " style="color: #009ad6;"></i>{{langContent.info1?langContent.info1:''}}
+                                      </div>
+                                      <!-- 买家资料 -->
+                                      <div class="marginT5" v-if="status==2&&item.trade_status!=1&&item.trade_status!=4" @click="openBuyFrame_tips(3,item.buyer_uid,item.id,item.trade_status,item.num,item.unit_price,item.eth_price,item.type)">
+                                          <i class="iconfont icon-ziliao fontSize14" style="color: #009ad6;"></i>{{langContent.info2?langContent.info2:''}}
+                                      </div>
+                                      <!-- 确认交易 -->
+                                      <!-- <div v-if="(status==1&&item.trade_status==2)||(status==2&&item.trade_status==3)" @click="openBuyFrame_tips(2,item.user_ID,item.id,item.trade_status,item.num,item.unit_price,item.eth_price,item.type)">
+                                      <i class="iconfont  icon-jiaoyi fontSize14 " style="color: #23ab3d;"></i> {{langContent.sure?langContent.sure:''}}
+                                      </div> -->
+                                      <div class="marginT5" v-if="(status==1&&item.trade_status==2)" @click="openBuyFrame_tips(2,item.seller_uid,item.id,item.trade_status,item.num,item.unit_price,item.eth_price,item.type)">
+                                          <i class="iconfont  icon-jiaoyi fontSize14 " style="color: #23ab3d;"></i> {{langContent.sure?langContent.sure:''}}
+                                      </div>
+                                      <div class="marginT5" v-if="(status==2&&item.trade_status==3)" @click="openBuyFrame_tips(2,item.buyer_uid,item.id,item.trade_status,item.num,item.unit_price,item.eth_price,item.type)">
+                                          <i class="iconfont  icon-jiaoyi fontSize14 " style="color: #23ab3d;"></i> {{langContent.sure?langContent.sure:''}}
+                                      </div>
+                                      <!-- <div class='' v-if="status==1&&item.trade_status==1">取消交易</div> -->
+                                      <!-- 买家投诉卖家 -->
+                                      <!-- <div class="marginT1" v-if="status==1&&item.trade_status!=1&&item.order_status!=3" @click="toPage(item.ts_status,'feedback','./my/feedback.html',{from:'jyzx',dingdan:item.order_sn,id:item.id,user_ID:item.seller_uid,type_id:1})"> -->
+                                      <div class="marginT5" v-if="status==1&&item.trade_status!=1&&item.order_status!=3" @click="toPage('feedback','./my/feedback.html',{from:'jyzx',dingdan:item.order_sn,id:item.id,user_ID:item.seller_uid,type_id:1})">
+                                          <i class="iconfont icon-jubao fontSize14 " style="color: #ff6262;"></i> {{langContent.report?langContent.report:''}}
+                                      </div>
+                                      <!-- 卖家投诉买家 -->
+                                      <!-- <div class="marginT1" v-if="status==2&&item.trade_status!=1&&item.order_status!=3" @click="toPage(item.ts_status,'feedback','./my/feedback.html',{from:'jyzx',dingdan:item.order_sn,id:item.id,user_ID:item.buyer_uid,type_id:1})"> -->
+                                      <div class="marginT5" v-if="status==2&&item.trade_status!=1&&item.order_status!=3" @click="toPage('feedback','./my/feedback.html',{from:'jyzx',dingdan:item.order_sn,id:item.id,user_ID:item.buyer_uid,type_id:1})">
+                                          <i class="iconfont icon-jubao fontSize14 " style="color: #ff6262;"></i> {{langContent.report?langContent.report:''}}
+                                      </div>
+                                  </div>
+                                  <div v-if="(status!=3)&&item.trade_status==1" @click="openBuyFrame_tips(0,item.buyer_uid,item.id,item.trade_status,item.num,item.unit_price,item.eth_price,item.type)" class="color_black6 flex_row_center fontSize14 marginT5">
+                                      <i class="iconfont icon-quxiaodingdan fontSize14 marginR5 " style="color: #ff6262; "></i> 取消挂单
+                                  </div>
                               </div>
                           </div>
                         </van-list>
@@ -409,8 +443,8 @@
 <script type="text/javascript" src="../script/const.js"></script>
 <script type="text/javascript" src="../script/common.js"></script>
 <script type="text/javascript">
-    var frame3 = new Vue({
-        el: "#frame3",
+    var frame0 = new Vue({
+        el: "#frame0",
         data: {
             title: '买入',
             info: '',
@@ -453,8 +487,8 @@
                         from: 'tabBar'
                     });
                 }, 1);
-                frame3.$data.langContent = GlobleLanguageContent.frame3;
-                frame3.$data.getCodetip = GlobleLanguageContent.getCode;
+                frame0.$data.langContent = GlobleLanguageContent.frame3;
+                frame0.$data.getCodetip = GlobleLanguageContent.getCode;
                 var height = $api.fixStatusBar(document.querySelector('header'));
                 if (api.deviceModel == 'iPhone10,3' || api.deviceModel == 'iPhone10,6' || api.deviceModel == 'iPhone11,8' || api.deviceModel == 'iPhone11,2' || api.deviceModel == 'iPhone11,6' || api.deviceModel == 'iPhone11,4') {
                     that.frameHgt = api.frameHeight - $api.dom('.header').offsetHeight - $api.dom(".showcontent").offsetHeight - 56 - api.safeArea.bottom;
@@ -462,7 +496,7 @@
                     that.frameHgt = api.frameHeight - $api.dom('.header').offsetHeight - $api.dom(".showcontent").offsetHeight - 56;
                 }
                 var minheight = api.winHeight - height;
-                $api.css($api.dom('#frame3'), 'min-height:' + minheight + 'px');
+                $api.css($api.dom('#frame0'), 'min-height:' + minheight + 'px');
 
                 that.HBprice = $api.getStorage('latestHBprice')
                 that.websocket = api.require('myWebSocket');
@@ -539,7 +573,17 @@
                     }
                 }, 300);
             },
-
+            init () {
+                var that = this;
+                that.getHeader();
+                that.getinfo();
+                // that.changeListtype(1, '买入'); // 默认中国区 1
+                that.changesubStatus(2); //默认显示交易中
+                that.changebuyList(2); //默认显示大区
+                window.onscroll = function() {
+                    that.handleScroll()
+                }
+            },
             // 弹出支付提示语
             openBuyFrame_tips: function(type, user_ID, id, trade_status, num, unit_price, eth_price, isShow_type) {
                 var that = this
@@ -991,8 +1035,8 @@
             },
             reloadlang: function() {
                 var that = this;
-                frame3.$data.langContent = GlobleLanguageContent.frame3;
-                frame3.$data.getCodetip = GlobleLanguageContent.getCode;
+                frame0.$data.langContent = GlobleLanguageContent.frame3;
+                frame0.$data.getCodetip = GlobleLanguageContent.getCode;
             },
 
         }

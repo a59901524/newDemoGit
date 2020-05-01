@@ -10,13 +10,15 @@
     <link rel="stylesheet" type="text/css" href="../../css/api.css" />
     <link rel="stylesheet" type="text/css" href="../../lib/iconfont2/iconfont.css" />
     <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/new/reset.css">
+    <script type="text/javascript" src="../../script/lib-flexible.js"></script>
     <style>
         .color_green {
             color: green;
         }
 
         .pd20 {
-            padding: .6rem 0rem;
+            padding: .3rem 0rem;
         }
 
         .bule {
@@ -27,10 +29,11 @@
 
 <body class=" bg-white">
     <div id="refuel_record" class="content color_999  bg-white" v-cloak>
-        <header class="header  ">
-            <i class="iconfont icon-xiangzuo" onclick="goBack()"></i>
-            <div>{{langContent.title?langContent.title:''}}</div>
+        <header class="header  bg-white">
+            <i class="iconfont icon-xiangzuo color_gg" onclick="goBack()"></i>
+            <div class="color_gg">加油卡充值记录</div>
         </header>
+        <div class="h40"></div>
         <van-pull-refresh id="getrecord" v-model="downLoading" @refresh="getrecord" :pulling-text="getCodetip.vant_pulling" :loosing-text="getCodetip.vant_loosing" :loading-text="getCodetip.vant_loading">
             <van-list class="" v-model="upLoading" :finished="finished" :finished-text="getCodetip.vantlistfinished" @load="getrecord" :immediate-check="false">
                 <div v-for="obj in list" class="title padding12 bbd">

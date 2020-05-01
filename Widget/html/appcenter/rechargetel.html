@@ -9,6 +9,9 @@
     <link rel="stylesheet" type="text/css" href="../../css/api.css" />
     <link rel="stylesheet" type="text/css" href="../../lib/iconfont2/iconfont.css" />
     <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/new/reset.css">
+    <link rel="stylesheet" href="../../css/new/recharge.css">
+    <script type="text/javascript" src="../../script/lib-flexible.js"></script>
     <style>
         .item {
             width: calc(100% / 3 - 2px - 8px);
@@ -28,10 +31,8 @@
             margin: -1rem auto;
         }
 
-        .input {
-            flex: 1;
-            font-size: 1.2rem;
-            text-indent: 1rem;
+        input {
+            color: #fff;
         }
 
         .icon-tongxunlu_hh {
@@ -41,8 +42,6 @@
         }
 
         img {
-            width: 1.2rem;
-            height: 1.2rem;
             display: inline-block;
             vertical-align: middle;
         }
@@ -59,30 +58,32 @@
             background-color: rgba(0, 0, 0, .5);
             z-index: 10001;
         }
+        .tomyfeed {
+            font-size: 0.3rem;
+            position: absolute;
+            right: 10px;
+            bottom: 0;
+        }
     </style>
 </head>
 
-<body class="bg-white">
-    <div id="rechargetel" class="content color_999" v-cloak>
-        <header class="header bg_default bbd">
+<body class="has_header recharge">
+    <div id="rechargetel" class="content" v-cloak>
+        <header class="header">
             <i class="iconfont icon-xiangzuo " onclick="goBack()"></i>
-            <div>{{langContent.title?langContent.title:''}}</div>
-            <div class="tomyfeed color_black6" @click="toPage('rechargetelrecord','rechargetelrecord.html',{typelist:typelist})">{{langContent.record?langContent.record:''}}</div>
+            <div>话费充值</div>
+            <div class="tomyfeed" @click="toPage('rechargetelrecord','rechargetelrecord.html',{typelist:typelist})">充值记录</div>
         </header>
-
-        <div class=" padding1 ">{{langContent.value?langContent.value:''}}：<span class=" color_default1">{{HDC?HDC:'0'}}</span></div>
-        <div class="flex_row_between">
-            <input class="flex_grow1 mobile color_black3 fontSize16 input" type="tel" :placeholder="langContent.tel" v-model="mobile ">
-            <i class="iconfont icon-tongxunlu_hh  "></i>
+        <div class="h40"></div>
+        <div class="content2">
+            <div class="p fontSize22">可用HDC：<span class="fontSize26 col04e5ee">{{HDC?HDC:'0'}}</span></div>
+            <div class="phone"><input type="tel" :placeholder="langContent.tel" v-model="mobile "></div>
+            <div class="img"><img src="../../image/new/bj.png" alt=""></div>
         </div>
-        <div class="fontSize12 marginT1" style="margin-left: 1rem;">{{langContent.money?langContent.money:''}}</div>
-
-        <div class=" flex_wrap flex_row_left ">
-            <div v-for="obj in typelist " class="item text_center " @click="charge(obj.id) ">
-                <div class=" fontSize16 color_black6  HDCposition">
-                    <img src="../../image/appcenter/ic_topUp_coins.png" alt=""> {{obj.face_value}}{{langContent.yuan?langContent.yuan:''}}
-                </div>
-                <div>{{langContent.price?langContent.price:''}}{{obj.yjl}}HDC</div>
+        <div class="rechargeUl">
+            <div class="rechargeLi" v-for="obj in typelist " @click="charge(obj.id) ">
+                <div class="price"><img src="../../image/new/b13.png" alt="">{{obj.face_value}}元</div>
+                <p class="fontSize22 col04e5ee">售价：{{obj.yjl}}HDC</p>
             </div>
         </div>
         <!-- 新写的 密码弹框-->

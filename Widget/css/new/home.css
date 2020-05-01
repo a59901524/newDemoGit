@@ -289,7 +289,9 @@
 	display: flex;
 	justify-content: space-between;
 	margin-bottom: 0.12rem;
+	font-size: 0.28rem;
 }
 .jyUl .jyLi .bd{
 	line-height: 0.25rem;
+	font-size: 0.28rem;
 }

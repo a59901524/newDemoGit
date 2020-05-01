@@ -24,56 +24,54 @@
         </header>
         <div class="content2">
             <div class="li">
-                <div class="title fontSize28">{{langContent.cjrz?langContent.cjrz:''}}</div>
+                <div class="title fontSize28">VIP1认证</div>
                 <div class="ct col00d3fc fontSize22">
-                    <p class="colabbdff">{{langContent.qy?langContent.qy:''}}:</p>
+                    <p class="colabbdff">VIP1升级规则:</p>
                     <div class="nn">
-                        <span>{{langContent.cj1?langContent.cj1:''}}</span><span>{{langContent.cj2?langContent.cj2:''}}35%</span>
+                        <span>实名认证成功，交易手续费降至50%</span><span></span>
                     </div>
                 </div>
                 <div class="btn" v-if="info.auth_primary==0" @click="isRz('attestation','attestation.html',info.auth_primary)">立即认证</div>
                 <div class="btn rz" v-if="info.auth_primary==1">已认证</div>
             </div>
             <div class="li">
-                <div class="title fontSize28">{{langContent.zjrz?langContent.zjrz:''}}</div>
+                <div class="title fontSize28">VIP2认证</div>
                 <div class="ct col00d3fc fontSize22">
-                    <p class="colabbdff">{{langContent.qy?langContent.qy:''}}:</p>
+                    <p class="colabbdff">VIP2升级规则:</p>
                     <div class="nn">
-                        <span>{{langContent.zj1?langContent.zj1:''}}</span><span>{{langContent.cj2?langContent.cj2:''}}30%</span>
+                        <span>贡献度达到100，交易手续费降至35%</span>
                     </div>
                 </div>
                 <div class="btn" v-if="info.auth_middle==0" @click="middlerz(2)">立即认证</div>
                 <div class="btn rz" v-if="info.auth_middle==1">已认证</div>
             </div>
             <div class="li">
-                <div class="title fontSize28">{{langContent.gjrz?langContent.gjrz:''}}</div>
+                <div class="title fontSize28">VIP3认证</div>
                 <div class="ct col00d3fc fontSize22">
-                    <p class="colabbdff">{{langContent.qy?langContent.qy:''}}:</p>
+                    <p class="colabbdff">VIP3升级规则:</p>
                     <div class="nn">
-                        <span>{{langContent.zj1?langContent.zj1:''}}</span><span>{{langContent.cj2?langContent.cj2:''}}25%</span>
+                        <span>贡献度达到200，交易手续费降至30%</span>
                     </div>
                 </div>
                 <div class="btn" v-if="info.auth_senior==0" @click="middlerz(3)">立即认证</div>
                 <div class="btn rz" v-if="info.auth_senior==1">已认证</div>
             </div>
             <div class="li">
-                <div class="title fontSize28">{{langContent.sjrz?langContent.sjrz:''}}</div>
+                <div class="title fontSize28">VIP4认证</div>
                 <div class="ct col00d3fc fontSize22">
-                    <p class="colabbdff">{{langContent.qy?langContent.qy:''}}:</p>
+                    <p class="colabbdff">VIP4升级规则:</p>
                     <div class="nn">
-                        <span>{{langContent.sj1?langContent.sj1:''}}</span><span>{{langContent.sj2?langContent.sj2:''}}</span>
-                        <span>{{langContent.sj3?langContent.sj3:''}}</span>
+                        <span>贡献度达到2000，交易手续费降至28%</span>
                     </div>
                 </div>
                 <div class="btn" @click="remind()">立即认证</div>
             </div>
             <div class="li">
-                <div class="title fontSize28">{{langContent.fwsrz?langContent.fwsrz:''}}</div>
+                <div class="title fontSize28">VIP5认证</div>
                 <div class="ct col00d3fc fontSize22">
-                    <p class="colabbdff">{{langContent.qy?langContent.qy:''}}:</p>
+                    <p class="colabbdff">VIP5认证:</p>
                     <div class="nn">
-                        <span>{{langContent.fws1?langContent.fws1:''}}</span><span>{{langContent.fws2?langContent.fws2:''}}</span>
-                        <span>{{langContent.fws3?langContent.fws3:''}}</span>
+                        <span>贡献度达到5000，交易手续费降至25%</span>
                     </div>
                 </div>
                 <div class="btn" @click="remind()">立即认证</div>

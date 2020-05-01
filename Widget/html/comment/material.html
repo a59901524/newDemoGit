@@ -9,6 +9,8 @@
     <title>交易资料</title>
     <link rel="stylesheet" href="../../lib/iconfont2/iconfont.css">
     <link rel="stylesheet" href="../../css/common.css">
+    <link rel="stylesheet" type="text/css" href="../../css/new/reset.css">
+    <script type="text/javascript" src="../../script/lib-flexible.js"></script>
     <style>
         html,
         body {
@@ -59,23 +61,23 @@
     </style>
 </head>
 
-<body class="has_header">
+<body class="">
     <div id="material" class="color_black3 bg-white" v-cloak>
         <header class="header bbd ">
-            <i class="iconfont icon-xiangzuo " @click="goBack()"></i>
+            <i class="iconfont icon-xiangzuo " style="color: #250084" @click="goBack()"></i>
             <!-- <div>{{langContent.title?langContent.title:''}}</div> -->
-            <div v-if="type==1">
+            <div style="color: #250084" v-if="type==1">
                 {{langContent.sellinfo?langContent.sellinfo:''}}
             </div>
-            <div v-if="type==3">
+            <div style="color: #250084" v-if="type==3">
                 {{langContent.buyinfo?langContent.buyinfo:''}}
             </div>
-            <div v-if="type==2&&(!isShow)" class="flex_row_center fontSize16">
+            <div style="color: #250084" v-if="type==2&&(!isShow)" class="flex_row_center fontSize16">
                 {{langContent.sure?langContent.sure:''}}
             </div>
         </header>
 
-
+        <div class="h88"></div>
         <div class="cont">
             <!-- 买卖家资料 -->
             <div class="padding12  Brd1 " v-if="type==1||type==3" @click.stop="cancel">
@@ -85,41 +87,41 @@
                 <div class="flex_row_center fontSize16 " v-if="type==3">
                     {{langContent.buyinfo?langContent.buyinfo:''}}
                 </div> -->
-                <div class="fontSize14 marginT1">
+                <div class="fontSize14 marginT5">
                     {{langContent.name?langContent.name:''}}：{{info.mobile}}
                 </div>
-                <div class="fontSize14 marginT1">
+                <div class="fontSize14 marginT5">
                     {{langContent.user?langContent.user:''}}：{{info.realname}}
                 </div>
-                <div v-show="isShow_type == 1" class="fontSize14 marginT1" @click="copyNum">
+                <div v-show="isShow_type == 1" class="fontSize14 marginT5" @click="copyNum">
                     {{langContent.card?langContent.card:''}}：{{info.bank_card}} ({{langContent.copy?langContent.copy:''}})
                 </div>
-                <div v-show="isShow_type == 1" class="fontSize14 marginT1">
+                <div v-show="isShow_type == 1" class="fontSize14 marginT5">
                     {{langContent.hang?langContent.hang:''}}：{{info.bank_name}}
                 </div>
                 <!-- 以太坊地址 -->
-                <div v-show="isShow_type == 2" class="fontSize14 marginT1 " @click="copy">
+                <div v-show="isShow_type == 2" class="fontSize14 marginT5 " @click="copy">
                     {{langContent.eth?langContent.eth:''}}：{{info.eth_address}}
                 </div>
-                <div v-show="isShow_type == 2" class="flex_row_center marginT1">
+                <div v-show="isShow_type == 2" class="flex_row_center marginT5">
                     <div class="sharebtn" @click.stop="copy">{{langContent.copy?langContent.copy:''}}</div>
                 </div>
 
-                <div v-show="isShow_type == 1" class="fontSize14 marginT1">
+                <div v-show="isShow_type == 1" class="fontSize14 marginT5">
                     {{langContent.wx?langContent.wx:''}}：
-                    <div class="marginT1"></div>
+                    <div class="marginT5"></div>
                     <img style="width: 100%;height:auto; margin:0 auto;" :src="info.wechat?info.wechat:''" alt="">
                 </div>
-                <div v-show="isShow_type == 1" class="flex_row_center marginT1">
+                <div v-show="isShow_type == 1" class="flex_row_center marginT5">
                     <div class="sharebtn" @click.stop="Save_album_wx(info.wechat)">{{langContent.save?langContent.save:''}}</div>
                 </div>
-                <div v-show="isShow_type == 1" class="fontSize14 marginT1">
+                <div v-show="isShow_type == 1" class="fontSize14 marginT5">
                     {{langContent.zfb?langContent.zfb:''}}：
-                    <div class="marginT1"></div>
+                    <div class="marginT5"></div>
                     <!-- {{info.alipay}} -->
                     <img style="width: 100%;height:auto; margin:0 auto;" :src="info.alipay?info.alipay:''" alt="">
                 </div>
-                <div v-show="isShow_type == 1" class="flex_row_center marginT1">
+                <div v-show="isShow_type == 1" class="flex_row_center marginT5">
                     <div class="sharebtn" @click.stop="Save_album_zfb(info.alipay)">{{langContent.save?langContent.save:''}}</div>
                 </div>
             </div>
@@ -130,58 +132,58 @@
                 <!-- <div v-if="type==2&&(!isShow)" class="flex_row_center fontSize16">
                     {{langContent.sure?langContent.sure:''}}
                 </div> -->
-                <div class="fontSize14 marginT1">
+                <div class="fontSize14 marginT5">
                     {{langContent.name?langContent.name:''}}：{{info.mobile}}
                 </div>
-                <div class="fontSize14 marginT1">
+                <div class="fontSize14 marginT5">
                     {{langContent.user?langContent.user:''}}：{{info.realname}}
                 </div>
-                <div v-show="isShow_type == 1" class="fontSize14 marginT1" @click="copyNum">
+                <div v-show="isShow_type == 1" class="fontSize14 marginT5" @click="copyNum">
                     {{langContent.card?langContent.card:''}}：{{info.bank_card}} ({{langContent.copy?langContent.copy:''}})
                 </div>
-                <div v-show="isShow_type == 1" class="fontSize14 marginT1">
+                <div v-show="isShow_type == 1" class="fontSize14 marginT5">
                     {{langContent.hang?langContent.hang:''}}：{{info.bank_name}}
                 </div>
 
                 <!-- 以太坊地址 -->
-                <div v-show="isShow_type == 2" class="fontSize14 marginT1 " @click="copy">
+                <div v-show="isShow_type == 2" class="fontSize14 marginT5 " @click="copy">
                     {{langContent.eth?langContent.eth:''}}：{{info.eth_address}}
                 </div>
-                <div v-show="isShow_type == 2" class="flex_row_center marginT1">
+                <div v-show="isShow_type == 2" class="flex_row_center marginT5">
                     <div class="sharebtn" @click.stop="copy">{{langContent.copy?langContent.copy:''}}</div>
                 </div>
 
-                <div v-show="isShow_type == 1" class="fontSize14 marginT1">
+                <div v-show="isShow_type == 1" class="fontSize14 marginT5">
                     {{langContent.wx?langContent.wx:''}}：
-                    <div class="marginT1"></div>
+                    <div class="marginT5"></div>
                     <img style="width: 100%;height:auto; margin:0 auto;" :src="info.wechat?info.wechat:''" alt="">
                 </div>
-                <div v-show="isShow_type == 1" class="flex_row_center marginT1">
+                <div v-show="isShow_type == 1" class="flex_row_center marginT5">
                     <div class="sharebtn" @click.stop="Save_album_wx(info.wechat)">{{langContent.save?langContent.save:''}}</div>
                 </div>
-                <div v-show="isShow_type == 1" class="fontSize14 marginT1">
+                <div v-show="isShow_type == 1" class="fontSize14 marginT5">
                     {{langContent.zfb?langContent.zfb:''}}：
-                    <div class="marginT1"></div>
+                    <div class="marginT5"></div>
                     <img style="width: 100%;height:auto; margin:0 auto;" :src="info.alipay?info.alipay:''" alt="">
                 </div>
 
-                <div v-show="isShow_type == 1" class="flex_row_center marginT1">
+                <div v-show="isShow_type == 1" class="flex_row_center marginT5">
                     <div class="sharebtn" @click.stop="Save_album_zfb(info.alipay)">{{langContent.save?langContent.save:''}}</div>
                 </div>
 
-                <div class="fontSize14 marginT1" v-if="trade_status==2">
+                <div class="fontSize14 marginT5" v-if="trade_status==2">
                     {{langContent.up?langContent.up:''}}：
                 </div>
-                <div class="fontSize14 marginT1" v-if="trade_status==3">
+                <div class="fontSize14 marginT5" v-if="trade_status==3">
                     {{langContent.look?langContent.look:''}}：
                 </div>
-                <div class="flex_row_center marginT1 " style="border-radius: .5rem;border: 1px solid" @click.stop="getImg" v-if="trade_status==2">
+                <div class="flex_row_center marginT5 " style="border-radius: .5rem;border: 1px solid" @click.stop="getImg" v-if="trade_status==2">
                     <img :src="pingzheng||'../../image/uppz.png'" alt="" style="width: 150px;height: 150px;">
                 </div>
-                <div class="flex_row_center marginT1 padding12 " style="border-radius: .5rem;border: 1px solid" v-if="trade_status==3" @click.stop="isShow=true">
+                <div class="flex_row_center marginT5 padding12 " style="border-radius: .5rem;border: 1px solid" v-if="trade_status==3" @click.stop="isShow=true">
                     <img :src="pingzheng||'../../image/jh.png'" alt="" style="width: 150px;height: 150px;">
                 </div>
-                <!-- <div class="flex_row_center marginT1"> -->
+                <!-- <div class="flex_row_center marginT5"> -->
                 <!-- <div class=' ' style='padding: 5px 2rem;border-radius: .5rem' @click.stop='buy'>
                         确认交易
                     </div> -->
@@ -206,7 +208,7 @@
                     <div class="flex_row_left">
                         <input type="password" :placeholder="langContent.psw_input" v-model="password">
                     </div>
-                    <div class="flex_row_between marginT1">
+                    <div class="flex_row_between marginT5">
                         <div @click.stop="buy" class="btn">{{langContent.conf?langContent.conf:''}}</div>
                         <div @click.stop="password='';isShowpas=false;" class="btn btn1">{{langContent.cancel?langContent.cancel:''}}</div>
                     </div>
@@ -240,7 +242,7 @@
             isShow: false,
             flag: true,
             // 新写的交易弹框
-            isShowpas: false,
+            isShowpas: true,
             password: '',
             langContent: {},
             getCodetip: {}

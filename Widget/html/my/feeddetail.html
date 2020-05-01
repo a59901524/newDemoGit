@@ -103,8 +103,8 @@
 <body class="bg-white">
     <div id="feeddetail" class="content" v-cloak>
         <header class="header bg-white">
-            <i class="iconfont icon-xiangzuo" style="color: #cb974d" onclick="goBack()"></i>
-            <div style="color: #cb974d">反馈详情</div>
+            <i class="iconfont icon-xiangzuo color_gg" onclick="goBack()"></i>
+            <div class="color_gg">反馈详情</div>
         </header>
         <van-pull-refresh id="getInfo" v-model="downLoading" @refresh="getInfo" :pulling-text="getCodetip.vant_pulling" :loosing-text="getCodetip.vant_loosing" :loading-text="getCodetip.vant_loading">
             <van-list class="list" v-model="upLoading" :finished="finished" :finished-text="getCodetip.vantlistfinished" @load="getInfo" :immediate-check="false">

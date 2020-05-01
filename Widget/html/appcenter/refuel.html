@@ -9,13 +9,14 @@
     <link rel="stylesheet" type="text/css" href="../../css/api.css" />
     <link rel="stylesheet" type="text/css" href="../../lib/iconfont2/iconfont.css" />
     <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/new/reset.css">
+    <script type="text/javascript" src="../../script/lib-flexible.js"></script>
     <style>
         input,
         .input {
             flex: 1;
-            font-size: 1.2rem;
-            padding: 1rem 0rem;
-            text-indent: 1rem;
+            font-size: 0.28rem;
+            padding: 0.32rem 0rem;
             width: 80%;
             color: #999999;
         }
@@ -42,15 +43,14 @@
         }
 
         .HDCposition {
-            margin: .5rem;
+            margin: .15rem;
         }
 
         .tomyfeed {
-            font-size: 1rem;
+            font-size: 0.3rem;
             position: absolute;
-            right: 1rem;
-            bottom: 10px;
-            margin-right: 1rem;
+            right: 10px;
+            bottom: 0;
         }
         /* 加油类型标签样式 */
 
@@ -80,17 +80,17 @@
         }
 
         .icon-tongxunlu_hh {
-            font-size: 2rem;
-            margin-right: 1rem;
+            font-size: 0.5rem;
+            margin-right: 0.2rem;
         }
 
         .bbd {
-            padding-left: 1rem;
+            padding-left: 0.2rem;
         }
 
         img {
-            width: 1.2rem;
-            height: 1.2rem;
+            width: 0.35rem;
+            height: 0.35rem;
             display: inline-block;
             vertical-align: middle;
         }
@@ -184,21 +184,21 @@
     </style>
 </head>
 
-<body class="color_999 bg-white">
+<body class="bg-white">
     <div id="refuel" class="content" v-cloak>
-        <header class="header bbd posi_relative">
-            <i class="iconfont icon-xiangzuo" onclick="goBack()"></i>
-            <div>{{langContent.title?langContent.title:''}}</div>
-            <div class="tomyfeed color_black6" @click="toPage('refuel_record','refuel_record.html',{typelist:typelist})">{{langContent.record?langContent.record:''}}</div>
+        <header class="header bbd posi_relative bg-white">
+            <i class="iconfont icon-xiangzuo color_gg" onclick="goBack()"></i>
+            <div class="color_gg">加油卡充值</div>
+            <div class="tomyfeed color_black6" @click="toPage('refuel_record','refuel_record.html',{typelist:typelist})">充值记录</div>
         </header>
         <!-- 可用HDC -->
-
+        <div class="h50"></div>
         <!-- <div class=" padding1 fontSize14 color_black6_left">
             {{langContent.value?langContent.value:''}}：<span class=" color_default1">{{HDC?HDC:'0'}}</span>
         </div> -->
         <!-- 可用HDC -->
         <div class="flex_row_left bbd ">
-            <div class="fontSize14 color_black6_left ">{{langContent.value?langContent.value:''}}</div>
+            <div class="fontSize14 color_black6_left ">可用YS</div>
             <div class="color_black6_right">
                 <!-- <input class="flex_grow1" :placeholder="" disabled> -->
                 <div class="flex_grow1 input ">{{HDC?HDC:'0'}}</div>
@@ -206,7 +206,7 @@
         </div>
         <!-- 输入手机号码 -->
         <div class="flex_row_left bbd ">
-            <div class="fontSize14 color_black6_left">{{langContent.tel?langContent.tel:''}}</div>
+            <div class="fontSize14 color_black6_left">手机号码</div>
             <div class="color_black6_right" style="margin-left: 1rem;">
                 <input class="flex_grow1" type="tel" :placeholder="langContent.tel_input" v-model="mobile">
             </div>
@@ -214,28 +214,28 @@
         </div>
         <!--持卡人姓名 -->
         <div class="flex_row_left bbd ">
-            <div class="fontSize14 color_black6_left">{{langContent.name?langContent.name:''}}</div>
+            <div class="fontSize14 color_black6_left">持卡人姓名</div>
             <div class="color_black6_right"> <input class="flex_grow1" :placeholder="langContent.name_input" v-model="username"></div>
         </div>
         <!-- 加油卡卡号 -->
         <div class="flex_row_left bbd ">
-            <div class="fontSize14 color_black6_left">{{langContent.card?langContent.card:''}}</div>
+            <div class="fontSize14 color_black6_left">加油卡卡号</div>
             <div class="color_black6_right"> <input class="flex_grow1" type="tel" maxlength="19" οnkeyup="value=value.replace(/[^\d\.]/g,'')" :placeholder="langContent.card_input" v-model="game_userid"></div>
         </div>
         <!-- 加油卡类型 -->
         <div class="flex_row_left bbd posi_relative" @click="refue_checkeds()">
-            <div class="fontSize14 color_black6_left">{{langContent.cardtype?langContent.cardtype:''}}</div>
+            <div class="fontSize14 color_black6_left">加油卡类型</div>
             <div class="color_black6_right ">
                 <input class="flex_grow1" type="tel" :placeholder="cardtype_input?cardtype_input:langContent.cardtype_input" disabled>
 
             </div>
-            <i class="iconfont icon-direction_right color_default1" style="position: absolute;right: 1rem; "></i>
+            <i class="iconfont icon-direction_right color_default1" style="position: absolute;right: 0.2rem; "></i>
         </div>
 
 
 
         <!-- 充值金额 -->
-        <div class="fontSize12   padding1 marginT1" style="padding-bottom: .2rem;">{{langContent.money?langContent.money:''}}</div>
+        <div class="fontSize12   padding1 marginT5" style="padding-bottom: .2rem;">充值金额</div>
         <!-- 中石化列表 -->
         <div class="flex_row_left flex_wrap" v-if="charge_type==1">
             <div v-for="obj in typelist" class="item text_center" @click="charge(obj.id)" v-if="obj.face_value != 0 &&  obj.status !=0">
