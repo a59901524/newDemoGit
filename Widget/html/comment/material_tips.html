@@ -33,8 +33,8 @@
         }
 
         p {
-            line-height: 0.4rem;
-            padding-bottom: .3rem;
+          line-height: 0.44rem;
+          padding-bottom: .2rem;
         }
 
         strong {
@@ -105,11 +105,14 @@
             -webkit-transform: rotate(45deg);
             transform: rotate(45deg);
         }
+        .marginR10{
+          margin-right: 0.1rem;
+        }
     </style>
 </head>
 
 <body>
-    <div id="material_tips" class="flex_row_center padding12" style='font-size: 0.28rem' v-cloak>
+    <div id="material_tips" class="flex_row_center padding12 fontSize16" v-cloak>
         <!-- 买入HDC，提示支付金额-->
         <!-- status == 2 买家状态 -->
         <div class=" box posi_relative" v-if="status == 1 && trade_status!=1">
@@ -122,7 +125,7 @@
 
             <!-- <p class="tips_text">请严格按照每个订单数量金额核对进行交易，上传凭证 <span style="color: rgb(143, 60, 60);">（账单详情页为标准，其它都视为假图）</span> 确认后再进行下一个订单交易（请认真核对此订单的凭证，保障自身利益。）,以免造成多单订单金额交叉错误。 如果是您自己订单交易错误所造成的损失由您自己承担，平台概不负责，请悉知。</p> -->
             <p class="tips_text" v-html="langContent.buytip"></p>
-            <div class="fontSize12 marginT5 tips_yes">
+            <div class="fontSize16 marginT5 tips_yes">
                 <div class="common_radio marginR10 " :class="{'on':partner == true}" style="vertical-align:middle;" @click="partner =! partner"></div>
                 <span>{{langContent.read?langContent.read:''}}</span>
             </div>
@@ -143,7 +146,7 @@
             <!-- 提示的ETH -->
             <p v-if="(eth_price != 0)">{{langContent.get?langContent.get:''}}： <strong>{{eth_price}}ETH</strong></p>
             <p class="tips_text">{{langContent.selltip?langContent.selltip:''}}</p>
-            <div class="fontSize12 marginT1 tips_yes">
+            <div class="fontSize16 marginT1 tips_yes">
                 <div class="common_radio marginR10 " :class="{'on':partner == true}" style="vertical-align:middle;" @click="partner =! partner"></div>
                 <span>{{langContent.read?langContent.read:''}}</span>
             </div>
@@ -162,7 +165,7 @@
             <p class="quexiao_tips">注意事项：</p>
             <p>1，取消订单将扣除挂单剩余数量百分之十的手续费</p>
             <p>2，账号HDC余额小于-200将导致账号被冻结,请慎重对待每个订单！</p>
-            <div class="fontSize12 marginT5 tips_yes">
+            <div class="fontSize16 marginT5 tips_yes">
                 <div class="common_radio marginR10 " :class="{'on':partner == true}" style="vertical-align:middle;" @click="partner =! partner"></div>
                 <span>我已阅读并同意</span>
             </div>

@@ -55,7 +55,7 @@
           </header>
           <div class="content2">
               <div class="navLi" v-if="transtype==1">
-                  <h3 class="fontSize26">金币HD</h3>
+                  <h3 class="fontSize26">HD</h3>
                   <p class="fontSize30 col00fbfd">{{info.candy_money}}</p>
               </div>
               <div class="navLi">
@@ -69,11 +69,11 @@
           </div>
           <div class="cont bj bjTu">
              <div class="contLi jtRight"  @click="isShow = true"  v-show="rechargetype==1&&transtype==1">
-                 <label for="">{{langContent.kytg?langContent.kytg:''}}</label>
+                 <label for="">HD</label>
                  <input type="text" v-model="info.candy_money" disabled>
              </div>
              <div class="contLi jtRight"  @click="isShow = true" v-show="rechargetype==2&&transtype==1">
-                 <label for="">{{langContent.kyysj?langContent.kyysj:''}}</label>
+                 <label for="">可用YS</label>
                  <input type="text" value="{{info.candy_money}}" disabled>
              </div>
              <div class="contLi jtRight"  @click="isShow = true" v-show="rechargetype==3&&transtype==2">
@@ -82,11 +82,11 @@
              </div>
              <div class="contLi" v-show="(rechargetype==1)&&transtype==1">
                  <label for="">{{langContent.title?langContent.title:''}}HDC</label>
-                 <input type="number" :placeholder="langContent.tgtoJXA" v-model="num">
+                 <input type="number" placeholder="请输入转换HD的数量" v-model="num">
              </div>
              <div class="contLi" v-show="(rechargetype==2)&&transtype==1">
                  <label for="">{{langContent.title?langContent.title:''}}HDC</label>
-                 <input type="number" :placeholder="langContent.ysjtoJXA" v-model="num">
+                 <input type="number" placeholder="请输入转换可用YS的数量" v-model="num">
              </div>
              <div class="contLi" v-show="rechargetype==3&&transtype==2">
                  <label for="">{{langContent.zhysj?langContent.zhysj:''}}</label>
@@ -101,7 +101,7 @@
         <div class="box_wrapper fontSize16 color_black3" v-show="isShow">
             <div class="box bg-white posi_relative">
                 <div v-show="transtype==1" class="flex_row_between padding1 bbd" @click="rechargetype=1,isShow=false,num='',coin_type = 'candy_money'">
-                    糖果转换HD
+                    HD
                     <div class="common_radio" :class="{'on':rechargetype == 1}"></div>
                 </div>
                 <div v-show="transtype==1" class="flex_row_between padding1 bbd" @click="rechargetype=2,isShow=false,num='',coin_type = 'world_use_money'">
@@ -109,7 +109,7 @@
                     <div class=" common_radio" :class="{'on':rechargetype == 2}"></div>
                 </div>
                 <div v-show="transtype==2" class="flex_row_between padding1 bbd" @click="rechargetype=3,isShow=false,num='',coin_type = 'world_money'">
-                    {{langContent.type3?langContent.type3:''}}
+                    可用YS转HDC
                     <div class=" common_radio" :class="{'on':rechargetype == 3}"></div>
                 </div>
             </div>

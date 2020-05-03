@@ -29,7 +29,7 @@
             <div class="navLi"><img src="../image/new/b4.png" alt=""><span>发布任务</span></div>
             <div class="navLi"><img src="../image/new/b5.png" alt=""><span>悬赏中心</span></div>
         </div>
-        <div class="rek">
+        <!-- <div class="rek">
             <div class="h3"><img src="../image/new/b7.png" alt="">今日头条</div>
             <div class="rekUl bj bjTu fontSize26">
                 <div class="rekLeft">
@@ -53,8 +53,6 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="rekRight">
                     <div class="rekLi">
                         <div class="img"><img src="../image/new/b8.png" alt=""></div>
                         <div class="content2">
@@ -77,64 +75,61 @@
                     </div>
                 </div>
             </div>
+        </div> -->
+        <div class="rek">
+            <div class="h3"><img src="../image/new/b7.png" alt="">今日头条</div>
+            <div class="rekUl bj bjTu fontSize26">
+                <div class="rekLeft">
+                    <div class="rekLi" v-for="(obj, index) in list" v-show='list.length <= 2'>
+                        <div class="img"><img :src="obj.img_url?obj.img_url:'../image/applogo.png'" alt=""></div>
+                        <div class="content2">
+                            <div class="title">{{obj.title?obj.title:''}}</div>
+                            <div class="p">
+                                <span class="fontSize22 col3744b7">微信注册</span>
+                                <span class="fontSize28 colff8900">+{{obj.bounty?obj.bounty:''}}HDC</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="rekRight" v-if='list.length > 2'>
+                    <div class="rekLi" v-for="(obj, index) in list" v-show='2 < list.length > 5'>
+                        <div class="img"><img :src="obj.img_url?obj.img_url:'../image/applogo.png'" alt=""></div>
+                        <div class="content2">
+                            <div class="title">{{obj.title?obj.title:''}}</div>
+                            <div class="p">
+                                <span class="fontSize22 col3744b7">微信注册</span>
+                                <span class="fontSize28 colff8900">+{{obj.bounty?obj.bounty:''}}HDC</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="rek marginT5">
             <div class="h3"><img src="../image/new/b12.png" alt="">为你推荐</div>
             <div class="rekUl bj bjTu fontSize26">
-                <div class="ul">
-                    <div class="img">
-                        <img src="../image/new/b8.png" alt="">
-                    </div>
-                    <div class="li">
-                        <div class="top head">
-                            <div class="fontSize26">微信注册辅助</div>
-                            <div class="fontSize22"><span class="fontSize28 colff8900">0.60</span>HDC</div>
-                        </div>
-                        <div class="top foot">
-                            <div class="left fontSize22 col3744b7">
-                                <img src="../image/new/b13.png" alt="">
-                                26人已赚到赏金
-                            </div>
-                            <div class="right">剩余 <span class="col00fbfd">3</span> 人</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="ul">
-                    <div class="img">
-                        <img src="../image/new/b8.png" alt="">
-                    </div>
-                    <div class="li">
-                        <div class="top head">
-                            <div class="fontSize26">微信注册辅助</div>
-                            <div class="fontSize22"><span class="fontSize28 colff8900">0.60</span>HDC</div>
-                        </div>
-                        <div class="top foot">
-                            <div class="left fontSize22 col3744b7">
-                                <img src="../image/new/b13.png" alt="">
-                                26人已赚到赏金
-                            </div>
-                            <div class="right">剩余 <span class="col00fbfd">3</span> 人</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="ul">
-                    <div class="img">
-                        <img src="../image/new/b8.png" alt="">
-                    </div>
-                    <div class="li">
-                        <div class="top head">
-                            <div class="fontSize26">微信注册辅助</div>
-                            <div class="fontSize22"><span class="fontSize28 colff8900">0.60</span>HDC</div>
-                        </div>
-                        <div class="top foot">
-                            <div class="left fontSize22 col3744b7">
-                                <img src="../image/new/b13.png" alt="">
-                                26人已赚到赏金
-                            </div>
-                            <div class="right">剩余 <span class="col00fbfd">3</span> 人</div>
-                        </div>
-                    </div>
-                </div>
+                <van-pull-refresh id="getList" v-model="downLoading" @refresh="getList">
+                  <van-list class="" v-model="upLoading" :finished="finished" finished-text="--没有更多了--" @load="getList" :immediate-check="false">
+                      <div class="ul" v-for="obj in list">
+                          <div class="img">
+                              <img :src="obj.img_url?obj.img_url:'../image/applogo.png'" alt="">
+                          </div>
+                          <div class="li">
+                              <div class="top head">
+                                  <div class="fontSize26">{{obj.title?obj.title:''}}</div>
+                                  <div class="fontSize22"><span class="fontSize28 colff8900">{{obj.bounty?obj.bounty:''}}</span>HDC</div>
+                              </div>
+                              <div class="top foot">
+                                  <div class="left fontSize22 col3744b7">
+                                      <img src="../image/new/b13.png" alt="">
+                                      {{obj.finish_quantity?obj.finish_quantity:'0'}}人已赚到赏金
+                                  </div>
+                                  <div class="right">剩余 <span class="col00fbfd">{{obj.publish_quantity?(obj.publish_quantity - obj.accept_quantity):'0'}}</span> 人</div>
+                              </div>
+                          </div>
+                      </div>
+                    </van-list>
+                </van-pull-refresh>
             </div>
         </div>
     </div>

@@ -46,43 +46,43 @@
         .textlist {
             margin-bottom: 2px;
             text-indent: 0rem;
-            padding-left: .6rem;
+            padding-left: .2rem;
             display: block;
         }
 
         .get_mission {
             /* 去提交 已领取 */
-            padding: .2rem 1rem;
+            padding: .1rem 0.3rem;
             border-radius: 1rem;
             border: 1px solid #cb974d;
-            font-size: 1rem;
+            font-size: 0.28rem;
             color: #cb974d;
         }
 
         .get_missionOk {
             /* 已领取 */
-            padding: .2rem 1rem;
+            padding: .1rem 0.3rem;
             border-radius: 1rem;
             border: 1px solid #ddd;
-            font-size: 1rem;
+            font-size: 0.28rem;
             color: #999999;
         }
 
         .get_missionRefuse {
             /* 审核中/已拒绝 */
-            padding: .3rem;
+            padding: .1rem;
             border-radius: 1rem;
             border: 1px solid #ff6262;
-            font-size: 1rem;
+            font-size: 0.28rem;
             color: #ff6262;
         }
 
         .get_missionPass {
             /* 已通过 */
-            padding: .2rem 0.5rem;
+            padding: .1rem 0.3rem;
             border-radius: 1rem;
             border: 1px solid #2cc597;
-            font-size: 0.25rem;
+            font-size: 0.28rem;
             color: #2cc597;
         }
         /* .icon {
@@ -94,8 +94,8 @@
         } */
 
         .rwImg {
-            height: 1rem;
-            width: 1rem;
+            height: 0.5rem;
+            width: 0.5rem;
         }
 
         .icon-biaoqing {
@@ -124,13 +124,13 @@
     <div id="tasks" v-cloak class="color_black3">
         <header class="header bg-white">
             <i class="iconfont icon-xiangzuo color_gg" onclick="goBack()"></i>
-            <div class="color_gg">{{langContent.title?langContent.title:''}}</div>
+            <div class="color_gg">官方任务</div>
         </header>
         <div class="h88"></div>
         <div class="cont  fontSize14 bg-white">
             <div class="flex_row_around color_999">
-                <div class="item" :class="{'on':type==1}" @click="type=1,getInfo()">{{langContent.recive?langContent.recive:''}}</div>
-                <div class="item" :class="{'on':type==2}" @click="type=2,getInfo()">{{langContent.sub?langContent.sub:''}}</div>
+                <div class="item" :class="{'on':type==1}" @click="type=1,getInfo()">领取任务</div>
+                <div class="item" :class="{'on':type==2}" @click="type=2,getInfo()">提交任务</div>
             </div>
         </div>
         <!-- 领取任务 -->

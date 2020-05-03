@@ -9,6 +9,8 @@
     <title>提交任务</title>
     <link rel="stylesheet" href="../../lib/iconfont2/iconfont.css">
     <link rel="stylesheet" href="../../css/common.css">
+    <link rel="stylesheet" type="text/css" href="../../css/new/reset.css">
+    <script type="text/javascript" src="../../script/lib-flexible.js"></script>
     <style>
         .rwClass {
             width: 90%;
@@ -20,20 +22,20 @@
     </style>
 </head>
 
-<body class="has_header ">
+<body style="background: #DDD">
     <div id="tasks_sub" v-cloak>
-        <header class="header color_default1">
-            <i class="iconfont icon-xiangzuo" onclick="goBack()"></i>
-            <div>{{langContent.title?langContent.title:''}}</div>
-            <div @click="submitRw()" class="tomyfeed ">{{langContent.sub?langContent.sub:''}}</div>
+        <header class="header bg-white">
+            <i class="iconfont icon-xiangzuo color_gg" onclick="goBack()"></i>
+            <div class="color_gg">提交任务</div>
+            <div @click="submitRw()" class="tomyfeed ">提交</div>
         </header>
+        <div class="h88"></div>
         <div class="cont">
-
             <div class="flex_row_center  rwClass" @click.stop="getImg">
                 <img v-if="renWuTu!=''" :src="renWuTu||'../../image/uppz.png'" alt="" style="width: 100%;height: auto;">
                 <img v-if="renWuTu==''" :src="'../../image/upimg.png'" alt="" style="width: 150px;height: 150px;">
             </div>
-            <div @click="toPage('tasks_sub_tips','./tasks_sub_tips.html')" style="color: #ff6262; padding-left: 1rem; " class="fontSize14">
+            <div @click="toPage('tasks_sub_tips','./tasks_sub_tips.html')" style="color: #ff6262; padding-left: 0.3rem; " class="fontSize14">
                 <u>{{langContent.postRw?langContent.postRw:''}}</u>
             </div>
         </div>

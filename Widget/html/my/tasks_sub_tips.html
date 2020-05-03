@@ -9,6 +9,8 @@
     <title>提交任务</title>
     <link rel="stylesheet" href="../../lib/iconfont2/iconfont.css">
     <link rel="stylesheet" href="../../css/common.css">
+    <link rel="stylesheet" type="text/css" href="../../css/new/reset.css">
+    <script type="text/javascript" src="../../script/lib-flexible.js"></script>
     <style>
         html,
         body {
@@ -17,7 +19,7 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         .item {
             width: 50%;
             height: 45px;
@@ -25,23 +27,23 @@
             text-align: center;
             background: #51ABF0;
         }
-        
+
         .on {
             border-bottom: 2px solid #1C83D2;
         }
-        
+
         .video {
             width: 55px;
             height: 55px;
             margin-right: 15px;
         }
-        
+
         .rule {
             width: 90%;
             height: auto;
             margin: 0px auto 20px;
         }
-        
+
         .fixedbtn {
             margin-left: 50%;
             width: 80%;
@@ -51,7 +53,7 @@
             font-weight: 800;
             font-size: 16px;
         }
-        
+
         .close {
             position: absolute;
             right: 20px;
@@ -62,15 +64,16 @@
     </style>
 </head>
 
-<body class="has_header color_black3">
+<body style="background: #DDD">
     <div id="tasks_sub_tips" v-cloak>
-        <header class="header ">
-            <i class="iconfont icon-xiangzuo" onclick="goBack()"></i>
-            <div>{{langContent.title?langContent.title:''}}</div>
+        <header class="header bg-white">
+            <i class="iconfont icon-xiangzuo color_gg" onclick="goBack()"></i>
+            <div class="color_gg">任务规则</div>
         </header>
         <div class="cont bg-white">
             <!-- <div class="padding1 " style="padding-bottom: 0;" v-for="con in langContent.list1">{{con?con:''}}</div> -->
             <!-- <div class="padding1 " style="padding-bottom: 0;">{{langContent.rule?langContent.rule:''}}</div> -->
+
             <div class="padding1 ">
                 <p v-if="userinfo.area_code == 86" v-for="obj in langContent.list2">{{obj?obj:''}}</p>
                 <p v-if="userinfo.area_code != 86" v-for="obj in langContent.Elist2">{{obj?obj:''}}</p>
