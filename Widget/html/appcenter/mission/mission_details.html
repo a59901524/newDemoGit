@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="../../../lib/vant/vant.css">
     <link rel="stylesheet" href="../../../lib/iconfont2/iconfont.css">
     <link rel="stylesheet" href="../../../css/common.css">
+    <link rel="stylesheet" type="text/css" href="../../../css/new/reset.css">
+    <script type="text/javascript" src="../../../script/lib-flexible.js"></script>
     <style>
         html,
         body {
@@ -22,8 +24,8 @@
         }
 
         .post_icon1 {
-            font-size: 2rem;
-            margin-right: .4rem;
+            font-size: 0.6rem;
+            margin-right: .2rem;
         }
         /********************** 发布任务任务列表 ****************/
 
@@ -32,12 +34,13 @@
         }
 
         ul {
-            padding: 1rem;
+            padding: 0.3rem;
+            line-height: 0.4rem;
         }
 
         li {
             list-style: disc;
-            padding-bottom: 1rem;
+            padding-bottom: 0.3rem;
         }
 
         .stepimg {
@@ -72,26 +75,27 @@
         }
 
         .marginBT {
-            padding: 1rem;
+            padding: 0.3rem;
             border-bottom: 1px solid #eeeeee;
         }
     </style>
 </head>
 
-<body class="has_header ">
+<body class="bg_white fontSize14">
     <div id="mission_details" v-cloak>
-        <header class="header bg-white">
-            <i class="iconfont icon-xiangzuo " onclick="goBack()"></i>
+        <header class="header bg-white color_gg">
+            <i class="iconfont icon-xiangzuo color_gg" onclick="goBack()"></i>
             <div>任务详情</div>
         </header>
-        <div class="cont">
+        <div class="h88"></div>
+        <div class="cont" style="background: #f5f5f5;">
             <!-------------------------------------------- 任务类型 ---------------------------------------->
-            <div class="   color_default1 padding1 flex_row_left color_black3 " style="font-size: 1.5rem; font-weight: 900;">
-                <div style="background-color: #cfa767; width: 4px; height: 1.5rem; margin-right: 1rem;"></div>
-                <div class="text-overflow_1 "> {{info.title?info.title:''}}</div>
+            <div class="   color_default1 padding1 flex_row_left color_black3 " style="font-size: 0.36rem; font-weight: 900;">
+                <div style="background-color: #cfa767; width: 4px; height: 0.5rem; margin-right: 0.3rem;"></div>
+                <div class="text-overflow_1 ">{{info.title?info.title:''}}</div>
             </div>
 
-            <div class="bg-white">
+            <div class="bg-white fontSize14">
                 <!-------------------------------------------- 截止时间 ---------------------------------------->
                 <div class="marginBT flex_row_between">
                     <div class="flex_row_left color_black3">
@@ -123,7 +127,7 @@
                 </div>
             </div>
             <!-------------------------------------------- 任务ID ---------------------------------------->
-            <div class=" bg-white">
+            <div class=" bg-white fontSize14">
                 <div v-if="info.url!=''" class="flex_row_between marginBT" style="overflow: hidden;" @click="copy(info.url)">
                     <div class="flex_row_left color_black3">
                         <div class="">任务链接</div>
@@ -222,7 +226,7 @@
                 <input v-show="info.accept&&info.accept.status==1" class="inputarea" type="text" v-model="font_verify" placeholder="请按要求填入文字验证">
                 <div class="padding1 fontSize16 color_black3">备注：{{info.remarks?info.remarks:'发布人未提供备注'}}</div>
             </div>
-            <div class="   text_center flex_row_around padding1 bg-white marginT1">
+            <div class="   text_center flex_row_around padding1 bg-white marginT5">
                 <div class="flex_row_between text_center ">
                     <i class="iconfont icon-lingqu color_default1 post_icon1 "></i> <span class="marginR5">已被领取:</span> <span class="color_default1">{{info.accept_quantity?info.accept_quantity:'0'}} </span>
                 </div>
@@ -247,53 +251,53 @@
                 </div>
                 <!-- that.columns = ['全部', '待完成', '审核中', '已通过', '已驳回', '申诉中', '系统驳回']; -->
                 <div v-if="!isMytask">
-                    <div v-show="!info.accept||!info.accept.status||(info.accept&&info.accept.status==0)" @click="acceptreward()" class="bg_gold text_center fontSize16 colorFFF padding1 marginT1" style="border-radius: 5px">
+                    <div v-show="!info.accept||!info.accept.status||(info.accept&&info.accept.status==0)" @click="acceptreward()" class="bg_gold text_center fontSize16 colorFFF padding1 marginT5" style="border-radius: 5px">
                         我已确认,领取任务
                     </div>
-                    <div v-show="info.accept&&info.accept.status==1" @click="subreward()" class="bg_gold text_center fontSize16 colorFFF padding1 marginT1" style="border-radius: 5px">
+                    <div v-show="info.accept&&info.accept.status==1" @click="subreward()" class="bg_gold text_center fontSize16 colorFFF padding1 marginT5" style="border-radius: 5px">
                         提交任务
                     </div>
-                    <div v-show="info.accept&&info.accept.status==2" class="bg_gold text_center fontSize16 colorFFF padding1 marginT1" style="border-radius: 5px">
+                    <div v-show="info.accept&&info.accept.status==2" class="bg_gold text_center fontSize16 colorFFF padding1 marginT5" style="border-radius: 5px">
                         任务审核中
                     </div>
-                    <div v-show="info.accept&&info.accept.status==3" class="bg_gold text_center fontSize16 colorFFF padding1 marginT1" style="border-radius: 5px">
+                    <div v-show="info.accept&&info.accept.status==3" class="bg_gold text_center fontSize16 colorFFF padding1 marginT5" style="border-radius: 5px">
                         任务已通过
                     </div>
-                    <div v-show="info.accept&&info.accept.status==4" @click="appealreward()" class="bg_gold text_center fontSize16 colorFFF padding1 marginT1" style="border-radius: 5px">
+                    <div v-show="info.accept&&info.accept.status==4" @click="appealreward()" class="bg_gold text_center fontSize16 colorFFF padding1 marginT5" style="border-radius: 5px">
                         任务已驳回，点击申诉
                     </div>
-                    <div v-show="info.accept&&info.accept.status==5" class="bg_gold text_center fontSize16 colorFFF padding1 marginT1" style="border-radius: 5px">
+                    <div v-show="info.accept&&info.accept.status==5" class="bg_gold text_center fontSize16 colorFFF padding1 marginT5" style="border-radius: 5px">
                         任务申诉中
                     </div>
-                    <div v-show="info.accept&&info.accept.status==6" class="bg_gold text_center fontSize16 colorFFF padding1 marginT1" style="border-radius: 5px">
+                    <div v-show="info.accept&&info.accept.status==6" class="bg_gold text_center fontSize16 colorFFF padding1 marginT5" style="border-radius: 5px">
                         任务已被管理员驳回
                     </div>
                 </div>
 
                 <div v-if="isMytask">
                     <!-- ['待处理', '审核中', '已发布', '已完成', '已终止'] -->
-                    <div v-show="info.status==0&&info.wait_count>0" @click="toCertify()" class="bg_gold text_center fontSize16 colorFFF padding1 marginT1" style="border-radius: 5px">
+                    <div v-show="info.status==0&&info.wait_count>0" @click="toCertify()" class="bg_gold text_center fontSize16 colorFFF padding1 marginT5" style="border-radius: 5px">
                         任务已取消，去审核
                     </div>
-                    <div v-show="info.status==0" class="bg_gold text_center fontSize16 colorFFF padding1 marginT1" style="border-radius: 5px">
+                    <div v-show="info.status==0" class="bg_gold text_center fontSize16 colorFFF padding1 marginT5" style="border-radius: 5px">
                         任务已取消
                     </div>
-                    <div v-show="info.status==1" class="bg_gold text_center fontSize16 colorFFF padding1 marginT1" style="border-radius: 5px">
+                    <div v-show="info.status==1" class="bg_gold text_center fontSize16 colorFFF padding1 marginT5" style="border-radius: 5px">
                         任务审核中
                     </div>
-                    <div v-show="info.status!=1&&info.status!=3" @click="releaseaccept()" class="bg_ccc text_center fontSize16 color_black6 padding1 marginT1" style="border-radius: 5px">
+                    <div v-show="info.status!=1&&info.status!=3" @click="releaseaccept()" class="bg_ccc text_center fontSize16 color_black6 padding1 marginT5" style="border-radius: 5px">
                         清除超时任务
                     </div>
-                    <div v-show="info.status==2" @click="toCertify()" class="bg_gold text_center fontSize16 colorFFF padding1 marginT1" style="border-radius: 5px">
+                    <div v-show="info.status==2" @click="toCertify()" class="bg_gold text_center fontSize16 colorFFF padding1 marginT5" style="border-radius: 5px">
                         任务已发布，去审核
                     </div>
-                    <div v-show="info.status==2" @click="canceltask()" class="bg_gray color_default text_center fontSize16  padding1 marginT1" style="border-radius: 5px">
+                    <div v-show="info.status==2" @click="canceltask()" class="bg_gray color_default text_center fontSize16  padding1 marginT5" style="border-radius: 5px">
                         取消发布任务
                     </div>
-                    <div v-show="info.status==3" class="bg_gold text_center fontSize16 colorFFF padding1 marginT1" style="border-radius: 5px">
+                    <div v-show="info.status==3" class="bg_gold text_center fontSize16 colorFFF padding1 marginT5" style="border-radius: 5px">
                         任务已完成
                     </div>
-                    <div v-show="info.status==4" class="bg_gold text_center fontSize16 colorFFF padding1 marginT1" style="border-radius: 5px">
+                    <div v-show="info.status==4" class="bg_gold text_center fontSize16 colorFFF padding1 marginT5" style="border-radius: 5px">
                         任务已终止
                     </div>
                 </div>

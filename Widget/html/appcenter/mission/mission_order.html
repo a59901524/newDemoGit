@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="../../../lib/vant/vant.css">
     <link rel="stylesheet" href="../../../lib/iconfont2/iconfont.css">
     <link rel="stylesheet" href="../../../css/common.css">
+    <link rel="stylesheet" type="text/css" href="../../../css/new/reset.css">
+    <script type="text/javascript" src="../../../script/lib-flexible.js"></script>
     <style>
         html,
         body {
@@ -44,8 +46,8 @@
         /********************** 任务列表 ****************/
 
         .mission_list {
-            padding: 1rem;
-            margin-bottom: .5rem;
+            padding: 0.2rem;
+            margin-bottom: .2rem;
         }
 
         span {
@@ -57,8 +59,8 @@
             background-color: #ffffff;
             border: 1px solid #dddddd;
             border-radius: 5px;
-            padding: .5rem;
-            margin-bottom: .5rem;
+            padding: .2rem;
+            margin-bottom: .2rem;
         }
 
         .mission_list_center_leftT {
@@ -82,7 +84,7 @@
         .mission_list_center {
             flex: 1;
             overflow: hidden;
-            padding: 0 1rem;
+            padding: 0 0.2rem;
         }
 
         .mission_list_right {
@@ -91,13 +93,14 @@
     </style>
 </head>
 
-<body class="has_header color_999">
+<body class="color_999 fontSize14">
     <div id="mission_order" v-cloak>
-        <header class="header color_default1 ">
-            <i class="iconfont icon-xiangzuo " onclick="goBack()"></i>
+        <header class="header color_default1 bg_white color_gg">
+            <i class="iconfont icon-xiangzuo color_gg" onclick="goBack()"></i>
             <div>悬赏管理</div>
         </header>
-        <div class="cont padding1 flex_row_around bg-white bbd">
+        <div class="h88"></div>
+        <div class="cont flex_row_around bg-white bbd">
             <div class=" flex_row_left fontSize14 color_default1">{{myTitle}}</div>
             <div class=" flex_row_right color_999" style="flex-wrap: nowrap;overflow-x: scroll;overflow-y: hidden;">
                 <div class="b_header" :class="{'on':type==1}" @click="switchover(1)" style="margin-left: 1px;">
@@ -118,7 +121,6 @@
         <van-popup v-model="showPicker" position="bottom">
             <van-picker show-toolbar :columns="columns" :default-index="statusindex" @cancel="showPicker = false" @confirm="onConfirm" />
         </van-popup>
-
         <van-pull-refresh id="getList" v-model="downLoading" @refresh="getList">
             <van-list class="" v-model="upLoading" :finished="finished" finished-text="--没有更多了--" @load="getList" :immediate-check="false">
                 <div class="mission_list">

@@ -10,21 +10,24 @@
     <link rel="stylesheet" href="../../../lib/vant/vant.css">
     <link rel="stylesheet" href="../../../lib/iconfont2/iconfont.css">
     <link rel="stylesheet" href="../../../css/common.css">
+    <link rel="stylesheet" type="text/css" href="../../../css/new/reset.css">
+    <script type="text/javascript" src="../../../script/lib-flexible.js"></script>
     <style>
         /********************** 发布任务任务列表 ****************/
 
         .post_input {
             width: 100%;
             text-align: right;
-            font-size: 1.2rem;
-            line-height: 1.5rem;
+            font-size: 0.32rem;
+            line-height: 0.4rem;
             padding: .3rem 0rem;
         }
 
         .post_input::placeholder {
-            font-size: 1.2rem;
-            line-height: 1.5rem;
+            font-size: 0.32rem;
+            line-height: 0.4rem;
             padding: .3rem 0rem;
+            color: #666;
         }
 
         .post_input_title {
@@ -53,21 +56,21 @@
         }
 
         .tomyfeed {
-            font-size: 1rem;
+            font-size: 0.28rem;
             position: absolute;
-            right: 1rem;
-            bottom: 10px;
+            right: 10px;
+            bottom: 0;
         }
 
         .text_title_lfte {
-            font-size: 1.2rem;
-            padding: .3rem 0rem;
+            font-size: 0.32rem;
+            padding: .1rem 0rem;
         }
 
         .text_right_right {
-            font-size: 1.2rem;
+            font-size: 0.32rem;
             padding: .3rem 0rem;
-            margin-right: 1rem;
+            margin-right: 0.1rem;
         }
 
         textarea {
@@ -76,28 +79,42 @@
             display: block;
             border: none;
             resize: none;
-            padding: 0.5rem 4% 0rem;
-            font-size: 1rem;
-            line-height: 0.96rem;
+            padding: 0.1rem 4% 0rem;
+            font-size: 0.26rem;
+            line-height: 0.3rem;
             outline: none;
             border-radius: 0rem;
         }
-
+        .padding1{
+            padding: 0.1rem 0.24rem;
+        }
         .borderTextarea {
             border: 1px solid #dddddd;
+        }
+        input::-webkit-input-placeholder,textarea::-webkit-input-placeholder{
+            color:#666666;
+        }
+        input:-moz-placeholder,textarea:-moz-placeholder{
+            color:#666666;
+        }
+        input::-moz-placeholder,textarea::-moz-placeholder{
+            color:#666666;
+        }
+        input:-ms-input-placeholder,textarea:-ms-input-placeholder{
+            color:#666666;
         }
     </style>
 </head>
 
-<body class="has_header color_black3 ">
+<body class=" color_black3 ">
     <div id="mission_post" v-cloak>
-        <header class="header bbd ">
-            <i class="iconfont icon-xiangzuo " onclick="goBack()"></i>
+        <header class="header bbd bg_white color_gg">
+            <i class="iconfont icon-xiangzuo color_gg" onclick="goBack()"></i>
             <div>发布悬赏</div>
             <div class="tomyfeed color_black6" onclick="toPage('mission_notice','./mission_notice.html')">发布须知</div>
         </header>
-
-        <div class="cont ">
+        <div class="h88"></div>
+        <div class="cont fontSize14">
             <!--  任务类型 ---------------------------------------->
             <div class="">
                 <div class=" bg-white padding1_left_right bbd ">
@@ -106,7 +123,7 @@
                         <div @click="gopics()" style="width: 56px;height: 56px; background-color: #999; margin-right: 5px; "><img :src="img_url?img_url:'../../../image/appcenter/up_img.png'" alt=""></div>
                         <div style="flex:1" class="borderTextarea"><textarea v-model="missionTitle" ref="focus" style="height: 48px; color: #999;" name="" id="" maxlength="20" placeholder="请一句话描述你的需求"></textarea></div>
                     </div>
-                    <div style="height: 1.2rem;"></div>
+                    <div style="height: 0.3rem;"></div>
                 </div>
 
 
@@ -210,8 +227,8 @@
 
                 <!-------------------------------------------- 第一步 ---------------------------------------->
                 <div v-for="(adddata,index) in steps">
-                    <div class="fontSize14" style="margin-left: 1rem;">第 <span>{{index+1}}</span> 步</div>
-                    <div class="flex_row_between " style="padding: .2rem 1rem .6rem;">
+                    <div class="fontSize14" style="margin-left: 0.25rem;">第 <span>{{index+1}}</span> 步</div>
+                    <div class="flex_row_between " style="padding: .2rem 0.2rem .3rem;">
                         <div style="width: 56px;height: 56px;   margin-right: 5px" @click="gopic(adddata)"><img :src="adddata.img?adddata.img:'../../../image/appcenter/up_img.png'" alt=""></div>
                         <div style="flex:1 " class="borderTextarea"><textarea v-model="adddata.step_text" name="" id="" maxlength="50" placeholder="请叙述详细步骤,不超过50个字" style="height: 48px; color: #ccc;"></textarea></div>
                         <div>
@@ -229,19 +246,19 @@
                 <div class="padding1 bbd">
                     <div class="text_title_lfte ">文字验证 (选填)</div>
                     <div class="borderTextarea">
-                        <textarea name="" id="" cols="30" rows="2" maxlength="50" v-model="textVerify" placeholder="如需接单者提供文字信息,请在此输入,其它地方输入无效。" style="height: 6rem; color: #ccc;">
+                        <textarea name="" id="" cols="30" rows="2" maxlength="50" v-model="textVerify" placeholder="如需接单者提供文字信息,请在此输入,其它地方输入无效。" style="height: 2rem; color: #ccc;">
                         </textarea>
                     </div>
-                    <div style="height: 1rem;"></div>
+                    <div style="height: 0.2rem;"></div>
                 </div>
                 <!-------------------------------------------- 备注(选填) ---------------------------------------->
                 <div class="padding1 ">
                     <div class="text_title_lfte ">备注 (选填)</div>
                     <div class="borderTextarea">
-                        <textarea name="" id="" cols="30" rows="2" maxlength="200" v-model="remarks" placeholder="请叙述备注,不超过200个字" style="height: 6rem; color: #ccc;">
+                        <textarea name="" id="" cols="30" rows="2" maxlength="200" v-model="remarks" placeholder="请叙述备注,不超过200个字" style="height: 2rem; color: #ccc;">
                             </textarea>
                     </div>
-                    <div style="height: 1rem;"></div>
+                    <div style="height: 0.2rem;"></div>
                 </div>
             </div>
             <div style="height: 75px;"></div>

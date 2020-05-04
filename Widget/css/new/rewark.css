@@ -59,6 +59,7 @@
 	width: 0.99rem;
 	height: 0.99rem;
 }
+
 .rewark .nav .navLi span{
 	display: inline-block;
 	margin-top: 0.18rem;
@@ -78,17 +79,20 @@
 }
 .rewark .rekLeft, .rewark .rekRight{
 	display: flex;
-	justify-content: space-around;
+	justify-content: flex-start;
+	flex-wrap: wrap;
 }
 .rewark .rekLeft .rekLi, .rewark .rekRight .rekLi{
 	display: flex;
 	justify-content: space-around;
-	flex: 1;
+	width: 50%;
+	padding: 0.15rem;
+	box-sizing: border-box
 }
-.rewark .rekLeft .rekLi {
+/*.rewark .rekLeft .rekLi {
 	border-bottom: 0.01rem solid #370e9f;
-}
-.rewark .rekLeft .rekLi:first-child{
+}*/
+/*.rewark .rekLeft .rekLi:first-child{
 	padding: 0.14rem 0.22rem 0.27rem 0.10rem;
 	border-right: 0.01rem solid #370e9f;
 }
@@ -101,14 +105,24 @@
 }
 .rewark .rekRight .rekLi:last-child {
 	padding: 0.14rem 0 0.14rem 0.17rem;
-}
+}*/
 .rewark .rekLeft .rekLi .img, .rewark .rekRight .rekLi .img{
 	width: 0.8rem;
 	height: 0.8rem;
+	flex: 0 0 0.8rem;
+}
+.rewark .rekLeft .rekLi .img img{
+	border-radius: 50%;
 }
 .rekLi .content2 {
 	flex: 1;
 	margin-left: 0.08rem;
+	width: calc(100% - 0.8rem);
+}
+.rekLi .content2 .title{
+	overflow: hidden;
+	text-overflow:ellipsis;
+	white-space: nowrap;
 }
 .rekLi .content2 .p{
 	display: flex;
@@ -138,6 +152,9 @@
 .rekUl .ul .img{
 	width: 1rem;
 	height: 1rem;
+}
+.rekUl .ul .img img{
+	border-radius: 50%;
 }
 .rekUl .ul .li .foot img{
 	width: 0.3rem;

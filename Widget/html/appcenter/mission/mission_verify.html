@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="../../../lib/vant/vant.css">
     <link rel="stylesheet" href="../../../lib/iconfont2/iconfont.css">
     <link rel="stylesheet" href="../../../css/common.css">
+    <link rel="stylesheet" type="text/css" href="../../../css/new/reset.css">
+    <script type="text/javascript" src="../../../script/lib-flexible.js"></script>
     <style>
         html,
         body {
@@ -19,7 +21,7 @@
             box-sizing: border-box;
             -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
         }
-        
+
         .btnpart {
             height: 50px;
             position: fixed;
@@ -28,11 +30,11 @@
             right: 0;
             background: #fff;
         }
-        
+
         .btn {
             width: 45%;
-            height: 3rem;
-            line-height: 3rem;
+            height: 0.8rem;
+            line-height: 0.8rem;
             border-radius: 5px;
             color: #ffffff;
             background: #72a7fe;
@@ -43,12 +45,13 @@
     </style>
 </head>
 
-<body class="color_black6">
+<body class="color_black6 fontSize14">
     <div id="mission_verify" v-cloak>
         <header class="header ">
-            <i class="iconfont icon-xiangzuo " onclick="goBack()"></i>
-            <div>悬赏审核</div>
+            <i class="iconfont icon-xiangzuo color_gg" onclick="goBack()"></i>
+            <div class="color_gg">悬赏审核</div>
         </header>
+        <div class="h88"></div>
         <div class="cont bg-white">
             <div style="height: 45px;"></div>
             <div class="fontSize14 padding1">做悬赏人：{{info.nickname?info.nickname:''}}(ID:{{info.number?info.number:''}})</div>

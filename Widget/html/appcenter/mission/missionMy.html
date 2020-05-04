@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="../../../lib/vant/vant.css">
     <link rel="stylesheet" href="../../../lib/iconfont2/iconfont.css">
     <link rel="stylesheet" href="../../../css/common.css">
+    <link rel="stylesheet" type="text/css" href="../../../css/new/reset.css">
+    <script type="text/javascript" src="../../../script/lib-flexible.js"></script>
     <style>
         html,
         body {
@@ -21,10 +23,10 @@
         }
 
         .mission_myicon {
-            width: 7rem;
-            height: 7rem;
+            width: 2rem;
+            height: 2rem;
             border-radius: 50%;
-            margin-right: 1.5rem;
+            margin-right: 0.5rem;
         }
         /* 接单  | 样式*/
 
@@ -60,7 +62,7 @@
          */
 
         .padding05 {
-            padding: 0.5rem 0.83rem;
+            padding: 0.3rem 0.2rem;
         }
 
         .flex_grow1 {
@@ -68,23 +70,24 @@
         }
 
         .color_default1 {
-            font-size: 1.8rem;
+            font-size: 0.5rem;
         }
     </style>
 </head>
 
-<body class="has_header  fontSize14 color_999">
+<body class="fontSize14 color_999">
     <div id="missionMy" v-cloak>
         <header class="header bg-white bbd">
-            <i class="iconfont icon-xiangzuo " onclick="goBack()"></i>
-            <div>悬赏中心</div>
+            <i class="iconfont icon-xiangzuo color_gg" onclick="goBack()"></i>
+            <div class="color_gg">悬赏中心</div>
         </header>
-        <div class="cont ">
+        <div class="h88"></div>
+        <div class="cont bg_eee fontSize14">
             <div class=" padding1  flex_row_left  padding1 bg-white color_black3 ">
                 <div> <img :src="info.my_avatar?info.my_avatar:'../../../image/applogo.png'" alt="" class="mission_myicon"></div>
                 <div class="fontSize18 ">
                     {{info.my_nickname?info.my_nickname:''}}
-                    <p class="marginT1 fontSize12">用户ID：{{info.my_user_sn?info.my_user_sn:''}}</p>
+                    <p class="marginT5 fontSize12">用户ID：{{info.my_user_sn?info.my_user_sn:''}}</p>
                 </div>
             </div>
             <div class="padding05">我的资产(HDC)</div>

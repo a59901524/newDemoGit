@@ -353,8 +353,8 @@ input::-webkit-input-placeholder {
     right: 0;
     text-align: center;
     font-size: 16px;
-    line-height: 1rem;
-    height: 1rem;
+    line-height: 0.8rem;
+    height: 0.8rem;
     width: 100%!important;
     bottom: -1px!important;
     background-color: #fff;
@@ -720,11 +720,11 @@ input::-webkit-input-placeholder {
 }
 
 .padding1_left_right {
-    padding: 0rem 0.83rem;
+    padding: 0rem 0.2rem;
 }
 
 .padding1_top_bottom {
-    padding: 0.83rem 0rem;
+    padding: 0.3rem 0rem;
 }
 
 .padding12 {
@@ -732,11 +732,11 @@ input::-webkit-input-placeholder {
 }
 
 .padding12_left_right {
-    padding: 0rem 1rem;
+    padding: 0rem 0.3rem;
 }
 
 .padding12_top_bottom {
-    padding: 1rem 0rem;
+    padding: 0.3rem 0rem;
 }
 
 .padding12_top {
@@ -776,7 +776,7 @@ input::-webkit-input-placeholder {
 }
 
 .marginT1 {
-    margin-top: 1rem;
+    margin-top: 0.3rem;
 }
 
 .marginT2 {
@@ -817,7 +817,7 @@ input::-webkit-input-placeholder {
 }
 
 .marginB1 {
-    margin-bottom: 1rem;
+    margin-bottom: 0.3rem;
 }
 
 .marginB2 {
