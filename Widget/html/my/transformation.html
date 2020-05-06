@@ -74,7 +74,7 @@
              </div>
              <div class="contLi jtRight"  @click="isShow = true" v-show="rechargetype==2&&transtype==1">
                  <label for="">可用YS</label>
-                 <input type="text" value="{{info.candy_money}}" disabled>
+                 <input type="text" v-model="info.world_use_money" disabled>
              </div>
              <div class="contLi jtRight"  @click="isShow = true" v-show="rechargetype==3&&transtype==2">
                  <label for="">{{langContent.kyJXA?langContent.kyJXA:''}}</label>

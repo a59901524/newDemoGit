@@ -167,6 +167,17 @@
                 certifylist.$data.langContent = GlobleLanguageContent.certifylist;
                 certifylist.$data.getCodetip = GlobleLanguageContent.getCode;
                 that.getInfo()
+                api.addEventListener({
+                    name: 'resume'
+                }, function(ret, err) {
+                    if (api.appParam) {
+                        var fromZfb = JSON.parse(api.appParam);
+                        // console.error(JSON.stringify(fromZfb)) //iOS：{"is_certify":"1"}
+                        if ((that.isAndroid && fromZfb && fromZfb.appParam && fromZfb.appParam.is_certify)) {
+                            that.getInfo()
+                        }
+                    }
+                });
             }
         },
         methods: {
