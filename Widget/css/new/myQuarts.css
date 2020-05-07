@@ -7,7 +7,8 @@
 }
 .myQuarts .content {
 	padding: 0.16rem 0.12rem;
-    font-size: 0.26rem;
+  font-size: 0.26rem;
+	position: relative;
 }
 .myQuarts .content .nav{
 	display: flex;
@@ -15,8 +16,12 @@
 }
 .myQuarts .quarts{
 	width: 3.5rem;
-    height: 3.5rem;
-    margin: 2rem auto
+	height: 3.5rem;
+	margin: 2rem auto;
+	position: absolute;
+	top: 0.4rem;
+	left: 50%;
+	transform: translateX(-50%);
 }
 .myQuarts .footbtn{
 	position: fixed;

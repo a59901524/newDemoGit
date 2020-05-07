@@ -11,10 +11,8 @@
     <link rel="stylesheet" type="text/css" href="../lib/vant/vant.css" />
     <link rel="stylesheet" type="text/css" href="../lib/iconfont2/iconfont.css" />
     <link rel="stylesheet" type="text/css" href="../css/new/myQuarts.css">
+    <link rel="stylesheet" type="text/css" href="../css/frame1.css">
     <script src="../script/lib-flexible.js"></script>
-    <style>
-
-    </style>
 </head>
 
 <body class='myQuarts'>
@@ -25,14 +23,61 @@
         <div class="h88"></div>
         <div class="content">
             <div class="nav">
-                <div class="navLi" :class="{'col00d3fc': qe == 1}" @click="qe = 1">微型金矿</div>
-                <div class="navLi" :class="{'col00d3fc': qe == 2}" @click="qe = 2">小型金矿</div>
-                <div class="navLi" :class="{'col00d3fc': qe == 3}" @click="qe = 3">中型金矿</div>
-                <div class="navLi" :class="{'col00d3fc': qe == 4}" @click="qe = 4">大型金矿</div>
-                <div class="navLi" :class="{'col00d3fc': qe == 5}" @click="qe = 5">豪华型金矿</div>
+                <div class="navLi" :class="{'col00d3fc': type == 1}" @click="changeType(1)">微型金矿</div>
+                <div class="navLi" :class="{'col00d3fc': type == 2}" @click="changeType(2)">小型金矿</div>
+                <div class="navLi" :class="{'col00d3fc': type == 3}" @click="changeType(3)">中型金矿</div>
+                <div class="navLi" :class="{'col00d3fc': type == 4}" @click="changeType(4)">大型金矿</div>
+                <div class="navLi" :class="{'col00d3fc': type == 5}" @click="changeType(5)">豪华型金矿</div>
+            </div>
+            <div class="f_h_cont">
+                <!-- <div class="tea-leaf flex_row_center"  class="tea-leaf1">
+                    <div class="JXA Bc text_center flex_row_center coin fontSize10">
+                        0.11 JXA
+                    </div>
+                </div>
+                <div class="tea-leaf flex_row_center"  class="tea-leaf1">
+                    <div class="JXA Bc text_center flex_row_center coin fontSize10">
+                        0.002 JXA
+                    </div>
+                </div>
+                <div class="tea-leaf flex_row_center"  class="tea-leaf2">
+                    <div class="JXA Bc text_center flex_row_center coin fontSize10">
+                        0.002 JXA
+                    </div>
+                </div>
+                <div class="tea-leaf flex_row_center"  class="tea-leaf3">
+                    <div class="JXA Bc text_center flex_row_center coin fontSize10">
+                        0.002 JXA
+                    </div>
+                </div>
+                <div class="tea-leaf flex_row_center"  class="tea-leaf4">
+                    <div class="JXA Bc text_center flex_row_center coin fontSize10">
+                        0.002 JXA
+                    </div>
+                </div>
+                <div class="tea-leaf flex_row_center"  class="tea-leaf5">
+                    <div class="JXA Bc text_center flex_row_center coin fontSize10">
+                        0.002 JXA
+                    </div>
+                </div>
+                <div class="tea-leaf flex_row_center"  class="tea-leaf6">
+                    <div class="JXA Bc text_center flex_row_center coin fontSize10">
+                        0.002 JXA
+                    </div>
+                </div>
+                <div class="tea-leaf flex_row_center"  class="tea-leaf7">
+                    <div class="JXA Bc text_center flex_row_center coin fontSize10">
+                        0.002 JXA
+                    </div>
+                </div> -->
+                <div class="tea-leaf flex_row_center" v-for="(item, key) in list" :key="key" :class="'tea-leaf'+key">
+                    <div class="JXA Bc text_center flex_row_center coin fontSize10" @click="getGold(item.id)">
+                        {{fixTwo(item.profit)}} JXA
+                    </div>
+                </div>
             </div>
             <div class="quarts">
-                <img :src="'../image/new/d' + qe + '.png'" alt="">
+                <img :src="'../image/new/d' + type + '.png'" alt="">
             </div>
         </div>
         <div class="footbtn">
@@ -74,19 +119,19 @@
             qe: 1,
             senlist: [{
                 id: 1,
-                name: '森林一号'
+                name: '微型金矿'
             }, {
                 id: 2,
-                name: '森林二号'
+                name: '小型金矿'
             }, {
                 id: 3,
-                name: '森林三号'
+                name: '中型金矿'
             }, {
                 id: 4,
-                name: '森林四号'
+                name: '大型金矿'
             }, {
                 id: 5,
-                name: '森林五号'
+                name: '豪华型金矿'
             }, ],
             type: 1,
             uid: '',
@@ -195,7 +240,7 @@
             changeType: function(id) {
                 var that = this;
                 that.type = id;
-                $api.css($api.dom("#frame1"), "background-image: url(../image/tree/tree" + id + ".jpg);");
+                // $api.css($api.dom("#frame1"), "background-image: url(../image/tree/tree" + id + ".jpg);");
                 that.getInfo()
             },
             // 一键领取逻辑
